@@ -16,12 +16,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         textTheme: const TextTheme(
-          titleLarge: TextStyle(
-            color: Color(0xFF1380FE), 
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+            titleLarge: TextStyle(
+              fontSize: 29,
+              fontWeight: FontWeight.bold,
+            ),
+            titleSmall: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+            titleMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
         scaffoldBackgroundColor: const Color(0xFFFFFFFF),
         appBarTheme: const AppBarTheme(backgroundColor: Color(0xFFFFFFFF)),
       ),

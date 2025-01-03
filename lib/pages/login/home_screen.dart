@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               hintText: 'Search',
                               hintStyle: const TextStyle(
                                   color: Colors.grey,
-                                  fontWeight: FontWeight.w300),
+                                  fontWeight: FontWeight.w400),
                               prefixIcon:
                                   const Icon(Icons.menu, color: Colors.grey),
                               suffixIcon:
@@ -298,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       'Beth Ford',
                                       style: TextStyle(
                                           fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           color: Color(0xFF767676)),
                                     ),
                                   ),
@@ -317,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Today 7am',
                                           style: TextStyle(
                                               color: Colors.grey,
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.w400),
                                         )
                                       ],
                                     ),
@@ -334,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 30,
+                          height: 50,
                           child: Row(
                             children: [
                               Padding(
@@ -342,9 +342,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     const EdgeInsets.symmetric(vertical: 5),
                                 child: Container(
                                   decoration: const BoxDecoration(
-                                      border: Border(
-                                          left: BorderSide(
-                                              width: 1.0, color: Colors.grey))),
+                                    border: Border(
+                                      left: BorderSide(
+                                          width: 1.0, color: Colors.grey),
+                                    ),
+                                  ),
                                 ),
                               ),
                               const Padding(
@@ -410,7 +412,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       'Rose Dean',
                                       style: TextStyle(
                                           fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           color: Color(0xFF767676)),
                                     ),
                                   ),
@@ -429,7 +431,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Today 3am',
                                           style: TextStyle(
                                               color: Colors.grey,
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.w400),
                                         )
                                       ],
                                     ),
@@ -464,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                   'Discovery',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w500,
                                       color: Colors.grey),
                                 ),
                               )
@@ -541,7 +543,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Today 5am',
                                           style: TextStyle(
                                               color: Colors.grey,
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.w400),
                                         )
                                       ],
                                     ),
@@ -694,61 +696,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // Container(
-              //   decoration: BoxDecoration(
-              //     color: const Color(0xFF1380FE),
-              //     borderRadius: BorderRadius.circular(5),
-              //   ),
-              //   child: Container(
-              //     decoration: BoxDecoration(
-              //         color: Colors.white,
-              //         borderRadius: BorderRadius.circular(5)),
-              //     child: Container(
-              //       decoration: BoxDecoration(
-              //         color: const Color(0xFFE1EFFF),
-              //         borderRadius: BorderRadius.circular(5),
-              //       ),
-              //       child: const Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           // child flex
-              //           Row(
-              //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //             crossAxisAlignment: CrossAxisAlignment.start,
-              //             children: [
-              //               // child one flex
-              //               Padding(
-              //                 padding: EdgeInsets.only(right: 5),
-              //                 child: Row(
-              //                   children: [
-              //                     Text(
-              //                         'Almost there, you need\n 5 more leads to\n achieve your goal!')
-              //                   ],
-              //                 ),
-              //               ),
-              //               // child two flex
-              //               Padding(
-              //                 padding: EdgeInsets.only(left: 5),
-              //                 child: Row(
-              //                   children: [
-              //                     Text(
-              //                       '5',
-              //                       style: TextStyle(
-              //                           fontSize: 30,
-              //                           fontWeight: FontWeight.bold),
-              //                     ),
-              //                   ],
-              //                 ),
-              //               )
-              //             ],
-              //           )
-              //         ],
-              //       ),
-
-              //     ),
-              //   ),
-              // )
-
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: Column(
@@ -761,7 +708,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         // Optional rounded corners
                       ),
-                      padding: const EdgeInsets.only(left: 15),
+                      padding: const EdgeInsets.only(left: 12),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white, // Inner container color
@@ -779,30 +726,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: 180,
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(
-                                        15, 10, 0, 10),
+                                        10, 10, 0, 10),
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFE1EFFF),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       padding: const EdgeInsets.all(5),
-                                      child: const Column(
+                                      child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Almost there, you need\n 5 more leads\n to achieve\n your goal',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12),
-                                          ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            '5',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 25),
-                                          ),
+                                              'Almost there, you need\n 5 more leads\n to achieve\n your goal',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall),
+                                          const SizedBox(height: 5),
+                                          Text('5',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge),
                                         ],
                                       ),
                                     ),
@@ -821,22 +765,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       padding: const EdgeInsets.all(5),
-                                      child: const Column(
+                                      child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Keep it up! You are\n doing great!',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12),
+                                            'Congratulations you \nhave completed leads everyday for 32 days straight.',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall,
                                           ),
-                                          SizedBox(height: 5),
+                                          const SizedBox(height: 5),
                                           Text(
-                                            '10',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 25),
+                                            '80%',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge,
                                           ),
                                         ],
                                       ),
@@ -855,29 +799,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: 180,
                                   child: Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(15, 0, 0, 10),
+                                        const EdgeInsets.fromLTRB(10, 0, 0, 10),
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFE1EFFF),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       padding: const EdgeInsets.all(10),
-                                      child: const Column(
+                                      child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Keep pushing,\nYou are almost there!',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12),
+                                            'Total Leads',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium,
                                           ),
                                           SizedBox(height: 5),
                                           Text(
                                             '3',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 25),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge,
                                           ),
                                         ],
                                       ),
@@ -897,23 +841,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       padding: const EdgeInsets.all(10),
-                                      child: const Column(
+                                      child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Don’t stop now!\nSuccess is near!',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12),
+                                          const SizedBox(
+                                            height: 5,
                                           ),
-                                          SizedBox(height: 5),
                                           Text(
-                                            '7',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 25),
+                                            'Great you are doing!\vbetter then 87% of salesperson.',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall,
                                           ),
+                                          const SizedBox(height: 5),
+                                          Text('87%',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge),
                                         ],
                                       ),
                                     ),
@@ -925,12 +870,115 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF1380FE), // Set the background color
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(10),
+                        child: const Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment
+                                  .spaceEvenly, // Space between text and image
+                              children: [
+                                // Text on the left
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .start, // Align text to the left
+                                  children: [
+                                    Text(
+                                      'Scheduled \nGoals',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 26),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      'Follow up 10 clients to hit your \ngoals.',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(bottom: 10)),
+                                    // SizedBox(height: 10)
+                                  ],
+                                ),
+                                // Image with text in the middle
+                                Stack(
+                                  alignment: Alignment
+                                      .center, // Aligns the text in the center of the image
+                                  children: [
+                                    Image(
+                                      image:
+                                          AssetImage('assets/circle-main.jpg'),
+                                      height: 100,
+                                      width: 100,
+                                      color: Color(
+                                          0xFF1380FE), // Blend white over the image
+                                      colorBlendMode: BlendMode
+                                          .multiply, // Apply blend mode
+                                    ),
+                                    Text(
+                                      '65%',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 26,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
-                  
                 ),
               ),
             ],
           ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.white, // Background color of the fixed area
+        padding: const EdgeInsets.all(5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize
+                  .min, // Ensures the column doesn’t expand unnecessarily
+              children: [
+                Image.asset('assets/Leadss.png', height: 25, width: 30),
+                const Text('Leads'),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize
+                  .min, // Ensures the column doesn’t expand unnecessarily
+              children: [
+                Image.asset('assets/Opportunity.png', height: 25, width: 30),
+                const Text('Opportunity'),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize
+                  .min, // Ensures the column doesn’t expand unnecessarily
+              children: [
+                Image.asset('assets/calender.png', height: 25, width: 30),
+                const Text('Calendar'),
+              ],
+            ),
+          ],
         ),
       ),
     );
