@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/login/home_screen.dart';
-import 'package:smart_assist/pages/login/set_new_pwd.dart';
-import 'package:smart_assist/pages/login/set_pwd.dart';
+import 'package:smart_assist/pages/login/second_screen.dart';
+import 'package:smart_assist/pages/login/first_screen.dart';
 import 'package:smart_assist/pages/login/verify_mail.dart';
 
 void main() {
@@ -14,7 +14,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      home: SetPwd(),
       theme: ThemeData(
+        buttonTheme: ButtonThemeData(),
         textTheme: const TextTheme(
             titleLarge: TextStyle(
               fontSize: 29,
@@ -26,13 +28,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(backgroundColor: Color(0xFFFFFFFF)),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/setPassword',
-      routes: {
-        '/setPassword': (context) => const SetPwd(),
-        '/setNewPassword': (context) => const SetNewPwd(),
-        '/verifyEmail': (context) => const VerifyMail(),
-        '/home': (context) => const HomeScreen()
-      },
+      
     );
   }
 }

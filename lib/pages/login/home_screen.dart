@@ -11,7 +11,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _activeButtonIndex = 0;
   int _upcommingButtonIndex = 0;
-  int _leadButton = 0;
+  int _leadButton = 0;  
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(
               fontSize: 14, fontWeight: FontWeight.w400, color: Colors.white),
         ),
+        
         actions: [
           IconButton(
             onPressed: () {},
@@ -211,18 +212,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               style: TextButton.styleFrom(
                                 backgroundColor: _upcommingButtonIndex == 0
-                                    ? const Color.fromARGB(255, 81, 223,
-                                        121) // Active color (green)
-                                    : Colors
-                                        .transparent, // No background for inactive button
+                                    ? const Color.fromARGB(255, 81, 223, 121)
+                                        // ignore: deprecated_member_use
+                                        .withOpacity(
+                                            0.29) // Active color (green)
+                                    : null, // No background for inactive button
                                 foregroundColor: _upcommingButtonIndex == 0
-                                    ? Colors.white // Active text color (white)
+                                    ? Colors
+                                        .blueGrey // Active text color (white)
                                     : Colors
                                         .black, // Inactive text color (black)
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 5), // Add vertical padding
                               ),
-                              child: const Text('Upcoming'),
+                              child: Text('Upcoming',
+                                  style:
+                                      Theme.of(context).textTheme.titleSmall),
                             ),
                           ),
                           // Overdue Button
@@ -236,18 +241,23 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               style: TextButton.styleFrom(
                                 backgroundColor: _upcommingButtonIndex == 1
-                                    ? const Color.fromRGBO(
-                                        238, 59, 59, 1) // Active color (green)
+                                    ? const Color.fromRGBO(238, 59, 59, 1)
+                                        // ignore: deprecated_member_use
+                                        .withOpacity(
+                                            .29) // Active color (green)
                                     : Colors
                                         .transparent, // No background for inactive button
                                 foregroundColor: _upcommingButtonIndex == 1
-                                    ? Colors.white // Active text color (white)
+                                    ? Colors
+                                        .blueGrey // Active text color (white)
                                     : Colors
                                         .black, // Inactive text color (black)
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 5), // Add vertical padding
                               ),
-                              child: const Text('Overdue'),
+                              child: Text('Overdue',
+                                  style:
+                                      Theme.of(context).textTheme.titleSmall),
                             ),
                           ),
                         ],

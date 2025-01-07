@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/button.dart';
-import 'package:smart_assist/pages/paragraph_text.dart';
-import 'package:smart_assist/pages/style_text.dart';
+import 'package:smart_assist/pages/login/second_screen.dart';
+import 'package:smart_assist/pages/login/verify_mail.dart';
+import 'package:smart_assist/services/email_srv.dart';
+import 'package:smart_assist/utils/button.dart';
+import 'package:smart_assist/utils/paragraph_text.dart';
+import 'package:smart_assist/utils/snackbar_helper.dart';
+import 'package:smart_assist/utils/style_text.dart';
 
 class SetPwd extends StatefulWidget {
   const SetPwd({super.key});
@@ -13,9 +17,9 @@ class SetPwd extends StatefulWidget {
 class _SetPwdState extends State<SetPwd> {
   // Controllers for text fields
   final TextEditingController _passwordController = TextEditingController();
-
-  // Password visibility toggle
-  bool _isPasswordObscured = true;
+  TextEditingController emailController = TextEditingController();
+    
+ 
 
   // Form key for validation );
 
@@ -67,20 +71,9 @@ class _SetPwdState extends State<SetPwd> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextFormField(
-                      controller: _passwordController,
-                      obscureText: _isPasswordObscured,
+                      controller: emailController,
                       decoration: InputDecoration(
                         hintText: 'Enter Email ID',
-                        suffixIcon: IconButton(
-                          icon: Icon(_isPasswordObscured
-                              ? Icons.visibility_off
-                              : Icons.visibility),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordObscured = !_isPasswordObscured;
-                            });
-                          },
-                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -92,12 +85,7 @@ class _SetPwdState extends State<SetPwd> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: ElevatedButton(
-                      onPressed: () {
-                         // ignore: avoid_print
-                         print('navigate to setnewpwd');
-                        Navigator.pushNamed(
-                            context, '/setNewPassword'); // Navigate to Page Two
-                      },
+                      onPressed: verifyEmail,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0276FE),
                         foregroundColor: Colors.white,
@@ -116,5 +104,33 @@ class _SetPwdState extends State<SetPwd> {
         ),
       ),
     );
+  }
+
+  Future<void> verifyEmail() async {
+    final email = emailController.text;
+    final body = {"email": email};
+
+    try {
+      final response = await EmailService.verifyEmail(body);
+
+      if (response['isSuccess'] == true) {
+        print('API hit successful: ${response['data']}');
+        showSuccessMessage(context, message: 'Email Verified Successfully');
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyMail(email : emailController.text),
+          ),
+        );
+      } else {
+        print('API hit failed: ${response['data']}');
+        showErrorMessage(context, message: 'Check the Email');
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      print('Unexpected error: $error');
+      showErrorMessage(context, message: 'Error during API call');
+    }
   }
 }

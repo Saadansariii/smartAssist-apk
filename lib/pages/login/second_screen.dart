@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/button.dart';
-import 'package:smart_assist/pages/paragraph_text.dart';
-import 'package:smart_assist/pages/style_text.dart';
+import 'package:smart_assist/utils/button.dart';
+import 'package:smart_assist/utils/paragraph_text.dart';
+import 'package:smart_assist/utils/style_text.dart';
 
 class SetNewPwd extends StatefulWidget {
   const SetNewPwd({super.key});

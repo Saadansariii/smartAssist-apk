@@ -1,20 +1,23 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/button.dart';
-import 'package:smart_assist/pages/style_text.dart';
+import 'package:smart_assist/pages/login/first_screen.dart';
+import 'package:smart_assist/services/otp_srv.dart';
+import 'package:smart_assist/utils/button.dart';
+import 'package:smart_assist/utils/snackbar_helper.dart';
+import 'package:smart_assist/utils/style_text.dart';
 
 class VerifyMail extends StatefulWidget {
-  const VerifyMail({super.key});
+  final String email;
+  const VerifyMail({super.key, required this.email});
 
   @override
   State<VerifyMail> createState() => _SetPwdState();
 }
 
 class _SetPwdState extends State<VerifyMail> {
-   
-
   // Form key for validation );
-
+  final TextEditingController emailController = TextEditingController();
+  TextEditingController otpController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,11 +58,11 @@ class _SetPwdState extends State<VerifyMail> {
                         children: [
                           const TextSpan(
                             text: 'An 6-digit code has been sent to ',
-                            style: TextStyle(fontSize: 16 , height: 2),
+                            style: TextStyle(fontSize: 16, height: 2),
                           ),
-                          const TextSpan(
-                            text: 'Richard@gmail.com',
-                            style: TextStyle(
+                          TextSpan(
+                            text: '${widget.email}',
+                            style: const TextStyle(
                                 color:
                                     Colors.black), // Dark color for the email
                           ),
@@ -72,8 +75,10 @@ class _SetPwdState extends State<VerifyMail> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                // Handle the "Change" tap event here
-                                // print("Change clicked");
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const SetPwd()));
                               },
                           ),
                         ],
@@ -81,17 +86,21 @@ class _SetPwdState extends State<VerifyMail> {
                     ),
                   ),
 
+                  TextField(
+                    controller: otpController,
+                    decoration: const InputDecoration(hintText: 'Enter otp'),
+                  ),
+
                   Padding(
-                    padding:
-                        const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
                         text:
                             "Didn't receive the code? ", // Text before the link
                         style: const TextStyle(
-                            color: Colors
-                                .grey , fontSize: 16), // Default style for the first part
+                            color: Colors.grey,
+                            fontSize: 16), // Default style for the first part
                         children: [
                           TextSpan(
                             text: 'Resend',
@@ -100,22 +109,17 @@ class _SetPwdState extends State<VerifyMail> {
                               decoration: TextDecoration
                                   .underline, // Underline the link
                             ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                // print('Resend clicked');
-                              },
+                            recognizer: TapGestureRecognizer()..onTap = () {},
                           ),
                         ],
                       ),
                     ),
                   ), // Next Step Button
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 26 ,  horizontal: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 26, horizontal: 8),
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(
-                            context, '/home'); // Navigate to Page Two
-                      },
+                      onPressed: onVerify,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0276FE),
                         foregroundColor: Colors.white,
@@ -134,5 +138,35 @@ class _SetPwdState extends State<VerifyMail> {
         ),
       ),
     );
+  }
+
+  Future<void> onVerify() async {
+    final otp = otpController.text;
+    final email = emailController.text; // Retrieve email from the controller
+    final body = {"otp": otp, "email": email};
+
+    try {
+      final response = await OtpSrv.verifyEmail(body);
+
+      if (response['isSuccess'] == true) {
+        print('API hit successful: ${response['data']}');
+        showSuccessMessage(context, message: 'Email Verified Successfully');
+
+        // Navigate to VerifyMail screen with the email
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyMail(email: email),
+          ),
+        );
+      } else {
+        print('API hit failed: ${response['data']}');
+        showErrorMessage(context, message: 'Check the Email');
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      print('Unexpected error: $error');
+      showErrorMessage(context, message: 'Error during API call');
+    }
   }
 }
