@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:smart_assist/pages/login/home_screen.dart';
+import 'package:smart_assist/services/set_pwd_srv.dart';
 import 'package:smart_assist/utils/button.dart';
 import 'package:smart_assist/utils/paragraph_text.dart';
+import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class SetNewPwd extends StatefulWidget {
-  const SetNewPwd({super.key});
+  final String email;
+  const SetNewPwd({super.key, required this.email});
 
   @override
   State<SetNewPwd> createState() => _SetPwdState();
 }
 
 class _SetPwdState extends State<SetNewPwd> {
+  final TextEditingController newPwdController = TextEditingController();
+  final TextEditingController confirmPwdController = TextEditingController();
   // Controllers for text fields
   final TextEditingController _passwordController = TextEditingController();
 
@@ -59,16 +66,16 @@ class _SetPwdState extends State<SetNewPwd> {
                   const Row(
                     children: [
                       Padding(
-                          padding:
-                             EdgeInsets.fromLTRB(6, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
                           child: Text('Password'))
                     ],
                   ),
                   // Password TextField
-                 Padding(
+                  Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
-                      controller: _passwordController,
+                      // controller: _passwordController,
+                      controller: newPwdController,
                       obscureText: _isPasswordObscured,
                       decoration: InputDecoration(
                         hintText:
@@ -96,15 +103,15 @@ class _SetPwdState extends State<SetNewPwd> {
                   const Row(
                     children: [
                       Padding(
-                          padding:
-                               EdgeInsets.fromLTRB(6, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
                           child: Text('Confirm Password'))
                     ],
                   ),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: TextFormField( 
+                    child: TextFormField(
+                      controller: confirmPwdController,
                       obscureText: _isPasswordObscured,
                       decoration: InputDecoration(
                         hintText: 'Enter Confirm Password',
@@ -129,12 +136,7 @@ class _SetPwdState extends State<SetNewPwd> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: ElevatedButton(
-                      onPressed: () {
-                        // ignore: avoid_print
-                        print('navigate to setnewpwd');
-                        Navigator.pushNamed(
-                            context, '/verifyEmail'); // Navigate to Page Two
-                      },
+                      onPressed: submitBtn,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0276FE),
                         foregroundColor: Colors.white,
@@ -143,7 +145,7 @@ class _SetPwdState extends State<SetNewPwd> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Button('Next Step'), 
+                      child: const Button('Next Step'),
                     ),
                   ),
                 ],
@@ -153,5 +155,52 @@ class _SetPwdState extends State<SetNewPwd> {
         ),
       ),
     );
+  }
+
+  Future<void> submitBtn() async {
+    final newPwd = newPwdController.text;
+    final confirmPwd = confirmPwdController.text;
+
+    final deviceToken = await FirebaseMessaging.instance.getToken();
+
+    // Check if the token is available
+    if (deviceToken == null) {
+      print('Failed to retrieve device token');
+      return;
+    }
+
+    // Prepare the body with email, new password, confirm password, and device token
+    final body = {
+      "email": widget.email,
+      "newPwd": newPwd,
+      "confirmPwd": confirmPwd,
+      "device_token": deviceToken, // Add the device token here
+    };
+
+    try {
+      final response = await SetPwdSrv.SetPwd(body);
+
+      print('API Response: $response');
+
+      if (response['isSuccess'] == true) {
+        // ignore: use_build_context_synchronously
+        showSuccessMessage(context, message: 'Email Verified Successfully');
+
+        // Navigate to VerifyMail screen with the email
+        Navigator.push(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
+      } else {
+        // ignore: use_build_context_synchronously
+        showErrorMessage(context, message: 'Check the Email or OTP');
+      }
+    } catch (error) {
+      // ignore: use_build_context_synchronously
+      showErrorMessage(context, message: 'Error during API call');
+    }
   }
 }

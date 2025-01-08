@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/login/first_screen.dart';
+import 'package:smart_assist/pages/login/second_screen.dart';
 import 'package:smart_assist/services/otp_srv.dart';
 import 'package:smart_assist/utils/button.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
@@ -16,7 +17,6 @@ class VerifyMail extends StatefulWidget {
 
 class _SetPwdState extends State<VerifyMail> {
   // Form key for validation );
-  final TextEditingController emailController = TextEditingController();
   TextEditingController otpController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -141,31 +141,38 @@ class _SetPwdState extends State<VerifyMail> {
   }
 
   Future<void> onVerify() async {
-    final otp = otpController.text;
-    final email = emailController.text; // Retrieve email from the controller
-    final body = {"otp": otp, "email": email};
+    final otp = int.tryParse(otpController.text);
+    if (otp == null) {
+      showErrorMessage(context,
+          message: 'Invalid OTP. Please enter numbers only.');
+      return;
+    }
+
+    final body = {"otp": otp, "email": widget.email};
 
     try {
       final response = await OtpSrv.verifyEmail(body);
 
+      print('API Response: $response');
+
       if (response['isSuccess'] == true) {
-        print('API hit successful: ${response['data']}');
+        // ignore: use_build_context_synchronously
         showSuccessMessage(context, message: 'Email Verified Successfully');
 
         // Navigate to VerifyMail screen with the email
         Navigator.push(
+          // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
-            builder: (context) => VerifyMail(email: email),
+            builder: (context) => SetNewPwd(email: widget.email),
           ),
         );
       } else {
-        print('API hit failed: ${response['data']}');
-        showErrorMessage(context, message: 'Check the Email');
+        // ignore: use_build_context_synchronously
+        showErrorMessage(context, message: 'Check the Email or OTP');
       }
     } catch (error) {
-      // Handle unexpected errors
-      print('Unexpected error: $error');
+      // ignore: use_build_context_synchronously
       showErrorMessage(context, message: 'Error during API call');
     }
   }

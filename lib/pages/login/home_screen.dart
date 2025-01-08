@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:smart_assist/widgets/followups/overdue_followup.dart';
+import 'package:smart_assist/widgets/followups/upcoming_row.dart';
+import 'package:smart_assist/widgets/oppointment/overdue.dart';
+import 'package:smart_assist/widgets/oppointment/upcoming.dart';
+import 'package:smart_assist/widgets/testdrive/overdue.dart';
+import 'package:smart_assist/widgets/testdrive/upcoming.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,9 +15,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Widget currentWidget = const SizedBox();
   int _activeButtonIndex = 0;
   int _upcommingButtonIndex = 0;
-  int _leadButton = 0;  
+  final _upcommingBtnFollowups = 0;
+  final _upcommingBtnAppointments = 0;
+  final _upcommingBtnTestdrive = 0;
+
+  int _leadButton = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(
               fontSize: 14, fontWeight: FontWeight.w400, color: Colors.white),
         ),
-        
         actions: [
           IconButton(
             onPressed: () {},
@@ -97,9 +107,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             TextButton(
                               onPressed: () {
                                 setState(() {
-                                  _activeButtonIndex =
-                                      0; // Set Follow Ups as active
+                                  _activeButtonIndex = 0;
                                 });
+                                followUps(_upcommingBtnFollowups);
                               },
                               style: TextButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -130,6 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _activeButtonIndex =
                                       1; // Set Appointments as active
                                 });
+                                oppointment(_upcommingBtnAppointments);
                               },
                               style: TextButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -157,6 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _activeButtonIndex =
                                       2; // Set Test Drive as active
                                 });
+                                testDrive(_upcommingBtnTestdrive);
                               },
                               style: TextButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -206,8 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: TextButton(
                               onPressed: () {
                                 setState(() {
-                                  _upcommingButtonIndex =
-                                      0; // Set Upcoming as active
+                                  _upcommingButtonIndex = 0;
                                 });
                               },
                               style: TextButton.styleFrom(
@@ -270,344 +281,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: const Border(
-                              left: BorderSide(
-                                width: 8.0,
-                                color: Color.fromARGB(255, 81, 223, 121),
-                              ),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: ClipRect(
-                                  child: Image.asset('assets/Star.png'),
-                                ),
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                // const Text('data')
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                    child: Text(
-                                      'Beth Ford',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xFF767676)),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(10, 5, 0, 0),
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/call.png',
-                                          height:
-                                              30, // Adjust image size as needed
-                                          width: 30,
-                                        ),
-                                        const Text(
-                                          'Today 7am',
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w400),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    border: Border(
-                                      left: BorderSide(
-                                          width: 1.0, color: Colors.grey),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  'Range Rover\nvelar',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [Image.asset('assets/arrowButton.png')],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 0.0, horizontal: 5),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: const Border(
-                              left: BorderSide(
-                                width: 8.0,
-                                color: Color.fromARGB(255, 81, 223, 121),
-                              ),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: ClipRect(
-                                  child: Image.asset('assets/Star.png'),
-                                ),
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                // const Text('data')
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                    child: Text(
-                                      'Rose Dean',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xFF767676)),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(10, 5, 0, 0),
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/call.png',
-                                          height:
-                                              30, // Adjust image size as needed
-                                          width: 30,
-                                        ),
-                                        const Text(
-                                          'Today 3am',
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w400),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      border: Border(
-                                          left: BorderSide(
-                                              width: 1.0, color: Colors.grey))),
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  'Discovery',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [Image.asset('assets/arrowButton.png')],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 0.0, horizontal: 5),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: const Border(
-                              left: BorderSide(
-                                width: 8.0,
-                                color: Color.fromARGB(255, 81, 223, 121),
-                              ),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: ClipRect(
-                                  child: Image.asset('assets/Star.png'),
-                                ),
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                // const Text('data')
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                    child: Text(
-                                      'Tira Smith',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF767676)),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(10, 5, 0, 0),
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/call.png',
-                                          height:
-                                              30, // Adjust image size as needed
-                                          width: 30,
-                                        ),
-                                        const Text(
-                                          'Today 5am',
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w400),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      border: Border(
-                                          left: BorderSide(
-                                              width: 1.0, color: Colors.grey))),
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  'Defender',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [Image.asset('assets/arrowButton.png')],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+
+              // this is onclick fn for upcoming and overdue.
+              currentWidget,
+
               // leads test drive button
 
               Padding(
@@ -992,5 +669,35 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  void followUps(int index) {
+    setState(() {
+      if (index == 0) {
+        currentWidget = const CustomRow();
+      } else if (index == 1) {
+        currentWidget = const OverdueFollowup();
+      }
+    });
+  }
+
+  void testDrive(int index) {
+    setState(() {
+      if (index == 0) {
+        currentWidget = const TestUpcoming();
+      } else if (index == 1) {
+        currentWidget = const TestOverdue();
+      }
+    });
+  }
+
+  void oppointment(int index) {
+    setState(() {
+      if (index == 0) {
+        currentWidget = const OppUpcoming();
+      } else if (index == 1) {
+        currentWidget = const OppOverdue();
+      }
+    });
   }
 }

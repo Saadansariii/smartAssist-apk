@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/login/second_screen.dart';
+import 'package:flutter/material.dart'; 
 import 'package:smart_assist/pages/login/verify_mail.dart';
 import 'package:smart_assist/services/email_srv.dart';
 import 'package:smart_assist/utils/button.dart';
@@ -16,7 +15,7 @@ class SetPwd extends StatefulWidget {
 
 class _SetPwdState extends State<SetPwd> {
   // Controllers for text fields
-  final TextEditingController _passwordController = TextEditingController();
+  // final TextEditingController _passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
     
  
