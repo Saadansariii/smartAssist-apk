@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/login/home_screen.dart';
+import 'package:smart_assist/pages/home_screen.dart';
 import 'package:smart_assist/services/set_pwd_srv.dart';
 import 'package:smart_assist/utils/button.dart';
 import 'package:smart_assist/utils/paragraph_text.dart';

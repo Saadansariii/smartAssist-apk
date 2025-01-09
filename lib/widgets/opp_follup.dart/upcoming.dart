@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/details_pages/followups.dart';
 
-class CustomRow extends StatelessWidget {
-  const CustomRow({super.key});
+class OppFollUps extends StatelessWidget {
+  const OppFollUps({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +30,20 @@ class CustomRow extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Beth Ford',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Color.fromARGB(255, 139, 138, 138)),
+                  Row(
+                    children: [
+                      const Text(
+                        'Tira Smith',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 139, 138, 138)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Image.asset('assets/vector.png'),
+                      )
+                    ],
                   ),
                   const Padding(padding: EdgeInsets.only(bottom: 5)),
                   Row(

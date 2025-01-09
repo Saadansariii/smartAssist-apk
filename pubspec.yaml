@@ -64,20 +64,33 @@ flutter:
     - assets/car.png
     - assets/lock.png
     - assets/loginbro.png
-    - assets/call.png
+    - assets/phone.png
     - assets/arrowButton.png
     - assets/Emoji.png
     - assets/Leads.png
     - assets/Mic.png
     - assets/Notification.png
     - assets/Star.png
+    - assets/graph.png
     - assets/circle-main.jpg
     - assets/Opportunity.png
     - assets/Leadss.png
+    - assets/location.png
     - assets/vector.png
     - assets/vector_light.png
     - assets/Time.png
-
+    - assets/whatsapp.png
+    - assets/blue_bag.png
+    - assets/blue_arrow.png
+    - assets/blue_car.png
+    - assets/blue_mail.png
+    - assets/blue_phone.png
+    - assets/cloud.png
+    - assets/phone.png
+    - assets/redirect_msg.png
+    - assets/profile.png
+    - assets/mail.png
+    - assets/redirect_msg.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
