@@ -297,18 +297,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // this is onclick fn for upcoming and overdue.
               currentWidget,
+              SizedBox(height: 5),
+              currentWidget,
+              SizedBox(height: 5),
+              currentWidget,
 
+              SizedBox(height: 10),
               // leads test drive button
 
               Padding(
-                padding: const EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
                   decoration: BoxDecoration(
                     color: const Color(0xFFE1EFFF),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: SizedBox(
-                    height: 40, // Set height for the container
+                    height: 40,
+                    width: double.infinity,
                     child: SingleChildScrollView(
                       scrollDirection:
                           Axis.horizontal, // Enable horizontal scrolling
@@ -334,7 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               foregroundColor: _leadButton == 0
                                   ? Colors.white // Active text color (white)
                                   : Colors.black, // Inactive text color (black)
-                              minimumSize: const Size(110, 40),
+                              minimumSize: const Size(121, 50),
                               textStyle: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.normal),
                             ),
@@ -361,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               foregroundColor: _leadButton == 1
                                   ? Colors.white // Active text color (white)
                                   : Colors.black, // Inactive text color (black)
-                              minimumSize: const Size(110, 40),
+                              minimumSize: const Size(121, 50),
                               textStyle: const TextStyle(fontSize: 16),
                             ),
                             child: const Text('Test Drive'),
@@ -387,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               foregroundColor: _leadButton == 2
                                   ? Colors.white // Active text color (white)
                                   : Colors.black, // Inactive text color (black)
-                              minimumSize: const Size(110, 40),
+                              minimumSize: const Size(121, 50),
                               textStyle: const TextStyle(fontSize: 16),
                             ),
                             child: const Text('Orders'),

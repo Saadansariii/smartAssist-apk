@@ -94,22 +94,24 @@ class _CalenderState extends State<Calender> {
               )),
         ],
       ),
-      body: Container(
-        color: const Color(0xffD2D1D1),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Calendar Section
-            CalenderWidget(calendarFormat: _calendarFormat),
-            // CalenderWidget(),
-            const SizedBox(
-              height: 10,
-            ),
-
-            AppointmentWidget(),
-            SizedBox(height: 10), // Space between report and events
-            EventWidget(),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          color: const Color(0xffD2D1D1),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Calendar Section
+              CalenderWidget(calendarFormat: _calendarFormat),
+              // CalenderWidget(),
+              const SizedBox(
+                  height: 10,
+                  ),
+        
+              AppointmentWidget(),
+              SizedBox(height: 10), // Space between report and events
+              EventWidget(),
+            ],
+          ),
         ),
       ),
     );
