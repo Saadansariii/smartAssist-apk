@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_assist/pages/calenderPages.dart/calender.dart';
 import 'package:smart_assist/pages/home_screen.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
@@ -297,7 +298,7 @@ class _OpportunityState extends State<Opportunity> {
 
               // this is onclick fn for upcoming and overdue.
               currentWidget,
-
+              currentWidget, currentWidget,
               // leads test drive button
 
               Padding(
@@ -457,14 +458,19 @@ class _OpportunityState extends State<Opportunity> {
                 ),
               ],
             ),
-            const Column(
+            Column(
               mainAxisSize: MainAxisSize
                   .min, // Ensures the column doesn’t expand unnecessarily
               children: [
-                Icon(Icons.calendar_month_outlined),
+                const Icon(Icons.calendar_month_outlined),
+                GestureDetector(
+                  child: const Text('Calendar'),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Calender()));
+                  },
+                )
                 // Image.asset('assets/calender.png', height: 25, width: 30),
-
-                Text('Calendar'),
               ],
             ),
           ],

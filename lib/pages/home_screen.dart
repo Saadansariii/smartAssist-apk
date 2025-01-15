@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_assist/pages/Add_followups.dart';
 import 'package:smart_assist/pages/calenderPages.dart/calender.dart';
 import 'package:smart_assist/pages/opportunity.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
@@ -20,14 +21,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Widget currentWidget = const CustomRow();
-  Widget currentBtn = const SizedBox();
-  int _activeButtonIndex = 0;
-  int _upcommingButtonIndex = 0;
-  final _upcommingBtnFollowups = 0;
-  final _upcommingBtnAppointments = 0;
-  final _upcommingBtnTestdrive = 0;
+  // Widget currentWidget = const CustomRow();
+  // Widget currentBtn = const SizedBox();
+  // int _activeButtonIndex = 0;
+  // int _upcommingButtonIndex = 0;
+  // final _upcommingBtnFollowups = 0;
+  // final _upcommingBtnAppointments = 0;
+  // final _upcommingBtnTestdrive = 0;
   int _selectedBtnIndex = 0;
+
+  // Widgets for FollowUp, TestDrive, and Appointments
+  Widget currentWidget = const CustomRow();
+  int _activeButtonIndex = 0;
+
+// Separate indices for each section's upcoming/overdue toggle
+  int _upcomingBtnFollowups = 0;
+  int _upcomingBtnAppointments = 0;
+  int _upcomingBtnTestdrive = 0;
 
   final List<Widget> _widgets = [
     const Leads(),
@@ -123,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 setState(() {
                                   _activeButtonIndex = 0;
                                 });
-                                followUps(_upcommingBtnFollowups);
+                                followUps(_upcomingBtnFollowups);
                               },
                               style: TextButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -151,10 +161,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             TextButton(
                               onPressed: () {
                                 setState(() {
-                                  _activeButtonIndex =
-                                      1; // Set Appointments as active
+                                  _activeButtonIndex = 1;
                                 });
-                                oppointment(_upcommingBtnAppointments);
+                                oppointment(_upcomingBtnAppointments);
                               },
                               style: TextButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -179,10 +188,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             TextButton(
                               onPressed: () {
                                 setState(() {
-                                  _activeButtonIndex =
-                                      2; // Set Test Drive as active
+                                  _activeButtonIndex = 2;
                                 });
-                                testDrive(_upcommingBtnTestdrive);
+                                testDrive(_upcomingBtnTestdrive);
                               },
                               style: TextButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -231,18 +239,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: TextButton(
                               onPressed: () {
-                                setState(() {
-                                  _upcommingButtonIndex = 0;
-                                });
+                                if (_activeButtonIndex == 0) {
+                                  followUps(0);
+                                } else if (_activeButtonIndex == 1) {
+                                  oppointment(0);
+                                } else if (_activeButtonIndex == 2) {
+                                  testDrive(0);
+                                }
                               },
                               style: TextButton.styleFrom(
-                                backgroundColor: _upcommingButtonIndex == 0
+                                backgroundColor: _activeButtonIndex == 0
                                     ? const Color.fromARGB(255, 81, 223, 121)
                                         // ignore: deprecated_member_use
                                         .withOpacity(
                                             0.29) // Active color (green)
                                     : null, // No background for inactive button
-                                foregroundColor: _upcommingButtonIndex == 0
+                                foregroundColor: _activeButtonIndex == 0
                                     ? Colors
                                         .blueGrey // Active text color (white)
                                     : Colors
@@ -259,19 +271,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: TextButton(
                               onPressed: () {
-                                setState(() {
-                                  _upcommingButtonIndex = 1;
-                                });
+                                if (_activeButtonIndex == 0) {
+                                  followUps(1);
+                                } else if (_activeButtonIndex == 1) {
+                                  oppointment(1);
+                                } else if (_activeButtonIndex == 2) {
+                                  testDrive(1);
+                                }
                               },
                               style: TextButton.styleFrom(
-                                backgroundColor: _upcommingButtonIndex == 1
+                                backgroundColor: _activeButtonIndex == 2
                                     ? const Color.fromRGBO(238, 59, 59, 1)
                                         // ignore: deprecated_member_use
                                         .withOpacity(
                                             .29) // Active color (green)
                                     : Colors
                                         .transparent, // No background for inactive button
-                                foregroundColor: _upcommingButtonIndex == 1
+                                foregroundColor: _activeButtonIndex == 2
                                     ? Colors
                                         .blueGrey // Active text color (white)
                                     : Colors
@@ -302,9 +318,26 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 5),
               currentWidget,
 
-              SizedBox(height: 10),
+              // SizedBox(height: 10),
               // leads test drive button
-
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AddFollowups()));
+                    },
+                    child: const Icon(
+                      Icons.keyboard_arrow_down_outlined,
+                      size: 36,
+                    ),
+                  )
+                ],
+              ),
+              // SizedBox(height: 2),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
@@ -478,32 +511,38 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Follow-ups toggle logic
   void followUps(int index) {
     setState(() {
+      _upcomingBtnFollowups = index;
       if (index == 0) {
-        currentWidget = const CustomRow();
+        currentWidget = const CustomRow(); // Upcoming Follow-ups
       } else if (index == 1) {
-        currentWidget = const OverdueFollowup();
+        currentWidget = const OverdueFollowup(); // Overdue Follow-ups
       }
     });
   }
 
+// Test Drive toggle logic
   void testDrive(int index) {
     setState(() {
+      _upcomingBtnTestdrive = index;
       if (index == 0) {
-        currentWidget = const TestUpcoming();
+        currentWidget = const TestUpcoming(); // Upcoming Test Drive
       } else if (index == 1) {
-        currentWidget = const TestOverdue();
+        currentWidget = const TestOverdue(); // Overdue Test Drive
       }
     });
   }
 
+// Appointments toggle logic
   void oppointment(int index) {
     setState(() {
+      _upcomingBtnAppointments = index;
       if (index == 0) {
-        currentWidget = const OppUpcoming();
+        currentWidget = const OppUpcoming(); // Upcoming Appointments
       } else if (index == 1) {
-        currentWidget = const OppOverdue();
+        currentWidget = const OppOverdue(); // Overdue Appointments
       }
     });
   }

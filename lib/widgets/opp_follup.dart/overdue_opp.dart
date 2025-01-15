@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/details_pages/followups.dart';
 
-class OppFollUps extends StatelessWidget {
-  const OppFollUps({super.key});
+class OverdueOpp extends StatelessWidget {
+  const OverdueOpp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class OppFollUps extends StatelessWidget {
             border: const Border(
               left: BorderSide(
                 width: 8.0, // Left border width
-                color: Color.fromARGB(255, 81, 223, 121), // Left border color
+                color: Color(0xFFEA4335), // Left border color
               ),
             ),
           ),
@@ -26,24 +26,16 @@ class OppFollUps extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Image.asset('assets/Star.png'),
+              Image.asset('assets/vector_light.png'),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      const Text(
-                        'Tira Smith',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Color.fromARGB(255, 139, 138, 138)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Image.asset('assets/vector.png'),
-                      )
-                    ],
+                  const Text(
+                    'Beth Ford',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color.fromARGB(255, 139, 138, 138)),
                   ),
                   const Padding(padding: EdgeInsets.only(bottom: 5)),
                   Row(
@@ -52,9 +44,9 @@ class OppFollUps extends StatelessWidget {
                       //   Icons.phone,
                       //   color: Colors.grey,
                       // ),
-                      // Image.asset('assets/phone.png'),
+                      Image.asset('assets/phone.png'),
                       const Padding(padding: EdgeInsets.only(right: 5)),
-                      const Text('Today 3pm',
+                      const Text('Today',
                           style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 12,
@@ -72,19 +64,19 @@ class OppFollUps extends StatelessWidget {
                         color: Colors.grey, fontWeight: FontWeight.w500),
                   ),
                   Padding(padding: EdgeInsets.only(bottom: 5)),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_month_outlined,
-                        color: Colors.grey,
-                      ),
-                      Text(
-                        'Tomorrow',
-                        style: TextStyle(
-                            color: Colors.grey, fontWeight: FontWeight.w400),
-                      )
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Icon(
+                  //       Icons.calendar_month_outlined,
+                  //       color: Colors.grey,
+                  //     ),
+                  //     Text(
+                  //       'Tomorrow',
+                  //       style: TextStyle(
+                  //           color: Colors.grey, fontWeight: FontWeight.w400),
+                  //     )
+                  //   ],
+                  // ),
                 ],
               ),
               Row(

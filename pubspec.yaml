@@ -39,6 +39,8 @@ dependencies:
   firebase_messaging: ^15.2.0
   table_calendar: ^3.0.9
   intl: ^0.20.1
+  flutter_slidable: ^3.1.2
+  font_awesome_flutter: ^10.8.0
 
 dev_dependencies:
   flutter_test:
@@ -72,7 +74,7 @@ flutter:
     - assets/Leads.png
     - assets/Mic.png
     - assets/Notification.png
-    - assets/Star.png
+    - assets/star.png
     - assets/graph.png
     - assets/circle-main.jpg
     - assets/Opportunity.png
@@ -93,6 +95,7 @@ flutter:
     - assets/profile.png
     - assets/mail.png
     - assets/redirect_msg.png
+    - assets/call.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
