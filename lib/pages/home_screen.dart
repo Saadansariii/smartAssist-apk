@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Widgets for FollowUp, TestDrive, and Appointments
   Widget currentWidget = const CustomRow();
   int _activeButtonIndex = 0;
+  int _childButtonIndex = 0;
 
 // Separate indices for each section's upcoming/overdue toggle
   int _upcomingBtnFollowups = 0;
@@ -119,100 +120,91 @@ class _HomeScreenState extends State<HomeScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: SizedBox(
-                    height: 40, // Set height for the container
-                    child: SingleChildScrollView(
-                      scrollDirection:
-                          Axis.horizontal, // Enable horizontal scrolling
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: Row(
-                          children: [
-                            // Follow Ups Button
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _activeButtonIndex = 0;
-                                });
-                                followUps(_upcomingBtnFollowups);
-                              },
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                backgroundColor: _activeButtonIndex == 0
-                                    ? const Color(
-                                        0xFF1380FE) // Active color (blue)
-                                    : Colors
-                                        .transparent, // No background for inactive buttons
-                                foregroundColor: _activeButtonIndex == 0
-                                    ? Colors.white // Active text color (white)
-                                    : Colors
-                                        .black, // Inactive text color (black)
-                                minimumSize: const Size(110, 40),
-                                textStyle: const TextStyle(fontSize: 16),
+                    height: 37,
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        // Follow Ups Button
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _activeButtonIndex = 0;
+                              });
+                              followUps(_upcomingBtnFollowups);
+                            },
+                            style: TextButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                              child: const Text(
-                                'FollowUps(6)',
-                                style: TextStyle(fontWeight: FontWeight.normal),
-                              ),
+                              backgroundColor: _activeButtonIndex == 0
+                                  ? const Color(0xFF1380FE)
+                                  : Colors.transparent,
+                              foregroundColor: _activeButtonIndex == 0
+                                  ? Colors.white
+                                  : Colors.black,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              textStyle: const TextStyle(fontSize: 14),
                             ),
-
-                            // Appointments Button
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _activeButtonIndex = 1;
-                                });
-                                oppointment(_upcomingBtnAppointments);
-                              },
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                backgroundColor: _activeButtonIndex == 1
-                                    ? const Color(
-                                        0xFF1380FE) // Active color (blue)
-                                    : Colors
-                                        .transparent, // No background for inactive buttons
-                                foregroundColor: _activeButtonIndex == 1
-                                    ? Colors.white // Active text color (white)
-                                    : Colors
-                                        .black, // Inactive text color (black)
-                                minimumSize: const Size(110, 40),
-                                textStyle: const TextStyle(fontSize: 16),
-                              ),
-                              child: const Text('Appointments (5)'),
-                            ),
-
-                            // Test Drive Button
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _activeButtonIndex = 2;
-                                });
-                                testDrive(_upcomingBtnTestdrive);
-                              },
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                backgroundColor: _activeButtonIndex == 2
-                                    ? const Color(
-                                        0xFF1380FE) // Active color (blue)
-                                    : Colors
-                                        .transparent, // No background for inactive buttons
-                                foregroundColor: _activeButtonIndex == 2
-                                    ? Colors.white // Active text color (white)
-                                    : Colors
-                                        .black, // Inactive text color (black)
-                                minimumSize: const Size(110, 40),
-                                textStyle: const TextStyle(fontSize: 16),
-                              ),
-                              child: const Text('Test Drive (5)'),
-                            ),
-                          ],
+                            child: const Text('FollowUps (6)',
+                                textAlign: TextAlign.center),
+                          ),
                         ),
-                      ),
+
+                        // Appointments Button
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _activeButtonIndex = 1;
+                              });
+                              oppointment(_upcomingBtnAppointments);
+                            },
+                            style: TextButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              backgroundColor: _activeButtonIndex == 1
+                                  ? const Color(0xFF1380FE)
+                                  : Colors.transparent,
+                              foregroundColor: _activeButtonIndex == 1
+                                  ? Colors.white
+                                  : Colors.black,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              textStyle: const TextStyle(fontSize: 14),
+                            ),
+                            child: const Text('Appointments (5)',
+                                textAlign: TextAlign.center),
+                          ),
+                        ),
+
+                        // Test Drive Button
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _activeButtonIndex = 2;
+                              });
+                              testDrive(_upcomingBtnTestdrive);
+                            },
+                            style: TextButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              backgroundColor: _activeButtonIndex == 2
+                                  ? const Color(0xFF1380FE)
+                                  : Colors.transparent,
+                              foregroundColor: _activeButtonIndex == 2
+                                  ? Colors.white
+                                  : Colors.black,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              textStyle: const TextStyle(fontSize: 14),
+                            ),
+                            child: const Text('Test Drive (5)',
+                                textAlign: TextAlign.center),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -226,11 +218,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.fromLTRB(15, 15, 5, 10),
                     child: Container(
                       width: 200, // Set width of the container
-                      height: 40,
+                      height: 30,
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: const Color(
-                                0xFF767676)), // Border around the container
+                            color: const Color(0xFF767676),
+                            width: .5), // Border around the container
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Row(
@@ -239,6 +231,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: TextButton(
                               onPressed: () {
+                                setState(() {
+                                  _childButtonIndex =
+                                      0; // Set Upcoming as active
+                                });
+
                                 if (_activeButtonIndex == 0) {
                                   followUps(0);
                                 } else if (_activeButtonIndex == 1) {
@@ -248,29 +245,41 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }
                               },
                               style: TextButton.styleFrom(
-                                backgroundColor: _activeButtonIndex == 0
-                                    ? const Color.fromARGB(255, 81, 223, 121)
-                                        // ignore: deprecated_member_use
-                                        .withOpacity(
-                                            0.29) // Active color (green)
-                                    : null, // No background for inactive button
-                                foregroundColor: _activeButtonIndex == 0
-                                    ? Colors
-                                        .blueGrey // Active text color (white)
-                                    : Colors
-                                        .black, // Inactive text color (black)
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 5), // Add vertical padding
+                                backgroundColor: _childButtonIndex == 0
+                                    ? const Color(0xFF51DF79)
+                                        .withOpacity(0.6) // Green for Upcoming
+                                    : Colors.transparent,
+                                foregroundColor: _childButtonIndex == 0
+                                    ? Colors.white
+                                    : Colors.black,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                side: BorderSide(
+                                  color: _childButtonIndex == 0
+                                      ? const Color.fromARGB(255, 81, 223, 121)
+                                      : Colors.transparent,
+                                  width: 1, // Border width
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      30), // Optional: Rounded corners
+                                ),
                               ),
                               child: Text('Upcoming',
                                   style:
                                       Theme.of(context).textTheme.titleSmall),
                             ),
                           ),
+
                           // Overdue Button
                           Expanded(
                             child: TextButton(
                               onPressed: () {
+                                setState(() {
+                                  _childButtonIndex =
+                                      1; // Set Overdue as active
+                                });
+
                                 if (_activeButtonIndex == 0) {
                                   followUps(1);
                                 } else if (_activeButtonIndex == 1) {
@@ -280,20 +289,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }
                               },
                               style: TextButton.styleFrom(
-                                backgroundColor: _activeButtonIndex == 2
-                                    ? const Color.fromRGBO(238, 59, 59, 1)
-                                        // ignore: deprecated_member_use
-                                        .withOpacity(
-                                            .29) // Active color (green)
-                                    : Colors
-                                        .transparent, // No background for inactive button
-                                foregroundColor: _activeButtonIndex == 2
-                                    ? Colors
-                                        .blueGrey // Active text color (white)
-                                    : Colors
-                                        .black, // Inactive text color (black)
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 5), // Add vertical padding
+                                backgroundColor: _childButtonIndex == 1
+                                    ? const Color(0xFFEE3B3B)
+                                        .withOpacity(0.6) // Red for Overdue
+                                    : Colors.transparent,
+                                foregroundColor: _childButtonIndex == 1
+                                    ? Colors.white
+                                    : Colors.black,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                side: BorderSide(
+                                  color: _childButtonIndex == 1
+                                      ? Color.fromRGBO(236, 81, 81, 1)
+                                          .withOpacity(0.59)
+                                      : Colors.transparent,
+                                  width: 1, // Border width
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      30), // Optional: Rounded corners
+                                ),
                               ),
                               child: Text('Overdue',
                                   style:
@@ -348,16 +363,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SizedBox(
                     height: 40,
                     width: double.infinity,
-                    child: SingleChildScrollView(
-                      scrollDirection:
-                          Axis.horizontal, // Enable horizontal scrolling
-                      child: Row(
-                        children: [
-                          // Follow Ups Button
-                          TextButton(
+                    child: Row(
+                      children: [
+                        // Follow Ups Button
+                        Expanded(
+                          child: TextButton(
                             onPressed: () {
                               setState(() {
-                                _leadButton = 0; // Set Follow Ups as active
+                                _leadButton = 0;
                                 _selectedBtnIndex = 0;
                               });
                             },
@@ -366,25 +379,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               backgroundColor: _leadButton == 0
-                                  ? const Color(
-                                      0xFF1380FE) // Active color (blue)
-                                  : Colors
-                                      .transparent, // No background for inactive buttons
+                                  ? const Color(0xFF1380FE)
+                                  : Colors.transparent,
                               foregroundColor: _leadButton == 0
-                                  ? Colors.white // Active text color (white)
-                                  : Colors.black, // Inactive text color (black)
-                              minimumSize: const Size(121, 50),
-                              textStyle: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.normal),
+                                  ? Colors.white
+                                  : Colors.black,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              textStyle: const TextStyle(fontSize: 14),
                             ),
-                            child: const Text('Leads'),
+                            child: const Text('Leads',
+                                textAlign: TextAlign.center),
                           ),
+                        ),
 
-                          // Appointments Button
-                          TextButton(
+                        // Appointments Button
+                        Expanded(
+                          child: TextButton(
                             onPressed: () {
                               setState(() {
-                                _leadButton = 1; // Set Appointments as active
+                                _leadButton = 1;
                                 _selectedBtnIndex = 2;
                               });
                             },
@@ -393,24 +406,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               backgroundColor: _leadButton == 1
-                                  ? const Color(
-                                      0xFF1380FE) // Active color (blue)
-                                  : Colors
-                                      .transparent, // No background for inactive buttons
+                                  ? const Color(0xFF1380FE)
+                                  : Colors.transparent,
                               foregroundColor: _leadButton == 1
-                                  ? Colors.white // Active text color (white)
-                                  : Colors.black, // Inactive text color (black)
-                              minimumSize: const Size(121, 50),
-                              textStyle: const TextStyle(fontSize: 16),
+                                  ? Colors.white
+                                  : Colors.black,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              textStyle: const TextStyle(fontSize: 14),
                             ),
-                            child: const Text('Test Drive'),
+                            child: const Text('Test Drive',
+                                textAlign: TextAlign.center),
                           ),
+                        ),
 
-                          // Test Drive Button
-                          TextButton(
+                        // Test Drive Button
+                        Expanded(
+                          child: TextButton(
                             onPressed: () {
                               setState(() {
-                                _leadButton = 2; // Set Test Drive as active
+                                _leadButton = 2;
                                 _selectedBtnIndex = 1;
                               });
                             },
@@ -419,20 +433,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               backgroundColor: _leadButton == 2
-                                  ? const Color(
-                                      0xFF1380FE) // Active color (blue)
-                                  : Colors
-                                      .transparent, // No background for inactive buttons
+                                  ? const Color(0xFF1380FE)
+                                  : Colors.transparent,
                               foregroundColor: _leadButton == 2
-                                  ? Colors.white // Active text color (white)
-                                  : Colors.black, // Inactive text color (black)
-                              minimumSize: const Size(121, 50),
-                              textStyle: const TextStyle(fontSize: 16),
+                                  ? Colors.white
+                                  : Colors.black,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              textStyle: const TextStyle(fontSize: 14),
                             ),
-                            child: const Text('Orders'),
+                            child: const Text('Orders',
+                                textAlign: TextAlign.center),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

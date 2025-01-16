@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:smart_assist/pages/test_drive.dart/verify_otp.dart';
 
 class TestUpcoming extends StatelessWidget {
   const TestUpcoming({super.key});
@@ -23,7 +24,7 @@ class TestUpcoming extends StatelessWidget {
             backgroundColor: Colors.green,
             label: 'Start',
             onPressed: (context) {
-              // Define action for WhatsApp icon
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>  VerifyOtp()));
               print('WhatsApp action pressed');
             },
           ),

@@ -41,6 +41,7 @@ dependencies:
   intl: ^0.20.1
   flutter_slidable: ^3.1.2
   font_awesome_flutter: ^10.8.0
+  timeline_tile: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +97,11 @@ flutter:
     - assets/mail.png
     - assets/redirect_msg.png
     - assets/call.png
+    - assets/caricon.png
+    - assets/time.png
+    - assets/calandericon.png
+    - assets/companybag.png
+    - assets/whatsappicon.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
