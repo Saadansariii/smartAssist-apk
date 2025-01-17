@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/test_drive.dart/finish_drive.dart';
 import 'package:smart_assist/widgets/details/timeline.dart';
+import 'package:smart_assist/widgets/details/timelinetext.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 
 class TestDriveDetails extends StatefulWidget {
   const TestDriveDetails({super.key});
@@ -40,7 +42,7 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    // final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 239, 235, 235),
@@ -108,6 +110,30 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                 ),
               ),
               const SizedBox(height: 30),
+              Column(
+                children: [
+                  // Text('10:15\nAm'),
+                  Timeline(
+                    isFirst: true,
+                    isLast: false,
+                    icon: Icons.mail,
+                    startChild: Text(
+                      '10:15 \nAm',
+                      style: TextStyle(fontSize: 16, color: Colors.blue),
+                    ),
+                  ),
+                  // Text('10:15 \nAm'),
+                  Timeline(
+                    isFirst: false,
+                    isLast: true,
+                    icon: Icons.phone,
+                    startChild: Text(
+                      '10:15 \nAm',
+                      style: TextStyle(fontSize: 16, color: Colors.blue),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

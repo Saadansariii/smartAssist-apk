@@ -17,135 +17,152 @@ class Leads extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               color: Color(0xFF1380FE),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
+              // border: Border.all(color: Colors.redAccent),
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.circular(11),
+                right: Radius.circular(11),
               ),
             ),
-            padding: EdgeInsets.only(left: screenWidth * 0.03),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                children: [
-                  // First Row
-                  SizedBox(
-                    height: 200,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: EdgeInsets.only(left: 9),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    // border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.all(Radius.circular(14)),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        // border: Border.all(color: Colors.yellow),
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.horizontal(left: Radius.circular(10))),
+                    child: Column(
                       children: [
-                        _buildInfoCard(
-                          context,
-                          'Almost there, you need\n 5 more leads\n to achieve\n your goal',
-                          '5',
-                          screenWidth,
+                        // First Row
+                        SizedBox(
+                          height: 126,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _buildInfoCard(
+                                context,
+                                'Almost there, you need\n 5  ',
+                                '5',
+                                screenWidth,
+                              ),
+                              _buildInfoCard(
+                                context,
+                                'Congratulations you \nhave  .',
+                                '80%',
+                                screenWidth,
+                                rightPadding: 15,
+                              ),
+                            ],
+                          ),
                         ),
-                        _buildInfoCard(
-                          context,
-                          'Congratulations you \nhave completed leads everyday for 32 days straight.',
-                          '80%',
-                          screenWidth,
-                          rightPadding: screenWidth * 0.04,
+                        // Second Row
+                        SizedBox(
+                          height: 126,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _buildInfoCard(
+                                context,
+                                'Total Leads',
+                                '3',
+                                screenWidth,
+                                bottomPadding: screenHeight * 0.015,
+                              ),
+                              _buildInfoCard(
+                                context,
+                                'Great you are doing!\nbetter  ',
+                                '87%',
+                                screenWidth,
+                                rightPadding: 15,
+                                bottomPadding: screenHeight * 0.015,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  // Second Row
-                  SizedBox(
-                    height: 200,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildInfoCard(
-                          context,
-                          'Total Leads',
-                          '3',
-                          screenWidth,
-                          bottomPadding: screenHeight * 0.015,
-                        ),
-                        _buildInfoCard(
-                          context,
-                          'Great you are doing!\nbetter than 87% of salespeople.',
-                          '87%',
-                          screenWidth,
-                          rightPadding: screenWidth * 0.04,
-                          bottomPadding: screenHeight * 0.015,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // Bottom Container (Scheduled Goals)
-          Padding(
-            padding: EdgeInsets.only(right: screenWidth * 0.04),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFF1380FE),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
                 ),
-              ),
-              padding: EdgeInsets.all(screenWidth * 0.03),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Scheduled \nGoals',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenWidth * 0.06,
-                            ),
-                          ),
-                          SizedBox(height: screenHeight * 0.01),
-                          Text(
-                            'Follow up 10 clients to hit your \ngoals.',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                              fontSize: screenWidth * 0.035,
-                            ),
-                          ),
-                        ],
+                Container(
+                  padding: EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFF1380FE),
+                      // color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
                       ),
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Image(
-                            image: const AssetImage('assets/circle-main.jpg'),
-                            height: screenWidth * 0.25,
-                            width: screenWidth * 0.25,
-                            color: const Color(0xFF1380FE),
-                            colorBlendMode: BlendMode.multiply,
-                          ),
-                          Text(
-                            '65%',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenWidth * 0.06,
+                    ),
+                    padding: EdgeInsets.all(screenWidth * 0.03),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Scheduled \nGoals',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: screenWidth * 0.06,
+                                  ),
+                                ),
+                                SizedBox(height: screenHeight * 0.01),
+                                Text(
+                                  'Follow up 10 clients to hit your \ngoals.',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: screenWidth * 0.035,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Image(
+                                  image: const AssetImage(
+                                      'assets/circle-main.jpg'),
+                                  height: screenWidth * 0.25,
+                                  width: screenWidth * 0.25,
+                                  color: const Color(0xFF1380FE),
+                                  colorBlendMode: BlendMode.multiply,
+                                ),
+                                Text(
+                                  '65%',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: screenWidth * 0.06,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
+    // Bottom Container (Scheduled Goals)
   }
 
   Widget _buildInfoCard(
@@ -169,7 +186,7 @@ class Leads extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: screenWidth * 0.035,
+                  fontSize: 10,
                   fontWeight: FontWeight.w500,
                 ),
               ),

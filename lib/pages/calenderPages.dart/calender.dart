@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smart_assist/pages/calenderPages.dart/addTask.dart';
 import 'package:smart_assist/pages/home_screen.dart';
 import 'package:smart_assist/widgets/calender/appointment.dart';
@@ -67,7 +68,7 @@ class _CalenderState extends State<Calender> {
                     });
                   },
                   icon: const Icon(
-                    Icons.calendar_today,
+                    FontAwesomeIcons.calendar,
                     color: Colors.white,
                   ),
                 ),
@@ -104,9 +105,9 @@ class _CalenderState extends State<Calender> {
               CalenderWidget(calendarFormat: _calendarFormat),
               // CalenderWidget(),
               const SizedBox(
-                  height: 10,
-                  ),
-        
+                height: 10,
+              ),
+
               AppointmentWidget(),
               SizedBox(height: 10), // Space between report and events
               EventWidget(),

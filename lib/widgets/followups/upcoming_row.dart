@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smart_assist/pages/details_pages/followups.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomRow extends StatelessWidget {
   const CustomRow({super.key});
@@ -61,7 +62,12 @@ class CustomRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset('assets/star.png'),
+                // Image.asset('assets/star.png'),
+                Icon(
+                  FontAwesomeIcons.star,
+                  color: Colors.amberAccent,
+                  size: 30,
+                ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -79,7 +85,12 @@ class CustomRow extends StatelessWidget {
                         //   Icons.phone,
                         //   color: Colors.grey,
                         // ),
-                        Image.asset('assets/phone.png'),
+                        // Image.asset('assets/phone.png'),
+                        Icon(
+                          FontAwesomeIcons.phoneVolume,
+                          color: Colors.blue,
+                          size: 14,
+                        ),
                         const Padding(padding: EdgeInsets.only(right: 5)),
                         const Text('Today 3pm',
                             style: TextStyle(

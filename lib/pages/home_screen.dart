@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // Horizontal Scrollable Button Row
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                 child: Container(
                   decoration: BoxDecoration(
                     color: const Color(0xFFE1EFFF),

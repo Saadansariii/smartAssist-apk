@@ -26,7 +26,7 @@ class TestOverdue extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: ClipRect(
-                      child: Image.asset('assets/Star.png'),
+                      child: Image.asset('assets/star.png'),
                     ),
                   ),
                   Column(

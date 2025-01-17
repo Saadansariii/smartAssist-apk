@@ -58,7 +58,7 @@ class OppUpcoming extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset('assets/Star.png'),
+                Image.asset('assets/star.png'),
                 const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
