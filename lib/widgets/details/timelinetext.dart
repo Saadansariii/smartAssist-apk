@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 
-class Timelinetext extends StatelessWidget {
-  const Timelinetext({super.key});
+class AfterTimelinetext extends StatelessWidget {
+  const AfterTimelinetext({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [Text('hiii')],
+    return Container(
+      width: 200,
+      decoration: BoxDecoration(
+        color: Colors.grey,
+      ),
+      child: Row(
+        children: [
+          Column(
+            children: [Text(' ')],
+          )
+        ],
+      ),
     );
   }
 }
