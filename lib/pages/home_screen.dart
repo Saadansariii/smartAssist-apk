@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/Add_followups.dart';
 import 'package:smart_assist/pages/calenderPages.dart/calender.dart';
 import 'package:smart_assist/pages/opportunity.dart';
@@ -74,12 +75,12 @@ class _HomeScreenState extends State<HomeScreen> {
               // Search Field
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 child: Row(
                   children: [
                     Expanded(
                       child: SizedBox(
-                        height: 50,
+                        height: 45,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 1, vertical: 5),
@@ -94,8 +95,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   const EdgeInsets.fromLTRB(1, 4, 0, 4),
                               border: InputBorder.none,
                               hintText: 'Search',
-                              hintStyle: const TextStyle(
-                                  color: Colors.grey,
+                              hintStyle: GoogleFonts.montserrat(
+                                  fontSize: 16,
+                                  color: Color(0xff767676),
                                   fontWeight: FontWeight.w400),
                               prefixIcon:
                                   const Icon(Icons.menu, color: Colors.grey),
@@ -146,8 +148,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               textStyle: const TextStyle(fontSize: 14),
                             ),
-                            child: const Text('FollowUps (6)',
-                                textAlign: TextAlign.center),
+                            child: Text(
+                              'FollowUps(6)',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12, fontWeight: FontWeight.w400),
+                            ),
                           ),
                         ),
 
@@ -173,8 +178,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               textStyle: const TextStyle(fontSize: 14),
                             ),
-                            child: const Text('Appointments (5)',
-                                textAlign: TextAlign.center),
+                            child: Text('Appointments(5)',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 12, fontWeight: FontWeight.w400)),
                           ),
                         ),
 
@@ -200,8 +206,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               textStyle: const TextStyle(fontSize: 14),
                             ),
-                            child: const Text('Test Drive (5)',
-                                textAlign: TextAlign.center),
+                            child: Text('Test Drive(5)',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 12, fontWeight: FontWeight.w400)),
                           ),
                         ),
                       ],
@@ -215,9 +222,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 15, 5, 10),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                     child: Container(
-                      width: 200, // Set width of the container
+                      width: 150, // Set width of the container
                       height: 30,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -230,45 +237,50 @@ class _HomeScreenState extends State<HomeScreen> {
                           // Upcoming Button
                           Expanded(
                             child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _childButtonIndex =
-                                      0; // Set Upcoming as active
-                                });
+                                onPressed: () {
+                                  setState(() {
+                                    _childButtonIndex =
+                                        0; // Set Upcoming as active
+                                  });
 
-                                if (_activeButtonIndex == 0) {
-                                  followUps(0);
-                                } else if (_activeButtonIndex == 1) {
-                                  oppointment(0);
-                                } else if (_activeButtonIndex == 2) {
-                                  testDrive(0);
-                                }
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: _childButtonIndex == 0
-                                    ? const Color(0xFF51DF79)
-                                        .withOpacity(0.6) // Green for Upcoming
-                                    : Colors.transparent,
-                                foregroundColor: _childButtonIndex == 0
-                                    ? Colors.white
-                                    : Colors.black,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                side: BorderSide(
-                                  color: _childButtonIndex == 0
-                                      ? const Color.fromARGB(255, 81, 223, 121)
+                                  if (_activeButtonIndex == 0) {
+                                    followUps(0);
+                                  } else if (_activeButtonIndex == 1) {
+                                    oppointment(0);
+                                  } else if (_activeButtonIndex == 2) {
+                                    testDrive(0);
+                                  }
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: _childButtonIndex == 0
+                                      ? const Color(0xFF51DF79).withOpacity(
+                                          0.6) // Green for Upcoming
                                       : Colors.transparent,
-                                  width: 1, // Border width
+                                  foregroundColor: _childButtonIndex == 0
+                                      ? Colors.white
+                                      : Colors.black,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  side: BorderSide(
+                                    color: _childButtonIndex == 0
+                                        ? const Color.fromARGB(
+                                            255, 81, 223, 121)
+                                        : Colors.transparent,
+                                    width: 1, // Border width
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        30), // Optional: Rounded corners
+                                  ),
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      30), // Optional: Rounded corners
-                                ),
-                              ),
-                              child: Text('Upcoming',
-                                  style:
-                                      Theme.of(context).textTheme.titleSmall),
-                            ),
+                                child: Text(
+                                  'Upcoming',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color.fromARGB(
+                                          255, 121, 119, 119)),
+                                )),
                           ),
 
                           // Overdue Button
@@ -311,8 +323,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               child: Text('Overdue',
-                                  style:
-                                      Theme.of(context).textTheme.titleSmall),
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color.fromARGB(
+                                          255, 121, 119, 119))),
                             ),
                           ),
                         ],
@@ -328,9 +343,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // this is onclick fn for upcoming and overdue.
               currentWidget,
-              SizedBox(height: 5),
+
+              SizedBox(height: 10),
               currentWidget,
-              SizedBox(height: 5),
+              SizedBox(height: 10),
               currentWidget,
 
               // SizedBox(height: 10),

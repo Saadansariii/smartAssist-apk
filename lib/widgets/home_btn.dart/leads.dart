@@ -49,7 +49,7 @@ class Leads extends StatelessWidget {
                               _buildInfoCard(
                                 context,
                                 'Almost there, you need\n 5  ',
-                                '5',
+                                '6',
                                 screenWidth,
                               ),
                               _buildInfoCard(

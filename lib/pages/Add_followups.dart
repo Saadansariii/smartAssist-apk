@@ -100,7 +100,7 @@ class _AddFollowupsState extends State<AddFollowups> {
                     ),
                     Container(
                       width: 250, // Set width of the container
-                      height: 35,
+                      height: 30,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: const Color(0xFF767676),

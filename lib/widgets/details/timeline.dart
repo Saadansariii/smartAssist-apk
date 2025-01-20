@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/widgets/details/timelinetext.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class Timeline extends StatelessWidget {
@@ -10,6 +9,7 @@ class Timeline extends StatelessWidget {
   final Widget endChild;
   final bool showIndicator;
   final bool showBeforeLine;
+  // final bool showBefire
 
   const Timeline(
       {super.key,
@@ -26,7 +26,6 @@ class Timeline extends StatelessWidget {
     return TimelineTile(
       alignment: TimelineAlign.manual,
       lineXY: 0.19,
-      startChild: startChild,
       isFirst: isFirst,
       isLast: isLast,
       beforeLineStyle: LineStyle(
@@ -34,26 +33,23 @@ class Timeline extends StatelessWidget {
       ),
       indicatorStyle: showIndicator
           ? IndicatorStyle(
-              width: 40,
+              width: 25,
+              height: 25,
               color: Colors.blue,
               iconStyle: icon != null
                   ? IconStyle(
-                      iconData: icon!,
-                      color: Colors.white,
-                    )
+                      iconData: icon!, color: Colors.white, fontSize: 20)
                   : null,
             )
           : const IndicatorStyle(
               width: 0,
               color: Colors.transparent,
             ),
-      endChild: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Container(
-          color: Colors.white,
-          child: endChild,
-        ),
+      startChild: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [startChild],
       ),
+      endChild: endChild,
     );
   }
 }

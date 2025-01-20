@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/details_pages/followups.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -68,31 +69,34 @@ class CustomRow extends StatelessWidget {
                   color: Colors.amberAccent,
                   size: 30,
                 ),
-                Column(
+                const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Beth Ford',
+                    Text(
+                      'Beth Fords',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                           color: Color.fromARGB(255, 139, 138, 138)),
                     ),
-                    const Padding(padding: EdgeInsets.only(bottom: 5)),
+                    Divider(
+                      color: Colors.amberAccent,
+                      thickness: 1,
+                      endIndent: 10,
+                    ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Icon(
-                        //   Icons.phone,
-                        //   color: Colors.grey,
-                        // ),
-                        // Image.asset('assets/phone.png'),
                         Icon(
                           FontAwesomeIcons.phoneVolume,
                           color: Colors.blue,
                           size: 14,
                         ),
-                        const Padding(padding: EdgeInsets.only(right: 5)),
-                        const Text('Today 3pm',
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Today 3pm',
                             style: TextStyle(
                                 fontWeight: FontWeight.normal,
                                 fontSize: 12,
@@ -101,29 +105,25 @@ class CustomRow extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Discovery Sport',
-                      style: TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w500),
-                    ),
-                    Padding(padding: EdgeInsets.only(bottom: 5)),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_month_outlined,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          'Tomorrow',
-                          style: TextStyle(
-                              color: Colors.grey, fontWeight: FontWeight.w400),
-                        )
-                      ],
-                    ),
-                  ],
+                Divider(
+                  thickness: 1,
+                  color: Colors.black,
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Discovery Sport',
+                        style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey),
+                      ),
+                    ],
+                  ),
                 ),
                 Row(
                   children: [
