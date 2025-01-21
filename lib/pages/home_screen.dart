@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/Add_followups.dart';
 import 'package:smart_assist/pages/calenderPages.dart/calender.dart';
+import 'package:smart_assist/pages/navbar_page/favorite.dart';
 import 'package:smart_assist/pages/opportunity.dart';
-import 'package:smart_assist/widgets/followups/overdue_followup.dart';
-import 'package:smart_assist/widgets/followups/upcoming_row.dart';
-import 'package:smart_assist/widgets/home_btn.dart/leads.dart';
-import 'package:smart_assist/widgets/home_btn.dart/order.dart';
-import 'package:smart_assist/widgets/home_btn.dart/test_drive.dart';
-import 'package:smart_assist/widgets/oppointment/overdue.dart';
-import 'package:smart_assist/widgets/oppointment/upcoming.dart';
-import 'package:smart_assist/widgets/testdrive/overdue.dart';
-import 'package:smart_assist/widgets/testdrive/upcoming.dart';
+import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
+import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,43 +16,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Widget currentWidget = const CustomRow();
-  // Widget currentBtn = const SizedBox();
-  // int _activeButtonIndex = 0;
-  // int _upcommingButtonIndex = 0;
-  // final _upcommingBtnFollowups = 0;
-  // final _upcommingBtnAppointments = 0;
-  // final _upcommingBtnTestdrive = 0;
-  int _selectedBtnIndex = 0;
-
-  // Widgets for FollowUp, TestDrive, and Appointments
-  Widget currentWidget = const CustomRow();
-  int _activeButtonIndex = 0;
-  int _childButtonIndex = 0;
-
-// Separate indices for each section's upcoming/overdue toggle
-  int _upcomingBtnFollowups = 0;
-  int _upcomingBtnAppointments = 0;
-  int _upcomingBtnTestdrive = 0;
-
-  final List<Widget> _widgets = [
-    const Leads(),
-    const Order(),
-    const TestDrive(),
-  ];
-
-  int _leadButton = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF1380FE),
-        title: const Text(
-          'Good morning Richard !',
-          style: TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w400, color: Colors.white),
+        title: Text(
+          'Good morning Richard!',
+          style: GoogleFonts.poppins(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
         ),
         actions: [
           IconButton(
@@ -87,8 +57,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: TextField(
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide.none),
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide.none,
+                              ),
                               filled: true,
                               fillColor: const Color(0xFFE1EFFF),
                               contentPadding:
@@ -96,11 +71,111 @@ class _HomeScreenState extends State<HomeScreen> {
                               border: InputBorder.none,
                               hintText: 'Search',
                               hintStyle: GoogleFonts.montserrat(
-                                  fontSize: 16,
-                                  color: Color(0xff767676),
-                                  fontWeight: FontWeight.w400),
-                              prefixIcon:
-                                  const Icon(Icons.menu, color: Colors.grey),
+                                fontSize: 16,
+                                color: Color(0xff767676),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              prefixIcon: GestureDetector(
+                                onTap: () {
+                                  // Show the bottom drawer
+                                  showModalBottomSheet(
+                                    context: context,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20),
+                                      ),
+                                    ),
+                                    builder: (context) {
+                                      return Container(
+                                        padding: const EdgeInsets.all(16),
+                                        height: 270, // Adjust height as needed
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            ListTile(
+                                              leading: Icon(
+                                                Icons.person_outline,
+                                                size: 28,
+                                              ),
+                                              title: Text(
+                                                'Profile',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                // Add your navigation logic
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: Icon(
+                                                Icons.star_border_outlined,
+                                                size: 28,
+                                              ),
+                                              title: Text(
+                                                'Favorites',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        FavoritePage(),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: Icon(
+                                                Icons.settings_outlined,
+                                                size: 28,
+                                              ),
+                                              title: Text(
+                                                'App Settings',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                // Add your navigation logic
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: Icon(
+                                                Icons.logout_outlined,
+                                                size: 28,
+                                              ),
+                                              title: Text(
+                                                'Logout',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              onTap: () { 
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.menu,
+                                  color: Colors.grey,
+                                ),
+                              ),
                               suffixIcon:
                                   const Icon(Icons.mic, color: Colors.grey),
                             ),
@@ -111,363 +186,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-
-              // Horizontal Scrollable Button Row
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE1EFFF),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: SizedBox(
-                    height: 37,
-                    width: double.infinity,
-                    child: Row(
-                      children: [
-                        // Follow Ups Button
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _activeButtonIndex = 0;
-                              });
-                              followUps(_upcomingBtnFollowups);
-                            },
-                            style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              backgroundColor: _activeButtonIndex == 0
-                                  ? const Color(0xFF1380FE)
-                                  : Colors.transparent,
-                              foregroundColor: _activeButtonIndex == 0
-                                  ? Colors.white
-                                  : Colors.black,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              textStyle: const TextStyle(fontSize: 14),
-                            ),
-                            child: Text(
-                              'FollowUps(6)',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 12, fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ),
-
-                        // Appointments Button
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _activeButtonIndex = 1;
-                              });
-                              oppointment(_upcomingBtnAppointments);
-                            },
-                            style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              backgroundColor: _activeButtonIndex == 1
-                                  ? const Color(0xFF1380FE)
-                                  : Colors.transparent,
-                              foregroundColor: _activeButtonIndex == 1
-                                  ? Colors.white
-                                  : Colors.black,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              textStyle: const TextStyle(fontSize: 14),
-                            ),
-                            child: Text('Appointments(5)',
-                                style: GoogleFonts.poppins(
-                                    fontSize: 12, fontWeight: FontWeight.w400)),
-                          ),
-                        ),
-
-                        // Test Drive Button
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _activeButtonIndex = 2;
-                              });
-                              testDrive(_upcomingBtnTestdrive);
-                            },
-                            style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              backgroundColor: _activeButtonIndex == 2
-                                  ? const Color(0xFF1380FE)
-                                  : Colors.transparent,
-                              foregroundColor: _activeButtonIndex == 2
-                                  ? Colors.white
-                                  : Colors.black,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              textStyle: const TextStyle(fontSize: 14),
-                            ),
-                            child: Text('Test Drive(5)',
-                                style: GoogleFonts.poppins(
-                                    fontSize: 12, fontWeight: FontWeight.w400)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              // Upcoming and Overdue Buttons in a container with border
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                    child: Container(
-                      width: 150, // Set width of the container
-                      height: 30,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: const Color(0xFF767676),
-                            width: .5), // Border around the container
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        children: [
-                          // Upcoming Button
-                          Expanded(
-                            child: TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _childButtonIndex =
-                                        0; // Set Upcoming as active
-                                  });
-
-                                  if (_activeButtonIndex == 0) {
-                                    followUps(0);
-                                  } else if (_activeButtonIndex == 1) {
-                                    oppointment(0);
-                                  } else if (_activeButtonIndex == 2) {
-                                    testDrive(0);
-                                  }
-                                },
-                                style: TextButton.styleFrom(
-                                  backgroundColor: _childButtonIndex == 0
-                                      ? const Color(0xFF51DF79).withOpacity(
-                                          0.6) // Green for Upcoming
-                                      : Colors.transparent,
-                                  foregroundColor: _childButtonIndex == 0
-                                      ? Colors.white
-                                      : Colors.black,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  side: BorderSide(
-                                    color: _childButtonIndex == 0
-                                        ? const Color.fromARGB(
-                                            255, 81, 223, 121)
-                                        : Colors.transparent,
-                                    width: 1, // Border width
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        30), // Optional: Rounded corners
-                                  ),
-                                ),
-                                child: Text(
-                                  'Upcoming',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400,
-                                      color: const Color.fromARGB(
-                                          255, 121, 119, 119)),
-                                )),
-                          ),
-
-                          // Overdue Button
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _childButtonIndex =
-                                      1; // Set Overdue as active
-                                });
-
-                                if (_activeButtonIndex == 0) {
-                                  followUps(1);
-                                } else if (_activeButtonIndex == 1) {
-                                  oppointment(1);
-                                } else if (_activeButtonIndex == 2) {
-                                  testDrive(1);
-                                }
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: _childButtonIndex == 1
-                                    ? const Color(0xFFEE3B3B)
-                                        .withOpacity(0.6) // Red for Overdue
-                                    : Colors.transparent,
-                                foregroundColor: _childButtonIndex == 1
-                                    ? Colors.white
-                                    : Colors.black,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                side: BorderSide(
-                                  color: _childButtonIndex == 1
-                                      ? Color.fromRGBO(236, 81, 81, 1)
-                                          .withOpacity(0.59)
-                                      : Colors.transparent,
-                                  width: 1, // Border width
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      30), // Optional: Rounded corners
-                                ),
-                              ),
-                              child: Text('Overdue',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400,
-                                      color: const Color.fromARGB(
-                                          255, 121, 119, 119))),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                    child: Icon(Icons.add, size: 30),
-                  ),
-                ],
-              ),
-
-              // this is onclick fn for upcoming and overdue.
-              currentWidget,
-
-              SizedBox(height: 10),
-              currentWidget,
-              SizedBox(height: 10),
-              currentWidget,
-
-              // SizedBox(height: 10),
-              // leads test drive button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AddFollowups()));
-                    },
-                    child: const Icon(
-                      Icons.keyboard_arrow_down_outlined,
-                      size: 36,
-                    ),
-                  )
-                ],
-              ),
-              // SizedBox(height: 2),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE1EFFF),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: SizedBox(
-                    height: 40,
-                    width: double.infinity,
-                    child: Row(
-                      children: [
-                        // Follow Ups Button
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _leadButton = 0;
-                                _selectedBtnIndex = 0;
-                              });
-                            },
-                            style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              backgroundColor: _leadButton == 0
-                                  ? const Color(0xFF1380FE)
-                                  : Colors.transparent,
-                              foregroundColor: _leadButton == 0
-                                  ? Colors.white
-                                  : Colors.black,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              textStyle: const TextStyle(fontSize: 14),
-                            ),
-                            child: const Text('Leads',
-                                textAlign: TextAlign.center),
-                          ),
-                        ),
-
-                        // Appointments Button
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _leadButton = 1;
-                                _selectedBtnIndex = 2;
-                              });
-                            },
-                            style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              backgroundColor: _leadButton == 1
-                                  ? const Color(0xFF1380FE)
-                                  : Colors.transparent,
-                              foregroundColor: _leadButton == 1
-                                  ? Colors.white
-                                  : Colors.black,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              textStyle: const TextStyle(fontSize: 14),
-                            ),
-                            child: const Text('Test Drive',
-                                textAlign: TextAlign.center),
-                          ),
-                        ),
-
-                        // Test Drive Button
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _leadButton = 2;
-                                _selectedBtnIndex = 1;
-                              });
-                            },
-                            style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              backgroundColor: _leadButton == 2
-                                  ? const Color(0xFF1380FE)
-                                  : Colors.transparent,
-                              foregroundColor: _leadButton == 2
-                                  ? Colors.white
-                                  : Colors.black,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              textStyle: const TextStyle(fontSize: 14),
-                            ),
-                            child: const Text('Orders',
-                                textAlign: TextAlign.center),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              _widgets[_selectedBtnIndex],
+              const Threebtn(),
+              const BottomBtnSecond(),
             ],
           ),
         ),
@@ -478,21 +198,39 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            const Column(
-              mainAxisSize: MainAxisSize
-                  .min, // Ensures the column doesn’t expand unnecessarily
+            Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.search,
-                  color: Colors.blue,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
+                    );
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.magnifyingGlass,
+                        color: Colors.blue,
+                      ),
+                      Text(
+                        'Leads',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                // Image.asset('assets/Leadss.png', height: 25, width: 30),
-                Text('Leads', style: TextStyle(color: Colors.blue)),
               ],
             ),
             Column(
-              mainAxisSize: MainAxisSize
-                  .min, // Ensures the column doesn’t expand unnecessarily
+              mainAxisSize: MainAxisSize.min,
               children: [
                 GestureDetector(
                   onTap: () {
@@ -502,20 +240,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           builder: (context) => const Opportunity()),
                     );
                   },
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.local_fire_department_sharp),
-                      // Image.asset('assets/Opportunity.png', height: 25, width: 30),
-                      Text('Opportunity'),
+                      Icon(FontAwesomeIcons.fireFlameCurved),
+                      Text(
+                        'Opportunity',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
             Column(
-              mainAxisSize: MainAxisSize
-                  .min, // Ensures the column doesn’t expand unnecessarily
+              mainAxisSize: MainAxisSize.min,
               children: [
                 GestureDetector(
                   onTap: () {
@@ -524,55 +266,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(builder: (context) => const Calender()),
                     );
                   },
-                  child: const Column(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.calendar_month_outlined),
-                      Text('Calendar'),
+                      Icon(FontAwesomeIcons.calendarDays),
+                      Text(
+                        'Calendar',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                // Image.asset('assets/calender.png', height: 25, width: 30),
               ],
             ),
           ],
         ),
       ),
     );
-  }
-
-  // Follow-ups toggle logic
-  void followUps(int index) {
-    setState(() {
-      _upcomingBtnFollowups = index;
-      if (index == 0) {
-        currentWidget = const CustomRow(); // Upcoming Follow-ups
-      } else if (index == 1) {
-        currentWidget = const OverdueFollowup(); // Overdue Follow-ups
-      }
-    });
-  }
-
-// Test Drive toggle logic
-  void testDrive(int index) {
-    setState(() {
-      _upcomingBtnTestdrive = index;
-      if (index == 0) {
-        currentWidget = const TestUpcoming(); // Upcoming Test Drive
-      } else if (index == 1) {
-        currentWidget = const TestOverdue(); // Overdue Test Drive
-      }
-    });
-  }
-
-// Appointments toggle logic
-  void oppointment(int index) {
-    setState(() {
-      _upcomingBtnAppointments = index;
-      if (index == 0) {
-        currentWidget = const OppUpcoming(); // Upcoming Appointments
-      } else if (index == 1) {
-        currentWidget = const OppOverdue(); // Overdue Appointments
-      }
-    });
   }
 }

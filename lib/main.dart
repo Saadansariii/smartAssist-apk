@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/details_pages/test_drive_details.dart';
 import 'package:smart_assist/pages/home_screen.dart';
+import 'package:smart_assist/pages/navbar_page/favorite.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // home: TestDriveDetails(),
       home: const HomeScreen(),
+      // home: FavoritePage(),
       theme: ThemeData(
         buttonTheme: const ButtonThemeData(),
         textTheme: const TextTheme(

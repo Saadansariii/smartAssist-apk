@@ -74,7 +74,7 @@ class CustomRow extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Beth Fords',
+                      'Beth Ford',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,

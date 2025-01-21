@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class BottomBtn extends StatefulWidget {
-  const BottomBtn({super.key});
+class BottomBtnOne extends StatefulWidget {
+  const BottomBtnOne({super.key});
 
   @override
-  _BottomBtnState createState() => _BottomBtnState();
+  _BottomBtnOneState createState() => _BottomBtnOneState();
 }
 
-class _BottomBtnState extends State<BottomBtn> {
+class _BottomBtnOneState extends State<BottomBtnOne> {
   int _leadButton = 0; // Initially set to 'Leads'
   int _selectedBtnIndex = 0; // This is to track selected button index
   final List<String> _buttonLabels = ['Leads', 'Test Drive', 'Orders'];
@@ -92,7 +92,8 @@ class _BottomBtnState extends State<BottomBtn> {
     required int index,
     required VoidCallback onPressed,
   }) {
-    double buttonWidth = MediaQuery.of(context).size.width / 4; // Adjust width based on screen size
+    double buttonWidth = MediaQuery.of(context).size.width /
+        4; // Adjust width based on screen size
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
