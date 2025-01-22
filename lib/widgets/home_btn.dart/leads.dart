@@ -13,16 +13,10 @@ class Leads extends StatelessWidget {
       padding: EdgeInsets.only(top: screenHeight * 0.02),
       child: Column(
         children: [
-          // Outer container with rounded corners
           Container(
             decoration: const BoxDecoration(
-              color: Color(0xFF1380FE),
-              // border: Border.all(color: Colors.redAccent),
-              borderRadius: BorderRadius.horizontal(
-                left: Radius.circular(11),
-                right: Radius.circular(11),
-              ),
-            ),
+                color: Color(0xFF1380FE),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(10))),
             padding: EdgeInsets.only(left: 9),
             child: Column(
               children: [
@@ -91,12 +85,14 @@ class Leads extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(right: 10),
-                  decoration: BoxDecoration(color: Colors.white),
+                  padding: EdgeInsets.only(right: 15),
+                  color: Colors.white, // Outer container with white background
                   child: Container(
                     decoration: BoxDecoration(
                       color: Color(0xFF1380FE),
-                      // color: Colors.white,
+                      border: Border.all(
+                          color:
+                              Colors.transparent), // Ensures no visible border
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(10),
                       ),
