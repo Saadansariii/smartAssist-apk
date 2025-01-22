@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/calenderPages.dart/calender.dart';
+import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
+import 'package:smart_assist/pages/navbar_page/logout_page.dart';
 import 'package:smart_assist/pages/opportunity.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
@@ -106,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                // Add your navigation logic
                                                 Navigator.pop(context);
                                               },
                                             ),
@@ -146,7 +147,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               onTap: () {
                                                 // Add your navigation logic
-                                                Navigator.pop(context);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AppSetting()));
                                               },
                                             ),
                                             ListTile(
@@ -161,8 +166,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
-                                              onTap: () { 
-                                                Navigator.pop(context);
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LogoutPage()));
                                               },
                                             ),
                                           ],
