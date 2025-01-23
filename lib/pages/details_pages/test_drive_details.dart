@@ -194,14 +194,34 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                           .transparent, // Transparent to ensure it's not visible
                     ),
                     endChild: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '22 OCT',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.blue,
-                        ),
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '22',
+                            style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue),
+                          ),
+                          Text(
+                            'nd',
+                            style: TextStyle(
+                              fontSize: 14,
+                              height: 0.5,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'OCT',
+                            style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue), // Regular size for 13
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -213,14 +233,15 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                     isFirst: true,
                     isLast: false,
                     beforeLineStyle: LineStyle(
-                      color: Colors.blue, // Line color
+                      color: const Color.fromARGB(
+                          255, 102, 102, 102), // Line color
                       thickness: 2, // Line thickness
                     ),
                     indicatorStyle: IndicatorStyle(
                       padding: EdgeInsets.only(left: 5),
                       width: 30,
                       height: 30,
-                      color: Colors.red, // Indicator color
+                      color: Colors.blue, // Indicator color
                       iconStyle: IconStyle(
                         iconData: Icons.mail,
                         color: Colors.white,
@@ -255,12 +276,29 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              'Emails sent, including content, attachments.',
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey,
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Emails ', // Make "Emails" bold
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight:
+                                          FontWeight.w600, // Bold weight
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        'sent, including content, attachments.', // Keep the rest normal
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight:
+                                          FontWeight.w400, // Normal weight
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -275,7 +313,8 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                     isFirst: false,
                     isLast: true,
                     beforeLineStyle: LineStyle(
-                      color: Colors.blue, // Line color
+                      color: const Color.fromARGB(
+                          255, 102, 102, 102), // Line color
                       thickness: 2, // Line thickness
                     ),
                     indicatorStyle: IndicatorStyle(
@@ -314,12 +353,30 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              'Emails sent, including content, attachments.',
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey,
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        'Updated  the quote over call', // Make "Emails" bold
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight:
+                                          FontWeight.w600, // Bold weight
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        ', including content, attachments, and whether they were opened or clicked.', // Keep the rest normal
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight:
+                                          FontWeight.w400, // Normal weight
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -345,14 +402,34 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                           .transparent, // Transparent to ensure it's not visible
                     ),
                     endChild: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '22 OCT',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.blue,
-                        ),
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '22',
+                            style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue),
+                          ),
+                          Text(
+                            'nd',
+                            style: TextStyle(
+                              fontSize: 14,
+                              height: 0.5,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'OCT',
+                            style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue), // Regular size for 13
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -364,17 +441,18 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                     isFirst: true,
                     isLast: false,
                     beforeLineStyle: const LineStyle(
-                      color: Colors.blue, // Customize line color
-                      thickness: 2, // Line thickness
+                      color: Color.fromARGB(
+                          255, 149, 143, 143), // Customize line color
+                      thickness: 1, // Line thickness
                     ),
                     indicatorStyle: IndicatorStyle(
                         padding: EdgeInsets.only(left: 5),
                         // drawGap: true,
                         width: 30,
                         height: 30,
-                        color: const Color.fromARGB(255, 50, 115, 168),
+                        color: Colors.blue,
                         iconStyle: IconStyle(
-                            iconData: Icons.car_crash, color: Colors.white)),
+                            iconData: Icons.mail, color: Colors.white)),
                     startChild: Container(
                       decoration: BoxDecoration(
                         color: const Color(0xffE7F2FF),
@@ -444,18 +522,20 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                     alignment: TimelineAlign.manual,
                     lineXY: 0.25,
                     isFirst: false,
-                    isLast: true,
+                    isLast: false,
                     beforeLineStyle: const LineStyle(
-                      color: Colors.blue,
-                      thickness: 2,
+                      color: Color.fromARGB(255, 149, 143, 143),
+                      thickness: 1,
                     ),
                     indicatorStyle: IndicatorStyle(
                         padding: EdgeInsets.only(left: 5),
-                        width: 30,
-                        height: 30,
-                        color: const Color.fromARGB(255, 50, 115, 168),
-                        iconStyle: IconStyle(
-                            iconData: Icons.car_crash, color: Colors.white)),
+                        // width: 30,
+                        // height: 30,
+                        color: Colors.transparent
+                        // color: const Color.fromARGB(255, 50, 115, 168),
+                        // iconStyle: IconStyle(
+                        //     iconData: Icons.car_crash, color: Colors.white),
+                        ),
                     startChild: Container(
                       decoration: BoxDecoration(
                         color: const Color(0xffF8F5F2),
@@ -492,14 +572,17 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                                   'October 22, 2024 \nLand Rover Defender 110 (2024).',
                                   style: GoogleFonts.poppins(
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
                                   ),
+                                ),
+                                SizedBox(
+                                  height: 5,
                                 ),
                                 // box
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 5.0),
+                                      horizontal: 0.0),
                                   child: Container(
                                     width: double.infinity,
                                     decoration: BoxDecoration(
@@ -523,12 +606,10 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                                                   Text('from:',
                                                       style:
                                                           GoogleFonts.poppins(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: Colors
-                                                                  .black)),
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      )),
                                                   const SizedBox(height: 3),
                                                   SizedBox(width: 10),
                                                   Text(
@@ -579,7 +660,7 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                                                   ),
                                                   const SizedBox(height: 1),
                                                   const Divider(
-                                                      color: Colors.grey,
+                                                      color: Colors.black,
                                                       thickness: 1),
                                                 ],
                                               ),
@@ -710,72 +791,766 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                                     ),
                                   ),
                                 ),
+                                SizedBox(
+                                  height: 5,
+                                ),
                                 Text(
                                   'Test Drive 2:',
                                   style: GoogleFonts.poppins(
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w600,
                                     color:
                                         const Color.fromARGB(255, 94, 94, 94),
                                   ),
                                 ),
-                                Text(
-                                  'Car Model: [Make,Model,Year]',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color:
-                                        const Color.fromARGB(255, 94, 94, 94),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight
+                                          .w400, // Default weight for the text
+                                      color:
+                                          const Color.fromARGB(255, 94, 94, 94),
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: '• ', // Add the dot with a space
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight
+                                              .bold, // Ensure the dot is bold if needed
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'Car Model: ', // Bold text
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight
+                                              .w600, // Bold weight for "Car Model:"
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            '[Make, Model, Year]', // Regular text
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight
+                                              .w400, // Regular weight for the rest
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  'Dealership Location: [Dealership name and addresss]',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color:
-                                        const Color.fromARGB(255, 94, 94, 94),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: '• ', // Starting dot
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: const Color.fromARGB(
+                                              255, 94, 94, 94),
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            'Dealership Location: ', // Bold part
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight:
+                                              FontWeight.w600, // Bold weight
+                                          color: const Color.fromARGB(
+                                              255, 94, 94, 94),
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            '[Dealership name and addresss]', // Normal part
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color.fromARGB(
+                                              255, 94, 94, 94),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  'feedback:',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color:
-                                        const Color.fromARGB(255, 94, 94, 94),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: '• ', // Starting dot
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color.fromARGB(
+                                              255, 94, 94, 94),
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'feedback:', // Bold text
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight:
+                                              FontWeight.w600, // Bold weight
+                                          color: const Color.fromARGB(
+                                              255, 94, 94, 94),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  'Pros : the customer was highly impressed by the sleek and elegant design of the velar.',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color:
-                                        const Color.fromARGB(255, 94, 94, 94),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: '• ', // Starting dot
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: 'Pros: ', // Bold "Pros"
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight:
+                                                FontWeight.w600, // Bold weight
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              'The customer was highly impressed by the sleek and elegant design of the Velar.', // Normal text
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-
-                                Text(
-                                  'Cons :They expressed concern that the low roofline might compromise headdroom.',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color:
-                                        const Color.fromARGB(255, 94, 94, 94),
+                                const SizedBox(
+                                    height: 2), // Space between Pros and Cons
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: '• ', // Starting dot
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: 'Cons: ', // Bold "Cons"
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight:
+                                                FontWeight.w600, // Bold weight
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              'They expressed concern that the low roofline might compromise headroom.', // Normal text
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-
+                                SizedBox(
+                                  height: 4,
+                                ),
                                 Text(
                                   'Decision:[interested/Not interested/Considering]',
                                   style: GoogleFonts.poppins(
                                     fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  TimelineTile(
+                    alignment: TimelineAlign.manual,
+                    lineXY: 0.25,
+                    isFirst: false,
+                    isLast: false,
+                    beforeLineStyle: const LineStyle(
+                      color: Color.fromARGB(255, 149, 143, 143),
+                      thickness: 1,
+                    ),
+                    indicatorStyle: IndicatorStyle(
+                        padding: EdgeInsets.only(left: 5),
+                        // width: 30,
+                        // height: 30,
+                        color: Colors.transparent
+                        // color: const Color.fromARGB(255, 50, 115, 168),
+                        // iconStyle: IconStyle(
+                        //     iconData: Icons.car_crash, color: Colors.white),
+                        ),
+                    startChild: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xffB2EF89).withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        '10:15Am',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    endChild: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0), // Horizontal padding for gap
+                      child: Column(
+                        children: [
+                          SizedBox(
+                              height:
+                                  10), // Adds vertical space between startChild and endChild
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xffB2EF89).withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'October 22, 2024 \nLand Rover Defender 110 (2024).',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                // box
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 0.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                                child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
+                                              child: Row(
+                                                children: [
+                                                  Text('from:',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      )),
+                                                  const SizedBox(height: 3),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    'Kanchpada Mumbai',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                  const SizedBox(height: 1),
+                                                  const Divider(
+                                                      color: Colors.black,
+                                                      thickness: 1),
+                                                ],
+                                              ),
+                                            ))
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                                child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
+                                              child: Row(
+                                                children: [
+                                                  Text('To:',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                              color: Colors
+                                                                  .black)),
+                                                  const SizedBox(height: 3),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    'Marine lines',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w300),
+                                                  ),
+                                                  const SizedBox(height: 1),
+                                                  const Divider(
+                                                      color: Colors.black,
+                                                      thickness: 1),
+                                                ],
+                                              ),
+                                            ))
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                                child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
+                                              child: Row(
+                                                children: [
+                                                  Text('Start time:',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                              color: Colors
+                                                                  .black)),
+                                                  const SizedBox(height: 3),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    '11 : 55',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w300),
+                                                  ),
+                                                  const SizedBox(height: 1),
+                                                  const Divider(
+                                                      color: Colors.grey,
+                                                      thickness: 1),
+                                                ],
+                                              ),
+                                            ))
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                                child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
+                                              child: Row(
+                                                children: [
+                                                  Text('End time:',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                              color: Colors
+                                                                  .black)),
+                                                  const SizedBox(height: 3),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    '00 : 00',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w300),
+                                                  ),
+                                                  const SizedBox(height: 1),
+                                                  const Divider(
+                                                      color: Colors.grey,
+                                                      thickness: 1),
+                                                ],
+                                              ),
+                                            ))
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                                child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
+                                              child: Row(
+                                                children: [
+                                                  Text('Total time:',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                              color: Colors
+                                                                  .black)),
+                                                  const SizedBox(height: 3),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    '30 min',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w300),
+                                                  ),
+                                                  const SizedBox(height: 1),
+                                                  const Divider(
+                                                      color: Colors.grey,
+                                                      thickness: 1),
+                                                ],
+                                              ),
+                                            ))
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Test Drive 1:',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
                                     color:
                                         const Color.fromARGB(255, 94, 94, 94),
                                   ),
                                 ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight
+                                          .w400, // Default weight for the text
+                                      color:
+                                          const Color.fromARGB(255, 94, 94, 94),
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: '• ', // Add the dot with a space
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight
+                                              .bold, // Ensure the dot is bold if needed
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'Car Model: ', // Bold text
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight
+                                              .w600, // Bold weight for "Car Model:"
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            '[Make, Model, Year]', // Regular text
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight
+                                              .w400, // Regular weight for the rest
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: '• ', // Starting dot
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: const Color.fromARGB(
+                                              255, 94, 94, 94),
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            'Dealership Location: ', // Bold part
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight:
+                                              FontWeight.w600, // Bold weight
+                                          color: const Color.fromARGB(
+                                              255, 94, 94, 94),
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            '[Dealership name and addresss]', // Normal part
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color.fromARGB(
+                                              255, 94, 94, 94),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: '• ', // Starting dot
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color.fromARGB(
+                                              255, 94, 94, 94),
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'feedback:', // Bold text
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight:
+                                              FontWeight.w600, // Bold weight
+                                          color: const Color.fromARGB(
+                                              255, 94, 94, 94),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: '• ', // Starting dot
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: 'Pros: ', // Bold "Pros"
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight:
+                                                FontWeight.w600, // Bold weight
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              'The customer was highly impressed by the sleek and elegant design of the Velar.', // Normal text
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                    height: 2), // Space between Pros and Cons
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: '• ', // Starting dot
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: 'Cons: ', // Bold "Cons"
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight:
+                                                FontWeight.w600, // Bold weight
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              'They expressed concern that the low roofline might compromise headroom.', // Normal text
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color.fromARGB(
+                                                255, 94, 94, 94),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 4,
+                                ),
+                                Text(
+                                  'Decision:[interested/Not interested/Considering]',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  TimelineTile(
+                    alignment: TimelineAlign.manual,
+                    lineXY: 0.25, // Adjust alignment of the timeline line
+                    isFirst: false,
+                    isLast: true,
+                    beforeLineStyle: const LineStyle(
+                      color: Color.fromARGB(
+                          255, 149, 143, 143), // Customize line color
+                      thickness: 1, // Line thickness
+                    ),
+                    indicatorStyle: IndicatorStyle(
+                        padding: EdgeInsets.only(left: 5),
+                        // drawGap: true,
+                        width: 30,
+                        height: 30,
+                        color: const Color.fromARGB(255, 50, 115, 168),
+                        iconStyle: IconStyle(
+                            iconData: Icons.car_crash, color: Colors.white)),
+                    startChild: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xffE7F2FF),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        textAlign: TextAlign.start,
+                        '10:15Am',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    endChild: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0), // Add padding for the gap
+                      child: Column(
+                        children: [
+                          SizedBox(
+                              height:
+                                  10), // This adds vertical space between startChild and endChild
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xffE7F2FF),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              'Emails sent, including content, attachments.',
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ],
