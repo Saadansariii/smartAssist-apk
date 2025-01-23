@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TestDriveDetails(),
-      // home: const HomeScreen(),
+      // home: TestDriveDetails(),
+      home: const HomeScreen(),
       // home: FavoritePage(),
       theme: ThemeData(
         buttonTheme: const ButtonThemeData(),

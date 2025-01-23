@@ -141,8 +141,8 @@ class _ThreebtnState extends State<Threebtn> {
                 height: 30,
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: const Color(0xFF767676),
-                      width: .5), // Border around the container
+                      color: const Color(0xFF767676).withOpacity(0.3),
+                      width: 1), // Border around the container
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Row(
@@ -166,7 +166,7 @@ class _ThreebtnState extends State<Threebtn> {
                           style: TextButton.styleFrom(
                             backgroundColor: _childButtonIndex == 0
                                 ? const Color(0xFF51DF79)
-                                    .withOpacity(0.6) // Green for Upcoming
+                                    .withOpacity(0.29) // Green for Upcoming
                                 : Colors.transparent,
                             foregroundColor: _childButtonIndex == 0
                                 ? Colors.white
@@ -189,7 +189,7 @@ class _ThreebtnState extends State<Threebtn> {
                                 fontSize: 10,
                                 fontWeight: FontWeight.w400,
                                 color:
-                                    const Color.fromARGB(255, 121, 119, 119)),
+                                    const Color(0xff000000).withOpacity(0.56)),
                           )),
                     ),
 
@@ -211,8 +211,7 @@ class _ThreebtnState extends State<Threebtn> {
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: _childButtonIndex == 1
-                              ? const Color(0xFFEE3B3B)
-                                  .withOpacity(0.6) // Red for Overdue
+                              ? const Color(0xFFFFF5F4) // Red for Overdue
                               : Colors.transparent,
                           foregroundColor: _childButtonIndex == 1
                               ? Colors.white
@@ -235,7 +234,7 @@ class _ThreebtnState extends State<Threebtn> {
                                 fontSize: 10,
                                 fontWeight: FontWeight.w400,
                                 color:
-                                    const Color.fromARGB(255, 121, 119, 119))),
+                                    const Color(0xff000000).withOpacity(0.56))),
                       ),
                     ),
                   ],
@@ -254,7 +253,6 @@ class _ThreebtnState extends State<Threebtn> {
             //             PopupMenuItem(child: Text('h2'))
             //           ]),
             // ),
-             
           ],
         ),
         currentWidget,

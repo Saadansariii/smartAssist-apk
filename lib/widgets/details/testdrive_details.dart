@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart'; 
+import 'package:google_fonts/google_fonts.dart';
+
 class TestdriveDetailsWidget extends StatefulWidget {
   const TestdriveDetailsWidget({super.key});
 
@@ -40,7 +41,7 @@ class _TestdriveDetailsWidgetState extends State<TestdriveDetailsWidget> {
       'title': 'Date',
       'subtitle': '2024-08-01'
     },
-    {'image': 'assets/time.png', 'title': 'Time', 'subtitle': '12:48'},
+    {'image': 'assets/Time.png', 'title': 'Time', 'subtitle': '12:48'},
   ];
 
   Widget buildDetailRow(
@@ -61,7 +62,7 @@ class _TestdriveDetailsWidgetState extends State<TestdriveDetailsWidget> {
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: Color(0x8F423F3F))),
-                const SizedBox(height: 3),
+                const SizedBox(height: 1),
                 Text(
                   subtitle,
                   style: GoogleFonts.poppins(
@@ -90,14 +91,16 @@ class _TestdriveDetailsWidgetState extends State<TestdriveDetailsWidget> {
             color: Colors.white, borderRadius: BorderRadius.circular(10)),
         child: Column(
           children: [
-            const CircleAvatar(
-              radius: 40,
-              backgroundImage: AssetImage('assets/profile.png'),
-            ),
-            const SizedBox(height: 10),
+            Icon(Icons.person),
+            // const CircleAvatar(
+            //   radius: 40,
+            //   // backgroundImage: AssetImage('assets/profile.png'),
+            // ),
+            const SizedBox(height: 3),
             Text('Tira',
+            
                 style: GoogleFonts.poppins(
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Color(0xff2E2E30))),
             // Iterate over the details list and pass the correct 'isLast' value

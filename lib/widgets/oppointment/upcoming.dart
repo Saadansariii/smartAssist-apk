@@ -10,31 +10,54 @@ class OppUpcoming extends StatelessWidget {
       endActionPane: ActionPane(
         motion: const StretchMotion(),
         children: [
-          SlidableAction(
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
-            icon: Icons.phone, // Material icon
+          CustomSlidableAction(
             onPressed: (context) {
-              // Define action for phone icon
               print('Phone action pressed');
             },
+            backgroundColor: Colors.blue, // Background color of the action
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.phone, // Custom icon
+                  color: Colors.white, // White icon color
+                  size: 30, // Adjust size as needed
+                ),
+              ],
+            ),
           ),
-          SlidableAction(
-            backgroundColor: Colors.green,
-            icon: Icons.message_rounded,
+          CustomSlidableAction(
             onPressed: (context) {
-              // Define action for WhatsApp icon
-              print('WhatsApp action pressed');
+              print('Phone action pressed');
             },
+            backgroundColor: Colors.green, // Background color of the action
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.message, // Custom icon
+                  color: Colors.white, // White icon color
+                  size: 30, // Adjust size as needed
+                ),
+              ],
+            ),
           ),
-          SlidableAction(
-            backgroundColor: const Color.fromARGB(255, 231, 225, 225),
-            icon: Icons.mail,
+          CustomSlidableAction(
             onPressed: (context) {
-              // Define action for mail icon
-              print('Mail action pressed');
+              print('Phone action pressed');
             },
-            foregroundColor: Colors.red, // This will set the icon color to red
+            backgroundColor: const Color.fromARGB(
+                255, 231, 225, 225), // Background color of the action
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.mail, // Custom icon
+                  color: Colors.white, // White icon color
+                  size: 30, // Adjust size as needed
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -46,7 +69,8 @@ class OppUpcoming extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color.fromARGB(
                   255, 245, 244, 244), // Background color for the content
-              borderRadius: BorderRadius.circular(10), // Optional rounded corners
+              borderRadius:
+                  BorderRadius.circular(10), // Optional rounded corners
               border: const Border(
                 left: BorderSide(
                   width: 8.0, // Left border width

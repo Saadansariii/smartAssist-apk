@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/pages/details_pages/test_drive_details.dart';
 import 'package:smart_assist/pages/test_drive.dart/verify_otp.dart';
+import 'package:smart_assist/widgets/details/testdrive_details.dart';
 
 class TestUpcoming extends StatelessWidget {
   const TestUpcoming({super.key});
@@ -11,44 +14,85 @@ class TestUpcoming extends StatelessWidget {
       endActionPane: ActionPane(
         motion: const StretchMotion(),
         children: [
-          SlidableAction(
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
-            icon: Icons.phone, // Material icon
+          CustomSlidableAction(
             onPressed: (context) {
-              // Define action for phone icon
               print('Phone action pressed');
             },
+            backgroundColor: Colors.blue, // Background color of the action
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.phone, // Custom icon
+                  color: Colors.white, // White icon color
+                  size: 30, // Adjust size as needed
+                ),
+              ],
+            ),
           ),
-          SlidableAction(
-            backgroundColor: Colors.green,
-            label: 'Start',
+          CustomSlidableAction(
             onPressed: (context) {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>  VerifyOtp()));
-              print('WhatsApp action pressed');
+              print('Phone action pressed');
             },
+            backgroundColor: Colors.green, // Background color of the action
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TestDriveDetails()));
+                  },
+                  child: Text(
+                    'Start',
+                    style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
       startActionPane: ActionPane(
         motion: const StretchMotion(),
         children: [
-          SlidableAction(
-            backgroundColor: const Color.fromARGB(255, 231, 225, 225),
-            foregroundColor: Colors.white,
-            icon: Icons.phone, // Material icon
+          CustomSlidableAction(
             onPressed: (context) {
-              // Define action for phone icon
               print('Phone action pressed');
             },
+            backgroundColor: const Color.fromARGB(
+                255, 231, 225, 225), // Background color of the action
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.phone, // Custom icon
+                  color: Colors.white, // White icon color
+                  size: 30, // Adjust size as needed
+                ),
+              ],
+            ),
           ),
-          SlidableAction(
-            backgroundColor: Colors.green,
-            icon: Icons.message_rounded,
+          CustomSlidableAction(
             onPressed: (context) {
-              // Define action for WhatsApp icon
-              print('WhatsApp action pressed');
+              print('Phone action pressed');
             },
+            backgroundColor: Colors.green, // Background color of the action
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.message, // Custom icon
+                  color: Colors.white, // White icon color
+                  size: 30, // Adjust size as needed
+                ),
+              ],
+            ),
           ),
         ],
       ),

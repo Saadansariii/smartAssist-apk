@@ -14,31 +14,54 @@ class CustomRow extends StatelessWidget {
       endActionPane: ActionPane(
         motion: const StretchMotion(),
         children: [
-          SlidableAction(
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
-            icon: Icons.phone, // Material icon
+          CustomSlidableAction(
             onPressed: (context) {
-              // Define action for phone icon
               print('Phone action pressed');
             },
+            backgroundColor: Colors.blue, // Background color of the action
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.phone, // Custom icon
+                  color: Colors.white, // White icon color
+                  size: 30, // Adjust size as needed
+                ),
+              ],
+            ),
           ),
-          SlidableAction(
-            backgroundColor: Colors.green,
-            icon: Icons.message_rounded,
+          CustomSlidableAction(
             onPressed: (context) {
-              // Define action for WhatsApp icon
-              print('WhatsApp action pressed');
+              print('Phone action pressed');
             },
+            backgroundColor: Colors.green, // Background color of the action
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.message, // Custom icon
+                  color: Colors.white, // White icon color
+                  size: 30, // Adjust size as needed
+                ),
+              ],
+            ),
           ),
-          SlidableAction(
-            backgroundColor: const Color.fromARGB(255, 231, 225, 225),
-            icon: Icons.mail,
+          CustomSlidableAction(
             onPressed: (context) {
-              // Define action for mail icon
-              print('Mail action pressed');
+              print('Phone action pressed');
             },
-            foregroundColor: Colors.red, // This will set the icon color to red
+            backgroundColor: const Color.fromARGB(
+                255, 231, 225, 225), // Background color of the action
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.mail, // Custom icon
+                  color: Colors.white, // White icon color
+                  size: 30, // Adjust size as needed
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -65,11 +88,11 @@ class CustomRow extends StatelessWidget {
               children: [
                 // Image.asset('assets/star.png'),
                 Icon(
-                  FontAwesomeIcons.star,
+                  Icons.star_rounded,
                   color: Colors.amberAccent,
-                  size: 30,
+                  size: 40,
                 ),
-                const Column(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -80,10 +103,13 @@ class CustomRow extends StatelessWidget {
                           fontSize: 20,
                           color: Color.fromARGB(255, 139, 138, 138)),
                     ),
-                    Divider(
-                      color: Colors.amberAccent,
-                      thickness: 1,
-                      endIndent: 10,
+                    // Divider(
+                    //   color: Colors.amberAccent,
+                    //   thickness: 1,
+                    //   endIndent: 10,
+                    // ),
+                    SizedBox(
+                      height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,12 +131,21 @@ class CustomRow extends StatelessWidget {
                     ),
                   ],
                 ),
-                Divider(
-                  thickness: 1,
-                  color: Colors.black,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(top: 20),
+                        height: 20,
+                        width: 1,
+                        decoration: BoxDecoration(
+                            border:
+                                Border(right: BorderSide(color: Colors.grey)))),
+                  ],
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 18),
+                  margin: EdgeInsets.only(top: 22),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -135,7 +170,18 @@ class CustomRow extends StatelessWidget {
                                 builder: (context) =>
                                     const FollowupsDetails()));
                       },
-                      child: Image.asset('assets/arrowButton.png'),
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: const Color(0xffD9D9D9),
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Icon(
+                          Icons.arrow_forward_ios_sharp,
+                          size: 25,
+                          color: Colors.white,
+                          weight: 40,
+                        ),
+                      ),
                     ),
                   ],
                 ),
