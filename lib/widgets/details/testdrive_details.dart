@@ -41,7 +41,7 @@ class _TestdriveDetailsWidgetState extends State<TestdriveDetailsWidget> {
       'title': 'Date',
       'subtitle': '2024-08-01'
     },
-    {'image': 'assets/Time.png', 'title': 'Time', 'subtitle': '12:48'},
+    // {'image': 'assets/time.png', 'title': 'Time', 'subtitle': '12:48'},
   ];
 
   Widget buildDetailRow(
@@ -98,7 +98,6 @@ class _TestdriveDetailsWidgetState extends State<TestdriveDetailsWidget> {
             // ),
             const SizedBox(height: 3),
             Text('Tira',
-            
                 style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

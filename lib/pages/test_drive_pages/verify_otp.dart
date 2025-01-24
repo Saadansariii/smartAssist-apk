@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/home_screen.dart';
-import 'package:smart_assist/pages/test_drive.dart/drive_start.dart';
+import 'package:smart_assist/pages/test_drive_pages/drive_start.dart';
 import 'package:smart_assist/utils/button.dart';
 
 class VerifyOtp extends StatefulWidget {

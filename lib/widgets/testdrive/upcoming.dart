@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/details_pages/test_drive_details.dart';
-import 'package:smart_assist/pages/test_drive.dart/verify_otp.dart';
+import 'package:smart_assist/pages/test_drive_pages/drive_start.dart';
+import 'package:smart_assist/pages/test_drive_pages/verify_otp.dart';
 import 'package:smart_assist/widgets/details/testdrive_details.dart';
 
 class TestUpcoming extends StatelessWidget {
@@ -38,19 +39,30 @@ class TestUpcoming extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
+                TextButton(
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TestDriveDetails()));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DriveStart(),
+                      ),
+                    );
                   },
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero, // Remove padding
+                    minimumSize: Size.zero, // Remove minimum size
+                    tapTargetSize:
+                        MaterialTapTargetSize.shrinkWrap, // Shrink tap target
+                    backgroundColor:
+                        Colors.transparent, // Transparent background
+                  ),
                   child: Text(
                     'Start',
                     style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],

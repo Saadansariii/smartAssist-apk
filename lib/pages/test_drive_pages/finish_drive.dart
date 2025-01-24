@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/details_pages/followups.dart';
 import 'package:smart_assist/pages/details_pages/test_drive_details.dart';
-import 'package:smart_assist/pages/test_drive.dart/drive_end.dart';
+import 'package:smart_assist/pages/test_drive_pages/drive_end.dart';
 
 class FinishDrive extends StatelessWidget {
   const FinishDrive({super.key});

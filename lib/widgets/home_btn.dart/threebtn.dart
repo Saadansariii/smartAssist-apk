@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/pages/home_screen.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
 import 'package:smart_assist/widgets/oppointment/overdue.dart';
@@ -16,6 +17,7 @@ class Threebtn extends StatefulWidget {
 }
 
 class _ThreebtnState extends State<Threebtn> {
+  bool _isMonthView = true;
   int _selectedBtnIndex = 0;
 
   Widget currentWidget = const CustomRow();
@@ -241,18 +243,104 @@ class _ThreebtnState extends State<Threebtn> {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-              child: Icon(Icons.add, size: 30),
+            GestureDetector(
+              onTap: () async {
+                final result = await showMenu<String>(
+                  context: context,
+                  position: const RelativeRect.fromLTRB(200, 230, 30, 0),
+                  items: [
+                    PopupMenuItem<String>(
+                      onTap: () {},
+                      padding:
+                          EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                      height: 0,
+                      value: 'followup',
+                      child: Center(
+                        child: Text(
+                          'Create Followups',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                    PopupMenuDivider(height: 1),
+                    PopupMenuItem<String>(
+                      onTap: () {
+                        Future.delayed(Duration.zero, () {
+                          // Delayed to ensure PopupMenuItem tap is completed before opening the dialog
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: _leadFirstStep(
+                                    context), // Your modal widget
+                              );
+                            },
+                          );
+                        });
+                      },
+                      padding: EdgeInsets.symmetric(vertical: 2),
+                      height: 0,
+                      value: 'lead',
+                      child: Center(
+                        child: Text(
+                          'Create Lead',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+
+                // Optional: Handle menu item selection (if required)
+                if (result != null) {
+                  print('Selected: $result');
+                }
+              },
+              // child: Row(
+              //   children: [
+              //     if (_isMonthView)
+              //       IconButton(
+              //         onPressed: () {
+              //           setState(() {
+              //             _isMonthView = true;
+              //           });
+              //         },
+              //         icon: const Icon(
+              //           Icons.add,
+              //           color: Colors.white,
+              //         ),
+              //       ),
+              //     if (!_isMonthView)
+              //       IconButton(
+              //         onPressed: () {
+              //           setState(() {
+              //             _isMonthView = false;
+              //           });
+              //         },
+              //         icon: const Icon(
+              //           Icons.wrong_location_rounded,
+              //           color: Colors.white,
+              //         ),
+              //       ),
+              //   ],
+              // ),
+
+              child: const Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                child: Icon(Icons.add, size: 30),
+              ),
             ),
-            // ListTile(
-            //   title: Text('data'),
-            //   trailing: PopupMenuButton(
-            //       itemBuilder: (context) => [
-            //             PopupMenuItem(child: Text('hi')),
-            //             PopupMenuItem(child: Text('h2'))
-            //           ]),
-            // ),
           ],
         ),
         currentWidget,
@@ -298,4 +386,1028 @@ class _ThreebtnState extends State<Threebtn> {
       }
     });
   }
+}
+
+Widget _leadFirstStep(BuildContext context) {
+  String? selectedEvent;
+  String? selectedCustomer;
+
+  return StatefulBuilder(
+    builder: (BuildContext context, StateSetter setState) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            // border: Border.all(color: Colors.black),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment
+                      .stretch, // Stretch children horizontally
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Center(
+                          child: Text('Add New leads',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text(
+                        'Status',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity, // Full width dropdown
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: const Color.fromARGB(255, 243, 238, 238),
+                      ),
+                      child: Material(
+                        child: DropdownButton<String>(
+                          // menuMaxHeight: 200,
+                          menuWidth: 250,
+                          value: selectedEvent,
+                          hint: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text("New",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey)),
+                          ),
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          isExpanded: true,
+                          underline: const SizedBox.shrink(),
+                          items: <String>['New' 'Qualified', 'Followup', 'Lost']
+                              .map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(value,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedEvent = value; // Update selected event
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // Dropdown 2 (Customer/Client)
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('First name*',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500)),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity, // Full width text field
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: const Color.fromARGB(255, 243, 238, 238),
+                      ),
+                      child: TextField(
+                        style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                        decoration: const InputDecoration(
+                          hintText: 'Alex', // Placeholder text
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 12), // Padding inside the TextField
+                          border: InputBorder
+                              .none, // Remove border for custom design
+                        ),
+                        onChanged: (value) {
+                          // Handle text change (optional)
+                          print(value);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Last name*',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500)),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity, // Full width text field
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: const Color.fromARGB(255, 243, 238, 238),
+                      ),
+                      child: TextField(
+                        style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                        decoration: const InputDecoration(
+                          hintText: 'Carter', // Placeholder text
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 12), // Padding inside the TextField
+                          border: InputBorder
+                              .none, // Remove border for custom design
+                        ),
+                        onChanged: (value) {
+                          // Handle text change (optional)
+                          print(value);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Email*',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500)),
+                    ),
+                    const SizedBox(height: 5),
+                    Container(
+                      width: double.infinity, // Full width text field
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: const Color.fromARGB(255, 243, 238, 238),
+                      ),
+                      child: TextField(
+                        style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                        decoration: const InputDecoration(
+                          hintText: 'AlexCarter@gmail.com', // Placeholder text
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 12), // Padding inside the TextField
+                          border: InputBorder
+                              .none, // Remove border for custom design
+                        ),
+                        onChanged: (value) {
+                          // Handle text change (optional)
+                          print(value);
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    // Row with Buttons
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 45,
+                            decoration: BoxDecoration(
+                              color: Colors.black, // Cancel button color
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // Close modal on cancel
+                              },
+                              child: Text('Cancel',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Container(
+                            height: 45,
+                            decoration: BoxDecoration(
+                              color: Colors.blue, // Submit button color
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: TextButton(
+                              onPressed: () {
+                                // Close the current dialog and open the second dialog
+                                Navigator.pop(
+                                    context); // Close the first dialog
+                                Future.microtask(() {
+                                  // Immediately queue the second dialog to open after the first closes
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: _leadSecondStep(
+                                          context), // Your second modal widget
+                                    ),
+                                  );
+                                });
+                              },
+                              child: Text(
+                                'Next',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget _leadSecondStep(BuildContext context) {
+  String? selectedEvent;
+  String? selectedCustomer;
+
+  return StatefulBuilder(
+    builder: (BuildContext context, StateSetter setState) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Center(
+                            child: Text('Add New leads',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          'Purchase type :',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity, // Full width dropdown
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
+                        child: DropdownButton<String>(
+                          menuWidth: 250,
+                          value: selectedEvent, // Set to selectedEvent
+                          hint: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text("Select",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey)),
+                          ),
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          isExpanded: true,
+                          underline: const SizedBox.shrink(),
+                          items: <String>[
+                            'New Vehicle',
+                            'Old Vehicle',
+                          ].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value:
+                                  value, // Ensure value matches dropdown items
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(value,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedEvent = value; // Update selected event
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          'Type :',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
+                        child: DropdownButton<String>(
+                          menuWidth: 250,
+                          value:
+                              selectedEvent, // Use same value for consistency
+                          hint: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text("Select",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey)),
+                          ),
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          isExpanded: true,
+                          underline: const SizedBox.shrink(),
+                          items: <String>[
+                            'Patrol',
+                            'Diesel',
+                            'EV',
+                          ].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(value,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedEvent = value;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Sub Type: *',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500)),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
+                        child: TextField(
+                          style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                          decoration: const InputDecoration(
+                            hintText: 'Retail',
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 12),
+                            border: InputBorder.none,
+                          ),
+                          onChanged: (value) {
+                            // Handle text change (optional)
+                            print(value);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          'Brand',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
+                        child: DropdownButton<String>(
+                          menuWidth: 250,
+                          value:
+                              selectedEvent, // Use selectedEvent for consistency
+                          hint: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text("Jaguar",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey)),
+                          ),
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          isExpanded: true,
+                          underline: const SizedBox.shrink(),
+                          items: <String>[
+                            'Land Rover',
+                            'Range Rover',
+                            'Others',
+                          ].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value, // Use valid value
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(value,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedEvent = value;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Previous',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.blue, // Submit button color
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  // Close the current dialog and open the second dialog
+                                  Navigator.pop(
+                                      context); // Close the first dialog
+                                  Future.microtask(() {
+                                    // Immediately queue the second dialog to open after the first closes
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => Dialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: _leadThirdStep(
+                                            context), // Your second modal widget
+                                      ),
+                                    );
+                                  });
+                                },
+                                child: Text(
+                                  'Next',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget _leadThirdStep(BuildContext context) {
+  String? selectedEvent;
+  String? selectedCustomer;
+
+  return StatefulBuilder(
+    builder: (BuildContext context, StateSetter setState) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Center(
+                            child: Text('Add New leads',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          'Primary model input:',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity, // Full width dropdown
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
+                        child: DropdownButton<String>(
+                          menuWidth: 250,
+                          value: selectedEvent, // Set to selectedEvent
+                          hint: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text("Discovery",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey)),
+                          ),
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          isExpanded: true,
+                          underline: const SizedBox.shrink(),
+                          items: <String>[
+                            'Range Rover',
+                            'Others',
+                          ].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value:
+                                  value, // Ensure value matches dropdown items
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(value,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedEvent = value; // Update selected event
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          'Source :',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
+                        child: DropdownButton<String>(
+                          menuWidth: 250,
+                          value:
+                              selectedEvent, // Use same value for consistency
+                          hint: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text("Email",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey)),
+                          ),
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          isExpanded: true,
+                          underline: const SizedBox.shrink(),
+                          items: <String>[
+                            'Email',
+                            'Field Visit',
+                            'Referral',
+                          ].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(value,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedEvent = value;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Mobile*',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500)),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
+                        child: TextField(
+                          style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                          decoration: const InputDecoration(
+                            hintText: '0000000000',
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 12),
+                            border: InputBorder.none,
+                          ),
+                          onChanged: (value) {
+                            // Handle text change (optional)
+                            print(value);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          'Enquiry type',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
+                        child: DropdownButton<String>(
+                          menuWidth: 250,
+                          value:
+                              selectedEvent, // Use selectedEvent for consistency
+                          hint: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text("KMI",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey)),
+                          ),
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          isExpanded: true,
+                          underline: const SizedBox.shrink(),
+                          items: <String>[
+                            'Generic',
+                          ].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value, // Use valid value
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(value,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedEvent = value;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Previous',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.blue, // Submit button color
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  // Close the current dialog and open the second dialog
+                                  Navigator.pop(
+                                      context); // Close the first dialog
+                                  Future.microtask(() {
+                                    // Immediately queue the second dialog to open after the first closes
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => Dialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: _leadLastStep(
+                                            context), // Your second modal widget
+                                      ),
+                                    );
+                                  });
+                                },
+                                child: Text(
+                                  'Next',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget _leadLastStep(BuildContext context) {
+  String? selectedEvent;
+  String? selectedCustomer;
+
+  return StatefulBuilder(
+    builder: (BuildContext context, StateSetter setState) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Center(
+                            child: Text('Add New leads',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          'Description :',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity, // Full width dropdown
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
+                        child: DropdownButton<String>(
+                          menuWidth: 250,
+                          value: selectedEvent, // Set to selectedEvent
+                          hint: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text("New",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey)),
+                          ),
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          isExpanded: true,
+                          underline: const SizedBox.shrink(),
+                          items: <String>[
+                            'New Vehicle',
+                            'Old Vehicle',
+                          ].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value:
+                                  value, // Ensure value matches dropdown items
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(value,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedEvent = value; // Update selected event
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const SizedBox(height: 30),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Previous',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  print('Selected Event: $selectedEvent');
+                                  print('Selected Customer: $selectedCustomer');
+                                  Navigator.pop(context);
+                                },
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Submit',
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/home_screen.dart';
-import 'package:smart_assist/pages/test_drive.dart/drive_end.dart';
-import 'package:smart_assist/pages/test_drive.dart/verify_otp.dart';
+import 'package:smart_assist/pages/test_drive_pages/drive_end.dart';
+import 'package:smart_assist/pages/test_drive_pages/verify_otp.dart';
 
 class DriveStart extends StatelessWidget {
   const DriveStart({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/calenderPages.dart/calender.dart';
+import 'package:smart_assist/pages/calenderPages/calender.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
 import 'package:smart_assist/pages/navbar_page/logout_page.dart';

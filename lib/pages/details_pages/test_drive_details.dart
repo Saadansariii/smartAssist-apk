@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/home_screen.dart';
-import 'package:smart_assist/pages/test_drive.dart/finish_drive.dart';
+import 'package:smart_assist/pages/test_drive_pages/finish_drive.dart';
 import 'package:smart_assist/widgets/details/testdrive_details.dart';
 import 'package:smart_assist/widgets/details/timeline.dart';
 import 'package:smart_assist/widgets/timeline/timeline_eight_wid.dart';
