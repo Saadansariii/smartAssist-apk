@@ -8,8 +8,12 @@ import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
 
 class VerifyMail extends StatefulWidget {
+  final int _otpLength = 6; // Number of OTP digits
+  final List<TextEditingController> _controllers =
+      List.generate(6, (index) => TextEditingController());
+
   final String email;
-  const VerifyMail({super.key, required this.email});
+  VerifyMail({super.key, required this.email});
 
   @override
   State<VerifyMail> createState() => _SetPwdState();
@@ -23,77 +27,118 @@ class _SetPwdState extends State<VerifyMail> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       resizeToAvoidBottomInset: true, // Prevents bottom overflow
-      appBar: AppBar(),
-      body: SafeArea(
-        // Adds safe area to prevent bottom inset issues
-        child: SingleChildScrollView(
-          // Allows scrolling when keyboard appears
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Image
-                  Image.asset(
-                    'assets/lock.png',
-                    width: 250,
-                  ),
 
-                  // Title
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: StyleText('Verify Your Email address'),
-                  ),
+      body: Center(
+        child: SafeArea(
+          // Adds safe area to prevent bottom inset issues
+          child: SingleChildScrollView(
+            // Allows scrolling when keyboard appears
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Image
+                    Image.asset(
+                      'assets/lock.png',
+                      width: 250,
+                    ),
 
-                  // Subtitle
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: const TextStyle(
-                            color: Colors.grey), // Default text color
-                        children: [
-                          const TextSpan(
-                            text: 'An 6-digit code has been sent to ',
-                            style: TextStyle(fontSize: 16, height: 2),
-                          ),
-                          TextSpan(
-                            text: '${widget.email}',
-                            style: const TextStyle(
-                                color:
-                                    Colors.black), // Dark color for the email
-                          ),
-                          TextSpan(
-                            text: ' Change',
-                            style: const TextStyle(
-                              color: Colors.blue, // Link-like color
-                              decoration: TextDecoration
-                                  .underline, // Underline the "Change" text
+                    // Title
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: StyleText('Verify Your Email address'),
+                    ),
+
+                    // Subtitle
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.grey), // Default text color
+                          children: [
+                            const TextSpan(
+                              text: 'An 6-digit code has been sent to ',
+                              style: TextStyle(fontSize: 16, height: 2),
                             ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const SetPwd()));
-                              },
-                          ),
-                        ],
+                            TextSpan(
+                              text: '${widget.email}',
+                              style: const TextStyle(
+                                  color:
+                                      Colors.black), // Dark color for the email
+                            ),
+                            TextSpan(
+                              text: ' Change',
+                              style: const TextStyle(
+                                color: Colors.blue, // Link-like color
+                                decoration: TextDecoration
+                                    .underline, // Underline the "Change" text
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SetPwd()));
+                                },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  TextField(
-                    controller: otpController,
-                    decoration: const InputDecoration(hintText: 'Enter otp'),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
-                    child: RichText(
+                    // TextField(
+                    //   controller: otpController,
+                    //   decoration: const InputDecoration(hintText: 'Enter otp'),
+                    // ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(widget._otpLength, (index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          width: 45,
+                          child: TextField(
+                            controller: widget._controllers[index],
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            maxLength: 1,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: const InputDecoration(
+                              counterText: '',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              if (value.isNotEmpty &&
+                                  index < widget._otpLength - 1) {
+                                FocusScope.of(context).nextFocus();
+                              } else if (value.isEmpty && index > 0) {
+                                FocusScope.of(context).previousFocus();
+                              }
+                            },
+                          ),
+                        );
+                      }),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
                         text:
@@ -113,25 +158,25 @@ class _SetPwdState extends State<VerifyMail> {
                           ),
                         ],
                       ),
-                    ),
-                  ), // Next Step Button
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 26, horizontal: 8),
-                    child: ElevatedButton(
-                      onPressed: onVerify,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0276FE),
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    ), // Next Step Button
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 26, horizontal: 8),
+                      child: ElevatedButton(
+                        onPressed: onVerify,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0276FE),
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
+                        child: const Button('Verify'),
                       ),
-                      child: const Button('Verify'),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -141,12 +186,20 @@ class _SetPwdState extends State<VerifyMail> {
   }
 
   Future<void> onVerify() async {
-    final otp = int.tryParse(otpController.text);
-    if (otp == null) {
+    // Combine all the text from the individual controllers to form the OTP as a string
+    final otpString =
+        widget._controllers.map((controller) => controller.text).join();
+
+    // Ensure the OTP is valid (numeric and correct length)
+    if (otpString.length != widget._otpLength ||
+        int.tryParse(otpString) == null) {
       showErrorMessage(context,
-          message: 'Invalid OTP. Please enter numbers only.');
+          message: 'Invalid OTP. Please enter a valid code.');
       return;
     }
+
+    // Convert the OTP string to an integer for the API
+    final otp = int.parse(otpString);
 
     final body = {"otp": otp, "email": widget.email};
 
@@ -156,23 +209,18 @@ class _SetPwdState extends State<VerifyMail> {
       print('API Response: $response');
 
       if (response['isSuccess'] == true) {
-        // ignore: use_build_context_synchronously
         showSuccessMessage(context, message: 'Email Verified Successfully');
 
-        // Navigate to VerifyMail screen with the email
         Navigator.push(
-          // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
             builder: (context) => SetNewPwd(email: widget.email),
           ),
         );
       } else {
-        // ignore: use_build_context_synchronously
         showErrorMessage(context, message: 'Check the Email or OTP');
       }
     } catch (error) {
-      // ignore: use_build_context_synchronously
       showErrorMessage(context, message: 'Error during API call');
     }
   }

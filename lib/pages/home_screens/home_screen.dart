@@ -5,7 +5,7 @@ import 'package:smart_assist/pages/calenderPages/calender.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
 import 'package:smart_assist/pages/navbar_page/logout_page.dart';
-import 'package:smart_assist/pages/opportunity.dart';
+import 'package:smart_assist/pages/home_screens/opportunity.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/home_screen.dart';
+import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/pages/test_drive_pages/drive_end.dart';
 import 'package:smart_assist/pages/test_drive_pages/verify_otp.dart';
 

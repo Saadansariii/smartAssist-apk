@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/home_screen.dart';
+import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
 import 'package:smart_assist/widgets/opp_follup.dart/overdue_opp.dart';

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/home_screen.dart';
+import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/pages/login/login_page.dart';
 
 class LogoutPage extends StatelessWidget {
   const LogoutPage({super.key});
@@ -99,7 +100,10 @@ class LogoutPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
+                                builder: (context) => const LoginPage(
+                                  email: '',
+                                ),
+                              ));
                         },
                         child: Text(
                           'Logout',

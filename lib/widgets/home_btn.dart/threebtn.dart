@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/home_screen.dart';
+import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
 import 'package:smart_assist/widgets/oppointment/overdue.dart';
@@ -394,59 +394,58 @@ Widget _leadFirstStep(BuildContext context) {
 
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter setState) {
-      return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            // border: Border.all(color: Colors.black),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment
-                      .stretch, // Stretch children horizontally
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Center(
-                          child: Text('Add New leads',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black)),
+      return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment
+                        .stretch, // Stretch children horizontally
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Center(
+                            child: Text('Add New leads',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Text(
-                        'Status',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
+                      const SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          'Assign to',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
                       ),
-                    ),
-                    Container(
-                      width: double.infinity, // Full width dropdown
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: const Color.fromARGB(255, 243, 238, 238),
-                      ),
-                      child: Material(
+
+                      Container(
+                        width: double.infinity, // Full width dropdown
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
                         child: DropdownButton<String>(
-                          // menuMaxHeight: 200,
-                          menuWidth: 250,
-                          value: selectedEvent,
+                          value: selectedEvent, // Set to selectedEvent
                           hint: Padding(
                             padding: EdgeInsets.only(left: 10),
-                            child: Text("New",
+                            child: Text("Select",
                                 style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -455,10 +454,13 @@ Widget _leadFirstStep(BuildContext context) {
                           icon: const Icon(Icons.keyboard_arrow_down),
                           isExpanded: true,
                           underline: const SizedBox.shrink(),
-                          items: <String>['New' 'Qualified', 'Followup', 'Lost']
-                              .map((String value) {
+                          items: <String>[
+                            'New Vehicle',
+                            'Old Vehicle',
+                          ].map((String value) {
                             return DropdownMenuItem<String>(
-                              value: value,
+                              value:
+                                  value, // Ensure value matches dropdown items
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 10.0),
                                 child: Text(value,
@@ -476,178 +478,188 @@ Widget _leadFirstStep(BuildContext context) {
                           },
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    // Dropdown 2 (Customer/Client)
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('First name*',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      width: double.infinity, // Full width text field
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: const Color.fromARGB(255, 243, 238, 238),
+                      // Dropdown 2 (Customer/Client)
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('First name*',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500)),
                       ),
-                      child: TextField(
-                        style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
-                        decoration: const InputDecoration(
-                          hintText: 'Alex', // Placeholder text
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 12), // Padding inside the TextField
-                          border: InputBorder
-                              .none, // Remove border for custom design
+                      const SizedBox(height: 10),
+
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
                         ),
-                        onChanged: (value) {
-                          // Handle text change (optional)
-                          print(value);
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Last name*',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      width: double.infinity, // Full width text field
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: const Color.fromARGB(255, 243, 238, 238),
-                      ),
-                      child: TextField(
-                        style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
-                        decoration: const InputDecoration(
-                          hintText: 'Carter', // Placeholder text
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 12), // Padding inside the TextField
-                          border: InputBorder
-                              .none, // Remove border for custom design
+                        child: TextField(
+                          style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                          decoration: const InputDecoration(
+                            hintText: 'Alex', // Placeholder text
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 12),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 12), // Padding inside the TextField
+                            border: InputBorder
+                                .none, // Remove border for custom design
+                          ),
+                          onChanged: (value) {
+                            // Handle text change (optional)
+                            print(value);
+                          },
                         ),
-                        onChanged: (value) {
-                          // Handle text change (optional)
-                          print(value);
-                        },
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Email*',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                    ),
-                    const SizedBox(height: 5),
-                    Container(
-                      width: double.infinity, // Full width text field
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: const Color.fromARGB(255, 243, 238, 238),
+                      const SizedBox(height: 10),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Last name*',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500)),
                       ),
-                      child: TextField(
-                        style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
-                        decoration: const InputDecoration(
-                          hintText: 'AlexCarter@gmail.com', // Placeholder text
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 12), // Padding inside the TextField
-                          border: InputBorder
-                              .none, // Remove border for custom design
+                      const SizedBox(height: 10),
+                      Container(
+                        width: double.infinity, // Full width text field
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
                         ),
-                        onChanged: (value) {
-                          // Handle text change (optional)
-                          print(value);
-                        },
+                        child: TextField(
+                          style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                          decoration: const InputDecoration(
+                            hintText: 'Carter',
+                            hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12), // Placeholder text
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 12), // Padding inside the TextField
+                            border: InputBorder
+                                .none, // Remove border for custom design
+                          ),
+                          onChanged: (value) {
+                            // Handle text change (optional)
+                            print(value);
+                          },
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Email*',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500)),
+                      ),
+                      const SizedBox(height: 5),
+                      Container(
+                        width: double.infinity, // Full width text field
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color.fromARGB(255, 243, 238, 238),
+                        ),
+                        child: TextField(
+                          style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                          decoration: const InputDecoration(
+                            hintText: 'AlexCarter@gmail.com',
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 12),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 12), // Padding inside the TextField
+                            border: InputBorder
+                                .none, // Remove border for custom design
+                          ),
+                          onChanged: (value) {
+                            // Handle text change (optional)
+                            print(value);
+                          },
+                        ),
+                      ),
 
-                    const SizedBox(height: 30),
+                      const SizedBox(height: 30),
 
-                    // Row with Buttons
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 45,
-                            decoration: BoxDecoration(
-                              color: Colors.black, // Cancel button color
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context); // Close modal on cancel
-                              },
-                              child: Text('Cancel',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white)),
+                      // Row with Buttons
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.black, // Cancel button color
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(
+                                      context); // Close modal on cancel
+                                },
+                                child: Text('Cancel',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white)),
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Container(
-                            height: 45,
-                            decoration: BoxDecoration(
-                              color: Colors.blue, // Submit button color
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                // Close the current dialog and open the second dialog
-                                Navigator.pop(
-                                    context); // Close the first dialog
-                                Future.microtask(() {
-                                  // Immediately queue the second dialog to open after the first closes
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.blue, // Submit button color
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  // Close the current dialog and open the second dialog
+                                  Navigator.pop(
+                                      context); // Close the first dialog
+                                  Future.microtask(() {
+                                    // Immediately queue the second dialog to open after the first closes
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => Dialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: _leadSecondStep(
+                                            context), // Your second modal widget
                                       ),
-                                      child: _leadSecondStep(
-                                          context), // Your second modal widget
-                                    ),
-                                  );
-                                });
-                              },
-                              child: Text(
-                                'Next',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                                    );
+                                  });
+                                },
+                                child: Text(
+                                  'Next',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );

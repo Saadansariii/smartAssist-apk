@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class OtpSrv {
-  static Future<Map<String, dynamic>> verifyEmail(Map body) async {
-    const url = 'https://api.smartassistapp.in/api/login/verify-otp';
+ class LoginSrv {
+  static Future<Map<String, dynamic>> onLogin(Map body) async {
+    const url = 'https://api.smartassistapp.in/api/login';
     final uri = Uri.parse(url);
 
     try {
+      // Send POST request to the login endpoint
       final response = await http.post(
         uri,
         body: jsonEncode(body),
@@ -25,8 +26,10 @@ class OtpSrv {
         return {'isSuccess': false, 'data': errorData};
       }
     } catch (error) {
-      print('Error: $error'); // Log error
+      // Log the error and return a failure response
+      print('Error: $error');
       return {'isSuccess': false, 'error': error.toString()};
     }
   }
 }
+   
