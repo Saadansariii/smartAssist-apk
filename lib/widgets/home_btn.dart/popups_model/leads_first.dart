@@ -4,19 +4,28 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_second.dart';
 import 'package:smart_assist/utils/storage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LeadFirstStep extends StatefulWidget {
   const LeadFirstStep({Key? key}) : super(key: key);
+
   @override
   _LeadFirstStepState createState() => _LeadFirstStepState();
 }
 
 class _LeadFirstStepState extends State<LeadFirstStep> {
-  final Widget _leadSecondStep = const LeadsSecond();
+  // controller
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
+  final Widget _leadSecondStep = const LeadsSecond(
+    firstName: '',
+    lastName: '', email: '', selectedPurchaseType: '', selectedFuelType: '', subType: '', selectedBrand: '',
+  );
   String? selectedEvent;
   List<String> dropdownItems = [];
   bool isLoading = true;
-  // const LeadsSecond({Key? key}) : super(key: key);
 
   @override
   void initState() {
@@ -27,13 +36,12 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
   Future<void> fetchDropdownData() async {
     const String apiUrl = "https://api.smartassistapp.in/api/admin/users/all";
 
-    // Retrieve the token from storage (use the imported method)
     final token =
         await Storage.getToken(); // Assuming getToken is in the Storage class
 
     if (token == null) {
       print("No token found. Please login.");
-      return; // Handle token absence appropriately (e.g., prompt user to log in)
+      return;
     }
 
     try {
@@ -63,6 +71,11 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
         isLoading = false;
       });
     }
+  }
+
+  bool isValidEmail(String email) {
+    final regex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return regex.hasMatch(email);
   }
 
   @override
@@ -158,7 +171,6 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                       ),
               ),
               const SizedBox(height: 10),
-
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text('First name*',
@@ -166,7 +178,6 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                         TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
               ),
               const SizedBox(height: 10),
-
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -174,6 +185,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                   color: const Color.fromARGB(255, 243, 238, 238),
                 ),
                 child: TextField(
+                  controller: firstNameController,
                   style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -207,6 +219,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                   color: const Color.fromARGB(255, 243, 238, 238),
                 ),
                 child: TextField(
+                  controller: lastNameController,
                   style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -241,6 +254,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                   color: const Color.fromARGB(255, 243, 238, 238),
                 ),
                 child: TextField(
+                  controller: emailController,
                   style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -254,14 +268,11 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                     border: InputBorder.none, // Remove border for custom design
                   ),
                   onChanged: (value) {
-                    // Handle text change (optional)
                     print(value);
                   },
                 ),
               ),
-
               const SizedBox(height: 30),
-
               // Row with Buttons
               Row(
                 children: [
@@ -294,21 +305,46 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                       ),
                       child: TextButton(
                         onPressed: () {
+                          if (firstNameController.text.isEmpty ||
+                              lastNameController.text.isEmpty ||
+                              emailController.text.isEmpty) {
+                            // Show a Snackbar or AlertDialog to notify the user to fill all fields
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Please fill all the fields.')),
+                            );
+                            return;
+                          }
+
+                          if (!isValidEmail(emailController.text)) {
+                            // Show an error message for invalid email
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      'Please enter a valid email address.')),
+                            );
+                            return;
+                          }
+
                           // Close the current dialog and open the second dialog
                           Navigator.pop(context); // Close the first dialog
-                          Future.microtask(() {
-                            // Immediately queue the second dialog to open after the first closes
-                            showDialog(
-                              context: context,
-                              builder: (context) => Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                          Future.microtask(
+                            () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: LeadsSecond(
+                                    firstName: firstNameController.text.toString(),
+                                    lastName: lastNameController.text.toString(),
+                                    email : emailController.text.toString(), selectedPurchaseType: '', selectedFuelType: '', subType: '', selectedBrand: '',
+                                  ), // Your second modal widget
                                 ),
-                                child:
-                                    _leadSecondStep, // Your second modal widget
-                              ),
-                            );
-                          });
+                              );
+                            },
+                          );
                         },
                         child: Text(
                           'Next',
@@ -322,7 +358,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

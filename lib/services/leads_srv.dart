@@ -1,7 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:smart_assist/utils/storage.dart';
 
 class LeadsSrv {
+  final String baseUrl = 'https://api.smartassistapp.in/api/admin';
+
+  // ApiService(this.baseUrl);
+
   static Future<List?> loadFollowups(Map body) async {
     const url = 'https://api.smartassistapp.in/api/admin/leads/all';
 
@@ -59,5 +64,31 @@ class LeadsSrv {
   //   }
   // }
 
-   
+  static Future<bool> submitLead(Map<String, dynamic> leadData) async {
+    final token = await Storage.getToken();
+
+    try {
+      final response = await http.post(
+        Uri.parse('https://api.smartassistapp.in/api/admin/leads/create'),
+        headers: {
+          'Authorization': 'Bearer $token', // Add the token to the headers
+          'Content-Type': 'application/json', // Specify JSON content type
+        },
+        body: jsonEncode(leadData),
+      );
+
+      print('API Response Status: ${response.statusCode}');
+      print('API Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return true; // Successful response
+      } else {
+        print('Error: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return false;
+    }
+  }
 }

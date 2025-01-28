@@ -4,14 +4,46 @@ import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_first.dart
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_third.dart';
 
 class LeadsSecond extends StatefulWidget {
-  const LeadsSecond({Key? key}) : super(key: key);
+  final String selectedPurchaseType;
+  final String subType;
+  final String selectedFuelType;
+  final String selectedBrand;
+  final String firstName;
+  final String lastName;
+  final String email;
+  const LeadsSecond({
+    super.key,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.selectedPurchaseType,
+    required this.selectedFuelType,
+    required this.subType,
+    required this.selectedBrand,
+  });
 
   @override
   State<LeadsSecond> createState() => _LeadsSecondState();
 }
 
 class _LeadsSecondState extends State<LeadsSecond> {
-  final Widget _leadThirdStep = const LeadsThird();
+  final Widget _leadSecondStep = const LeadsSecond(
+    firstName: '',
+    lastName: '',
+    email: '',
+    selectedPurchaseType: '',
+    selectedFuelType: '',
+    subType: '',
+    selectedBrand: '',
+  );
+  TextEditingController typeController = TextEditingController();
+
+  final Widget _leadThirdStep = const LeadsThird(
+    firstName: '',
+    lastName: '',
+    email: '',
+    selectedPurchaseType: '', subType: '', selectedFuelType: '', selectedBrand: '', selectedEnquiryType: '', selectedEvent: '', selectedSource: '',
+  );
   final Widget _leadFirstStep = const LeadFirstStep();
   String? selectedPurchaseType;
   String? selectedFuelType;
@@ -45,8 +77,12 @@ class _LeadsSecondState extends State<LeadsSecond> {
               hint: 'Select Purchase Type',
               value: selectedPurchaseType,
               items: ['New Vehicle', 'Old Vehicle'],
-              onChanged: (value) =>
-                  setState(() => selectedPurchaseType = value),
+              onChanged: (value) {
+                setState(() {
+                  selectedPurchaseType = value;
+                });
+                print("Selected Purchase Type: $selectedPurchaseType");
+              },
             ),
 
             // Fuel Type Dropdown
@@ -55,14 +91,24 @@ class _LeadsSecondState extends State<LeadsSecond> {
               hint: 'Select Fuel Type',
               value: selectedFuelType,
               items: ['Petrol', 'Diesel', 'EV'],
-              onChanged: (value) => setState(() => selectedFuelType = value),
+              onChanged: (value) {
+                setState(() {
+                  selectedFuelType = value;
+                });
+                print("Selected Fuel Type: $selectedFuelType");
+              },
             ),
 
             // Sub Type Input
             _buildTextField(
               label: 'Sub Type:',
               hintText: 'Retail',
-              onChanged: (value) => setState(() => subType = value),
+              onChanged: (value) {
+                setState(() {
+                  subType = value;
+                });
+                print("Sub Type: $subType");
+              },
             ),
 
             // Brand Dropdown
@@ -71,7 +117,12 @@ class _LeadsSecondState extends State<LeadsSecond> {
               hint: 'Select Brand',
               value: selectedBrand,
               items: ['Land Rover', 'Range Rover', 'Others'],
-              onChanged: (value) => setState(() => selectedBrand = value),
+              onChanged: (value) {
+                setState(() {
+                  selectedBrand = value;
+                });
+                print("Selected Brand: $selectedBrand");
+              },
             ),
 
             const SizedBox(height: 30),
@@ -136,7 +187,17 @@ class _LeadsSecondState extends State<LeadsSecond> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: _leadThirdStep, // Your second modal widget
+                              child: LeadsThird(
+                                firstName: widget.firstName,
+                                lastName: widget.lastName,
+                                email: widget.email,
+                                selectedPurchaseType:
+                                    selectedPurchaseType ?? 'Default Value',
+                                subType: typeController.text,
+                                selectedFuelType:
+                                    selectedFuelType ?? 'Default value',
+                                selectedBrand: selectedBrand ?? 'Default value', selectedEnquiryType: '', selectedEvent: '', selectedSource: '',
+                              ),
                             ),
                           );
                         });

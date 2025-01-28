@@ -4,21 +4,70 @@ import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_last.dart'
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_second.dart';
 
 class LeadsThird extends StatefulWidget {
-  const LeadsThird({super.key});
+  // const LeadsThird({super.key, required firstName});
+  final String selectedPurchaseType;
+  final String subType;
+  final String selectedFuelType;
+  final String selectedBrand;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String selectedEnquiryType;
+  final String selectedEvent;
+  final String selectedSource;
+  const LeadsThird({
+    super.key,
+    required,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.selectedPurchaseType,
+    required this.subType,
+    required this.selectedFuelType,
+    required this.selectedBrand,
+    required this.selectedEnquiryType, required this.selectedEvent, required this.selectedSource,
+  });
 
   @override
   State<LeadsThird> createState() => _LeadsThirdState();
 }
 
 class _LeadsThirdState extends State<LeadsThird> {
-  final Widget _leadSecondStep = const LeadsSecond();
-  final Widget _leadLastStep = const LeadsLast();
+  final Widget _leadSecondStep = const LeadsSecond(
+    firstName: '',
+    lastName: '',
+    email: '',
+    selectedPurchaseType: '',
+    selectedFuelType: '',
+    subType: '',
+    selectedBrand: '',
+  );
+  final Widget _leadLastStep = const LeadsLast(
+    firstName: '',
+    lastName: '',
+    email: '',
+    mobile: '',
+    selectedPurchaseType: '',
+    selectedFuelType: '',
+    subType: '',
+    selectedBrand: '',
+    selectedEnquiryType: '', selectedEvent: '', selectedSource: '', String: null,
+  );
 
   // Declare the selection variables for dropdowns
   String? selectedEvent;
   String? selectedSource;
   String? selectedEnquiryType;
   String? selectedCustomer;
+
+  // Controller for mobile number input
+  TextEditingController mobileController = TextEditingController();
+
+  get selectedPurchaseType => null;
+
+  get selectedFuelType => null;
+
+  get selectedBrand => null;
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +93,13 @@ class _LeadsThirdState extends State<LeadsThird> {
                   _buildDropdown(
                     label: 'Discovery',
                     value: selectedEvent,
-                    items: ['Range Rover', 'Others'],
-                    onChanged: (value) => setState(() {
-                      selectedEvent = value;
-                    }),
+                    items: ['Land Rover', 'Jaguar'],
+                    onChanged: (value) {
+                      setState(() {
+                        selectedEvent = value;
+                      });
+                      print("Selected Event: $selectedEvent");
+                    },
                   ),
                   const SizedBox(height: 10),
                   _buildSectionTitle('Source:'),
@@ -55,16 +107,20 @@ class _LeadsThirdState extends State<LeadsThird> {
                     label: 'Email',
                     value: selectedSource,
                     items: ['Email', 'Field Visit', 'Referral'],
-                    onChanged: (value) => setState(() {
-                      selectedSource = value;
-                    }),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedSource = value;
+                      });
+                      print("Selected Source: $selectedSource");
+                    },
                   ),
                   const SizedBox(height: 10),
                   _buildSectionTitle('Mobile*'),
                   _buildTextField(
+                    controller: mobileController,
                     hintText: '0000000000',
                     onChanged: (value) {
-                      // Handle mobile number change if needed
+                      print("Mobile Number: $value");
                     },
                   ),
                   const SizedBox(height: 10),
@@ -73,9 +129,12 @@ class _LeadsThirdState extends State<LeadsThird> {
                     label: 'KMI',
                     value: selectedEnquiryType,
                     items: ['Generic'],
-                    onChanged: (value) => setState(() {
-                      selectedEnquiryType = value;
-                    }),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedEnquiryType = value;
+                      });
+                      print("Selected Enquiry Type: $selectedEnquiryType");
+                    },
                   ),
                   const SizedBox(height: 30),
                   _buildNavigationButtons(),
@@ -166,6 +225,7 @@ class _LeadsThirdState extends State<LeadsThird> {
 
   // Reusable TextField widget
   Widget _buildTextField({
+    required TextEditingController controller,
     required String hintText,
     required ValueChanged<String> onChanged,
   }) {
@@ -176,6 +236,7 @@ class _LeadsThirdState extends State<LeadsThird> {
         color: const Color.fromARGB(255, 243, 238, 238),
       ),
       child: TextField(
+        controller: controller, // Assign the controller
         style: GoogleFonts.poppins(
           fontSize: 14,
           fontWeight: FontWeight.w500,
@@ -247,7 +308,20 @@ class _LeadsThirdState extends State<LeadsThird> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: _leadLastStep,
+                    child: LeadsLast(
+                      firstName: widget.firstName,
+                      lastName: widget.lastName,
+                      email: widget.email,
+                      mobile: mobileController.text.toString(),
+                      selectedPurchaseType:
+                          selectedPurchaseType ?? 'Default Value',
+                      subType: widget.subType,
+                      selectedFuelType: selectedFuelType ?? 'Default Value',
+                      selectedBrand: selectedBrand ?? 'Default Value',
+                      selectedEnquiryType: selectedEnquiryType ?? 'Default',
+                      selectedEvent : selectedEvent ?? 'default',
+                      selectedSource : selectedSource ?? 'default', String: null,
+                    ),
                   ),
                 );
               });
