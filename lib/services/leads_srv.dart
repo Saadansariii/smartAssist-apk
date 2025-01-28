@@ -34,7 +34,7 @@ class LeadsSrv {
 
         // Assuming the API response is a list of strings:
         // Example: { "options": ["Option 1", "Option 2", "Option 3"] }
-        
+
         return List<String>.from(data['options']);
       } else {
         throw Exception('Failed to fetch options');
@@ -44,4 +44,20 @@ class LeadsSrv {
       return [];
     }
   }
+
+  // lead assign dropdown service
+
+  // Future<List<String>> fetchDropdownItems() async {
+  //   final url = Uri.parse("https://api.smartassistapp.in/api/admin/users/all");
+  //   final response = await http.get(url);
+
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body);
+  //     return List<String>.from(data['items']);
+  //   } else {
+  //     throw Exception("Failed to load dropdown items");
+  //   }
+  // }
+
+   
 }

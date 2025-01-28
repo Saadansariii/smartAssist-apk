@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/login/first_screen.dart';
-import 'package:smart_assist/pages/login/login_page.dart';
+import 'package:smart_assist/pages/login/login_page.dart'; 
+import 'package:hive_flutter/hive_flutter.dart';
 // import 'package:smart_assist/pages/details_pages/test_drive_details.dart';
 // import 'package:smart_assist/pages/home_screen.dart';
 // import 'package:smart_assist/pages/login/first_screen.dart';
@@ -9,6 +10,7 @@ import 'package:smart_assist/pages/login/login_page.dart';
 // import 'package:smart_assist/pages/navbar_page/favorite.dart';
 
 void main() async {
+  await Hive.initFlutter();
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp();
