@@ -41,32 +41,42 @@ class LoginSrv {
     final uri = Uri.parse(url);
 
     try {
-      // Send POST request to the login endpoint
       final response = await http.post(
         uri,
         body: jsonEncode(body),
         headers: {'Content-Type': 'application/json'},
       );
 
-      // Log the response for debugging
       print('API Status Code: ${response.statusCode}');
       print('API Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        final String token =
-            responseData['token']; // Assuming the token is in the 'token' field
 
-        // Save token in Storage (Hive or SharedPreferences)
+        // Ensure 'user' object is included in the returned data
+        final String token = responseData['token'];
+        final Map<String, dynamic>? user =
+            responseData.containsKey('user') ? responseData['user'] : null;
+
         await Storage.saveToken(token);
 
-        return {'isSuccess': true, 'token': token};
+        if (user != null) {
+          return {
+            'isSuccess': true,
+            'token': token,
+            'user': user
+          };  
+        } else {
+          return {
+            'isSuccess': false,
+            'message': 'User data missing in response'
+          };
+        }
       } else {
         final errorData = jsonDecode(response.body);
         return {'isSuccess': false, 'data': errorData};
       }
     } catch (error) {
-      // Log the error and return a failure response
       print('Error: $error');
       return {'isSuccess': false, 'error': error.toString()};
     }

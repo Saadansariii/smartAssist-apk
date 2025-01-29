@@ -4,7 +4,7 @@ import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_last.dart'
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_second.dart';
 
 class LeadsThird extends StatefulWidget {
-  // const LeadsThird({super.key, required firstName});
+  final String selectedSource;
   final String selectedPurchaseType;
   final String subType;
   final String selectedFuelType;
@@ -14,8 +14,7 @@ class LeadsThird extends StatefulWidget {
   final String email;
   final String selectedEnquiryType;
   final String selectedEvent;
-  final String selectedSource;
-  const LeadsThird({
+  LeadsThird({
     super.key,
     required,
     required this.firstName,
@@ -25,7 +24,9 @@ class LeadsThird extends StatefulWidget {
     required this.subType,
     required this.selectedFuelType,
     required this.selectedBrand,
-    required this.selectedEnquiryType, required this.selectedEvent, required this.selectedSource,
+    required this.selectedEnquiryType,
+    required this.selectedEvent,
+    required this.selectedSource,
   });
 
   @override
@@ -42,18 +43,23 @@ class _LeadsThirdState extends State<LeadsThird> {
     subType: '',
     selectedBrand: '',
   );
-  final Widget _leadLastStep = const LeadsLast(
-    firstName: '',
-    lastName: '',
-    email: '',
-    mobile: '',
-    selectedPurchaseType: '',
-    selectedFuelType: '',
-    subType: '',
-    selectedBrand: '',
-    selectedEnquiryType: '', selectedEvent: '', selectedSource: '', String: null,
-  );
+  // final Widget _leadLastStep = const LeadsLast(
+  //   selectedSource: '',
+  //   selectedEvent: '',
+  //   firstName: '',
+  //   lastName: '',
+  //   email: '',
+  //   mobile: '',
+  //   selectedPurchaseType: '',
+  //   selectedFuelType: '',
+  //   subType: '',
+  //   selectedBrand: '',
+  //   selectedEnquiryType: '',   String: null,
+  // );
 
+  String? selectedPurchaseType;
+  String? selectedFuelType;
+  String? selectedBrand;
   // Declare the selection variables for dropdowns
   String? selectedEvent;
   String? selectedSource;
@@ -62,12 +68,6 @@ class _LeadsThirdState extends State<LeadsThird> {
 
   // Controller for mobile number input
   TextEditingController mobileController = TextEditingController();
-
-  get selectedPurchaseType => null;
-
-  get selectedFuelType => null;
-
-  get selectedBrand => null;
 
   @override
   Widget build(BuildContext context) {
@@ -313,14 +313,13 @@ class _LeadsThirdState extends State<LeadsThird> {
                       lastName: widget.lastName,
                       email: widget.email,
                       mobile: mobileController.text.toString(),
-                      selectedPurchaseType:
-                          selectedPurchaseType ?? 'Default Value',
-                      subType: widget.subType,
-                      selectedFuelType: selectedFuelType ?? 'Default Value',
-                      selectedBrand: selectedBrand ?? 'Default Value',
-                      selectedEnquiryType: selectedEnquiryType ?? 'Default',
-                      selectedEvent : selectedEvent ?? 'default',
-                      selectedSource : selectedSource ?? 'default', String: null,
+                      selectedPurchaseType: selectedPurchaseType ?? 'new',
+                      selectedEnquiryType: selectedEnquiryType!,
+                      selectedEvent: selectedEvent!,
+                      selectedSource: selectedSource!,
+                      subType: '',
+                      selectedFuelType: selectedFuelType?? 'Patrol',
+                      selectedBrand: selectedBrand?? 'puma',
                     ),
                   ),
                 );

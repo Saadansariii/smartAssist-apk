@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_third.dart';
 
 class LeadsLast extends StatefulWidget {
@@ -13,7 +15,9 @@ class LeadsLast extends StatefulWidget {
   final String email;
   final String mobile;
   final String selectedSource;
-  const LeadsLast(
+  final String selectedEvent;
+  final String selectedEnquiryType;
+  LeadsLast(
       {super.key,
       required this.firstName,
       required this.lastName,
@@ -22,17 +26,24 @@ class LeadsLast extends StatefulWidget {
       required this.selectedPurchaseType,
       required this.subType,
       required this.selectedFuelType,
-      required this.selectedBrand, required String selectedEnquiryType, required String selectedEvent, required String, required this.selectedSource     });
+      required this.selectedBrand, 
+      required this.selectedSource,
+      required this.selectedEvent,
+      required this.selectedEnquiryType});
 
   @override
   State<LeadsLast> createState() => _LeadsLastState();
 }
 
 class _LeadsLastState extends State<LeadsLast> {
+  String selectedSource = '';
   String? selectedPurchaseType;
   String? selectedFuelType;
   String? selectedBrand;
+
   String subType = '';
+  String selectedEnquiryType = '';
+
   // Controllers for capturing input
   TextEditingController descriptionController = TextEditingController();
   TextEditingController dateController = TextEditingController();
@@ -40,10 +51,6 @@ class _LeadsLastState extends State<LeadsLast> {
 
   String? selectedEvent; // Event data to be captured
   String? selectedCustomer;
-  
-  get selectedEnquiryType => null;
-  
-  get selectedSource => null; // Customer data to be captured
 
   Future<void> _pickDate() async {
     DateTime? pickedDate = await showDatePicker(
@@ -220,14 +227,17 @@ class _LeadsLastState extends State<LeadsLast> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-                                          child: const LeadsThird(
+                                          child:   LeadsThird(
                                             firstName: '',
                                             lastName: '',
                                             email: '',
                                             selectedPurchaseType: '',
                                             subType: '',
                                             selectedFuelType: '',
-                                            selectedBrand: '', selectedEnquiryType: '', selectedEvent: '', selectedSource: '',
+                                            selectedBrand: '',
+                                            selectedEnquiryType: '',
+                                            selectedEvent: '',
+                                            selectedSource: '',
                                           ),
                                         ),
                                       );
@@ -280,25 +290,34 @@ class _LeadsLastState extends State<LeadsLast> {
     String description = descriptionController.text;
     String phone = phoneController.text;
     String date = dateController.text;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? spId = prefs.getString('user_id');
+
+    print('Retrieved sp_id: $spId'); // Debugging
+
+    if (spId == null) {
+      showErrorMessage(context,
+          message: 'User ID not found. Please log in again.');
+      return;
+    }
+
     // Prepare the lead data
     final leadData = {
-      // 'phone': phone,
-      // 'description': description,
-      // 'date': date,
       'fname': widget.firstName,
       'lname': widget.lastName,
       'email': widget.email,
       'phone': phone,
       'mobile': widget.mobile,
-      'purchase_type': selectedPurchaseType ,
-      'brand': selectedBrand ,
-      'type':  selectedFuelType,
-      'sub_type': widget.subType ,
-      'PMI':  selectedEvent,
-      'status': description, //add the dropdown
-      'lead_source': selectedSource ,
-      'enquiry_type':  selectedEnquiryType,
-      // 'sp_id':  ,
+      'purchase_type': selectedPurchaseType,
+      'brand': selectedBrand,
+      'type': selectedFuelType,
+      'sub_type': subType,
+      'sp_id': spId,
+      'status': description,
+      'lead_source': selectedSource,
+      'PMI': selectedEvent,
+      'enquiry_type': selectedEnquiryType,
     };
 
     print('Lead Data: $leadData');

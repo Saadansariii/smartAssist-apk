@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_second.dart';
 import 'package:smart_assist/utils/storage.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LeadFirstStep extends StatefulWidget {
   const LeadFirstStep({Key? key}) : super(key: key);
@@ -19,10 +19,11 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
-  final Widget _leadSecondStep = const LeadsSecond(
-    firstName: '',
-    lastName: '', email: '', selectedPurchaseType: '', selectedFuelType: '', subType: '', selectedBrand: '',
-  );
+// privous
+  // final Widget _leadSecondStep = const LeadsSecond(
+  //   firstName: '',
+  //   lastName: '', email: '', selectedPurchaseType: '', selectedFuelType: '', subType: '', selectedBrand: '',
+  // );
   String? selectedEvent;
   List<String> dropdownItems = [];
   bool isLoading = true;

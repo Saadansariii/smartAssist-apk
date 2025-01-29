@@ -38,13 +38,20 @@ class _LeadsSecondState extends State<LeadsSecond> {
   );
   TextEditingController typeController = TextEditingController();
 
-  final Widget _leadThirdStep = const LeadsThird(
+  final Widget _leadThirdStep =   LeadsThird(
     firstName: '',
     lastName: '',
     email: '',
-    selectedPurchaseType: '', subType: '', selectedFuelType: '', selectedBrand: '', selectedEnquiryType: '', selectedEvent: '', selectedSource: '',
+    selectedPurchaseType: '',
+    subType: '',
+    selectedFuelType: '',
+    selectedBrand: '',
+    selectedEnquiryType: '',
+    selectedEvent: '',
+    selectedSource: '',
   );
   final Widget _leadFirstStep = const LeadFirstStep();
+
   String? selectedPurchaseType;
   String? selectedFuelType;
   String? selectedBrand;
@@ -191,12 +198,13 @@ class _LeadsSecondState extends State<LeadsSecond> {
                                 firstName: widget.firstName,
                                 lastName: widget.lastName,
                                 email: widget.email,
-                                selectedPurchaseType:
-                                    selectedPurchaseType ?? 'Default Value',
                                 subType: typeController.text,
-                                selectedFuelType:
-                                    selectedFuelType ?? 'Default value',
-                                selectedBrand: selectedBrand ?? 'Default value', selectedEnquiryType: '', selectedEvent: '', selectedSource: '',
+                                selectedPurchaseType: selectedPurchaseType ?? "Petrol",
+                                selectedFuelType: selectedFuelType ?? "Diesel",
+                                selectedBrand: selectedBrand ?? "Maruti",
+                                selectedEnquiryType: '',
+                                selectedEvent: '',
+                                selectedSource: '',
                               ),
                             ),
                           );
