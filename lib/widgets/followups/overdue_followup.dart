@@ -60,7 +60,8 @@ class OverdueFollowup extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset('assets/star.png'),
+                // Image.asset('assets/star.png'),
+                Icon(Icons.star),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

@@ -129,7 +129,8 @@ class TestUpcoming extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset('assets/star.png'),
+                // Image.asset('assets/star.png'),
+                Icon(Icons.star),
                 const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
