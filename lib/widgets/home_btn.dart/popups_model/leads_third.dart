@@ -15,7 +15,7 @@ class LeadsThird extends StatefulWidget {
   final String selectedEnquiryType;
   final String selectedEvent;
   LeadsThird({
-    super.key, 
+    super.key,
     required,
     required this.firstName,
     required this.lastName,
@@ -34,15 +34,15 @@ class LeadsThird extends StatefulWidget {
 }
 
 class _LeadsThirdState extends State<LeadsThird> {
-  final Widget _leadSecondStep = const LeadsSecond(
-    firstName: '',
-    lastName: '',
-    email: '',
-    selectedPurchaseType: '',
-    selectedFuelType: '',
-    subType: '',
-    selectedBrand: '',
-  );
+  // final Widget _leadSecondStep = const LeadsSecond(
+  //   firstName: '',
+  //   lastName: '',
+  //   email: '',
+  //   selectedPurchaseType: '',
+  //   selectedFuelType: '',
+  //   subType: '',
+  //   selectedBrand: '',
+  // );
   // final Widget _leadLastStep = const LeadsLast(
   //   selectedSource: '',
   //   selectedEvent: '',
@@ -65,6 +65,14 @@ class _LeadsThirdState extends State<LeadsThird> {
   String? selectedSource;
   String? selectedEnquiryType;
   String? selectedCustomer;
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedPurchaseType = widget.selectedPurchaseType!;
+    selectedFuelType = widget.selectedFuelType!;
+    selectedBrand = widget.selectedBrand!;
+  }
 
   // Controller for mobile number input
   TextEditingController mobileController = TextEditingController();
@@ -128,7 +136,10 @@ class _LeadsThirdState extends State<LeadsThird> {
                   _buildDropdown(
                     label: 'KMI',
                     value: selectedEnquiryType,
-                    items: ['Generic'],
+                    items: [
+                      'Generic',
+                      '(Generic) Purchase intent within 90 days'
+                    ],
                     onChanged: (value) {
                       setState(() {
                         selectedEnquiryType = value;
@@ -275,7 +286,7 @@ class _LeadsThirdState extends State<LeadsThird> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: _leadSecondStep,
+                    // child: _leadSecondStep,
                   ),
                 );
               });
@@ -313,13 +324,13 @@ class _LeadsThirdState extends State<LeadsThird> {
                       lastName: widget.lastName,
                       email: widget.email,
                       mobile: mobileController.text.toString(),
-                      selectedPurchaseType: selectedPurchaseType ?? 'new',
+                      selectedPurchaseType: selectedPurchaseType!,
                       selectedEnquiryType: selectedEnquiryType!,
                       selectedEvent: selectedEvent!,
                       selectedSource: selectedSource!,
                       subType: '',
-                      selectedFuelType: selectedFuelType?? 'Patrol',
-                      selectedBrand: selectedBrand?? 'puma',
+                      selectedFuelType: selectedFuelType!,
+                      selectedBrand: selectedBrand!,
                     ),
                   ),
                 );

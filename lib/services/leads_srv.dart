@@ -80,13 +80,55 @@ class LeadsSrv {
       print('API Response Status: ${response.statusCode}');
       print('API Response Body: ${response.body}');
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return true; // Successful response
       } else {
         print('Error: ${response.statusCode}');
         return false;
       }
     } catch (e) {
+      print('Error: $e');
+      return false;
+    }
+  }
+
+  static Future<bool> submitFollowups(
+      Map<String, dynamic> followupsData, String leadId) async {
+    final token = await Storage.getToken();
+
+    // Debugging: print the headers and body
+    print('Headers: ${{
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+      'recordId': leadId,
+    }}');
+    print('Request body: ${jsonEncode(followupsData)}');
+
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'https://api.smartassistapp.in/api/admin/leads/$leadId/create-task'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'recordId': leadId,
+        },
+        body: jsonEncode(followupsData),
+      );
+
+      print('API Response Status: ${response.statusCode}');
+      print('API Response Body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        return true; // Task created successfully
+      } else {
+        // Handle unexpected error responses
+        print('Error: ${response.statusCode}');
+        print('Error details: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      // Catch any network or other errors
       print('Error: $e');
       return false;
     }

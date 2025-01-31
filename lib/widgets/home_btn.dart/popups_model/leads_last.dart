@@ -26,7 +26,7 @@ class LeadsLast extends StatefulWidget {
       required this.selectedPurchaseType,
       required this.subType,
       required this.selectedFuelType,
-      required this.selectedBrand, 
+      required this.selectedBrand,
       required this.selectedSource,
       required this.selectedEvent,
       required this.selectedEnquiryType});
@@ -36,21 +36,51 @@ class LeadsLast extends StatefulWidget {
 }
 
 class _LeadsLastState extends State<LeadsLast> {
-  String selectedSource = '';
-  String? selectedPurchaseType;
-  String? selectedFuelType;
-  String? selectedBrand;
+  // String selectedSource = '';
+  // String? selectedPurchaseType;
+  // String? selectedFuelType;
+  // String? selectedBrand;
+  // String? selectedEvent;
+  // String? selectedEnquiryType;
+  // String? selectedCustomer;
 
-  String subType = '';
-  String selectedEnquiryType = '';
+  // String? selectedFuelType;
+  // String? selectedPurchaseType;
+  // String? selectedBrand;
+  // String? selectedEvent;
+  // String? selectedSource;
+  // String? selectedEnquiryType;
+  // String? selectedCustomer;
+
+  String? selectedFuelType;
+  String? selectedPurchaseType;
+  String? selectedBrand;
+  String? selectedEvent;
+  String? selectedSource;
+  String? selectedEnquiryType;
+  String? selectedCustomer;
+  String? subType;
+  String? selectedStatus;
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedFuelType = widget.selectedFuelType!;
+    selectedPurchaseType = widget.selectedPurchaseType!;
+    subType = widget.subType!;
+    selectedEnquiryType = widget.selectedEnquiryType!;
+    selectedSource = widget.selectedSource!;
+    selectedEvent = widget.selectedEvent!;
+    selectedBrand = widget.selectedBrand!;
+    print(selectedFuelType);
+  }
 
   // Controllers for capturing input
   TextEditingController descriptionController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
-  String? selectedEvent; // Event data to be captured
-  String? selectedCustomer;
+  bool get isLoading => false;
 
   Future<void> _pickDate() async {
     DateTime? pickedDate = await showDatePicker(
@@ -101,6 +131,105 @@ class _LeadsLastState extends State<LeadsLast> {
                             ),
                           ),
                         ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            child: Text(
+                              textAlign: TextAlign.start,
+                              'Assign to',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: const Color.fromARGB(255, 243, 238, 238),
+                          ),
+                          child: isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : DropdownButton<String>(
+                                  value: selectedStatus,
+                                  hint: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                      "Select",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  isExpanded: true,
+                                  underline: const SizedBox.shrink(),
+                                  items: const [
+                                    DropdownMenuItem<String>(
+                                      value: "New",
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 10.0),
+                                        child: Text(
+                                          "New",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                    DropdownMenuItem<String>(
+                                      value: "Follow Up",
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 10.0),
+                                        child: Text(
+                                          "Followup",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                    DropdownMenuItem<String>(
+                                      value: "Qualified",
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 10.0),
+                                        child: Text(
+                                          "Qualified",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                    DropdownMenuItem<String>(
+                                      value: "Lost",
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 10.0),
+                                        child: Text(
+                                          "Lost",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedStatus =
+                                          value!; // Corrected assignment
+                                    });
+
+                                    print(
+                                        "Selected Status: $selectedStatus"); // Debugging
+                                  },
+                                ),
+                        ),
                         const SizedBox(height: 5),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -140,7 +269,7 @@ class _LeadsLastState extends State<LeadsLast> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5.0),
                           child: Text(
-                            'Phone :',
+                            'Lead code :',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           ),
@@ -154,7 +283,7 @@ class _LeadsLastState extends State<LeadsLast> {
                           child: TextField(
                             controller: phoneController,
                             decoration: InputDecoration(
-                              hintText: "Phone",
+                              hintText: "Lead Code",
                               hintStyle: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -227,7 +356,7 @@ class _LeadsLastState extends State<LeadsLast> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-                                          child:   LeadsThird(
+                                          child: LeadsThird(
                                             firstName: '',
                                             lastName: '',
                                             email: '',
@@ -307,14 +436,14 @@ class _LeadsLastState extends State<LeadsLast> {
       'fname': widget.firstName,
       'lname': widget.lastName,
       'email': widget.email,
-      'phone': phone,
+      'lead_code': phone,
       'mobile': widget.mobile,
       'purchase_type': selectedPurchaseType,
       'brand': selectedBrand,
       'type': selectedFuelType,
       'sub_type': subType,
       'sp_id': spId,
-      'status': description,
+      'status': selectedStatus,
       'lead_source': selectedSource,
       'PMI': selectedEvent,
       'enquiry_type': selectedEnquiryType,
@@ -325,7 +454,15 @@ class _LeadsLastState extends State<LeadsLast> {
 
     if (success) {
       print('Lead submitted successfully!');
-      Navigator.pop(context);
+
+      // Close modal if submission is successful
+      if (context.mounted) {
+        Navigator.pop(context); // Closes the modal
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Form Submit Successful.')),
+      );
     } else {
       print('Failed to submit lead.');
     }

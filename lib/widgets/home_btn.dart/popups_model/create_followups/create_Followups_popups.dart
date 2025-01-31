@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -8,16 +7,15 @@ import 'package:smart_assist/utils/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
-import 'package:smart_assist/utils/snackbar_helper.dart';
 
-class CreateLeadsPopups extends StatefulWidget {
-  const CreateLeadsPopups({super.key});
+class CreateFollowupsPopups extends StatefulWidget {
+  const CreateFollowupsPopups({super.key});
 
   @override
-  State<CreateLeadsPopups> createState() => _CreateLeadsPopupsState();
+  State<CreateFollowupsPopups> createState() => _CreateFollowupsPopupsState();
 }
 
-class _CreateLeadsPopupsState extends State<CreateLeadsPopups> {
+class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
   List<String> dropdownItems = [];
   bool isLoading = false;
   @override

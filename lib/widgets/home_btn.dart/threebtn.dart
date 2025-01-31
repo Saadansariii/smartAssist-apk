@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_first.dart';
 import 'package:smart_assist/widgets/oppointment/overdue.dart';
 import 'package:smart_assist/widgets/oppointment/upcoming.dart';
@@ -18,7 +19,8 @@ class Threebtn extends StatefulWidget {
 }
 
 class _ThreebtnState extends State<Threebtn> {
-final Widget _leadFirstStep= const LeadFirstStep();
+  final Widget _leadFirstStep = const LeadFirstStep();
+  final Widget _createFollowups = const CreateFollowupsPopups();
 
   bool _isMonthView = true;
   int _selectedBtnIndex = 0;
@@ -253,7 +255,23 @@ final Widget _leadFirstStep= const LeadFirstStep();
                   position: const RelativeRect.fromLTRB(200, 230, 30, 0),
                   items: [
                     PopupMenuItem<String>(
-                      onTap: () {},
+                      onTap: () {
+                        Future.delayed(Duration.zero, () {
+                          // Delayed to ensure PopupMenuItem tap is completed before opening the dialog
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: _createFollowups
+                                , // Your modal widget
+                              );
+                            },
+                          );
+                        });
+                      },
                       padding:
                           EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                       height: 0,
@@ -309,35 +327,6 @@ final Widget _leadFirstStep= const LeadFirstStep();
                   print('Selected: $result');
                 }
               },
-              // child: Row(
-              //   children: [
-              //     if (_isMonthView)
-              //       IconButton(
-              //         onPressed: () {
-              //           setState(() {
-              //             _isMonthView = true;
-              //           });
-              //         },
-              //         icon: const Icon(
-              //           Icons.add,
-              //           color: Colors.white,
-              //         ),
-              //       ),
-              //     if (!_isMonthView)
-              //       IconButton(
-              //         onPressed: () {
-              //           setState(() {
-              //             _isMonthView = false;
-              //           });
-              //         },
-              //         icon: const Icon(
-              //           Icons.wrong_location_rounded,
-              //           color: Colors.white,
-              //         ),
-              //       ),
-              //   ],
-              // ),
-
               child: const Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                 child: Icon(Icons.add, size: 30),
@@ -1278,155 +1267,155 @@ final Widget _leadFirstStep= const LeadFirstStep();
 //   );
 // }
 
-Widget _leadLastStep(BuildContext context) {
-  String? selectedEvent;
-  String? selectedCustomer;
+// Widget _leadLastStep(BuildContext context) {
+//   String? selectedEvent;
+//   String? selectedCustomer;
 
-  return StatefulBuilder(
-    builder: (BuildContext context, StateSetter setState) {
-      return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Center(
-                            child: Text('Add New leads',
-                                style: GoogleFonts.poppins(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Text(
-                          'Description :',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity, // Full width dropdown
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: const Color.fromARGB(255, 243, 238, 238),
-                        ),
-                        child: DropdownButton<String>(
-                          menuWidth: 250,
-                          value: selectedEvent, // Set to selectedEvent
-                          hint: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text("New",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey)),
-                          ),
-                          icon: const Icon(Icons.keyboard_arrow_down),
-                          isExpanded: true,
-                          underline: const SizedBox.shrink(),
-                          items: <String>[
-                            'New Vehicle',
-                            'Old Vehicle',
-                          ].map((String value) {
-                            return DropdownMenuItem<String>(
-                              value:
-                                  value, // Ensure value matches dropdown items
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: Text(value,
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black)),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedEvent = value; // Update selected event
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      const SizedBox(height: 30),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 45,
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Previous',
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white)),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: Container(
-                              height: 45,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: TextButton(
-                                onPressed: () {
-                                  print('Selected Event: $selectedEvent');
-                                  print('Selected Customer: $selectedCustomer');
-                                  Navigator.pop(context);
-                                },
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text('Submit',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white)),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    },
-  );
-}
+//   return StatefulBuilder(
+//     builder: (BuildContext context, StateSetter setState) {
+//       return Padding(
+//         padding: const EdgeInsets.all(10.0),
+//         child: SingleChildScrollView(
+//           scrollDirection: Axis.vertical,
+//           child: Container(
+//             width: double.infinity,
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(10),
+//             ),
+//             child: Column(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 SizedBox(
+//                   width: double.infinity,
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.stretch,
+//                     children: [
+//                       Align(
+//                         alignment: Alignment.centerLeft,
+//                         child: Padding(
+//                           padding: const EdgeInsets.symmetric(vertical: 8.0),
+//                           child: Center(
+//                             child: Text('Add New leads',
+//                                 style: GoogleFonts.poppins(
+//                                     fontSize: 18,
+//                                     fontWeight: FontWeight.bold,
+//                                     color: Colors.black)),
+//                           ),
+//                         ),
+//                       ),
+//                       const SizedBox(height: 5),
+//                       Padding(
+//                         padding: const EdgeInsets.symmetric(vertical: 5.0),
+//                         child: Text(
+//                           'Description :',
+//                           style: TextStyle(
+//                               fontSize: 16, fontWeight: FontWeight.w500),
+//                         ),
+//                       ),
+//                       Container(
+//                         width: double.infinity, // Full width dropdown
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(8),
+//                           color: const Color.fromARGB(255, 243, 238, 238),
+//                         ),
+//                         child: DropdownButton<String>(
+//                           menuWidth: 250,
+//                           value: selectedEvent, // Set to selectedEvent
+//                           hint: Padding(
+//                             padding: EdgeInsets.only(left: 10),
+//                             child: Text("New",
+//                                 style: GoogleFonts.poppins(
+//                                     fontSize: 14,
+//                                     fontWeight: FontWeight.w500,
+//                                     color: Colors.grey)),
+//                           ),
+//                           icon: const Icon(Icons.keyboard_arrow_down),
+//                           isExpanded: true,
+//                           underline: const SizedBox.shrink(),
+//                           items: <String>[
+//                             'New Vehicle',
+//                             'Old Vehicle',
+//                           ].map((String value) {
+//                             return DropdownMenuItem<String>(
+//                               value:
+//                                   value, // Ensure value matches dropdown items
+//                               child: Padding(
+//                                 padding: const EdgeInsets.only(left: 10.0),
+//                                 child: Text(value,
+//                                     style: GoogleFonts.poppins(
+//                                         fontSize: 14,
+//                                         fontWeight: FontWeight.w500,
+//                                         color: Colors.black)),
+//                               ),
+//                             );
+//                           }).toList(),
+//                           onChanged: (value) {
+//                             setState(() {
+//                               selectedEvent = value; // Update selected event
+//                             });
+//                           },
+//                         ),
+//                       ),
+//                       const SizedBox(height: 10),
+//                       const SizedBox(height: 30),
+//                       Row(
+//                         children: [
+//                           Expanded(
+//                             child: Container(
+//                               height: 45,
+//                               decoration: BoxDecoration(
+//                                 color: Colors.black,
+//                                 borderRadius: BorderRadius.circular(8),
+//                               ),
+//                               child: TextButton(
+//                                 onPressed: () {
+//                                   Navigator.pop(context);
+//                                 },
+//                                 child: Text('Previous',
+//                                     style: GoogleFonts.poppins(
+//                                         fontSize: 16,
+//                                         fontWeight: FontWeight.w600,
+//                                         color: Colors.white)),
+//                               ),
+//                             ),
+//                           ),
+//                           const SizedBox(width: 20),
+//                           Expanded(
+//                             child: Container(
+//                               height: 45,
+//                               decoration: BoxDecoration(
+//                                 color: Colors.blue,
+//                                 borderRadius: BorderRadius.circular(8),
+//                               ),
+//                               child: TextButton(
+//                                 onPressed: () {
+//                                   print('Selected Event: $selectedEvent');
+//                                   print('Selected Customer: $selectedCustomer');
+//                                   Navigator.pop(context);
+//                                 },
+//                                 child: GestureDetector(
+//                                   onTap: () {
+//                                     Navigator.pop(context);
+//                                   },
+//                                   child: Text('Submit',
+//                                       style: GoogleFonts.poppins(
+//                                           fontSize: 16,
+//                                           fontWeight: FontWeight.w600,
+//                                           color: Colors.white)),
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ],
+//                       )
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       );
+//     },
+//   );
+// }

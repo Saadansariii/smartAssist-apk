@@ -27,29 +27,29 @@ class LeadsSecond extends StatefulWidget {
 }
 
 class _LeadsSecondState extends State<LeadsSecond> {
-  final Widget _leadSecondStep = const LeadsSecond(
-    firstName: '',
-    lastName: '',
-    email: '',
-    selectedPurchaseType: '',
-    selectedFuelType: '',
-    subType: '',
-    selectedBrand: '',
-  );
+  // final Widget _leadSecondStep = const LeadsSecond(
+  //   firstName: '',
+  //   lastName: '',
+  //   email: '',
+  //   selectedPurchaseType: '',
+  //   selectedFuelType: '',
+  //   subType: '',
+  //   selectedBrand: '',
+  // );
   TextEditingController typeController = TextEditingController();
 
-  final Widget _leadThirdStep =   LeadsThird(
-    firstName: '',
-    lastName: '',
-    email: '',
-    selectedPurchaseType: '',
-    subType: '',
-    selectedFuelType: '',
-    selectedBrand: '',
-    selectedEnquiryType: '',
-    selectedEvent: '',
-    selectedSource: '',
-  );
+  // final Widget _leadThirdStep = LeadsThird(
+  //   firstName: '',
+  //   lastName: '',
+  //   email: '',
+  //   selectedPurchaseType: '',
+  //   subType: '',
+  //   selectedFuelType: '',
+  //   selectedBrand: '',
+  //   selectedEnquiryType: '',
+  //   selectedEvent: '',
+  //   selectedSource: '',
+  // );
   final Widget _leadFirstStep = const LeadFirstStep();
 
   String? selectedPurchaseType;
@@ -83,7 +83,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
               label: 'Purchase Type:',
               hint: 'Select Purchase Type',
               value: selectedPurchaseType,
-              items: ['New Vehicle', 'Old Vehicle'],
+              items: ['New Vehicle', 'Used Vehicle'],
               onChanged: (value) {
                 setState(() {
                   selectedPurchaseType = value;
@@ -151,6 +151,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
                       Navigator.pop(context); // Close the first dialog
                       Future.microtask(() {
                         // Immediately queue the second dialog to open after the first closes
+
                         showDialog(
                           context: context,
                           builder: (context) => Dialog(
