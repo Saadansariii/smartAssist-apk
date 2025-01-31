@@ -1,132 +1,117 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/details_pages/followups.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:smart_assist/pages/details_pages/followups.dart';
 
-class OverdueFollowup extends StatelessWidget {
-  const OverdueFollowup({super.key});
+class OverdueFollowup extends StatefulWidget {
+  final List<dynamic> overdueeFollowups;
+  const OverdueFollowup({super.key, required this.overdueeFollowups});
+
+  @override
+  State<OverdueFollowup> createState() => _OverdueFollowupState();
+}
+
+class _OverdueFollowupState extends State<OverdueFollowup> {
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    print("widget.upcomingFollowups");
+    print(widget.overdueeFollowups);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      endActionPane: ActionPane(
-        motion: const StretchMotion(),
-        children: [
-          SlidableAction(
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
-            icon: Icons.phone, // Material icon
-            onPressed: (context) {
-              // Define action for phone icon
-              print('Phone action pressed');
+    if (widget.overdueeFollowups.isEmpty) {
+      return const Center(
+        child: Text('No upcoming followups available'),
+      );
+    }
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.overdueeFollowups.length,
+            itemBuilder: (context, index) {
+              var item = widget.overdueeFollowups[index];
+              if (item.containsKey('name') &&
+                  item.containsKey('due_date') &&
+                  item.containsKey('task_id')) {
+                return overdueeFollowupsItem(
+                  name: item['name'],
+                  date: item['due_date'],
+                  vehicle: 'Discovery Sport',
+                  leadId: item['task_id'],
+                );
+              } else {
+                return ListTile(title: Text('Invalid data at index $index'));
+              }
             },
-          ),
-          SlidableAction(
-            backgroundColor: Colors.green,
-            icon: Icons.message_rounded,
-            onPressed: (context) {
-              // Define action for WhatsApp icon
-              print('WhatsApp action pressed');
-            },
-          ),
-          SlidableAction(
-            backgroundColor: const Color.fromARGB(255, 231, 225, 225),
-            icon: Icons.mail,
-            onPressed: (context) {
-              // Define action for mail icon
-              print('Mail action pressed');
-            },
-            foregroundColor: Colors.red, // This will set the icon color to red
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          );
+  }
+}
+
+class overdueeFollowupsItem extends StatelessWidget {
+  final String name;
+  final String date;
+  final String vehicle;
+  final String leadId;
+
+  const overdueeFollowupsItem({
+    super.key,
+    required this.name,
+    required this.date,
+    required this.vehicle,
+    required this.leadId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+      child: Slidable(
+        endActionPane: ActionPane(
+          motion: const StretchMotion(),
+          children: [
+            ReusableSlidableAction(
+              onPressed: () => _phoneAction(),
+              backgroundColor: Colors.blue,
+              icon: Icons.phone,
+            ),
+            ReusableSlidableAction(
+              onPressed: () => _messageAction(),
+              backgroundColor: Colors.green,
+              icon: Icons.message_rounded,
+            ),
+            ReusableSlidableAction(
+              onPressed: () => _mailAction(),
+              backgroundColor: const Color.fromARGB(255, 231, 225, 225),
+              icon: Icons.mail,
+              foregroundColor: Colors.red,
+            ),
+          ],
+        ),
         child: SizedBox(
           height: 80,
           child: Container(
             decoration: BoxDecoration(
-              color: const Color.fromARGB(
-                  255, 245, 244, 244), // Background color for the content
-              borderRadius:
-                  BorderRadius.circular(10), // Optional rounded corners
+              color: const Color.fromARGB(255, 245, 244, 244),
+              borderRadius: BorderRadius.circular(10),
               border: const Border(
-                left: BorderSide(
-                  width: 8.0, // Left border width
-                  color: Color(0xFFEA4335), // Left border color
-                ),
+                left: BorderSide(width: 8.0, color: Colors.red),
               ),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset('assets/star.png'),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Beth Ford',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Color.fromARGB(255, 139, 138, 138)),
-                    ),
-                    const Padding(padding: EdgeInsets.only(bottom: 5)),
-                    Row(
-                      children: [
-                        // Icon(
-                        //   Icons.phone,
-                        //   color: Colors.grey,
-                        // ),
-                        Image.asset('assets/phone.png'),
-                        const Padding(padding: EdgeInsets.only(right: 5)),
-                        const Text('Today',
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                                color: Colors.grey)),
-                      ],
-                    ),
-                  ],
-                ),
-                const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Discovery Sport',
-                      style: TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w500),
-                    ),
-                    Padding(padding: EdgeInsets.only(bottom: 5)),
-                    // Row(
-                    //   children: [
-                    //     Icon(
-                    //       Icons.calendar_month_outlined,
-                    //       color: Colors.grey,
-                    //     ),
-                    //     Text(
-                    //       'Tomorrow',
-                    //       style: TextStyle(
-                    //           color: Colors.grey, fontWeight: FontWeight.w400),
-                    //     )
-                    //   ],
-                    // ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const FollowupsDetails()));
-                      },
-                      child: Image.asset('assets/arrowButton.png'),
-                    ),
-                  ],
-                ),
+                const Icon(Icons.star_rounded,
+                    color: Colors.amberAccent, size: 40),
+                _buildUserDetails(),
+                _buildVerticalDivider(),
+                _buildCarModel(),
+                _buildNavigationButton(context),
               ],
             ),
           ),
@@ -134,4 +119,109 @@ class OverdueFollowup extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildUserDetails() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          name,
+          style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Color.fromARGB(255, 139, 138, 138)),
+        ),
+        const SizedBox(height: 5),
+        Row(
+          children: [
+            const Icon(Icons.phone, color: Colors.blue, size: 14),
+            const SizedBox(width: 10),
+            Text(date,
+                style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVerticalDivider() {
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      height: 20,
+      width: 1,
+      decoration: const BoxDecoration(
+          border: Border(right: BorderSide(color: Colors.grey))),
+    );
+  }
+
+  Widget _buildCarModel() {
+    return Container(
+      margin: const EdgeInsets.only(top: 22),
+      child: Text(vehicle,
+          style: const TextStyle(
+              fontSize: 12, fontWeight: FontWeight.w400, color: Colors.grey)),
+    );
+  }
+
+  Widget _buildNavigationButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const FollowupsDetails())),
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+            color: const Color(0xffD9D9D9),
+            borderRadius: BorderRadius.circular(30)),
+        child: const Icon(Icons.arrow_forward_ios_sharp,
+            size: 25, color: Colors.white),
+      ),
+    );
+  }
+}
+
+class ReusableSlidableAction extends StatelessWidget {
+  final VoidCallback onPressed;
+  final Color backgroundColor;
+  final IconData icon;
+  final Color? foregroundColor;
+
+  const ReusableSlidableAction({
+    super.key,
+    required this.onPressed,
+    required this.backgroundColor,
+    required this.icon,
+    this.foregroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomSlidableAction(
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 30,
+            color: Colors.white,
+          )
+        ],
+      ),
+      onPressed: (context) => onPressed(),
+    );
+  }
+}
+
+void _phoneAction() {
+  print("Phone action triggered");
+}
+
+void _messageAction() {
+  print("Message action triggered");
+}
+
+void _mailAction() {
+  print("Mail action triggered");
 }

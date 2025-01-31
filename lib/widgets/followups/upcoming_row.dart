@@ -1,190 +1,118 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/details_pages/followups.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CustomRow extends StatelessWidget {
-  const CustomRow({super.key});
+class FollowupsUpcoming extends StatefulWidget {
+  final List<dynamic> upcomingFollowups;
+  const FollowupsUpcoming({super.key, required this.upcomingFollowups});
+
+  @override
+  State<FollowupsUpcoming> createState() => _FollowupsUpcomingState();
+}
+
+class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    print("widget.upcomingFollowups");
+    print(widget.upcomingFollowups);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      endActionPane: ActionPane(
-        motion: const StretchMotion(),
-        children: [
-          CustomSlidableAction(
-            onPressed: (context) {
-              print('Phone action pressed');
+    if (widget.upcomingFollowups.isEmpty) {
+      return const Center(
+        child: Text('No upcoming followups available'),
+      );
+    }
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.upcomingFollowups.length,
+            itemBuilder: (context, index) {
+              var item = widget.upcomingFollowups[index];
+              if (item.containsKey('name') &&
+                  item.containsKey('due_date') &&
+                  item.containsKey('task_id')) {
+                return UpcomingFollowupItem(
+                  name: item['name'],
+                  date: item['due_date'],
+                  vehicle: 'Discovery Sport',
+                  leadId: item['task_id'],
+                );
+              } else {
+                return ListTile(title: Text('Invalid data at index $index'));
+              }
             },
-            backgroundColor: Colors.blue, // Background color of the action
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.phone, // Custom icon
-                  color: Colors.white, // White icon color
-                  size: 30, // Adjust size as needed
-                ),
-              ],
+          );
+  }
+}
+
+class UpcomingFollowupItem extends StatelessWidget {
+  final String name;
+  final String date;
+  final String vehicle;
+  final String leadId;
+
+  const UpcomingFollowupItem({
+    super.key,
+    required this.name,
+    required this.date,
+    required this.vehicle,
+    required this.leadId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+      child: Slidable(
+        endActionPane: ActionPane(
+          motion: const StretchMotion(),
+          children: [
+            ReusableSlidableAction(
+              onPressed: () => _phoneAction(),
+              backgroundColor: Colors.blue,
+              icon: Icons.phone,
             ),
-          ),
-          CustomSlidableAction(
-            onPressed: (context) {
-              print('Phone action pressed');
-            },
-            backgroundColor: Colors.green, // Background color of the action
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.message, // Custom icon
-                  color: Colors.white, // White icon color
-                  size: 30, // Adjust size as needed
-                ),
-              ],
+            ReusableSlidableAction(
+              onPressed: () => _messageAction(),
+              backgroundColor: Colors.green,
+              icon: Icons.message_rounded,
             ),
-          ),
-          CustomSlidableAction(
-            onPressed: (context) {
-              print('Phone action pressed');
-            },
-            backgroundColor: const Color.fromARGB(
-                255, 231, 225, 225), // Background color of the action
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.mail, // Custom icon
-                  color: Colors.white, // White icon color
-                  size: 30, // Adjust size as needed
-                ),
-              ],
+            ReusableSlidableAction(
+              onPressed: () => _mailAction(),
+              backgroundColor: const Color.fromARGB(255, 231, 225, 225),
+              icon: Icons.mail,
+              foregroundColor: Colors.red,
             ),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          ],
+        ),
         child: SizedBox(
           height: 80,
           child: Container(
             decoration: BoxDecoration(
-              color: const Color.fromARGB(
-                  255, 245, 244, 244), // Background color for the content
-              borderRadius:
-                  BorderRadius.circular(10), // Optional rounded corners
+              color: const Color.fromARGB(255, 245, 244, 244),
+              borderRadius: BorderRadius.circular(10),
               border: const Border(
                 left: BorderSide(
-                  width: 8.0, // Left border width
-                  color: Color.fromARGB(255, 81, 223, 121), // Left border color
-                ),
+                    width: 8.0, color: Color.fromARGB(255, 81, 223, 121)),
               ),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // Image.asset('assets/star.png'),
-                Icon(
-                  Icons.star_rounded,
-                  color: Colors.amberAccent,
-                  size: 40,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Beth Ford',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Color.fromARGB(255, 139, 138, 138)),
-                    ),
-                    // Divider(
-                    //   color: Colors.amberAccent,
-                    //   thickness: 1,
-                    //   endIndent: 10,
-                    // ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(
-                          FontAwesomeIcons.phoneVolume,
-                          color: Colors.blue,
-                          size: 14,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('Today 3pm',
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                                color: Colors.grey)),
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(top: 20),
-                        height: 20,
-                        width: 1,
-                        decoration: BoxDecoration(
-                            border:
-                                Border(right: BorderSide(color: Colors.grey)))),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 22),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Discovery Sport',
-                        style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const FollowupsDetails()));
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: const Color(0xffD9D9D9),
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Icon(
-                          Icons.arrow_forward_ios_sharp,
-                          size: 25,
-                          color: Colors.white,
-                          weight: 40,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                const Icon(Icons.star_rounded,
+                    color: Colors.amberAccent, size: 40),
+                _buildUserDetails(),
+                _buildVerticalDivider(),
+                _buildCarModel(),
+                _buildNavigationButton(context),
               ],
             ),
           ),
@@ -193,5 +121,108 @@ class CustomRow extends StatelessWidget {
     );
   }
 
-  void _onDismissed() {}
+  Widget _buildUserDetails() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          name,
+          style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Color.fromARGB(255, 139, 138, 138)),
+        ),
+        const SizedBox(height: 5),
+        Row(
+          children: [
+            const Icon(Icons.phone, color: Colors.blue, size: 14),
+            const SizedBox(width: 10),
+            Text(date,
+                style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVerticalDivider() {
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      height: 20,
+      width: 1,
+      decoration: const BoxDecoration(
+          border: Border(right: BorderSide(color: Colors.grey))),
+    );
+  }
+
+  Widget _buildCarModel() {
+    return Container(
+      margin: const EdgeInsets.only(top: 22),
+      child: Text(vehicle,
+          style: const TextStyle(
+              fontSize: 12, fontWeight: FontWeight.w400, color: Colors.grey)),
+    );
+  }
+
+  Widget _buildNavigationButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const FollowupsDetails())),
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+            color: const Color(0xffD9D9D9),
+            borderRadius: BorderRadius.circular(30)),
+        child: const Icon(Icons.arrow_forward_ios_sharp,
+            size: 25, color: Colors.white),
+      ),
+    );
+  }
+}
+
+class ReusableSlidableAction extends StatelessWidget {
+  final VoidCallback onPressed;
+  final Color backgroundColor;
+  final IconData icon;
+  final Color? foregroundColor;
+
+  const ReusableSlidableAction({
+    super.key,
+    required this.onPressed,
+    required this.backgroundColor,
+    required this.icon,
+    this.foregroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomSlidableAction(
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 30,
+            color: Colors.white,
+          )
+        ],
+      ),
+      onPressed: (context) => onPressed(),
+    );
+  }
+}
+
+void _phoneAction() {
+  print("Phone action triggered");
+}
+
+void _messageAction() {
+  print("Message action triggered");
+}
+
+void _mailAction() {
+  print("Mail action triggered");
 }

@@ -12,11 +12,13 @@ class AddFollowups extends StatefulWidget {
   State<AddFollowups> createState() => _AddFollowupsState();
 }
 
+
+
 class _AddFollowupsState extends State<AddFollowups> {
-  Widget currentWidgetOverdue1 = const OverdueFollowup();
+  Widget currentWidgetOverdue1 = const OverdueFollowup(overdueeFollowups: [],);
   Widget currentWidgetOverdue2 = const OverdueOpp();
   Widget currentWidget1 = const OppFollUps();
-  Widget currentWidget = const CustomRow();
+  Widget currentWidget = const FollowupsUpcoming(upcomingFollowups: [],);
   int _upcommingButtonIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class _AddFollowupsState extends State<AddFollowups> {
         backgroundColor: Colors.blue,
         automaticallyImplyLeading: true,
         title: const Text(
-          'All Follow ups', // e.g., January 2025
+          'All Follow ups', 
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,

@@ -17,11 +17,11 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  Widget currentWidgetOverdue1 = const OverdueFollowup();
+  Widget currentWidgetOverdue1 = const OverdueFollowup(overdueeFollowups: [],);
   Widget currentWidgetOverdue2 = const OverdueOpp();
   Widget currentWidget1 = const OppFollUps();
-  Widget currentWidget = const CustomRow();
-  Widget currentWidgetOverdue3 = const OverdueFollowup();
+  Widget currentWidget = const FollowupsUpcoming(upcomingFollowups: [], );
+  Widget currentWidgetOverdue3 = const OverdueFollowup(overdueeFollowups: [],);
   int _upcommingButtonIndex = 0;
 
   @override
