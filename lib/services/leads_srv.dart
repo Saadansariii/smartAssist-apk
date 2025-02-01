@@ -223,4 +223,85 @@ class LeadsSrv {
       throw Exception('Error fetching data: $e');
     }
   }
+
+  static Future<Map<String, dynamic>> singleFollowupsById(String taskId) async {
+    const String apiUrl = "https://api.smartassistapp.in/api/admin/tasks/";
+
+    final token = await Storage.getToken();
+    if (token == null) {
+      print("No token found. Please login.");
+      throw Exception("No token found. Please login.");
+    }
+
+    try {
+      // Ensure the actual leadId is being passed correctly
+      print('Fetching data for Lead ID: $taskId');
+      print(
+          'API URL: ${apiUrl + taskId}'); // Concatenate the leadId with the API URL
+
+      final response = await http.get(
+        Uri.parse('$apiUrl$taskId'), // Correct URL with leadId appended
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'taskId': taskId
+        },
+      );
+
+      // Debug: Print the response status code and body
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data; // Return the response data
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+      throw Exception('Error fetching data: $e');
+    }
+  }
+
+  static Future<Map<String, dynamic>> singleAppointmentById(
+      String eventId) async {
+    const String apiUrl = "https://api.smartassistapp.in/api/admin/events/";
+
+    final token = await Storage.getToken();
+    if (token == null) {
+      print("No token found. Please login.");
+      throw Exception("No token found. Please login.");
+    }
+
+    try {
+      // Ensure the actual leadId is being passed correctly
+      print('Fetching data for Lead ID: $eventId');
+      print(
+          'API URL: ${apiUrl + eventId}'); // Concatenate the leadId with the API URL
+
+      final response = await http.get(
+        Uri.parse('$apiUrl$eventId'), // Correct URL with leadId appended
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'taskId': eventId
+        },
+      );
+
+      // Debug: Print the response status code and body
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data; // Return the response data
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+      throw Exception('Error fetching data: $e');
+    }
+  }
 }

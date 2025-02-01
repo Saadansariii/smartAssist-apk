@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/details_pages/followups.dart';
+import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 
-class OppFollUps extends StatelessWidget {
+class OppFollUps extends StatefulWidget {
   const OppFollUps({super.key});
 
+  @override
+  State<OppFollUps> createState() => _OppFollUpsState();
+}
+
+class _OppFollUpsState extends State<OppFollUps> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -94,7 +99,7 @@ class OppFollUps extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const FollowupsDetails()));
+                              builder: (context) => const FollowupsDetails(taskId: '',)));
                     },
                     child: Image.asset('assets/arrowButton.png'),
                   ),

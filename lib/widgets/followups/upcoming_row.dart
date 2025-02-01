@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:smart_assist/pages/details_pages/followups.dart';
+import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 
 class FollowupsUpcoming extends StatefulWidget {
   final List<dynamic> upcomingFollowups;
@@ -43,6 +43,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
                   date: item['due_date'],
                   vehicle: 'Discovery Sport',
                   leadId: item['task_id'],
+                  taskId: item['task_id'],
                 );
               } else {
                 return ListTile(title: Text('Invalid data at index $index'));
@@ -52,11 +53,12 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
   }
 }
 
-class UpcomingFollowupItem extends StatelessWidget {
+class UpcomingFollowupItem extends StatefulWidget {
   final String name;
   final String date;
   final String vehicle;
   final String leadId;
+  final String taskId;
 
   const UpcomingFollowupItem({
     super.key,
@@ -64,7 +66,18 @@ class UpcomingFollowupItem extends StatelessWidget {
     required this.date,
     required this.vehicle,
     required this.leadId,
+    required this.taskId,
   });
+
+  @override
+  State<UpcomingFollowupItem> createState() => _UpcomingFollowupItemState();
+}
+
+class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +125,7 @@ class UpcomingFollowupItem extends StatelessWidget {
                 _buildUserDetails(),
                 _buildVerticalDivider(),
                 _buildCarModel(),
-                _buildNavigationButton(context),
+                _buildNavigationButton(context , widget.taskId),
               ],
             ),
           ),
@@ -127,7 +140,7 @@ class UpcomingFollowupItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          name,
+          widget.name,
           style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -138,7 +151,7 @@ class UpcomingFollowupItem extends StatelessWidget {
           children: [
             const Icon(Icons.phone, color: Colors.blue, size: 14),
             const SizedBox(width: 10),
-            Text(date,
+            Text(widget.date,
                 style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
         ),
@@ -159,16 +172,23 @@ class UpcomingFollowupItem extends StatelessWidget {
   Widget _buildCarModel() {
     return Container(
       margin: const EdgeInsets.only(top: 22),
-      child: Text(vehicle,
+      child: Text(widget.vehicle,
           style: const TextStyle(
               fontSize: 12, fontWeight: FontWeight.w400, color: Colors.grey)),
     );
   }
 
-  Widget _buildNavigationButton(BuildContext context) {
+  Widget _buildNavigationButton(BuildContext context, String taskId) {
     return GestureDetector(
-      onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const FollowupsDetails())),
+      onTap: () {
+        print("Navigating with leadId: $taskId");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FollowupsDetails(taskId: taskId),
+          ),
+        );
+      },
       child: Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(

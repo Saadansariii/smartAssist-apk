@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:smart_assist/pages/details_pages/followups.dart';
+import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 
 class OppOverdue extends StatefulWidget {
   final List<dynamic> overdueeOpp;
@@ -170,7 +170,7 @@ class UpcomingOppItem extends StatelessWidget {
   Widget _buildNavigationButton(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const FollowupsDetails())),
+          MaterialPageRoute(builder: (context) => const FollowupsDetails(taskId: '',))),
       child: Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(

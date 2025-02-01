@@ -37,8 +37,8 @@ class _CalenderWidgetState extends State<CalenderWidget> {
         headerStyle: const HeaderStyle(
           formatButtonVisible: false,
           titleCentered: false,
-          leftChevronVisible: false,
-          rightChevronVisible: false,
+          leftChevronVisible: true,
+          rightChevronVisible: true,
           headerPadding: EdgeInsets.zero,
           titleTextStyle: TextStyle(fontSize: 0, color: Colors.transparent),
         ),

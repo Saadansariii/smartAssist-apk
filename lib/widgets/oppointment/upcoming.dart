@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:smart_assist/pages/details_pages/followups.dart';
+import 'package:smart_assist/pages/details_pages/appointment/appointment_upcoming.dart';
+import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 
 class OppUpcoming extends StatefulWidget {
   final List<dynamic> upcomingOpp;
@@ -46,6 +47,7 @@ class _OppUpcomingState extends State<OppUpcoming> {
                   date: item['start_date'],
                   vehicle: 'Discovery Sport',
                   leadId: item['event_id'],
+                  eventId: item['event_id'],
                 );
               } else {
                 return ListTile(title: Text('Invalid data at index $index'));
@@ -60,6 +62,7 @@ class UpcomingOppItem extends StatelessWidget {
   final String date;
   final String vehicle;
   final String leadId;
+  final String eventId;
 
   const UpcomingOppItem({
     super.key,
@@ -67,6 +70,7 @@ class UpcomingOppItem extends StatelessWidget {
     required this.date,
     required this.vehicle,
     required this.leadId,
+    required this.eventId,
   });
 
   @override
@@ -170,8 +174,15 @@ class UpcomingOppItem extends StatelessWidget {
 
   Widget _buildNavigationButton(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const FollowupsDetails())),
+      onTap: () {
+        print("Navigating with leadId: $eventId");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AppointmentUpcoming(eventId : eventId),
+          ),
+        );
+      },
       child: Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
