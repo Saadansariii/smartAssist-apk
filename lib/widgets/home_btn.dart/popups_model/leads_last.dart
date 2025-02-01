@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_third.dart';
@@ -414,6 +415,12 @@ class _LeadsLastState extends State<LeadsLast> {
     );
   }
 
+Future<void> storeLeadId(String leadId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        'lead_id', leadId); // Save lead_id in SharedPreferences
+    print("Stored lead_id: $leadId"); // Debugging
+  }
   // This function will call the API and pass the captured data
   Future<void> submitForm() async {
     String description = descriptionController.text;
@@ -422,6 +429,7 @@ class _LeadsLastState extends State<LeadsLast> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? spId = prefs.getString('user_id');
+   String? leadId = prefs.getString('lead_id');
 
     print('Retrieved sp_id: $spId'); // Debugging
 
@@ -450,14 +458,22 @@ class _LeadsLastState extends State<LeadsLast> {
     };
 
     print('Lead Data: $leadData');
-    bool success = await LeadsSrv.submitLead(leadData);
-
+    bool success = await LeadsSrv.submitLead(leadData , leadId);
+    
     if (success) {
       print('Lead submitted successfully!');
 
+      //  String leadId = 'lead_id';
       // Close modal if submission is successful
       if (context.mounted) {
-        Navigator.pop(context); // Closes the modal
+        // Navigator.pop(context);
+         Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                SingleLeadsById(leadId: leadId!),  
+          ),
+        );
       }
 
       ScaffoldMessenger.of(context).showSnackBar(

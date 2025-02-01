@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_first.dart';
 import 'package:smart_assist/widgets/oppointment/overdue.dart';
@@ -23,6 +24,7 @@ class Threebtn extends StatefulWidget {
 class _ThreebtnState extends State<Threebtn> {
   final Widget _leadFirstStep = const LeadFirstStep();
   final Widget _createFollowups = const CreateFollowupsPopups();
+  final Widget _createAppoinment = const AppointmentPopup();
 
   List<dynamic> upcomingFollowups = [];
   List<dynamic> overdueFollowups = [];
@@ -297,91 +299,250 @@ class _ThreebtnState extends State<Threebtn> {
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () async {
-                final result = await showMenu<String>(
-                  context: context,
-                  position: const RelativeRect.fromLTRB(200, 230, 30, 0),
-                  items: [
-                    PopupMenuItem<String>(
-                      onTap: () {
-                        Future.delayed(Duration.zero, () {
-                          // Delayed to ensure PopupMenuItem tap is completed before opening the dialog
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: _createFollowups, // Your modal widget
-                              );
-                            },
-                          );
-                        });
-                      },
-                      padding:
-                          EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                      height: 0,
-                      value: 'followup',
-                      child: Center(
-                        child: Text(
-                          'Create Followups',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ),
-                    PopupMenuDivider(height: 1),
-                    PopupMenuItem<String>(
-                      onTap: () {
-                        Future.delayed(Duration.zero, () {
-                          // Delayed to ensure PopupMenuItem tap is completed before opening the dialog
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: _leadFirstStep, // Your modal widget
-                              );
-                            },
-                          );
-                        });
-                      },
-                      padding: EdgeInsets.symmetric(vertical: 2),
-                      height: 0,
-                      value: 'lead',
-                      child: Center(
-                        child: Text(
-                          'Create Lead',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
+            // GestureDetector(
+            //   onTap: () async {
+            //     final result = await showMenu<String>(
+            //       context: context,
+            //       position: const RelativeRect.fromLTRB(200, 230, 30, 0),
+            //       items: [
+            //         PopupMenuItem<String>(
+            //           onTap: () {
+            //             Future.delayed(Duration.zero, () {
+            //               // Delayed to ensure PopupMenuItem tap is completed before opening the dialog
+            //               showDialog(
+            //                 context: context,
+            //                 builder: (context) {
+            //                   return Dialog(
+            //                     shape: RoundedRectangleBorder(
+            //                       borderRadius: BorderRadius.circular(10),
+            //                     ),
+            //                     child: _createFollowups, // Your modal widget
+            //                   );
+            //                 },
+            //               );
+            //             });
+            //           },
+            //           padding:
+            //               EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+            //           height: 0,
+            //           value: 'followup',
+            //           child: Center(
+            //             child: Text(
+            //               'Create Followups',
+            //               textAlign: TextAlign.center,
+            //               style: GoogleFonts.poppins(
+            //                 fontSize: 12,
+            //                 fontWeight: FontWeight.w400,
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //         PopupMenuDivider(height: 1),
+            //         PopupMenuItem<String>(
+            //           onTap: () {
+            //             Future.delayed(Duration.zero, () {
+            //               // Delayed to ensure PopupMenuItem tap is completed before opening the dialog
+            //               showDialog(
+            //                 context: context,
+            //                 builder: (context) {
+            //                   return Dialog(
+            //                     shape: RoundedRectangleBorder(
+            //                       borderRadius: BorderRadius.circular(10),
+            //                     ),
+            //                     child: _leadFirstStep, // Your modal widget
+            //                   );
+            //                 },
+            //               );
+            //             });
+            //           },
+            //           padding: EdgeInsets.symmetric(vertical: 2),
+            //           height: 0,
+            //           value: 'lead',
+            //           child: Center(
+            //             child: Text(
+            //               'Create Lead',
+            //               textAlign: TextAlign.center,
+            //               style: GoogleFonts.poppins(
+            //                 fontSize: 12,
+            //                 fontWeight: FontWeight.w400,
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     );
 
-                // Optional: Handle menu item selection (if required)
-                if (result != null) {
-                  print('Selected: $result');
-                }
-              },
-              child: const Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                child: Icon(Icons.add, size: 30),
-              ),
+            //     // Optional: Handle menu item selection (if required)
+            //     if (result != null) {
+            //       print('Selected: $result');
+            //     }
+            //   },
+            //   child: const Padding(
+            //     padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+            //     child: Icon(Icons.add, size: 30),
+            //   ),
+            // ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (_activeButtonIndex == 0)
+                  GestureDetector(
+                    onTap: () async {
+                      final result = await showMenu<String>(
+                        context: context,
+                        position: const RelativeRect.fromLTRB(200, 230, 30, 0),
+                        items: [
+                          PopupMenuItem<String>(
+                            onTap: () {
+                              Future.delayed(Duration.zero, () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child:
+                                          _createFollowups, // Follow-ups modal
+                                    );
+                                  },
+                                );
+                              });
+                            },
+                            value: 'followup',
+                            child: Center(
+                              child: Text(
+                                'Create Followups',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuDivider(height: 1),
+                          PopupMenuItem<String>(
+                            onTap: () {
+                              Future.delayed(Duration.zero, () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: _leadFirstStep, // Lead modal
+                                    );
+                                  },
+                                );
+                              });
+                            },
+                            value: 'lead',
+                            child: Center(
+                              child: Text(
+                                'Create Lead',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                      if (result != null) {
+                        print('Selected: $result');
+                      }
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Icon(Icons.add, size: 30),
+                    ),
+                  ),
+                if (_activeButtonIndex == 1)
+                  GestureDetector(
+                    onTap: () async {
+                      final result = await showMenu<String>(
+                        context: context,
+                        position: const RelativeRect.fromLTRB(200, 230, 30, 0),
+                        items: [
+                          PopupMenuItem<String>(
+                            onTap: () {
+                              Future.delayed(Duration.zero, () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: _createAppoinment,
+                                      // Appointment modal
+                                    );
+                                  },
+                                );
+                              });
+                            },
+                            value: 'appointment',
+                            child: Center(
+                              child: Text(
+                                'Create Appointment',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuDivider(height: 1),
+                          PopupMenuItem<String>(
+                            onTap: () {
+                              Future.delayed(Duration.zero, () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: _leadFirstStep, // Lead modal
+                                    );
+                                  },
+                                );
+                              });
+                            },
+                            value: 'lead',
+                            child: Center(
+                              child: Text(
+                                'Create Lead',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                      if (result != null) {
+                        print('Selected: $result');
+                      }
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Icon(Icons.add, size: 30),
+                    ),
+                  ),
+              ],
             ),
           ],
         ),
+
+        // show data 
         currentWidget,
         SizedBox(height: 10),
       ],
@@ -408,11 +569,9 @@ class _ThreebtnState extends State<Threebtn> {
           overdueFollowups = data['overdueFollowups'];
           overdueAppointments = data['overdueAppointments'];
           upcomingAppointments = data['upcomingAppointments'];
-          print("widget.upcomingFollowups8888");
-          print(data['upcomingFollowups']);
-          // upcomingFollowups = List<Map<String, dynamic>>.from(
-          //     data['upcomingFollowups']['rows']);
-          // isLoading = false;
+          // print("widget.upcomingFollowups8888");
+          // print(data['upcomingFollowups']);
+           
         });
       } else {
         print("Failed to load data: ${response.statusCode}");

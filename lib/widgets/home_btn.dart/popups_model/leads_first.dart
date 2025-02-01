@@ -38,8 +38,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
     const String apiUrl = "https://api.smartassistapp.in/api/admin/users/all";
 
     final token =
-        await Storage.getToken(); // Assuming getToken is in the Storage class
-
+        await Storage.getToken();  
     if (token == null) {
       print("No token found. Please login.");
       return;

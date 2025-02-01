@@ -51,22 +51,22 @@ class FollowupsDetails extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ContactRow(
-                                iconPath: 'assets/whatsapp.png',
+                                icon: Icons.phone,
                                 title: 'Phone Number',
                                 subtitle: '2387429384',
                               ),
                               ContactRow(
-                                iconPath: 'assets/blue_mail.png',
+                                icon: Icons.email,
                                 title: 'Email',
                                 subtitle: 'Tira@gmail.com',
                               ),
                               ContactRow(
-                                iconPath: 'assets/blue_bag.png',
+                                icon: Icons.local_post_office_outlined,
                                 title: 'Company',
                                 subtitle: 'Abc Pvt Ltd',
                               ),
                               ContactRow(
-                                iconPath: 'assets/location.png',
+                                icon: Icons.location_on,
                                 title: 'Address',
                                 subtitle: 'Mumbai',
                               ),
@@ -76,53 +76,53 @@ class FollowupsDetails extends StatelessWidget {
                       ),
 
                       // Right Column with Profile and Actions
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Image.asset(
-                                'assets/profile.png',
-                                width: 80,
-                                height: 80,
-                                semanticLabel: 'Profile Picture',
+                      Container(
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black)),
+                        child: Expanded(
+                          flex: 2,
+                          child: Row(
+                            children: [
+                              Column(
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 50,
+                                      )),
+                                  const Text(
+                                    'Tira',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(width: 10),
+                                      Image.asset(
+                                        'assets/whatsapp.png',
+                                        width: 30,
+                                        height: 30,
+                                        semanticLabel: 'WhatsApp Icon',
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Image.asset(
+                                        'assets/redirect_msg.png',
+                                        width: 30,
+                                        height: 30,
+                                        semanticLabel: 'Redirect Message Icon',
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ),
-                            const Text(
-                              'Tira',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/cloud.png',
-                                  width: 30,
-                                  height: 30,
-                                  semanticLabel: 'Cloud Icon',
-                                ),
-                                const SizedBox(width: 10),
-                                Image.asset(
-                                  'assets/whatsapp.png',
-                                  width: 30,
-                                  height: 30,
-                                  semanticLabel: 'WhatsApp Icon',
-                                ),
-                                const SizedBox(width: 10),
-                                Image.asset(
-                                  'assets/redirect_msg.png',
-                                  width: 30,
-                                  height: 30,
-                                  semanticLabel: 'Redirect Message Icon',
-                                ),
-                              ],
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -142,68 +142,6 @@ class FollowupsDetails extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Row(
-                      children: [],
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 247, 243, 243),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Image.asset('assets/profile.png'),
-                                  ),
-                                  Text('Tira',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge),
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: Text('1 day left'),
-                                  )
-                                ],
-                              ),
-                              const Text(
-                                'By Lily',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w300, fontSize: 16),
-                              ),
-                              const Row(
-                                children: [
-                                  Text(
-                                    'Purchased the vehicle',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey),
-                                  ),
-                                  Icon(Icons.done)
-                                ],
-                              ),
-                              Container(
-                                // height: 300,
-                                width: 300,
-                                decoration: const BoxDecoration(
-                                    border: Border(
-                                        bottom:
-                                            BorderSide(color: Colors.black))),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                )
               ],
             ),
           ),

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ContactRow extends StatelessWidget {
-  final String iconPath;
+  final IconData icon; // Use IconData for Material Icons
   final String title;
   final String subtitle;
+  final Color? iconColor; // Optional icon color
 
   const ContactRow({
     super.key,
-    required this.iconPath,
+    required this.icon,
     required this.title,
     required this.subtitle,
+    this.iconColor, // Allow customization of icon color
   });
 
   @override
@@ -18,11 +20,10 @@ class ContactRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Image.asset(
-            iconPath,
-            width: 30,
-            height: 30,
-            semanticLabel: title,
+          Icon(
+            icon, // Use Icon widget instead of Image.asset
+            size: 30,
+            color: iconColor ?? Colors.blue, // Default color
           ),
           const SizedBox(width: 10),
           Column(
