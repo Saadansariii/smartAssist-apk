@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/home_screens/Add_followups.dart';
+import 'package:smart_assist/pages/home_screens/all_followups.dart';
 import 'package:smart_assist/widgets/home_btn.dart/leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/order.dart';
 import 'package:smart_assist/widgets/home_btn.dart/test_drive.dart';

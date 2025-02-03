@@ -86,7 +86,7 @@ class OverdueOpp extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const FollowupsDetails(taskId: '',)));
+                              builder: (context) => const FollowupsDetails(leadId: '',)));
                     },
                     child: Image.asset('assets/arrowButton.png'),
                   ),

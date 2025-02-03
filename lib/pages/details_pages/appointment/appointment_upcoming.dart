@@ -3,10 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 
 class AppointmentUpcoming extends StatefulWidget {
-  final String eventId;
+  final String leadId;
   const AppointmentUpcoming({
     super.key,
-    required this.eventId,
+    required this.leadId,
   });
 
   @override
@@ -15,22 +15,22 @@ class AppointmentUpcoming extends StatefulWidget {
 
 class _AppointmentUpcomingState extends State<AppointmentUpcoming> {
   // Placeholder data
-  String phoneNumber = 'Loading...';
-  String email = 'Loading...';
-  String status = 'Loading...';
-  String company = 'Loading...';
-  String address = 'Loading...';
-  String assign = 'Loading....';
+  String phoneNumber = '';
+  String email = '';
+  String status = '';
+  String company = '';
+  String address = '';
+  String assign = '';
 
   @override
   void initState() {
     super.initState();
-    fetchSingleIdData(widget.eventId); // Fetch data when widget is initialized
+    fetchSingleIdData(widget.leadId); // Fetch data when widget is initialized
   }
 
-  Future<void> fetchSingleIdData(String eventId) async {
+  Future<void> fetchSingleIdData(String leadId) async {
     try {
-      final leadData = await LeadsSrv.singleFollowupsById(eventId);
+      final leadData = await LeadsSrv.singleFollowupsById(leadId);
       setState(() {
         phoneNumber = leadData['mobile'] ?? 'N/A';
         email = leadData['lead_email'] ?? 'N/A';
@@ -53,7 +53,7 @@ class _AppointmentUpcomingState extends State<AppointmentUpcoming> {
       icon: icon,
       title: title,
       subtitle: subtitle,
-      eventId: widget.eventId,
+      eventId: widget.leadId,
     );
   }
 
@@ -62,7 +62,7 @@ class _AppointmentUpcomingState extends State<AppointmentUpcoming> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Followups Details',
+          'Events Details',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w400,
@@ -193,7 +193,7 @@ class ContactRow extends StatefulWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  final String eventId; // taskId is passed here
+  final String eventId;  
 
   const ContactRow({
     super.key,
@@ -238,7 +238,7 @@ class _ContactRowState extends State<ContactRow> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context ,) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(

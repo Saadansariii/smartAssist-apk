@@ -6,6 +6,7 @@ import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.d
 // import 'package:smart_assist/pages/login/first_screen.dart';
 import 'package:smart_assist/pages/login/login_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:smart_assist/pages/notification/notification.dart';
 import 'package:smart_assist/services/notifacation_srv.dart';
 // import 'package:smart_assist/pages/details_pages/test_drive_details.dart';
 // import 'package:smart_assist/pages/home_screen.dart';
@@ -35,11 +36,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(
-        email: '',
-      ),
+      // home: LoginPage(
+      //   email: '',
+      // ),
       // home: FollowupsDetails(),
-      // home: const HomeScreen(),
+      home: NotificationPage(),
       // home: (),
       theme: ThemeData(
         buttonTheme: const ButtonThemeData(),

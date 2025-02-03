@@ -41,12 +41,13 @@ class _OppUpcomingState extends State<OppUpcoming> {
               var item = widget.upcomingOpp[index];
               if (item.containsKey('assigned_to') &&
                   item.containsKey('start_date') &&
+                  item.containsKey('lead_id') &&
                   item.containsKey('event_id')) {
                 return UpcomingOppItem(
                   name: item['assigned_to'],
                   date: item['start_date'],
                   vehicle: 'Discovery Sport',
-                  leadId: item['event_id'],
+                  leadId: item['lead_id'],
                   eventId: item['event_id'],
                 );
               } else {
@@ -57,7 +58,7 @@ class _OppUpcomingState extends State<OppUpcoming> {
   }
 }
 
-class UpcomingOppItem extends StatelessWidget {
+class UpcomingOppItem extends StatefulWidget {
   final String name;
   final String date;
   final String vehicle;
@@ -69,10 +70,15 @@ class UpcomingOppItem extends StatelessWidget {
     required this.name,
     required this.date,
     required this.vehicle,
-    required this.leadId,
     required this.eventId,
+    required this.leadId,
   });
 
+  @override
+  State<UpcomingOppItem> createState() => _UpcomingOppItemState();
+}
+
+class _UpcomingOppItemState extends State<UpcomingOppItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -119,7 +125,7 @@ class UpcomingOppItem extends StatelessWidget {
                 _buildUserDetails(),
                 _buildVerticalDivider(),
                 _buildCarModel(),
-                _buildNavigationButton(context),
+                _buildNavigationButton(context, widget.leadId),
               ],
             ),
           ),
@@ -134,7 +140,7 @@ class UpcomingOppItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          name,
+          widget.name,
           style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -145,7 +151,7 @@ class UpcomingOppItem extends StatelessWidget {
           children: [
             const Icon(Icons.phone, color: Colors.blue, size: 14),
             const SizedBox(width: 10),
-            Text(date,
+            Text(widget.date,
                 style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
         ),
@@ -166,22 +172,26 @@ class UpcomingOppItem extends StatelessWidget {
   Widget _buildCarModel() {
     return Container(
       margin: const EdgeInsets.only(top: 22),
-      child: Text(vehicle,
+      child: Text(widget.vehicle,
           style: const TextStyle(
               fontSize: 12, fontWeight: FontWeight.w400, color: Colors.grey)),
     );
   }
 
-  Widget _buildNavigationButton(BuildContext context) {
+  Widget _buildNavigationButton(BuildContext context, String leadId) {
     return GestureDetector(
       onTap: () {
-        print("Navigating with leadId: $eventId");
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AppointmentUpcoming(eventId : eventId),
-          ),
-        );
+        if (leadId.isNotEmpty) {
+          print("Navigating with leadId: $leadId");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppointmentUpcoming(leadId: leadId),
+            ),
+          );
+        } else {
+          print("Invalid leadId");
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(5),

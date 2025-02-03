@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 
 class FollowupsDetails extends StatefulWidget {
-  final String taskId;
-  const FollowupsDetails({super.key, required this.taskId});
+  final String leadId;
+  const FollowupsDetails({super.key, required this.leadId});
 
   @override
   State<FollowupsDetails> createState() => _FollowupsDetailsState();
@@ -12,29 +12,29 @@ class FollowupsDetails extends StatefulWidget {
 
 class _FollowupsDetailsState extends State<FollowupsDetails> {
   // Placeholder data
-  String phoneNumber = 'Loading...';
+  String mobile = 'Loading...';
   String email = 'Loading...';
   String status = 'Loading...';
   String company = 'Loading...';
   String address = 'Loading...';
-  String assign = 'Loading....';
+  String lead_owner = 'Loading....';
 
   @override
   void initState() {
     super.initState();
-    fetchSingleIdData(widget.taskId); // Fetch data when widget is initialized
+    fetchSingleIdData(widget.leadId);
   }
 
-  Future<void> fetchSingleIdData(String taskId) async {
+  Future<void> fetchSingleIdData(String leadId) async {
     try {
-      final leadData = await LeadsSrv.singleFollowupsById(taskId);
+      final leadData = await LeadsSrv.singleFollowupsById(leadId);
       setState(() {
-        phoneNumber = leadData['mobile'] ?? 'N/A';
-        email = leadData['lead_email'] ?? 'N/A';
+        mobile = leadData['mobile'] ?? 'N/A';
+        email = leadData['email'] ?? 'N/A';
         status = leadData['status'] ?? 'N/A';
-        company = leadData['company'] ?? 'N/A';
+        company = leadData['brand'] ?? 'N/A';
         address = leadData['address'] ?? 'N/A';
-        assign = leadData['assigned_to'] ?? 'N/A';
+        lead_owner = leadData['lead_owner'] ?? 'N/A';
       });
     } catch (e) {
       print('Error fetching data: $e');
@@ -50,17 +50,19 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       icon: icon,
       title: title,
       subtitle: subtitle,
-      taskId: widget.taskId,
+      taskId: widget.leadId,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffF2F2F2),
       appBar: AppBar(
-        title: const Text(
-          'Followups Details',
-          style: TextStyle(
+        backgroundColor: Color(0xffF2F2F2),
+        title: Text(
+          'Leads Details',
+          style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w400,
             color: Color.fromARGB(255, 134, 134, 134),
@@ -72,7 +74,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white,
         elevation: 0,
       ),
       body: SafeArea(
@@ -85,8 +86,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                 Container(
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 247, 243, 243),
-                    border: Border.all(color: Colors.black.withOpacity(0.2)),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -101,7 +101,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                             _buildContactRow(
                                 icon: Icons.phone,
                                 title: 'Phone Number',
-                                subtitle: phoneNumber),
+                                subtitle: mobile),
                             _buildContactRow(
                                 icon: Icons.email,
                                 title: 'Email',
@@ -126,7 +126,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                             Icon(Icons.person, size: 50),
                             SizedBox(height: 8),
                             Text(
-                              assign,
+                              lead_owner,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -210,7 +210,7 @@ class _ContactRowState extends State<ContactRow> {
   String status = 'Loading...';
   String company = 'Loading...';
   String address = 'Loading...';
-  String assign = 'Loading...';
+  String lead_owner = 'Loading...';
 
   @override
   void initState() {
@@ -225,9 +225,9 @@ class _ContactRowState extends State<ContactRow> {
         phoneNumber = leadData['mobile'] ?? 'N/A';
         email = leadData['lead_email'] ?? 'N/A';
         status = leadData['status'] ?? 'N/A';
-        company = leadData['company'] ?? 'N/A';
+        company = leadData['brand'] ?? 'N/A';
         address = leadData['address'] ?? 'N/A';
-        assign = leadData['assigned_to'] ?? 'N/A';
+        lead_owner = leadData['lead_owner'] ?? 'N/A';
       });
     } catch (e) {
       print('Error fetching data: $e');
@@ -239,6 +239,7 @@ class _ContactRowState extends State<ContactRow> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start, // Align text at the top
         children: [
           Icon(
             widget.icon,
@@ -246,24 +247,30 @@ class _ContactRowState extends State<ContactRow> {
             color: Colors.blue,
           ),
           const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
+          Expanded(
+            // Ensure text doesn't overflow
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              Text(
-                widget.subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
+                const SizedBox(height: 4),
+                Text(
+                  widget.subtitle,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                  softWrap: true, // Allows text wrapping
+                  overflow: TextOverflow.visible, // Ensures no cutoff
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

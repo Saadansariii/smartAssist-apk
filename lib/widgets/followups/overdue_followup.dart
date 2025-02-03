@@ -37,12 +37,14 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
               var item = widget.overdueeFollowups[index];
               if (item.containsKey('name') &&
                   item.containsKey('due_date') &&
+                  item.containsKey('lead_id') &&
                   item.containsKey('task_id')) {
                 return overdueeFollowupsItem(
                   name: item['name'],
                   date: item['due_date'],
                   vehicle: 'Discovery Sport',
-                  leadId: item['task_id'],
+                  taskId: item['task_id'],
+                  leadId: item['lead_id'],
                 );
               } else {
                 return ListTile(title: Text('Invalid data at index $index'));
@@ -52,11 +54,12 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
   }
 }
 
-class overdueeFollowupsItem extends StatelessWidget {
+class overdueeFollowupsItem extends StatefulWidget {
   final String name;
   final String date;
   final String vehicle;
   final String leadId;
+  final String taskId;
 
   const overdueeFollowupsItem({
     super.key,
@@ -64,8 +67,14 @@ class overdueeFollowupsItem extends StatelessWidget {
     required this.date,
     required this.vehicle,
     required this.leadId,
+    required this.taskId,
   });
 
+  @override
+  State<overdueeFollowupsItem> createState() => _overdueeFollowupsItemState();
+}
+
+class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -111,7 +120,7 @@ class overdueeFollowupsItem extends StatelessWidget {
                 _buildUserDetails(),
                 _buildVerticalDivider(),
                 _buildCarModel(),
-                _buildNavigationButton(context),
+                _buildNavigationButton(context, widget.leadId),
               ],
             ),
           ),
@@ -126,7 +135,7 @@ class overdueeFollowupsItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          name,
+          widget.name,
           style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -137,7 +146,7 @@ class overdueeFollowupsItem extends StatelessWidget {
           children: [
             const Icon(Icons.phone, color: Colors.blue, size: 14),
             const SizedBox(width: 10),
-            Text(date,
+            Text(widget.date,
                 style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
         ),
@@ -158,16 +167,27 @@ class overdueeFollowupsItem extends StatelessWidget {
   Widget _buildCarModel() {
     return Container(
       margin: const EdgeInsets.only(top: 22),
-      child: Text(vehicle,
+      child: Text(widget.vehicle,
           style: const TextStyle(
               fontSize: 12, fontWeight: FontWeight.w400, color: Colors.grey)),
     );
   }
 
-  Widget _buildNavigationButton(BuildContext context) {
+  Widget _buildNavigationButton(BuildContext context, String leadId) {
     return GestureDetector(
-      onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const FollowupsDetails(taskId: '',))),
+      onTap: () {
+        if (leadId.isNotEmpty) {
+          print("Navigating with leadId: $leadId");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FollowupsDetails(leadId: leadId),
+            ),
+          );
+        } else {
+          print("Invalid leadId");
+        }
+      },
       child: Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(

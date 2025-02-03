@@ -37,12 +37,13 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
               var item = widget.upcomingFollowups[index];
               if (item.containsKey('name') &&
                   item.containsKey('due_date') &&
+                  item.containsKey('lead_id') &&
                   item.containsKey('task_id')) {
                 return UpcomingFollowupItem(
                   name: item['name'],
                   date: item['due_date'],
                   vehicle: 'Discovery Sport',
-                  leadId: item['task_id'],
+                  leadId: item['lead_id'],
                   taskId: item['task_id'],
                 );
               } else {
@@ -125,7 +126,7 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
                 _buildUserDetails(),
                 _buildVerticalDivider(),
                 _buildCarModel(),
-                _buildNavigationButton(context , widget.taskId),
+                _buildNavigationButton(context, widget.leadId),
               ],
             ),
           ),
@@ -178,16 +179,20 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
     );
   }
 
-  Widget _buildNavigationButton(BuildContext context, String taskId) {
+  Widget _buildNavigationButton(BuildContext context, String leadId) {
     return GestureDetector(
       onTap: () {
-        print("Navigating with leadId: $taskId");
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FollowupsDetails(taskId: taskId),
-          ),
-        );
+        if (leadId.isNotEmpty) {
+          print("Navigating with leadId: $leadId");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FollowupsDetails(leadId: leadId),
+            ),
+          );
+        } else {
+          print("Invalid leadId");
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(5),

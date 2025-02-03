@@ -99,7 +99,7 @@ class _OppFollUpsState extends State<OppFollUps> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const FollowupsDetails(taskId: '',)));
+                              builder: (context) => const FollowupsDetails(leadId: '',)));
                     },
                     child: Image.asset('assets/arrowButton.png'),
                   ),

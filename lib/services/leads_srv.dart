@@ -224,8 +224,8 @@ class LeadsSrv {
     }
   }
 
-  static Future<Map<String, dynamic>> singleFollowupsById(String taskId) async {
-    const String apiUrl = "https://api.smartassistapp.in/api/admin/tasks/";
+  static Future<Map<String, dynamic>> singleFollowupsById(String leadId) async {
+    const String apiUrl = "https://api.smartassistapp.in/api/admin/leads/";
 
     final token = await Storage.getToken();
     if (token == null) {
@@ -235,26 +235,27 @@ class LeadsSrv {
 
     try {
       // Ensure the actual leadId is being passed correctly
-      print('Fetching data for Lead ID: $taskId');
+      print('Fetching data for Lead ID: $leadId');
       print(
-          'API URL: ${apiUrl + taskId}'); // Concatenate the leadId with the API URL
+          'API URL: ${apiUrl + leadId}');  
 
       final response = await http.get(
-        Uri.parse('$apiUrl$taskId'), // Correct URL with leadId appended
+        Uri.parse('$apiUrl$leadId'),  
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
-          'taskId': taskId
+          'leadId': leadId
         },
       );
 
       // Debug: Print the response status code and body
       print('Response status code: ${response.statusCode}');
       print('Response body: ${response.body}');
+      
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        return data; // Return the response data
+        return data; 
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
       }
@@ -285,7 +286,7 @@ class LeadsSrv {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
-          'taskId': eventId
+          'eventId': eventId
         },
       );
 
