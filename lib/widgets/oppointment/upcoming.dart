@@ -82,7 +82,7 @@ class _UpcomingOppItemState extends State<UpcomingOppItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+     padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const StretchMotion(),

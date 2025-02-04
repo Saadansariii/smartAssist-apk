@@ -210,7 +210,7 @@ class _ThreebtnState extends State<Threebtn> {
                       child: TextButton(
                           onPressed: () {
                             setState(() {
-                              _childButtonIndex = 0; // Set Upcoming as active
+                              _childButtonIndex = 0;
                             });
 
                             if (_activeButtonIndex == 0) {
@@ -256,7 +256,7 @@ class _ThreebtnState extends State<Threebtn> {
                       child: TextButton(
                         onPressed: () {
                           setState(() {
-                            _childButtonIndex = 1; // Set Overdue as active
+                            _childButtonIndex = 1;
                           });
 
                           if (_activeButtonIndex == 0) {
@@ -269,7 +269,7 @@ class _ThreebtnState extends State<Threebtn> {
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: _childButtonIndex == 1
-                              ? const Color(0xFFFFF5F4) // Red for Overdue
+                              ? const Color(0xFFFFF5F4)
                               : Colors.transparent,
                           foregroundColor: _childButtonIndex == 1
                               ? Colors.white
@@ -542,9 +542,8 @@ class _ThreebtnState extends State<Threebtn> {
           ],
         ),
 
-        // show data 
-        currentWidget,
-        SizedBox(height: 10),
+        // show data
+        currentWidget, 
       ],
     );
   }
@@ -571,7 +570,6 @@ class _ThreebtnState extends State<Threebtn> {
           upcomingAppointments = data['upcomingAppointments'];
           // print("widget.upcomingFollowups8888");
           // print(data['upcomingFollowups']);
-           
         });
       } else {
         print("Failed to load data: ${response.statusCode}");

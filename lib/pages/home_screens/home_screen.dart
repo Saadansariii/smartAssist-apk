@@ -6,6 +6,7 @@ import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
 import 'package:smart_assist/pages/navbar_page/logout_page.dart';
 import 'package:smart_assist/pages/home_screens/opportunity.dart';
+import 'package:smart_assist/pages/notification/notification.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 
@@ -48,7 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => NotificationPage()));
+            },
             icon: const Icon(Icons.notifications),
             color: Colors.white,
           ),

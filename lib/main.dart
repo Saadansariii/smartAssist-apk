@@ -36,11 +36,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // home: LoginPage(
-      //   email: '',
-      // ),
+      home: LoginPage(
+        email: '',
+      ),
       // home: FollowupsDetails(),
-      home: NotificationPage(),
+      // home: NotificationPage(),
       // home: (),
       theme: ThemeData(
         buttonTheme: const ButtonThemeData(),
