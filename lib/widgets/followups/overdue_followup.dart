@@ -78,7 +78,7 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+     padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const StretchMotion(),

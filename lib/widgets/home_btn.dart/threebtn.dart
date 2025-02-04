@@ -48,6 +48,7 @@ class _ThreebtnState extends State<Threebtn> {
   @override
   void initState() {
     super.initState();
+    _childButtonIndex = 0;
     currentWidget = FollowupsUpcoming(
       upcomingFollowups: upcomingFollowups,
     );
@@ -200,7 +201,7 @@ class _ThreebtnState extends State<Threebtn> {
                 decoration: BoxDecoration(
                   border: Border.all(
                       color: const Color(0xFF767676).withOpacity(0.3),
-                      width: 1), // Border around the container
+                      width: 0.6), // Border around the container
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Row(
@@ -210,7 +211,7 @@ class _ThreebtnState extends State<Threebtn> {
                       child: TextButton(
                           onPressed: () {
                             setState(() {
-                              _childButtonIndex = 0;
+                              _childButtonIndex = 0; // Set Upcoming as active
                             });
 
                             if (_activeButtonIndex == 0) {
@@ -256,7 +257,7 @@ class _ThreebtnState extends State<Threebtn> {
                       child: TextButton(
                         onPressed: () {
                           setState(() {
-                            _childButtonIndex = 1;
+                            _childButtonIndex = 1; // Set Overdue as active
                           });
 
                           if (_activeButtonIndex == 0) {
@@ -269,7 +270,7 @@ class _ThreebtnState extends State<Threebtn> {
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: _childButtonIndex == 1
-                              ? const Color(0xFFFFF5F4)
+                              ? const Color(0xFFFFF5F4) // Red for Overdue
                               : Colors.transparent,
                           foregroundColor: _childButtonIndex == 1
                               ? Colors.white
@@ -393,6 +394,7 @@ class _ThreebtnState extends State<Threebtn> {
                         position: const RelativeRect.fromLTRB(200, 230, 30, 0),
                         items: [
                           PopupMenuItem<String>(
+                            height: 20,
                             onTap: () {
                               Future.delayed(Duration.zero, () {
                                 showDialog(
@@ -402,8 +404,7 @@ class _ThreebtnState extends State<Threebtn> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child:
-                                          _createFollowups, // Follow-ups modal
+                                      child: _createFollowups,
                                     );
                                   },
                                 );
@@ -421,8 +422,9 @@ class _ThreebtnState extends State<Threebtn> {
                               ),
                             ),
                           ),
-                          PopupMenuDivider(height: 1),
+                          PopupMenuDivider(height: 0.1),
                           PopupMenuItem<String>(
+                            height: 20,
                             onTap: () {
                               Future.delayed(Duration.zero, () {
                                 showDialog(
@@ -469,6 +471,7 @@ class _ThreebtnState extends State<Threebtn> {
                         position: const RelativeRect.fromLTRB(200, 230, 30, 0),
                         items: [
                           PopupMenuItem<String>(
+                            height: 20,
                             onTap: () {
                               Future.delayed(Duration.zero, () {
                                 showDialog(
@@ -499,6 +502,7 @@ class _ThreebtnState extends State<Threebtn> {
                           ),
                           PopupMenuDivider(height: 1),
                           PopupMenuItem<String>(
+                            height: 20,
                             onTap: () {
                               Future.delayed(Duration.zero, () {
                                 showDialog(
@@ -543,7 +547,8 @@ class _ThreebtnState extends State<Threebtn> {
         ),
 
         // show data
-        currentWidget, 
+        currentWidget,
+        // SizedBox(height: 10),
       ],
     );
   }

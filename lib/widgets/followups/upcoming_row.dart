@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:smart_assist/pages/details_pages/followups/followups.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:smart_assist/utils/storage.dart';
 
 class FollowupsUpcoming extends StatefulWidget {
   final List<dynamic> upcomingFollowups;
@@ -17,6 +20,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
   @override
   void initState() {
     super.initState();
+
     print("widget.upcomingFollowups");
     print(widget.upcomingFollowups);
   }
@@ -45,6 +49,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
                   vehicle: 'Discovery Sport',
                   leadId: item['lead_id'],
                   taskId: item['task_id'],
+                  isFavorite: item['favourite'] ?? false,
                 );
               } else {
                 return ListTile(title: Text('Invalid data at index $index'));
@@ -60,6 +65,7 @@ class UpcomingFollowupItem extends StatefulWidget {
   final String vehicle;
   final String leadId;
   final String taskId;
+  final bool isFavorite;
 
   const UpcomingFollowupItem({
     super.key,
@@ -68,6 +74,7 @@ class UpcomingFollowupItem extends StatefulWidget {
     required this.vehicle,
     required this.leadId,
     required this.taskId,
+    required this.isFavorite,
   });
 
   @override
@@ -75,9 +82,41 @@ class UpcomingFollowupItem extends StatefulWidget {
 }
 
 class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
+  late bool isFav;
   @override
   void initState() {
     super.initState();
+    isFav = widget.isFavorite;
+
+  }
+
+  Future<void> _toggleFavorite() async {
+    final token = await Storage.getToken();
+    final url = Uri.parse(
+        'https://api.smartassistapp.in/api/favourites/mark-fav/task/${widget.taskId}');
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'taskId': widget.taskId, 'favourite': !isFav}),
+      );
+
+      if (response.statusCode == 200) {
+        print('this is the url ${url}');
+        setState(() {
+          isFav = !isFav;
+        });
+      } else {
+        print('Failed to update favorite status: ${response.body}');
+        print('this is the url ${url}');
+      }
+    } catch (e) {
+      print('Error updating favorite status: $e');
+    }
   }
 
   @override
@@ -121,8 +160,14 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const Icon(Icons.star_rounded,
-                    color: Colors.amberAccent, size: 40),
+                IconButton(
+                  icon: Icon(
+                    isFav ? Icons.star_rounded : Icons.star_border_rounded,
+                    color: isFav ? Colors.amber : Colors.grey,
+                    size: 40,
+                  ),
+                  onPressed: _toggleFavorite, // Call API on tap
+                ),
                 _buildUserDetails(),
                 _buildVerticalDivider(),
                 _buildCarModel(),
@@ -162,7 +207,6 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
 
   Widget _buildVerticalDivider() {
     return Container(
-      margin: const EdgeInsets.only(top: 20),
       height: 20,
       width: 1,
       decoration: const BoxDecoration(
@@ -172,7 +216,6 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
 
   Widget _buildCarModel() {
     return Container(
-      margin: const EdgeInsets.only(top: 22),
       child: Text(widget.vehicle,
           style: const TextStyle(
               fontSize: 12, fontWeight: FontWeight.w400, color: Colors.grey)),
