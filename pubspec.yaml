@@ -141,6 +141,6 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/logo2.png" # Ensure the path is correct
+  image_path: "assets/logo4.png" # Ensure the path is correct
   adaptive_icon_background: "#ffffff" # Optional for Android adaptive icons
 

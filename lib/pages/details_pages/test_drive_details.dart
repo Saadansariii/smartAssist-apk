@@ -25,6 +25,8 @@ class TestDriveDetails extends StatefulWidget {
 }
 
 class _TestDriveDetailsState extends State<TestDriveDetails> {
+  List<Map<String, dynamic>> allEvents = []; // ✅ Define allEvents
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,8 +80,7 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [ 
-
+                children: [
                   TimelineTenWid(),
                   SizedBox(
                     height: 10,
@@ -88,9 +89,9 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
                   // timeline 2 Tira
                   TimelineNineWid(),
                   // 22oct
-                  TimelineEightWid(),
+                  TimelineEightWid(events: allEvents),
                   // first column first
-                  TimelineSevenWid(),
+                  TimelineSevenWid(events: allEvents, ),
                   TimelineSixWid(),
                   TimelineFiveWid(),
                   // third

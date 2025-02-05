@@ -4,7 +4,8 @@ import 'package:timeline_tile/timeline_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TimelineEightWid extends StatelessWidget {
-  const TimelineEightWid({super.key});
+    final List<Map<String, dynamic>> events;
+  const TimelineEightWid({super.key, required this.events});
 
   @override
   Widget build(BuildContext context) {

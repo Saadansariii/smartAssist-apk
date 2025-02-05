@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:smart_assist/pages/details_pages/followups/followups.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:smart_assist/utils/storage.dart';
 
 class OverdueFollowup extends StatefulWidget {
   final List<dynamic> overdueeFollowups;
@@ -13,12 +16,38 @@ class OverdueFollowup extends StatefulWidget {
 
 class _OverdueFollowupState extends State<OverdueFollowup> {
   bool isLoading = false;
+  List<dynamic> overdueFollowups = [];
 
   @override
   void initState() {
     super.initState();
     print("widget.upcomingFollowups");
     print(widget.overdueeFollowups);
+    fetchDashboardData();
+  }
+
+  Future<void> fetchDashboardData() async {
+    final token = await Storage.getToken();
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          overdueFollowups = data['overdueFollowups'];
+        });
+      } else {
+        print("Failed to load data: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
   }
 
   @override
@@ -45,6 +74,8 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
                   vehicle: 'Discovery Sport',
                   taskId: item['task_id'],
                   leadId: item['lead_id'],
+                  isFavorite: item['favourite'] ?? false,
+                  fetchDashboardData: fetchDashboardData,
                 );
               } else {
                 return ListTile(title: Text('Invalid data at index $index'));
@@ -60,6 +91,8 @@ class overdueeFollowupsItem extends StatefulWidget {
   final String vehicle;
   final String leadId;
   final String taskId;
+  final bool isFavorite;
+  final VoidCallback fetchDashboardData;
 
   const overdueeFollowupsItem({
     super.key,
@@ -68,6 +101,8 @@ class overdueeFollowupsItem extends StatefulWidget {
     required this.vehicle,
     required this.leadId,
     required this.taskId,
+    required this.isFavorite,
+    required this.fetchDashboardData,
   });
 
   @override
@@ -75,10 +110,46 @@ class overdueeFollowupsItem extends StatefulWidget {
 }
 
 class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
+  late bool isFav;
+  @override
+  void initState() {
+    super.initState();
+    isFav = widget.isFavorite;
+  }
+
+  Future<void> _toggleFavorite() async {
+    final token = await Storage.getToken();
+    final url = Uri.parse(
+        'https://api.smartassistapp.in/api/favourites/mark-fav/task/${widget.taskId}');
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'taskId': widget.taskId, 'favourite': !isFav}),
+      );
+
+      if (response.statusCode == 200) {
+        print('this is the url ${url}');
+        setState(() {
+          isFav = !isFav;
+        });
+      } else {
+        print('Failed to update favorite status: ${response.body}');
+        print('this is the url ${url}');
+      }
+    } catch (e) {
+      print('Error updating favorite status: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-     padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+      padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const StretchMotion(),
@@ -115,8 +186,14 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const Icon(Icons.star_rounded,
-                    color: Colors.amberAccent, size: 40),
+                IconButton(
+                  icon: Icon(
+                    isFav ? Icons.star_rounded : Icons.star_border_rounded,
+                    color: isFav ? Colors.amber : Colors.grey,
+                    size: 40,
+                  ),
+                  onPressed: _toggleFavorite, // Call API on tap
+                ),
                 _buildUserDetails(),
                 _buildVerticalDivider(),
                 _buildCarModel(),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/widgets/timeline/timeline_seven_wid.dart';
 
 class FollowupsDetails extends StatefulWidget {
   final String leadId;
@@ -19,10 +21,19 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   String address = 'Loading...';
   String lead_owner = 'Loading....';
 
+  // fetchevent data
+
+  List<String> subjectList = [];
+  List<String> priorityList = [];
+  List<String> startTimeList = [];
+  List<String> endTimeList = [];
+  List<String> startDateList = [];
+
   @override
   void initState() {
     super.initState();
     fetchSingleIdData(widget.leadId);
+    fetchSingleEvent(widget.leadId);
   }
 
   Future<void> fetchSingleIdData(String leadId) async {
@@ -41,16 +52,67 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     }
   }
 
+  List<Map<String, dynamic>> allEvents = [];
+  Future<void> fetchSingleEvent(String leadId) async {
+    try {
+      final List<Map<String, dynamic>> events =
+          await LeadsSrv.singleEventById(leadId);
+
+      setState(() {
+        if (events.isNotEmpty) {
+          allEvents = events;
+
+          // Initialize lists to store event data
+          subjectList = [];
+          priorityList = [];
+          startTimeList = [];
+          endTimeList = [];
+          startDateList = [];
+
+          // Loop through all events and store their details
+          for (var event in events) {
+            subjectList.add(event['subject'] ?? 'N/A');
+            priorityList.add(event['priority'] ?? 'N/A');
+            startTimeList.add(_formatTime(
+                event['start_time'])); // Convert time to 12-hour format
+            endTimeList.add(_formatTime(event['end_time']));
+            startDateList.add(event['start_date'] ?? 'N/A');
+          }
+        } else {
+          print("No events available.");
+        }
+      });
+    } catch (e) {
+      print('Error Fetching data: $e');
+    }
+  }
+
+  // ✅ Function to Convert 24-hour Time to 12-hour Format
+  String _formatTime(String? time) {
+    if (time == null || time.isEmpty) return 'N/A';
+
+    try {
+      DateTime parsedTime = DateFormat("HH:mm").parse(time);
+      return DateFormat("hh:mm").format(parsedTime);
+    } catch (e) {
+      print("Error formatting time: $e");
+      return 'Invalid Time';
+    }
+  }
+
   // Helper method to build ContactRow widget
-  Widget _buildContactRow(
-      {required IconData icon,
-      required String title,
-      required String subtitle}) {
+  Widget _buildContactRow({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+  }) {
     return ContactRow(
       icon: icon,
       title: title,
       subtitle: subtitle,
       taskId: widget.leadId,
+      containerBgColor: containerColors[title] ?? Colors.grey.shade200,
+      iconColor: iconColors[title] ?? Colors.black, // Pass custom icon color
     );
   }
 
@@ -68,6 +130,17 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
             color: Color.fromARGB(255, 134, 134, 134),
           ),
         ),
+        actions: [
+          Align(
+            // alignment: align,
+            child: IconButton( 
+                onPressed: () {},
+                icon: Icon(
+                  Icons.add,
+                  size: 30,
+                )),
+          )
+        ],
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.grey),
           onPressed: () {
@@ -99,31 +172,55 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildContactRow(
-                                icon: Icons.phone,
-                                title: 'Phone Number',
-                                subtitle: mobile),
+                              icon: Icons.phone,
+                              title: 'Phone Number',
+                              subtitle: mobile,
+                            ),
                             _buildContactRow(
-                                icon: Icons.email,
-                                title: 'Email',
-                                subtitle: email),
+                              icon: Icons.email,
+                              title: 'Email',
+                              subtitle: email,
+                            ),
                             _buildContactRow(
-                                icon: Icons.local_post_office_outlined,
-                                title: 'Company',
-                                subtitle: status),
+                              icon: Icons.local_post_office_outlined,
+                              title: 'Company',
+                              subtitle: status,
+                            ),
                             _buildContactRow(
-                                icon: Icons.location_on,
-                                title: 'Address',
-                                subtitle: address),
+                              icon: Icons.location_on,
+                              title: 'Address',
+                              subtitle: address,
+                            ),
                           ],
                         ),
                       ),
+
                       // Right Side - Profile (Centered)
                       Expanded(
                         flex: 1,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.person, size: 50),
+                            Container(
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 80, 78, 78),
+                                  border: Border.all(
+                                      color: const Color.fromARGB(
+                                          255, 88, 87, 87)),
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(50)),
+                                child: Icon(
+                                  size: 60,
+                                  Icons.person,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                             SizedBox(height: 8),
                             Text(
                               lead_owner,
@@ -136,19 +233,28 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.asset(
-                                  'assets/whatsapp.png',
-                                  width: 30,
-                                  height: 30,
-                                  semanticLabel: 'WhatsApp Icon',
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Icon(
+                                    Icons.phone,
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 SizedBox(width: 10),
-                                Image.asset(
-                                  'assets/redirect_msg.png',
-                                  width: 30,
-                                  height: 30,
-                                  semanticLabel: 'Redirect Message Icon',
-                                ),
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 233, 163, 84),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Icon(
+                                    Icons.message,
+                                    color: Colors.white,
+                                  ),
+                                )
                               ],
                             ),
                           ],
@@ -159,22 +265,29 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                 ),
                 const SizedBox(height: 20), // Spacer
                 // History Section
-                Text(
-                  'History',
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey,
+
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade300,
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: Text(
-                    'No History available Now..!',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // TimelineTenWid(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TimelineSevenWid(events: allEvents),
+                    ],
                   ),
                 ),
               ],
@@ -186,18 +299,36 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   }
 }
 
+final Map<String, Color> containerColors = {
+  'Phone Number': Colors.green.shade400,
+  'Email': Colors.blue.shade400,
+  'Company': Colors.yellow.shade400,
+  'Address': Colors.red.shade400,
+};
+
+final Map<String, Color> iconColors = {
+  'Phone Number': Colors.white,
+  'Email': Colors.white,
+  'Company': Colors.white,
+  'Address': Colors.white,
+};
+
 class ContactRow extends StatefulWidget {
   final IconData icon;
   final String title;
   final String subtitle;
   final String taskId; // taskId is passed here
+  final Color containerBgColor; // Add container background color
+  final Color iconColor;
 
   const ContactRow({
     super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
-    required this.taskId, // Pass taskId here
+    required this.taskId,
+    required this.containerBgColor,
+    required this.iconColor,
   });
 
   @override
@@ -241,10 +372,16 @@ class _ContactRowState extends State<ContactRow> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start, // Align text at the top
         children: [
-          Icon(
-            widget.icon,
-            size: 30,
-            color: Colors.blue,
+          Container(
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: widget.containerBgColor),
+            child: Icon(
+              widget.icon,
+              size: 25,
+              color: widget.iconColor,
+            ),
           ),
           const SizedBox(width: 10),
           Expanded(
