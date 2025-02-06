@@ -52,34 +52,64 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     }
   }
 
+  // Future<void> fetchSingleEvent(String leadId) async {
+  //   try {
+  //     final List<Map<String, dynamic>> events =
+  //         await LeadsSrv.singleEventById(leadId);
+
+  //     setState(() {
+  //       if (events.isNotEmpty) {
+  //         allEvents = events;
+
+  //         // Initialize lists to store event data
+  //         subjectList = [];
+  //         priorityList = [];
+  //         startTimeList = [];
+  //         endTimeList = [];
+  //         startDateList = [];
+
+  //         // Loop through all events and store their details
+  //         for (var event in events) {
+  //           subjectList.add(event['subject'] ?? 'N/A');
+  //           priorityList.add(event['priority'] ?? 'N/A');
+  //           startTimeList.add(_formatTime(
+  //               event['start_time'])); // Convert time to 12-hour format
+  //           endTimeList.add(_formatTime(event['end_time']));
+  //           startDateList.add(event['start_date'] ?? 'N/A');
+  //         }
+  //       } else {
+  //         print("No events available.");
+  //       }
+  //     });
+  //   } catch (e) {
+  //     print('Error Fetching data: $e');
+  //   }
+  // }
   List<Map<String, dynamic>> allEvents = [];
+
   Future<void> fetchSingleEvent(String leadId) async {
     try {
+      // Fetch API response
       final List<Map<String, dynamic>> events =
           await LeadsSrv.singleEventById(leadId);
 
       setState(() {
-        if (events.isNotEmpty) {
-          allEvents = events;
+        allEvents = events;
 
-          // Initialize lists to store event data
-          subjectList = [];
-          priorityList = [];
-          startTimeList = [];
-          endTimeList = [];
-          startDateList = [];
+        // Initialize lists to store event data
+        subjectList = [];
+        priorityList = [];
+        startTimeList = [];
+        endTimeList = [];
+        startDateList = [];
 
-          // Loop through all events and store their details
-          for (var event in events) {
-            subjectList.add(event['subject'] ?? 'N/A');
-            priorityList.add(event['priority'] ?? 'N/A');
-            startTimeList.add(_formatTime(
-                event['start_time'])); // Convert time to 12-hour format
-            endTimeList.add(_formatTime(event['end_time']));
-            startDateList.add(event['start_date'] ?? 'N/A');
-          }
-        } else {
-          print("No events available.");
+        // Loop through all events and store their details
+        for (var event in events) {
+          subjectList.add(event['subject'] ?? 'N/A');
+          priorityList.add(event['priority'] ?? 'N/A');
+          startTimeList.add(_formatTime(event['start_time']));
+          endTimeList.add(_formatTime(event['end_time']));
+          startDateList.add(event['start_date'] ?? 'N/A');
         }
       });
     } catch (e) {
@@ -382,7 +412,6 @@ class _ContactRowState extends State<ContactRow> {
               size: 25,
               color: widget.iconColor,
             ),
-
           ),
           const SizedBox(width: 10),
           Expanded(

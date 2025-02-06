@@ -10,8 +10,10 @@ import 'package:smart_assist/pages/notification/notification.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 
-class HomeScreen extends StatefulWidget { 
-  const HomeScreen({super.key, });
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({
+    super.key,
+  });
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -70,6 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       // Search Field
+                      SizedBox(
+                        height: 3,
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 5, horizontal: 10),
@@ -79,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: SizedBox(
                                 height: 45,
                                 child: TextField(
+                                  textAlignVertical: TextAlignVertical.bottom,
                                   decoration: InputDecoration(
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(30),
@@ -91,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     filled: true,
                                     fillColor: const Color(0xFFE1EFFF),
                                     hintText: 'Search',
-                                    hintStyle: GoogleFonts.montserrat(
+                                    hintStyle: GoogleFonts.poppins(
                                       fontSize: 16,
                                       color: const Color(0xff767676),
                                       fontWeight: FontWeight.w400,
@@ -151,7 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                                FavoritePage(leadId:  '',),
+                                                              FavoritePage(
+                                                            leadId: '',
+                                                          ),
                                                         ),
                                                       );
                                                     },
@@ -213,6 +221,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: const Icon(
                                         Icons.menu,
                                         color: Colors.grey,
+                                        size: 30,
+                                        // weight: 500,
+                                        
                                       ),
                                     ),
                                     suffixIcon: const Icon(Icons.mic,
@@ -224,8 +235,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: 3,
+                      ),
                       Threebtn(
-                        leadId:'',
+                        leadId: '',
                       ),
                       const BottomBtnSecond(),
                     ],
@@ -252,7 +266,8 @@ class _HomeScreenState extends State<HomeScreen> {
           if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const Opportunity(leadId:'')),
+              MaterialPageRoute(
+                  builder: (context) => const Opportunity(leadId: '')),
             );
           } else if (index == 2) {
             Navigator.push(

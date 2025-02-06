@@ -107,6 +107,7 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
   @override
   void initState() {
     super.initState();
+         
     isFav = widget.isFavorite;
   }
 

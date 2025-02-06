@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
       // home: FollowupsDetails(),
       // home: NotificationPage(),
       // home: (),
+      
       theme: ThemeData(
         buttonTheme: const ButtonThemeData(),
         textTheme: const TextTheme(
@@ -56,7 +57,9 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFFFFFFF),
         appBarTheme: const AppBarTheme(backgroundColor: Color(0xFFFFFFFF)),
       ),
+       
       debugShowCheckedModeBanner: false,
+
     );
   }
 }

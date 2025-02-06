@@ -266,10 +266,10 @@ class LeadsSrv {
 
 // history data api
 
-  static Future<List<Map<String, dynamic>>> singleEventById(
+static Future<List<Map<String, dynamic>>> singleEventById(
       String leadId) async {
     const String apiUrl =
-        "https://api.smartassistapp.in/api/admin/leads/events/all/"; //tasks for tasks
+        "https://api.smartassistapp.in/api/admin/leads/events/all/";
 
     final token = await Storage.getToken();
     if (token == null) {
@@ -295,11 +295,13 @@ class LeadsSrv {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
 
-        // ✅ Return the full "rows" array instead of just the first event
-        if (data.containsKey('rows') && data['rows'] is List) {
-          return List<Map<String, dynamic>>.from(data['rows']);
+        // Handle the nested structure with allEvents.rows
+        if (data.containsKey('allEvents') &&
+            data['allEvents'] is Map<String, dynamic> &&
+            data['allEvents'].containsKey('rows')) {
+          return List<Map<String, dynamic>>.from(data['allEvents']['rows']);
         } else {
-          throw Exception("No events found for this Lead ID.");
+          return []; // Return empty list if no events found
         }
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
@@ -309,6 +311,51 @@ class LeadsSrv {
       throw Exception('Error fetching data: $e');
     }
   }
+  
+
+  // static Future<List<Map<String, dynamic>>> singleEventById(
+  //     String leadId) async {
+  //   const String apiUrl =
+  //       "https://api.smartassistapp.in/api/admin/leads/events/all/"; //tasks for tasks
+
+  //   final token = await Storage.getToken();
+  //   if (token == null) {
+  //     print("No token found. Please login.");
+  //     throw Exception("No token found. Please login.");
+  //   }
+
+  //   try {
+  //     print('Fetching data for Lead ID: $leadId');
+  //     print('API URL: ${apiUrl + leadId}');
+
+  //     final response = await http.get(
+  //       Uri.parse('$apiUrl$leadId'),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
+
+  //     print('Response status code: ${response.statusCode}');
+  //     print('Response body: ${response.body}');
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data = json.decode(response.body);
+
+  //       // ✅ Return the full "rows" array instead of just the first event
+  //       if (data.containsKey('rows') && data['rows'] is List) {
+  //         return List<Map<String, dynamic>>.from(data['rows']);
+  //       } else {
+  //         throw Exception("No events found for this Lead ID.");
+  //       }
+  //     } else {
+  //       throw Exception('Failed to load data: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching data: $e');
+  //     throw Exception('Error fetching data: $e');
+  //   }
+  // }
 
 //
   static Future<Map<String, dynamic>> singleAppointmentById(
