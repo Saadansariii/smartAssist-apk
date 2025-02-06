@@ -133,7 +133,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
         actions: [
           Align(
             // alignment: align,
-            child: IconButton( 
+            child: IconButton(
                 onPressed: () {},
                 icon: Icon(
                   Icons.add,
@@ -382,6 +382,7 @@ class _ContactRowState extends State<ContactRow> {
               size: 25,
               color: widget.iconColor,
             ),
+
           ),
           const SizedBox(width: 10),
           Expanded(

@@ -402,7 +402,7 @@ class _AddFollowupsState extends State<AddFollowups> {
             upcomingFollowups: upcomingTasks,
             leadId: widget.leadId,
           ),
-          const Divider(), // Optional divider between upcoming and overdue
+          const Divider(), 
           OverdueFollowup(
             overdueeFollowups: overdueTasks,
           ),
@@ -459,180 +459,183 @@ class _AddFollowupsState extends State<AddFollowups> {
       ),
       // body:
       body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 1, vertical: 5),
-                        child: TextField(
-                          controller: searchController,
-                          onChanged: _filterTasks,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide.none),
-                            filled: true,
-                            fillColor: const Color(0xFFE1EFFF),
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(1, 4, 0, 4),
-                            border: InputBorder.none,
-                            hintText: 'Search',
-                            hintStyle: const TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w400),
-                            prefixIcon:
-                                const Icon(Icons.search, color: Colors.grey),
-                            suffixIcon:
-                                const Icon(Icons.mic, color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              children: [
-                Row(
+        // scrollDirection: Axis.horizontal,
+        child: Container(
+          width: double.infinity,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                child: Row(
                   children: [
-                    const SizedBox(width: 20),
-                    Container(
-                      width: 250,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color(0xFF767676),
-                          width: .5,
+                    Expanded(
+                      child: SizedBox(
+                        height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 1, vertical: 5),
+                          child: TextField(
+                            controller: searchController,
+                            onChanged: _filterTasks,
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide.none),
+                              filled: true,
+                              fillColor: const Color(0xFFE1EFFF),
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(1, 4, 0, 4),
+                              border: InputBorder.none,
+                              hintText: 'Search',
+                              hintStyle: const TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w400),
+                              prefixIcon:
+                                  const Icon(Icons.search, color: Colors.grey),
+                              suffixIcon:
+                                  const Icon(Icons.mic, color: Colors.grey),
+                            ),
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        children: [
-                          // All
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _upcommingButtonIndex = 0;
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: _upcommingButtonIndex == 0
-                                    ? const Color.fromARGB(255, 78, 109, 248)
-                                        .withOpacity(0.29)
-                                    : null,
-                                foregroundColor: _upcommingButtonIndex == 0
-                                    ? Colors.blueGrey
-                                    : Colors.black,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                side: BorderSide(
-                                  color: _upcommingButtonIndex == 0
-                                      ? Color.fromARGB(255, 78, 109, 248)
-                                      : Colors.transparent,
-                                  width: .5,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              child: const Text('All',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.grey)),
-                            ),
-                          ),
-                          // Upcoming Button
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _upcommingButtonIndex = 1;
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: _upcommingButtonIndex == 1
-                                    ? const Color.fromARGB(255, 81, 223, 121)
-                                        .withOpacity(0.29)
-                                    : null,
-                                foregroundColor: _upcommingButtonIndex == 1
-                                    ? Colors.blueGrey
-                                    : Colors.black,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                side: BorderSide(
-                                  color: _upcommingButtonIndex == 1
-                                      ? const Color.fromARGB(255, 81, 223, 121)
-                                      : Colors.transparent,
-                                  width: .5,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              child: Text('Upcoming',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.grey)),
-                            ),
-                          ),
-                          // Overdue Button
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _upcommingButtonIndex = 2;
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: _upcommingButtonIndex == 2
-                                    ? const Color.fromRGBO(238, 59, 59, 1)
-                                        .withOpacity(0.29)
-                                    : Colors.transparent,
-                                foregroundColor: _upcommingButtonIndex == 2
-                                    ? Colors.blueGrey
-                                    : Colors.black,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                side: BorderSide(
-                                  color: _upcommingButtonIndex == 2
-                                      ? Color.fromRGBO(236, 81, 81, 1)
-                                          .withOpacity(0.59)
-                                      : Colors.transparent,
-                                  width: .5,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              child: Text('Overdue',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.grey)),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
-            SizedBox(height: 10),
-            _getCurrentWidget(),
-          ],
+              ),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      const SizedBox(width: 20),
+                      Container(
+                        width: 250,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: const Color(0xFF767676),
+                            width: .5,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Row(
+                          children: [
+                            // All
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _upcommingButtonIndex = 0;
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: _upcommingButtonIndex == 0
+                                      ? const Color.fromARGB(255, 78, 109, 248)
+                                          .withOpacity(0.29)
+                                      : null,
+                                  foregroundColor: _upcommingButtonIndex == 0
+                                      ? Colors.blueGrey
+                                      : Colors.black,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  side: BorderSide(
+                                    color: _upcommingButtonIndex == 0
+                                        ? Color.fromARGB(255, 78, 109, 248)
+                                        : Colors.transparent,
+                                    width: .5,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: const Text('All',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey)),
+                              ),
+                            ),
+                            // Upcoming Button
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _upcommingButtonIndex = 1;
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: _upcommingButtonIndex == 1
+                                      ? const Color.fromARGB(255, 81, 223, 121)
+                                          .withOpacity(0.29)
+                                      : null,
+                                  foregroundColor: _upcommingButtonIndex == 1
+                                      ? Colors.blueGrey
+                                      : Colors.black,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  side: BorderSide(
+                                    color: _upcommingButtonIndex == 1
+                                        ? const Color.fromARGB(255, 81, 223, 121)
+                                        : Colors.transparent,
+                                    width: .5,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: Text('Upcoming',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey)),
+                              ),
+                            ),
+                            // Overdue Button
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _upcommingButtonIndex = 2;
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: _upcommingButtonIndex == 2
+                                      ? const Color.fromRGBO(238, 59, 59, 1)
+                                          .withOpacity(0.29)
+                                      : Colors.transparent,
+                                  foregroundColor: _upcommingButtonIndex == 2
+                                      ? Colors.blueGrey
+                                      : Colors.black,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  side: BorderSide(
+                                    color: _upcommingButtonIndex == 2
+                                        ? Color.fromRGBO(236, 81, 81, 1)
+                                            .withOpacity(0.59)
+                                        : Colors.transparent,
+                                    width: .5,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: Text('Overdue',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              _getCurrentWidget(),
+            ],
+          ),
         ),
       ),
     );

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
-import 'package:smart_assist/utils/style_text.dart';
+import 'package:smart_assist/pages/home_screens/home_screen.dart'; 
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
 import 'package:smart_assist/widgets/opp_follup.dart/overdue_opp.dart';
@@ -18,11 +17,15 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  Widget currentWidgetOverdue1 = const OverdueFollowup(overdueeFollowups: [],);
+  Widget currentWidgetOverdue1 = const OverdueFollowup(
+    overdueeFollowups: [],
+  );
   Widget currentWidgetOverdue2 = const OverdueOpp();
   Widget currentWidget1 = const OppFollUps();
-  Widget currentWidget =   FollowupsUpcoming(upcomingFollowups: [], leadId: '' );
-  Widget currentWidgetOverdue3 = const OverdueFollowup(overdueeFollowups: [],);
+  Widget currentWidget = FollowupsUpcoming(upcomingFollowups: [], leadId: '');
+  Widget currentWidgetOverdue3 = const OverdueFollowup(
+    overdueeFollowups: [],
+  );
   int _upcommingButtonIndex = 0;
 
   @override
@@ -158,48 +161,6 @@ class _FavoritePageState extends State<FavoritePage> {
               ),
             ),
             SizedBox(height: 10),
-            Column(
-              children: [
-                if (_upcommingButtonIndex == 0) ...[
-                  currentWidget,
-                  SizedBox(height: 10),
-                  currentWidget,
-                  const SizedBox(height: 10),
-                  currentWidget1,
-                  SizedBox(height: 10),
-                  currentWidget1,
-                  const SizedBox(height: 10),
-                  currentWidgetOverdue1,
-                  SizedBox(height: 10),
-                  currentWidgetOverdue1,
-                  const SizedBox(height: 10),
-                  currentWidgetOverdue2,
-                  SizedBox(height: 10),
-                  currentWidgetOverdue2,
-                  const SizedBox(height: 10),
-                ] else if (_upcommingButtonIndex == 1) ...[
-                  currentWidget,
-                  const SizedBox(height: 10),
-                  currentWidget1,
-                  SizedBox(height: 10),
-                  currentWidget1,
-                  SizedBox(height: 10),
-                  currentWidget1,
-                ] else if (_upcommingButtonIndex == 2) ...[
-                  const SizedBox(height: 10),
-                  currentWidgetOverdue2,
-                  const SizedBox(height: 10),
-                  currentWidgetOverdue1,
-                  const SizedBox(height: 10),
-                  currentWidgetOverdue1,
-                  const SizedBox(height: 10),
-                  currentWidgetOverdue2,
-                ] else if (_upcommingButtonIndex == 3) ...[
-                  const SizedBox(height: 10),
-                  currentWidgetOverdue3,
-                ],
-              ],
-            )
           ],
         ),
       ),
