@@ -24,23 +24,23 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddFollowups()));
-              },
-              child: const Icon(
-                Icons.keyboard_arrow_down_outlined,
-                size: 36,
-              ),
-            )
-          ],
-        ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     GestureDetector(
+        //       onTap: () {
+        //         Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //                 builder: (context) =>   AddFollowups()));
+        //       },
+        //       child: const Icon(
+        //         Icons.keyboard_arrow_down_outlined,
+        //         size: 36,
+        //       ),
+        //     )
+        //   ],
+        // ),
         // SizedBox(height: 2),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),

@@ -10,7 +10,8 @@ import 'package:smart_assist/widgets/opp_follup.dart/overdue_opp.dart';
 import 'package:smart_assist/widgets/opp_follup.dart/upcoming.dart';
 
 class FavoritePage extends StatefulWidget {
-  const FavoritePage({super.key});
+  final String leadId;
+  const FavoritePage({super.key, required this.leadId});
 
   @override
   State<FavoritePage> createState() => _FavoritePageState();
@@ -20,7 +21,7 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget currentWidgetOverdue1 = const OverdueFollowup(overdueeFollowups: [],);
   Widget currentWidgetOverdue2 = const OverdueOpp();
   Widget currentWidget1 = const OppFollUps();
-  Widget currentWidget = const FollowupsUpcoming(upcomingFollowups: [], );
+  Widget currentWidget =   FollowupsUpcoming(upcomingFollowups: [], leadId: '' );
   Widget currentWidgetOverdue3 = const OverdueFollowup(overdueeFollowups: [],);
   int _upcommingButtonIndex = 0;
 

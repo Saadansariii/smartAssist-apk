@@ -7,7 +7,8 @@ import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Opportunity extends StatefulWidget {
-  const Opportunity({super.key});
+  final String leadId;
+  const Opportunity({super.key, required this.leadId});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -98,7 +99,7 @@ class _OpportunityState extends State<Opportunity> {
                 ),
               ),
 
-              const Threebtn(),
+                Threebtn(leadId:widget.leadId,),
 
               const BottomBtnSecond(),
             ],
@@ -149,7 +150,7 @@ class _OpportunityState extends State<Opportunity> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Opportunity()),
+                          builder: (context) =>   Opportunity(leadId: '',)),
                     );
                   },
                   child: Column(

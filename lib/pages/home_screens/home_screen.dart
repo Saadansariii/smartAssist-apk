@@ -10,8 +10,8 @@ import 'package:smart_assist/pages/notification/notification.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget { 
+  const HomeScreen({super.key, });
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -151,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              const FavoritePage(),
+                                                                FavoritePage(leadId:  '',),
                                                         ),
                                                       );
                                                     },
@@ -224,7 +224,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      const Threebtn(),
+                      Threebtn(
+                        leadId:'',
+                      ),
                       const BottomBtnSecond(),
                     ],
                   ),
@@ -250,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const Opportunity()),
+              MaterialPageRoute(builder: (context) => const Opportunity(leadId:'')),
             );
           } else if (index == 2) {
             Navigator.push(
