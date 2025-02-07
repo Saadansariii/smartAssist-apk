@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http; 
+import 'package:http/http.dart' as http;
+import 'package:smart_assist/pages/calenderPages/tasks/task_appointment_pop.dart';
+import 'package:smart_assist/pages/calenderPages/tasks/task_followups_pop.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class AddTaskPopup extends StatefulWidget {
-  const AddTaskPopup({super.key});
+  final DateTime? selectedDate;
+  const AddTaskPopup({super.key, this.selectedDate});
 
   @override
   State<AddTaskPopup> createState() => _AddTaskPopupState();
@@ -24,6 +27,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
   void initState() {
     super.initState();
     fetchDropdownData();
+    print('this is the selected widget ${widget.selectedDate}');
   }
 
   Future<void> fetchDropdownData() async {
@@ -238,7 +242,26 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pop(context); // Close popup on submit
+                          Navigator.pop(context); // Close the current dialog
+                          Future.microtask(() {
+                            showDialog(
+                              context: context,
+                              builder: (context) => Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: selectedEvent == 'Appointment'
+                                    ? TaskAppointmentPop()
+                                    : selectedEvent == 'Test Drive'
+                                        ? TaskFollowupsPop(
+                                            selectedDate: widget
+                                                .selectedDate) //add testdrive here in future
+                                        : TaskFollowupsPop(
+                                            selectedDate: widget.selectedDate,
+                                          ),
+                              ),
+                            );
+                          });
                         },
                         child: const Text('Next',
                             style:

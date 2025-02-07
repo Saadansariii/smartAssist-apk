@@ -103,7 +103,7 @@ class _EventWidgetState extends State<EventWidget> {
                               ),
                               SizedBox(width: 5), // Space between day and month
                               Text(
-                                '${DateFormat('MMM').format(DateTime.now())}', // Current month (e.g., 'Feb')
+                                '${DateFormat('MMM').format(DateTime.now())}',  
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,

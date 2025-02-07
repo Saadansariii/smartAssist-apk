@@ -29,14 +29,18 @@ class _CalenderState extends State<Calender> {
   DateTime? _selectedDay;
   int overdueFollowupsCount = 0;
   int overdueAppointmentsCount = 0;
-  int upcomingAppointmentsCount = 0;
+  int upcomingAppointmentsCount = 0; 
+  late Widget _createTask;
   // var data = responseData;
 
-  final Widget _createTask = const AddTaskPopup();
+ 
+
+  // final Widget _createTask = const AddTaskPopup();
 
   @override
   void initState() {
     super.initState();
+    final Widget _createTask = AddTaskPopup(selectedDate: _selectedDay);
     _fetchAppointments(_focusedDay);
     _fetchDashboardData();
   }
@@ -106,6 +110,7 @@ class _CalenderState extends State<Calender> {
     setState(() {
       _selectedDay = selectedDay;
       _focusedDay = selectedDay; // Update focused day as well
+      _createTask = AddTaskPopup(selectedDate: selectedDay);
     });
 
     // Fetch data for the selected date
