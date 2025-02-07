@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_assist/pages/login/first_screen.dart';
 import 'package:smart_assist/pages/login/login_page.dart';
+import 'package:smart_assist/services/notification_service.dart';
 // import 'package:smart_assist/pages/details_pages/test_drive_details.dart';
 // import 'package:smart_assist/pages/home_screen.dart';
 // import 'package:smart_assist/pages/login/first_screen.dart';
@@ -11,6 +12,7 @@ import 'package:smart_assist/pages/login/login_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
+    await NotificationService.instance.initialize();
     await Firebase.initializeApp();
     print("Firebase initialized successfully!");
   } catch (e) {

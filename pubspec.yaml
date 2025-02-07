@@ -43,6 +43,7 @@ dependencies:
   font_awesome_flutter: ^10.8.0
   timeline_tile: ^2.0.0
   google_fonts: ^6.2.1
+  flutter_local_notifications: ^17.2.3
 
 dev_dependencies:
   flutter_test:
@@ -76,14 +77,11 @@ flutter:
     - assets/Leads.png
     - assets/Mic.png
     - assets/Notification.png
-    - assets/star.png
     - assets/graph.png
     - assets/circle-main.jpg
     - assets/Opportunity.png
     - assets/Leadss.png
     - assets/location.png
-    - assets/vector.png
-    - assets/vector_light.png
     - assets/whatsapp.png
     - assets/blue_bag.png
     - assets/blue_arrow.png
@@ -98,7 +96,7 @@ flutter:
     - assets/redirect_msg.png
     - assets/call.png
     - assets/caricon.png
-    - assets/time.png
+    # - assets/time.png
     - assets/calandericon.png
     - assets/companybag.png
     - assets/whatsappicon.png
