@@ -1,7 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/login/first_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smart_assist/pages/details_pages/followups/followups.dart';
+import 'package:smart_assist/pages/details_pages/test_drive_details.dart';
+import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.dart';
+// import 'package:smart_assist/pages/login/first_screen.dart';
 import 'package:smart_assist/pages/login/login_page.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:smart_assist/pages/notification/notification.dart';
+import 'package:smart_assist/services/notifacation_srv.dart';
 // import 'package:smart_assist/pages/details_pages/test_drive_details.dart';
 // import 'package:smart_assist/pages/home_screen.dart';
 // import 'package:smart_assist/pages/login/first_screen.dart';
@@ -10,13 +17,18 @@ import 'package:smart_assist/pages/login/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   try {
     await Firebase.initializeApp();
     print("Firebase initialized successfully!");
   } catch (e) {
     print("Firebase initialization failed: $e");
   }
-  runApp(const MyApp());
+
+  await Hive.initFlutter(); // Initialize Hive after Firebase
+  await NotificationService.instance.initialize(); // Initialize Notifications
+
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -29,8 +41,9 @@ class MyApp extends StatelessWidget {
         email: '',
       ),
       // home: TestDriveDetails(),
-      // home: const HomeScreen(),
-      // home: FavoritePage(),
+      // home: FollowupsDetails(),
+      // home: NotificationPage(),
+      // home: (),
       theme: ThemeData(
         buttonTheme: const ButtonThemeData(),
         textTheme: const TextTheme(

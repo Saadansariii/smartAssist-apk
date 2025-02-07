@@ -22,7 +22,7 @@ class _SetPwdState extends State<SetNewPwd> {
   final TextEditingController confirmPwdController = TextEditingController();
   // Controllers for text fields
   final TextEditingController _passwordController1 = TextEditingController();
-  final TextEditingController _passwordController2 = TextEditingController();
+  // final TextEditingController _passwordController2 = TextEditingController();
 
   // Password visibility toggle
   bool _isPasswordObscured1 = true;

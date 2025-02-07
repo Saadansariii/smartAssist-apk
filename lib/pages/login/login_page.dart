@@ -8,6 +8,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class LoginPage extends StatefulWidget {
   final String email;
   const LoginPage({super.key, required this.email});
@@ -231,27 +233,42 @@ class _LoginPageState extends State<LoginPage> {
     };
 
     setState(() {
-      isLoading = true; // Start loading
+      isLoading = true;
     });
 
     try {
       final response = await LoginSrv.onLogin(body);
+      print('Full API Response: $response'); // Debugging
 
-      if (response['isSuccess'] == true) {
-        showSuccessMessage(context, message: 'Login Successful!');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
+      if (response['isSuccess'] == true && response.containsKey('user')) {
+        final user = response['user'];
+
+        if (user.containsKey('user_id')) {
+          final userId = user['user_id'];
+          print('User ID received: $userId');
+
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user_id', userId);
+
+          showSuccessMessage(context, message: 'Login Successful!');
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        } else {
+          print('Error: user_id not found inside user object.');
+          showErrorMessage(context, message: 'User ID not found.');
+        }
       } else {
-        final errorMessage = response['data']['message'] ?? 'Login failed.';
-        showErrorMessage(context, message: errorMessage);
+        print('Error: User data missing or API call failed.');
+        showErrorMessage(context, message: 'Login failed.');
       }
     } catch (error) {
+      print('Error during API call: $error');
       showErrorMessage(context, message: 'Error during API call: $error');
     } finally {
       setState(() {
-        isLoading = false; // Stop loading
+        isLoading = false;
       });
     }
   }
