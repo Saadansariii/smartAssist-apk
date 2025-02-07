@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
+import 'package:smart_assist/widgets/leads_details_popup/create_appointment.dart';
+import 'package:smart_assist/widgets/leads_details_popup/create_followups.dart';
 import 'package:smart_assist/widgets/timeline/timeline_seven_wid.dart';
 
 class FollowupsDetails extends StatefulWidget {
@@ -28,6 +32,10 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   List<String> startTimeList = [];
   List<String> endTimeList = [];
   List<String> startDateList = [];
+
+  // dropdown
+  final Widget _createFollowups = const LeadsCreateFollowup();
+  final Widget _createAppoinment = const CreateAppointment();
 
   @override
   void initState() {
@@ -160,17 +168,100 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
             color: Color.fromARGB(255, 134, 134, 134),
           ),
         ),
+        // actions: [
+        //   Align(
+        //     child: IconButton(
+        //         onPressed: () {},
+        //         icon: Icon(
+        //           Icons.add,
+        //           size: 30,
+        //         )),
+        //   )
+        // ],
         actions: [
-          Align(
-            // alignment: align,
-            child: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.add,
-                  size: 30,
-                )),
-          )
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  final result = await showMenu<String>(
+                    context: context,
+                    position: const RelativeRect.fromLTRB(70, 90, 30, 100),
+                    items: [
+                      PopupMenuItem<String>(
+                        height: 20,
+                        onTap: () {
+                          Future.delayed(Duration.zero, () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: _createFollowups,
+                                );
+                              },
+                            );
+                          });
+                        },
+                        value: 'followup',
+                        child: Center(
+                          child: Text(
+                            'Create Followups',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        height: 20,
+                        onTap: () {
+                          Future.delayed(Duration.zero, () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: _createAppoinment,
+                                  // Appointment modal
+                                );
+                              },
+                            );
+                          });
+                        },
+                        value: 'appointment',
+                        child: Center(
+                          child: Text(
+                            'Create Appointment',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                  if (result != null) {
+                    print('Selected: $result');
+                  }
+                },
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  child: Icon(Icons.add, size: 30),
+                ),
+              ),
+            ],
+          ),
         ],
+
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.grey),
           onPressed: () {

@@ -3,9 +3,14 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
-import 'package:smart_assist/utils/storage.dart'; 
+import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_appointment.dart';
+import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_leads.dart';
+import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_opportunity.dart';
+import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_testdrive.dart';
+import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_upcoming.dart';
+import 'package:smart_assist/utils/storage.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http; 
+import 'package:http/http.dart' as http;
 
 class FavoritePage extends StatefulWidget {
   final String leadId;
@@ -27,114 +32,36 @@ class _FavoritePageState extends State<FavoritePage> {
   void initState() {
     super.initState();
     // Load initial data for followups
-    fetchFollowupData();
+    // fetchFollowupData();
+    FUpcoming(
+      leadId: widget.leadId,
+    );
   }
 
-  Future<void> fetchFollowupData() async {
-    setState(() => isLoading = true);
-    try {
-      // Replace with your actual API endpoint
-      final response = await fetchData('favourites/follow-ups/all');
-      setState(() {
-        followupData = List<Map<String, dynamic>>.from(response);
-      });
-    } catch (e) {
-      print('Error fetching followup data: $e');
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-
-  Future<void> fetchAppointmentData() async {
-    setState(() => isLoading = true);
-    try {
-      final response = await fetchData('/favourites/events/test-drives/all');
-      setState(() {
-        appointmentData = List<Map<String, dynamic>>.from(response);
-      });
-    } catch (e) {
-      print('Error fetching appointment data: $e');
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-
-  Future<void> fetchTestDriveData() async {
-    setState(() => isLoading = true);
-    try {
-      final response = await fetchData('/favourites/events/test-drives/all');
-      setState(() {
-        testDriveData = List<Map<String, dynamic>>.from(response);
-      });
-    } catch (e) {
-      print('Error fetching test drive data: $e');
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-
-  Future<void> fetchOpportunityData() async {
-    setState(() => isLoading = true);
-    try {
-      final response = await fetchData('/api/opportunities/favorite');
-      setState(() {
-        opportunityData = List<Map<String, dynamic>>.from(response);
-      });
-    } catch (e) {
-      print('Error fetching opportunity data: $e');
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-
-  Widget _buildDataList(List<Map<String, dynamic>> data) {
+  Widget _buildContent() {
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (data.isEmpty) {
-      return Center(
-        child: Text(
-          'No data available',
-          style: GoogleFonts.poppins(fontSize: 16),
-        ),
-      );
+    switch (_selectedButtonIndex) {
+      case 0:
+        return FUpcoming(
+          leadId: widget.leadId,
+        ); // Load follow-ups
+      case 1:
+        // return _buildDataList(appointmentData);
+        return FAppointment();
+      case 2:
+        // return _buildDataList(testDriveData);
+        return FTestdrive();
+      case 3:
+        // return _buildDataList(opportunityData);
+        return FLeads();
+      case 4:
+        return FOpportunity();
+      default:
+        return const SizedBox();
     }
-
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: data.length,
-      itemBuilder: (context, index) {
-        final item = data[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: ListTile(
-            title: Text(
-              item['subject'] ?? 'No Subject',
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Status: ${item['status'] ?? 'N/A'}',
-                  style: GoogleFonts.poppins(),
-                ),
-                Text(
-                  'Priority: ${item['priority'] ?? 'N/A'}',
-                  style: GoogleFonts.poppins(),
-                ),
-                Text(
-                  'Due Date: ${item['due_date'] ?? 'N/A'}',
-                  style: GoogleFonts.poppins(),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -170,149 +97,127 @@ class _FavoritePageState extends State<FavoritePage> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    FlexibleButton(
-                      title: 'Followups',
-                      onPressed: () {
-                        setState(() {
-                          _selectedButtonIndex = 0;
-                          fetchFollowupData();
-                        });
-                      },
-                      decoration: BoxDecoration(
-                        border: _selectedButtonIndex == 0
-                            ? Border.all(color: Colors.blue)
-                            : Border.all(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      textStyle: GoogleFonts.poppins(
-                        color: _selectedButtonIndex == 0
-                            ? Colors.blue
-                            : Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+              child: Wrap(
+                spacing: 1, // Space between buttons
+                children: [
+                  FlexibleButton(
+                    title: 'Followups',
+                    onPressed: () {
+                      setState(() {
+                        _selectedButtonIndex = 0;
+                      });
+                    },
+                    decoration: BoxDecoration(
+                      border: _selectedButtonIndex == 0
+                          ? Border.all(color: Colors.blue)
+                          : Border.all(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(13),
                     ),
-                    const SizedBox(width: 3),
-                    FlexibleButton(
-                      title: 'Appointments',
-                      onPressed: () {
-                        setState(() {
-                          _selectedButtonIndex = 1;
-                          fetchAppointmentData();
-                        });
-                      },
-                      decoration: BoxDecoration(
-                        border: _selectedButtonIndex == 1
-                            ? Border.all(color: Colors.blue)
-                            : Border.all(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      textStyle: GoogleFonts.poppins(
-                        color: _selectedButtonIndex == 1
-                            ? Colors.blue
-                            : Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    textStyle: GoogleFonts.poppins(
+                      color: _selectedButtonIndex == 0
+                          ? Colors.blue
+                          : Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
                     ),
-                    const SizedBox(width: 3),
-                    FlexibleButton(
-                      title: 'Test Drive',
-                      onPressed: () {
-                        setState(() {
-                          _selectedButtonIndex = 2;
-                          fetchTestDriveData();
-                        });
-                      },
-                      decoration: BoxDecoration(
-                        border: _selectedButtonIndex == 2
-                            ? Border.all(color: Colors.blue)
-                            : Border.all(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      textStyle: GoogleFonts.poppins(
-                        color: _selectedButtonIndex == 2
-                            ? Colors.blue
-                            : Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
+                  ),
+                  FlexibleButton(
+                    title: 'Appointments',
+                    onPressed: () {
+                      setState(() {
+                        _selectedButtonIndex = 1;
+                      });
+                    },
+                    decoration: BoxDecoration(
+                      border: _selectedButtonIndex == 1
+                          ? Border.all(color: Colors.blue)
+                          : Border.all(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(13),
                     ),
-                    const SizedBox(width: 3),
-                    FlexibleButton(
+                    textStyle: GoogleFonts.poppins(
+                      color: _selectedButtonIndex == 1
+                          ? Colors.blue
+                          : Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  FlexibleButton(
+                    title: 'Test Drive',
+                    onPressed: () {
+                      setState(() {
+                        _selectedButtonIndex = 2;
+                      });
+                    },
+                    decoration: BoxDecoration(
+                      border: _selectedButtonIndex == 2
+                          ? Border.all(color: Colors.blue)
+                          : Border.all(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(13),
+                    ),
+                    textStyle: GoogleFonts.poppins(
+                      color: _selectedButtonIndex == 2
+                          ? Colors.blue
+                          : Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  FlexibleButton(
+                    title: 'Leads',
+                    onPressed: () {
+                      setState(() {
+                        _selectedButtonIndex = 3;
+                      });
+                    },
+                    decoration: BoxDecoration(
+                      border: _selectedButtonIndex == 3
+                          ? Border.all(color: Colors.blue)
+                          : Border.all(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(13),
+                    ),
+                    textStyle: GoogleFonts.poppins(
+                      color: _selectedButtonIndex == 3
+                          ? Colors.blue
+                          : Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: FlexibleButton(
                       title: 'Opportunity',
                       onPressed: () {
                         setState(() {
-                          _selectedButtonIndex = 3;
-                          fetchOpportunityData();
+                          _selectedButtonIndex = 4;
                         });
                       },
                       decoration: BoxDecoration(
-                        border: _selectedButtonIndex == 3
+                        border: _selectedButtonIndex == 4
                             ? Border.all(color: Colors.blue)
                             : Border.all(color: Colors.transparent),
                         borderRadius: BorderRadius.circular(13),
                       ),
                       textStyle: GoogleFonts.poppins(
-                        color: _selectedButtonIndex == 3
+                        color: _selectedButtonIndex == 4
                             ? Colors.blue
                             : Colors.black,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 10),
-            _buildDataList(_selectedButtonIndex == 0
-                ? followupData
-                : _selectedButtonIndex == 1
-                    ? appointmentData
-                    : _selectedButtonIndex == 2
-                        ? testDriveData
-                        : opportunityData),
+            // const SizedBox(height: 5),
+            _buildContent(), // Load follow-ups or other data based on selection
           ],
         ),
       ),
     );
-  }
-}
-
-// Helper function to fetch data from API
- 
-Future<List<dynamic>> fetchData(String endpoint) async {
-  final token = await Storage.getToken();
-  if (token == null) {
-    throw Exception("No token found. Please login.");
-  }
-
-  final response = await http.get(
-    Uri.parse('https://api.smartassistapp.in/api/$endpoint'),
-    headers: {
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json',
-    },
-  );
-
-  if (response.statusCode == 200) {
-    final data = json.decode(response.body);
-
-    if (data != null &&
-        data is Map<String, dynamic> &&
-        data.containsKey('rows')) {
-      return data['rows'] as List<dynamic>;
-    } else {
-      throw Exception("Invalid response format");
-    }
-  } else {
-    throw Exception('Failed to load data: ${response.statusCode}');
   }
 }
 
@@ -337,7 +242,9 @@ class FlexibleButton extends StatelessWidget {
       child: TextButton(
         style: TextButton.styleFrom(
           backgroundColor: Color(0xffF3F9FF),
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(
+            horizontal: 10,
+          ),
           minimumSize: const Size(0, 0),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),

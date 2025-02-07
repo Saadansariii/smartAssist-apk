@@ -24,6 +24,7 @@ class Threebtn extends StatefulWidget {
 }
 
 class _ThreebtnState extends State<Threebtn> {
+  String? leadId;
   final Widget _leadFirstStep = const LeadFirstStep();
   final Widget _createFollowups = const CreateFollowupsPopups();
   final Widget _createAppoinment = const AppointmentPopup();
@@ -37,15 +38,12 @@ class _ThreebtnState extends State<Threebtn> {
   bool isLoading = true;
   late Widget currentWidget;
 
-  
-
   @override
   void initState() {
     super.initState();
     _childButtonIndex = 0;
     currentWidget = FollowupsUpcoming(
       upcomingFollowups: upcomingFollowups,
-      leadId: '',
     );
 
     // fetchDashboardData();
@@ -294,7 +292,7 @@ class _ThreebtnState extends State<Threebtn> {
                   ],
                 ),
               ),
-            ), 
+            ),
 
             //     // Optional: Handle menu item selection (if required)
             //     if (result != null) {
@@ -472,23 +470,28 @@ class _ThreebtnState extends State<Threebtn> {
         // show data
         currentWidget,
         // SizedBox(height: 10),
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
               onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddFollowups(leadId: widget.leadId),
-                  ),
-                );
+                if (leadId != null && leadId!.isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddFollowups(leadId: leadId!),
+                    ),
+                  );
+                } else {
+                  print("Error: leadId is null or empty");
+                }
               },
               child: const Icon(
                 Icons.keyboard_arrow_down_outlined,
                 size: 36,
               ),
-            )
+            ),
           ],
         ),
       ],
@@ -517,6 +520,10 @@ class _ThreebtnState extends State<Threebtn> {
           upcomingAppointments = data['upcomingAppointments'];
           // print("widget.upcomingFollowups8888");
           // print(data['upcomingFollowups']);
+          // Extract leadId from the first upcoming follow-up (if available)
+          if (upcomingFollowups.isNotEmpty) {
+            leadId = upcomingFollowups[0]['lead_id'];
+          }
         });
       } else {
         print("Failed to load data: ${response.statusCode}");
@@ -547,11 +554,10 @@ class _ThreebtnState extends State<Threebtn> {
   void followUps(int type) {
     setState(() {
       _upcomingBtnFollowups = type;
-       
+
       if (type == 0) {
         currentWidget = FollowupsUpcoming(
           upcomingFollowups: upcomingFollowups,
-          leadId: widget.leadId,
         );
       } else {
         currentWidget = OverdueFollowup(

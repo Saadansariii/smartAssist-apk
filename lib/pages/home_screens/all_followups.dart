@@ -5,6 +5,7 @@ import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
 
 class AddFollowups extends StatefulWidget {
   final String leadId;
@@ -18,6 +19,7 @@ class AddFollowups extends StatefulWidget {
 }
 
 class _AddFollowupsState extends State<AddFollowups> {
+  final Widget _createFollowups = const CreateFollowupsPopups();
   List<dynamic> _originalAllTasks = [];
   List<dynamic> _originalUpcomingTasks = [];
   List<dynamic> _originalOverdueTasks = [];
@@ -28,13 +30,13 @@ class _AddFollowupsState extends State<AddFollowups> {
   TextEditingController searchController = TextEditingController();
   bool _isLoading = true;
   // final leadId = widget.leadId;
-  String? leadId;
+  // String? leadId;
 
   @override
   void initState() {
     super.initState();
     fetchTasks();
-    leadId = widget.leadId;
+    // leadId = widget.leadId;
     print('this is the leadId ${widget.leadId}');
   }
 
@@ -42,7 +44,6 @@ class _AddFollowupsState extends State<AddFollowups> {
     setState(() => _isLoading = true);
     try {
       final token = await Storage.getToken();
-      // const String leadId = "ecb174ab-0dde-41c8-91d3-e9f3c0007a49";
       final String apiUrl =
           "https://api.smartassistapp.in/api/admin/leads/tasks/all/${widget.leadId}";
 
@@ -120,7 +121,19 @@ class _AddFollowupsState extends State<AddFollowups> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: _createFollowups, // Your follow-up widget
+                  );
+                },
+              );
+            },
             icon: const Icon(Icons.add, color: Colors.white, size: 36),
           ),
         ],
@@ -208,13 +221,11 @@ class _AddFollowupsState extends State<AddFollowups> {
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
-                                  OverdueFollowup(
-                                    overdueeFollowups: _filteredOverdueTasks,
-                                  ),
                                   FollowupsUpcoming(
                                     upcomingFollowups: _filteredUpcomingTasks,
-                                    leadId:
-                                        "ecb174ab-0dde-41c8-91d3-e9f3c0007a49",
+                                  ),
+                                  OverdueFollowup(
+                                    overdueeFollowups: _filteredOverdueTasks,
                                   ),
                                 ],
                               ),
@@ -225,7 +236,6 @@ class _AddFollowupsState extends State<AddFollowups> {
                     : _upcommingButtonIndex == 1
                         ? FollowupsUpcoming(
                             upcomingFollowups: _filteredUpcomingTasks,
-                            leadId: "ecb174ab-0dde-41c8-91d3-e9f3c0007a49",
                           )
                         : OverdueFollowup(
                             overdueeFollowups: _filteredOverdueTasks,

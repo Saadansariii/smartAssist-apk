@@ -7,9 +7,8 @@ import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 
 // ---------------- FOLLOWUPS UPCOMING LIST ----------------
 class FollowupsUpcoming extends StatefulWidget {
-  final List<dynamic> upcomingFollowups;
-  final String leadId;
-  const FollowupsUpcoming({super.key, required this.upcomingFollowups, required this.leadId});
+  final List<dynamic> upcomingFollowups; 
+  const FollowupsUpcoming({super.key, required this.upcomingFollowups, });
 
   @override
   State<FollowupsUpcoming> createState() => _FollowupsUpcomingState();
@@ -23,6 +22,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
   void initState() {
     super.initState();
     fetchDashboardData();
+    
   }
 
   Future<void> fetchDashboardData() async {
