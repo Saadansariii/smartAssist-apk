@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/calenderPages/tasks/addTask.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/pages/home_screens/opportunity.dart';
+import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/widgets/calender/appointment.dart';
 import 'package:smart_assist/widgets/calender/calender.dart';
 import 'package:smart_assist/widgets/calender/event.dart';
@@ -29,11 +30,9 @@ class _CalenderState extends State<Calender> {
   DateTime? _selectedDay;
   int overdueFollowupsCount = 0;
   int overdueAppointmentsCount = 0;
-  int upcomingAppointmentsCount = 0; 
+  int upcomingAppointmentsCount = 0;
   late Widget _createTask;
   // var data = responseData;
-
- 
 
   // final Widget _createTask = const AddTaskPopup();
 
@@ -126,7 +125,7 @@ class _CalenderState extends State<Calender> {
         leading: IconButton(
           onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                context, MaterialPageRoute(builder: (context) => BottomNavigation()));
           },
           icon: const Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
         ),
@@ -198,108 +197,108 @@ class _CalenderState extends State<Calender> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        color: Colors.white, // Background color of the fixed area
-        padding: const EdgeInsets.all(5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize
-                  .min, // Ensures the column doesn’t expand unnecessarily
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomeScreen()),
-                    );
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(FontAwesomeIcons.magnifyingGlass),
-                      // Image.asset('assets/Opportunity.png', height: 25, width: 30),
-                      Text(
-                        'Leads',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize
-                  .min, // Ensures the column doesn’t expand unnecessarily
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Opportunity(
-                                leadId: '',
-                              )),
-                    );
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.fireFlameCurved,
-                      ),
-                      // Image.asset('assets/Opportunity.png', height: 25, width: 30),
-                      Text(
-                        'Opportunity',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize
-                  .min, // Ensures the column doesn’t expand unnecessarily
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Calender()),
-                    );
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.calendarDays,
-                        color: Colors.blue,
-                      ),
-                      Text(
-                        'Calendar',
-                        style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.blue),
-                      ),
-                    ],
-                  ),
-                ),
-                // Image.asset('assets/calender.png', height: 25, width: 30),
-              ],
-            ),
-          ],
-        ),
-      ),
+      // bottomNavigationBar: Container(
+      //   color: Colors.white, // Background color of the fixed area
+      //   padding: const EdgeInsets.all(5),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //     children: [
+      //       Column(
+      //         mainAxisSize: MainAxisSize
+      //             .min, // Ensures the column doesn’t expand unnecessarily
+      //         children: [
+      //           GestureDetector(
+      //             onTap: () {
+      //               Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(
+      //                     builder: (context) => const HomeScreen()),
+      //               );
+      //             },
+      //             child: Column(
+      //               mainAxisSize: MainAxisSize.min,
+      //               children: [
+      //                 Icon(FontAwesomeIcons.magnifyingGlass),
+      //                 // Image.asset('assets/Opportunity.png', height: 25, width: 30),
+      //                 Text(
+      //                   'Leads',
+      //                   style: GoogleFonts.poppins(
+      //                     fontSize: 12,
+      //                     fontWeight: FontWeight.w400,
+      //                   ),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //       Column(
+      //         mainAxisSize: MainAxisSize
+      //             .min, // Ensures the column doesn’t expand unnecessarily
+      //         children: [
+      //           GestureDetector(
+      //             onTap: () {
+      //               Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(
+      //                     builder: (context) => Opportunity(
+      //                           leadId: '',
+      //                         )),
+      //               );
+      //             },
+      //             child: Column(
+      //               mainAxisSize: MainAxisSize.min,
+      //               children: [
+      //                 Icon(
+      //                   FontAwesomeIcons.fireFlameCurved,
+      //                 ),
+      //                 // Image.asset('assets/Opportunity.png', height: 25, width: 30),
+      //                 Text(
+      //                   'Opportunity',
+      //                   style: GoogleFonts.poppins(
+      //                     fontSize: 12,
+      //                     fontWeight: FontWeight.w400,
+      //                   ),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //       Column(
+      //         mainAxisSize: MainAxisSize
+      //             .min, // Ensures the column doesn’t expand unnecessarily
+      //         children: [
+      //           GestureDetector(
+      //             onTap: () {
+      //               Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(builder: (context) => const Calender()),
+      //               );
+      //             },
+      //             child: Column(
+      //               mainAxisSize: MainAxisSize.min,
+      //               children: [
+      //                 Icon(
+      //                   FontAwesomeIcons.calendarDays,
+      //                   color: Colors.blue,
+      //                 ),
+      //                 Text(
+      //                   'Calendar',
+      //                   style: GoogleFonts.poppins(
+      //                       fontSize: 12,
+      //                       fontWeight: FontWeight.w400,
+      //                       color: Colors.blue),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //           // Image.asset('assets/calender.png', height: 25, width: 30),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

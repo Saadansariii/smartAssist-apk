@@ -207,8 +207,7 @@ class _TaskItemState extends State<TaskItem> {
               icon: const Icon(Icons.arrow_forward_ios),
               onPressed: () {
                 if (widget.leadId.isNotEmpty) {
-                  Navigator.
-                  pushNamed(
+                  Navigator.pushNamed(
                     context,
                     '/followup-details',
                     arguments: widget.leadId,

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
+import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
@@ -106,7 +107,7 @@ class _AddFollowupsState extends State<AddFollowups> {
         leading: IconButton(
           onPressed: () => Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => BottomNavigation()),
           ),
           icon: const Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
         ),

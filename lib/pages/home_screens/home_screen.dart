@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/calenderPages/calender.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
+import 'package:smart_assist/pages/navbar_page/leads.dart';
 import 'package:smart_assist/pages/navbar_page/logout_page.dart';
 import 'package:smart_assist/pages/home_screens/opportunity.dart';
 import 'package:smart_assist/pages/notification/notification.dart';
@@ -114,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           builder: (context) {
                                             return Container(
                                               padding: const EdgeInsets.all(16),
-                                              height: 270,
+                                              height: 320,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -160,6 +161,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               FavoritePage(
                                                             leadId: '',
                                                           ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                  ListTile(
+                                                    leading: const Icon(
+                                                      Icons.search,
+                                                      size: 28,
+                                                    ),
+                                                    title: Text(
+                                                      'Leads',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const LeadsAll(),
                                                         ),
                                                       );
                                                     },
@@ -223,7 +248,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: Colors.grey,
                                         size: 30,
                                         // weight: 500,
-                                        
                                       ),
                                     ),
                                     suffixIcon: const Icon(Icons.mic,
@@ -247,36 +271,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.magnifyingGlass, color: Colors.blue),
-            label: "Leads",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.fireFlameCurved),
-            label: "Opportunity",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.calendarDays),
-            label: "Calendar",
-          ),
-        ],
-        onTap: (index) {
-          if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const Opportunity(leadId: '')),
-            );
-          } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Calender()),
-            );
-          }
-        },
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(FontAwesomeIcons.magnifyingGlass, color: Colors.blue),
+      //       label: "Leads",
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(FontAwesomeIcons.fireFlameCurved),
+      //       label: "Opportunity",
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(FontAwesomeIcons.calendarDays),
+      //       label: "Calendar",
+      //     ),
+      //   ],
+      //   onTap: (index) {
+      //     if (index == 1) {
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //             builder: (context) => const Opportunity(leadId: '')),
+      //       );
+      //     } else if (index == 2) {
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(builder: (context) => const Calender()),
+      //       );
+      //     }
+      //   },
+      // ),
     );
   }
 }

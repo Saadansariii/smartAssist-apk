@@ -106,105 +106,105 @@ class _OpportunityState extends State<Opportunity> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        color: Colors.white, // Background color of the fixed area
-        padding: const EdgeInsets.all(5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize
-                  .min, // Ensures the column doesn’t expand unnecessarily
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomeScreen()),
-                    );
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(FontAwesomeIcons.magnifyingGlass),
-                      // Image.asset('assets/Opportunity.png', height: 25, width: 30),
-                      Text(
-                        'Leads',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize
-                  .min, // Ensures the column doesn’t expand unnecessarily
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>   Opportunity(leadId: '',)),
-                    );
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.fireFlameCurved,
-                        color: Colors.blue,
-                      ),
-                      // Image.asset('assets/Opportunity.png', height: 25, width: 30),
-                      Text(
-                        'Opportunity',
-                        style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.blue),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize
-                  .min, // Ensures the column doesn’t expand unnecessarily
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Calender()),
-                    );
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(FontAwesomeIcons.calendarDays),
-                      // Image.asset('assets/Opportunity.png', height: 25, width: 30),
-                      Text(
-                        'Calendar',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Image.asset('assets/calender.png', height: 25, width: 30),
-              ],
-            ),
-          ],
-        ),
-      ),
+      // bottomNavigationBar: Container(
+      //   color: Colors.white, // Background color of the fixed area
+      //   padding: const EdgeInsets.all(5),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //     children: [
+      //       Column(
+      //         mainAxisSize: MainAxisSize
+      //             .min, // Ensures the column doesn’t expand unnecessarily
+      //         children: [
+      //           GestureDetector(
+      //             onTap: () {
+      //               Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(
+      //                     builder: (context) => const HomeScreen()),
+      //               );
+      //             },
+      //             child: Column(
+      //               mainAxisSize: MainAxisSize.min,
+      //               children: [
+      //                 Icon(FontAwesomeIcons.magnifyingGlass),
+      //                 // Image.asset('assets/Opportunity.png', height: 25, width: 30),
+      //                 Text(
+      //                   'Leads',
+      //                   style: GoogleFonts.poppins(
+      //                     fontSize: 12,
+      //                     fontWeight: FontWeight.w400,
+      //                   ),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //       Column(
+      //         mainAxisSize: MainAxisSize
+      //             .min, // Ensures the column doesn’t expand unnecessarily
+      //         children: [
+      //           GestureDetector(
+      //             onTap: () {
+      //               Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(
+      //                     builder: (context) =>   Opportunity(leadId: '',)),
+      //               );
+      //             },
+      //             child: Column(
+      //               mainAxisSize: MainAxisSize.min,
+      //               children: [
+      //                 Icon(
+      //                   FontAwesomeIcons.fireFlameCurved,
+      //                   color: Colors.blue,
+      //                 ),
+      //                 // Image.asset('assets/Opportunity.png', height: 25, width: 30),
+      //                 Text(
+      //                   'Opportunity',
+      //                   style: GoogleFonts.poppins(
+      //                       fontSize: 12,
+      //                       fontWeight: FontWeight.w400,
+      //                       color: Colors.blue),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //       Column(
+      //         mainAxisSize: MainAxisSize
+      //             .min, // Ensures the column doesn’t expand unnecessarily
+      //         children: [
+      //           GestureDetector(
+      //             onTap: () {
+      //               Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(builder: (context) => const Calender()),
+      //               );
+      //             },
+      //             child: Column(
+      //               mainAxisSize: MainAxisSize.min,
+      //               children: [
+      //                 Icon(FontAwesomeIcons.calendarDays),
+      //                 // Image.asset('assets/Opportunity.png', height: 25, width: 30),
+      //                 Text(
+      //                   'Calendar',
+      //                   style: GoogleFonts.poppins(
+      //                     fontSize: 12,
+      //                     fontWeight: FontWeight.w400,
+      //                   ),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //           // Image.asset('assets/calender.png', height: 25, width: 30),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

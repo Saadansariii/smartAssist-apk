@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -209,7 +210,7 @@ class _NotificationPageState extends State<NotificationPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const HomeScreen(),
+                builder: (context) => BottomNavigation(),
               ),
             );
           },

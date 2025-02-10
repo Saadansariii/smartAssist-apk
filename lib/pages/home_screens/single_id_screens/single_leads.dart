@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/utils/bottom_navigation.dart';
 
 class SingleLeadsById extends StatefulWidget {
   final String leadId;
@@ -138,7 +139,7 @@ class _SingleLeadsByIdState extends State<SingleLeadsById> {
         foregroundColor: Colors.grey,
         leading: IconButton(
           onPressed: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const HomeScreen())),
+              MaterialPageRoute(builder: (context) => BottomNavigation())),
           icon: const Icon(Icons.arrow_back_ios_outlined),
         ),
         actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],

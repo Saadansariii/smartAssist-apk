@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/pages/login/login_page.dart';
 import 'package:smart_assist/services/set_pwd_srv.dart';
+import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/button.dart';
 import 'package:smart_assist/utils/paragraph_text.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
@@ -306,7 +307,7 @@ class _SetPwdState extends State<SetNewPwd> {
           // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => BottomNavigation(),
           ),
         );
       } else {

@@ -1,10 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/pages/login/first_screen.dart';
 import 'package:smart_assist/services/login_srv.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
 
@@ -12,7 +15,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   final String email;
-  const LoginPage({super.key, required this.email});
+  final Function() onLoginSuccess;
+  const LoginPage(
+      {super.key, required this.email, required this.onLoginSuccess});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -210,7 +215,133 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> submitBtn() async {
+  // Future<void> submitBtn() async {
+  //   final email = newEmailController.text.trim();
+  //   final pwd = newPwdController.text.trim();
+
+  //   if (email.isEmpty || pwd.isEmpty) {
+  //     showErrorMessage(context, message: 'Email and Password cannot be empty.');
+  //     return;
+  //   }
+
+  //   final deviceToken = await FirebaseMessaging.instance.getToken();
+
+  //   if (deviceToken == null) {
+  //     showErrorMessage(context, message: 'Failed to retrieve device token.');
+  //     return;
+  //   }
+
+  //   final body = {
+  //     "email": email,
+  //     "password": pwd,
+  //     "device_token": deviceToken,
+  //   };
+
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+
+  //   try {
+  //     final response = await LoginSrv.onLogin(body);
+  //     print('Full API Response: $response'); // Debugging
+
+  //     if (response['isSuccess'] == true && response.containsKey('user')) {
+  //       final user = response['user'];
+
+  //       if (user.containsKey('user_id')) {
+  //         final userId = user['user_id'];
+  //         print('User ID received: $userId');
+
+  //         SharedPreferences prefs = await SharedPreferences.getInstance();
+  //         await prefs.setString('user_id', userId);
+
+  //         // showSuccessMessage(context, message: 'Login Successful!');
+  //         Get.offAll(() => BottomNavigation());
+  //         Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(builder: (context) => HomeScreen()),
+  //         );
+  //       } else {
+  //         print('Error: user_id not found inside user object.');
+  //         showErrorMessage(context, message: 'User ID not found.');
+  //       }
+  //     } else {
+  //       print('Error: User data missing or API call failed.');
+  //       showErrorMessage(context, message: 'Login failed.');
+  //     }
+  //   } catch (error) {
+  //     print('Error during API call: $error');
+  //     showErrorMessage(context, message: 'Error during API call: $error');
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
+
+
+// work fine
+
+  // Future<void> submitBtn() async {
+  //   final email = newEmailController.text.trim();
+  //   final pwd = newPwdController.text.trim();
+
+  //   if (email.isEmpty || pwd.isEmpty) {
+  //     showErrorMessage(context, message: 'Email and Password cannot be empty.');
+  //     return;
+  //   }
+
+  //   final deviceToken = await FirebaseMessaging.instance.getToken();
+  //   if (deviceToken == null) {
+  //     showErrorMessage(context, message: 'Failed to retrieve device token.');
+  //     return;
+  //   }
+
+  //   final body = {
+  //     "email": email,
+  //     "password": pwd,
+  //     "device_token": deviceToken,
+  //   };
+
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+
+  //   try {
+  //     final response = await LoginSrv.onLogin(body);
+  //     print('Full API Response: $response'); // Debugging
+
+  //     if (response['isSuccess'] == true && response.containsKey('user')) {
+  //       final user = response['user'];
+
+  //       if (user.containsKey('user_id')) {
+  //         final userId = user['user_id'];
+  //         print('User ID received: $userId');
+
+  //         SharedPreferences prefs = await SharedPreferences.getInstance();
+  //         await prefs.setString('user_id', userId);
+
+  //         showSuccessMessage(context, message: 'Login Successful!');
+  //         Get.offAll(() => BottomNavigation());  
+  //       } else {
+  //         print('Error: user_id not found inside user object.');
+  //         showErrorMessage(context, message: 'User ID not found.');
+  //       }
+  //     } else {
+  //       print('Error: User data missing or API call failed.');
+  //       showErrorMessage(context, message: 'Login failed.');
+  //     }
+  //   } catch (error) {
+  //     print('Error during API call: $error');
+  //     showErrorMessage(context, message: 'Error during API call: $error');
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
+
+Future<void> submitBtn() async {
     final email = newEmailController.text.trim();
     final pwd = newPwdController.text.trim();
 
@@ -220,7 +351,6 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     final deviceToken = await FirebaseMessaging.instance.getToken();
-
     if (deviceToken == null) {
       showErrorMessage(context, message: 'Failed to retrieve device token.');
       return;
@@ -238,26 +368,25 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await LoginSrv.onLogin(body);
-      print('Full API Response: $response'); // Debugging
+      print('Full API Response: $response');
 
       if (response['isSuccess'] == true && response.containsKey('user')) {
         final user = response['user'];
 
-        if (user.containsKey('user_id')) {
+        if (user.containsKey('user_id') && response.containsKey('token')) {
           final userId = user['user_id'];
-          print('User ID received: $userId');
+          final authToken = response['token']; // Assuming API returns a token
 
+          print('User ID received: $userId');
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('user_id', userId);
+          await prefs.setString('auth_token', authToken); // Save auth token
 
           showSuccessMessage(context, message: 'Login Successful!');
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
+          Get.offAll(() => BottomNavigation()); // Navigate to home
         } else {
-          print('Error: user_id not found inside user object.');
-          showErrorMessage(context, message: 'User ID not found.');
+          print('Error: User ID or token not found.');
+          showErrorMessage(context, message: 'Login failed.');
         }
       } else {
         print('Error: User data missing or API call failed.');
@@ -272,4 +401,5 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
   }
+
 }

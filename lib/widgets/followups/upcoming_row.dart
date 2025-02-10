@@ -7,8 +7,11 @@ import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 
 // ---------------- FOLLOWUPS UPCOMING LIST ----------------
 class FollowupsUpcoming extends StatefulWidget {
-  final List<dynamic> upcomingFollowups; 
-  const FollowupsUpcoming({super.key, required this.upcomingFollowups, });
+  final List<dynamic> upcomingFollowups;
+  const FollowupsUpcoming({
+    super.key,
+    required this.upcomingFollowups,
+  });
 
   @override
   State<FollowupsUpcoming> createState() => _FollowupsUpcomingState();
@@ -17,12 +20,12 @@ class FollowupsUpcoming extends StatefulWidget {
 class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
   bool isLoading = false;
   List<dynamic> upcomingFollowups = [];
+  bool _showLoader = true;
 
   @override
   void initState() {
     super.initState();
     fetchDashboardData();
-    
   }
 
   Future<void> fetchDashboardData() async {
@@ -40,43 +43,59 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
         final data = json.decode(response.body);
         setState(() {
           upcomingFollowups = data['upcomingFollowups'];
+          _showLoader = false;
         });
       } else {
         print("Failed to load data: ${response.statusCode}");
+        setState(() {
+          _showLoader = false;
+        });
       }
     } catch (e) {
       print("Error fetching data: $e");
+      setState(() {
+        _showLoader = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.upcomingFollowups.isEmpty) {
-      return const Center(child: Text('No upcoming followups available'));
+    if (_showLoader) {
+      return Container(
+        height: 250,
+        child: const Center(child: CircularProgressIndicator()),
+      );
     }
-    return isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : ListView.builder(
-            shrinkWrap: true,
-            itemCount: widget.upcomingFollowups.length,
-            itemBuilder: (context, index) {
-              var item = widget.upcomingFollowups[index];
-              return (item.containsKey('name') &&
-                      item.containsKey('due_date') &&
-                      item.containsKey('lead_id') &&
-                      item.containsKey('task_id'))
-                  ? UpcomingFollowupItem(
-                      name: item['name'],
-                      date: item['due_date'],
-                      vehicle: 'Discovery Sport',
-                      leadId: item['lead_id'],
-                      taskId: item['task_id'],
-                      isFavorite: item['favourite'] ?? false,
-                      fetchDashboardData: fetchDashboardData,
-                    )
-                  : ListTile(title: Text('Invalid data at index $index'));
-            },
-          );
+
+    if (upcomingFollowups.isEmpty) {
+      return Container(
+        height: 250,
+        child: const Center(child: Text('No upcoming followups available')),
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: upcomingFollowups.length,
+      itemBuilder: (context, index) {
+        var item = upcomingFollowups[index];
+        return (item.containsKey('name') &&
+                item.containsKey('due_date') &&
+                item.containsKey('lead_id') &&
+                item.containsKey('task_id'))
+            ? UpcomingFollowupItem(
+                name: item['name'],
+                date: item['due_date'],
+                vehicle: 'Discovery Sport',
+                leadId: item['lead_id'],
+                taskId: item['task_id'],
+                isFavorite: item['favourite'] ?? false,
+                fetchDashboardData: fetchDashboardData,
+              )
+            : ListTile(title: Text('Invalid data at index $index'));
+      },
+    );
   }
 }
 
@@ -107,7 +126,7 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
   @override
   void initState() {
     super.initState();
-         
+
     isFav = widget.isFavorite;
   }
 

@@ -221,11 +221,12 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                 hint: 'Select',
                 value: selectedSubject,
                 items: [
-                  'Call',
-                  'Provide Quotation',
-                  'Send Email',
-                  'Vehicle Selection',
-                  'Send SMS',
+                  'Meeting',
+                  'Test Drive',
+                  'Service Appointment',
+                  'Quotation',
+                  'Trade in Evaluation',
+                  'Showroom appointment',
                 ],
                 onChanged: (value) {
                   setState(() {
