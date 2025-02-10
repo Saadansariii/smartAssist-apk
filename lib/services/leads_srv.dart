@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class LeadsSrv {
@@ -266,7 +267,7 @@ class LeadsSrv {
 
 // history data api
 
-static Future<List<Map<String, dynamic>>> singleEventById(
+  static Future<List<Map<String, dynamic>>> singleEventById(
       String leadId) async {
     const String apiUrl =
         "https://api.smartassistapp.in/api/admin/leads/events/all/";
@@ -311,7 +312,6 @@ static Future<List<Map<String, dynamic>>> singleEventById(
       throw Exception('Error fetching data: $e');
     }
   }
-  
 
   // static Future<List<Map<String, dynamic>>> singleEventById(
   //     String leadId) async {
@@ -396,6 +396,101 @@ static Future<List<Map<String, dynamic>>> singleEventById(
     } catch (e) {
       print('Error fetching data: $e');
       throw Exception('Error fetching data: $e');
+    }
+  }
+
+  // Fetch appointments (tasks) for a selected date
+  static Future<List<dynamic>> fetchAppointments(DateTime selectedDate) async {
+    final String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
+    final String apiUrl =
+        'https://api.smartassistapp.in/api/calendar/tasks/all/asondate?date=$formattedDate';
+
+    final token = await Storage.getToken();
+
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("Error: ${response.statusCode}");
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data['rows'] ?? [];
+      } else {
+        print("Error: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      print("Error fetching appointments: $error");
+
+      return [];
+    }
+  }
+
+  // Fetch event counts for a selected date
+  static Future<Map<String, int>> fetchCount(DateTime selectedDate) async {
+    final String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
+    final String apiUrl =
+        'https://api.smartassistapp.in/api/calendar/data-count/asondate?date=$formattedDate';
+
+    final token = await Storage.getToken();
+
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return {
+          'upcomingFollowupsCount': data['upcomingFollowupsCount'] ?? 0,
+          'overdueFollowupsCount': data['overdueFollowupsCount'] ?? 0,
+          'upcomingAppointmentsCount': data['upcomingAppointmentsCount'] ?? 0,
+          'overdueAppointmentsCount': data['overdueAppointmentsCount'] ?? 0,
+        };
+      } else {
+        print('API Error: ${response.statusCode}');
+        return {};
+      }
+    } catch (error) {
+      print("Error fetching event counts: $error");
+      return {};
+    }
+  }
+
+  // Fetch dashboard data (initial load)
+  static Future<Map<String, int>> fetchDashboardData() async {
+    final token = await Storage.getToken();
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return {
+          'upcomingFollowupsCount': data['upcomingFollowupsCount'] ?? 0,
+          'overdueFollowupsCount': data['overdueFollowupsCount'] ?? 0,
+          'upcomingAppointmentsCount': data['upcomingAppointmentsCount'] ?? 0,
+          'overdueAppointmentsCount': data['overdueAppointmentsCount'] ?? 0,
+        };
+      } else {
+        print("Failed to load dashboard data: ${response.statusCode}");
+        return {};
+      }
+    } catch (e) {
+      print("Error fetching dashboard data: $e");
+      return {};
     }
   }
 }
