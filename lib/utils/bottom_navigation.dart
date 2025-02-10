@@ -81,7 +81,7 @@ Widget _buildNavItem({
         controller.selectedIndex.value = index;
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

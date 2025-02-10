@@ -53,8 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => NotificationPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationPage(
+                            leadId: '',
+                          )));
             },
             icon: const Icon(Icons.notifications),
             color: Colors.white,

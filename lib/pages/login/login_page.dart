@@ -12,6 +12,7 @@ import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_assist/utils/token_manager.dart';
 
 class LoginPage extends StatefulWidget {
   final String email;
@@ -31,7 +32,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
+       
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Stack(
@@ -279,7 +282,6 @@ class _LoginPageState extends State<LoginPage> {
   //   }
   // }
 
-
 // work fine
 
   // Future<void> submitBtn() async {
@@ -322,7 +324,7 @@ class _LoginPageState extends State<LoginPage> {
   //         await prefs.setString('user_id', userId);
 
   //         showSuccessMessage(context, message: 'Login Successful!');
-  //         Get.offAll(() => BottomNavigation());  
+  //         Get.offAll(() => BottomNavigation());
   //       } else {
   //         print('Error: user_id not found inside user object.');
   //         showErrorMessage(context, message: 'User ID not found.');
@@ -341,7 +343,9 @@ class _LoginPageState extends State<LoginPage> {
   //   }
   // }
 
-Future<void> submitBtn() async {
+  Future<void> submitBtn() async {
+    if (!mounted) return;
+
     final email = newEmailController.text.trim();
     final pwd = newPwdController.text.trim();
 
@@ -350,56 +354,49 @@ Future<void> submitBtn() async {
       return;
     }
 
-    final deviceToken = await FirebaseMessaging.instance.getToken();
-    if (deviceToken == null) {
-      showErrorMessage(context, message: 'Failed to retrieve device token.');
-      return;
-    }
-
-    final body = {
-      "email": email,
-      "password": pwd,
-      "device_token": deviceToken,
-    };
-
-    setState(() {
-      isLoading = true;
-    });
+    setState(() => isLoading = true);
 
     try {
-      final response = await LoginSrv.onLogin(body);
-      print('Full API Response: $response');
+      final deviceToken = await FirebaseMessaging.instance.getToken();
+      if (deviceToken == null) {
+        throw Exception('Failed to retrieve device token.');
+      }
 
-      if (response['isSuccess'] == true && response.containsKey('user')) {
+      final response = await LoginSrv.onLogin({
+        "email": email,
+        "password": pwd,
+        "device_token": deviceToken,
+      });
+
+      if (!mounted) return;
+
+      if (response['isSuccess'] == true && response['user'] != null) {
         final user = response['user'];
+        final userId = user['user_id'];
+        final authToken = response['token'];
 
-        if (user.containsKey('user_id') && response.containsKey('token')) {
-          final userId = user['user_id'];
-          final authToken = response['token']; // Assuming API returns a token
-
-          print('User ID received: $userId');
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('user_id', userId);
-          await prefs.setString('auth_token', authToken); // Save auth token
+        if (userId != null && authToken != null) {
+          // Save authentication data
+          await TokenManager.saveAuthData(authToken, userId);
 
           showSuccessMessage(context, message: 'Login Successful!');
-          Get.offAll(() => BottomNavigation()); // Navigate to home
+          Get.offAll(() => BottomNavigation());
+
+          widget.onLoginSuccess?.call();
         } else {
-          print('Error: User ID or token not found.');
-          showErrorMessage(context, message: 'Login failed.');
+          throw Exception('Invalid user data or token received');
         }
       } else {
-        print('Error: User data missing or API call failed.');
-        showErrorMessage(context, message: 'Login failed.');
+        throw Exception(
+            'Login failed: ${response['message'] ?? 'Unknown error'}');
       }
     } catch (error) {
-      print('Error during API call: $error');
-      showErrorMessage(context, message: 'Error during API call: $error');
+      if (!mounted) return;
+      showErrorMessage(context, message: error.toString());
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
-
 }

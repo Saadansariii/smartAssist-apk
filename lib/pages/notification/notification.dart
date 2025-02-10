@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -8,7 +10,8 @@ import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class NotificationPage extends StatefulWidget {
-  const NotificationPage({super.key});
+  final String leadId;
+  const NotificationPage({super.key, required this.leadId});
 
   @override
   State<NotificationPage> createState() => _NotificationPageState();
@@ -175,7 +178,7 @@ class _NotificationPageState extends State<NotificationPage> {
             : Border.all(color: Colors.transparent),
         borderRadius: BorderRadius.circular(15),
       ),
-      child: TextButton( 
+      child: TextButton(
         style: TextButton.styleFrom(
           backgroundColor: const Color(0xffF3F9FF),
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -271,6 +274,11 @@ class _NotificationPageState extends State<NotificationPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: GestureDetector(
                         onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      FollowupsDetails(leadId: widget.leadId)));
                           if (!isRead) {
                             markAsRead(notification['notification_id']);
                           }
