@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 
 class BottomNavigation extends StatelessWidget {
+  
   BottomNavigation({super.key});
 
   final NavigationController controller = Get.put(NavigationController());

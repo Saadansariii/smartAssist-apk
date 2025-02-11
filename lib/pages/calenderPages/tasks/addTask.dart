@@ -251,13 +251,18 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: selectedEvent == 'Appointment'
-                                    ? TaskAppointmentPop()
+                                    ? TaskAppointmentPop(
+                                        selectedDate: widget.selectedDate ??
+                                            DateTime.now(),
+                                      )
                                     : selectedEvent == 'Test Drive'
                                         ? TaskFollowupsPop(
-                                            selectedDate: widget
-                                                .selectedDate) //add testdrive here in future
+                                            selectedDate: widget.selectedDate ??
+                                                DateTime
+                                                    .now()) //add testdrive here in future
                                         : TaskFollowupsPop(
-                                            selectedDate: widget.selectedDate,
+                                            selectedDate: widget.selectedDate ??
+                                                DateTime.now(),
                                           ),
                               ),
                             );

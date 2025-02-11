@@ -401,7 +401,41 @@ class LeadsSrv {
 
   // Fetch appointments (tasks) for a selected date
   static Future<List<dynamic>> fetchAppointments(DateTime selectedDate) async {
-    final String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
+    final DateTime finalDate = selectedDate ?? DateTime.now();
+    final String formattedDate = DateFormat('dd-MM-yyyy').format(finalDate);
+    final String apiUrl =
+        'https://api.smartassistapp.in/api/calendar/events/all/asondate?date=$formattedDate';
+
+    final token = await Storage.getToken();
+
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 201) {
+        print("Error: ${response.statusCode}");
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data['rows'] ?? [];
+      } else {
+        print("Error: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      print("Error fetching appointments: $error");
+
+      return [];
+    }
+  }
+
+// fetch tasks
+
+  static Future<List<dynamic>> fetchtasks(DateTime selectedDate) async {
+    final DateTime finalDate = selectedDate ?? DateTime.now();
+    final String formattedDate = DateFormat('dd-MM-yyyy').format(finalDate);
     final String apiUrl =
         'https://api.smartassistapp.in/api/calendar/tasks/all/asondate?date=$formattedDate';
 
@@ -415,7 +449,7 @@ class LeadsSrv {
         },
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         print("Error: ${response.statusCode}");
         final Map<String, dynamic> data = json.decode(response.body);
         return data['rows'] ?? [];
@@ -435,7 +469,7 @@ class LeadsSrv {
     final String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
     final String apiUrl =
         'https://api.smartassistapp.in/api/calendar/data-count/asondate?date=$formattedDate';
-
+    print("Calling API for count on: $formattedDate");
     final token = await Storage.getToken();
 
     try {

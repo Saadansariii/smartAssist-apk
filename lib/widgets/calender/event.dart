@@ -3,16 +3,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class EventWidget extends StatefulWidget {
+  final DateTime selectedDate;
   final int overdueFollowupsCount;
   final int upcomingFollowupsCount;
   final int upcomingAppointmentsCount;
   final int overdueAppointmentsCount;
+
   const EventWidget({
     super.key,
     required this.overdueFollowupsCount,
     required this.upcomingFollowupsCount,
     required this.upcomingAppointmentsCount,
     required this.overdueAppointmentsCount,
+    required this.selectedDate,
   });
 
   @override
@@ -84,14 +87,15 @@ class _EventWidgetState extends State<EventWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${DateTime.now().day}', // Day number (e.g., 13)
+                                    '${widget.selectedDate.day}', // Day number (e.g., 13)
                                     style: GoogleFonts.poppins(
                                       fontSize: 24,
                                       color: Colors.white,
                                     ),
                                   ),
                                   Text(
-                                    '${getDayWithSuffix(DateTime.now().day).substring(DateTime.now().day.toString().length)}', // Suffix part (e.g., 'th', 'st', etc.)
+                                    // '${getDayWithSuffix(DateTime.now().day).substring(DateTime.now().day.toString().length)}', // Suffix part (e.g., 'th', 'st', etc.)
+                                    '${getDayWithSuffix(widget.selectedDate.day).substring(widget.selectedDate.day.toString().length)}',
                                     style: GoogleFonts.poppins(
                                       fontSize: 14,
                                       height: 0.5,
@@ -103,19 +107,19 @@ class _EventWidgetState extends State<EventWidget> {
                               ),
                               SizedBox(width: 5), // Space between day and month
                               Text(
-                                '${DateFormat('MMM').format(DateTime.now())}',  
+                                '${DateFormat('MMM').format(widget.selectedDate)}',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,
                                 ),
                               ),
                               // Time on the next line
-                              SizedBox(height: 5),
-                              Text(
-                                '12:15 AM',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 10),
-                              ),
+                              // SizedBox(height: 5),
+                              // Text(
+                              //   '12:15 AM',
+                              //   style: TextStyle(
+                              //       color: Colors.white, fontSize: 10),
+                              // ),
                             ],
                           )),
                     ],
@@ -184,7 +188,6 @@ class _EventWidgetState extends State<EventWidget> {
                                     color: const Color(0xffEF5138)))
                           ],
                         ),
-                        
                         const SizedBox(height: 5),
                         Row(
                           children: [

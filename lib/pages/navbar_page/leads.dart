@@ -149,13 +149,13 @@ class _LeadsAllState extends State<LeadsAll> {
         ),
         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
         onTap: () {
-          if (lead['lead_id'] != null) {
-            Navigator.pushNamed(
-              context,
-              '/followup-details',
-              arguments: lead['lead_id'],
-            );
-          }
+          // if (lead['lead_id'] != null) {
+          //   Navigator.pushNamed(
+          //     context,
+          //     '/followup-details',
+          //     arguments: lead['lead_id'],
+          //   );
+          // }
         },
       ),
     );

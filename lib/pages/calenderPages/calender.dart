@@ -5,6 +5,7 @@ import 'package:smart_assist/pages/calenderPages/tasks/addTask.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/widgets/calender/appointment.dart';
 import 'package:smart_assist/widgets/calender/calender.dart';
+import 'package:smart_assist/widgets/calender/calender_task.dart';
 import 'package:smart_assist/widgets/calender/event.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -38,31 +39,38 @@ class _CalenderState extends State<Calender> {
   Future<void> _fetchInitialData() async {
     _fetchAppointments(_focusedDay);
     _fetchCount(_focusedDay);
+    _fetchTasks(_focusedDay);
   }
 
   Future<void> _fetchAppointments(DateTime selectedDate) async {
-    final data = await LeadsSrv.fetchAppointments(selectedDate);
+    final DateTime finalDate = selectedDate ?? DateTime.now();
+    final data = await LeadsSrv.fetchAppointments(finalDate);
     setState(() {
       appointments = data;
     });
   }
 
-  // Future<void> _fetchCount(DateTime selectedDate) async {
-  //   final data = await LeadsSrv.fetchCount(selectedDate);
+  // Future<void> _fetchTasks(DateTime selectedDate) async {
+  //   final data = await LeadsSrv.fetchtasks(selectedDate);
   //   setState(() {
-  //     upcomingFollowupsCount = data['upcomingFollowupsCount'] ?? 0;
-  //     overdueFollowupsCount = data['overdueFollowupsCount'] ?? 0;
-  //     upcomingAppointmentsCount = data['upcomingAppointmentsCount'] ?? 0;
-  //     overdueAppointmentsCount = data['overdueAppointmentsCount'] ?? 0;
+  //     appointments = data;
   //   });
   // }
+  Future<void> _fetchTasks(DateTime? selectedDate) async {
+    final DateTime finalDate =
+        selectedDate ?? DateTime.now();  
+    final data = await LeadsSrv.fetchtasks(finalDate);
+    setState(() {
+      appointments = data;
+    });
+  }
 
   Future<void> _fetchCount(DateTime selectedDate) async {
     String formattedDate =
         DateFormat('dd-MM-yyyy').format(selectedDate); // Ensure correct format
     final data = await LeadsSrv.fetchCount(selectedDate);
 
-    print("API Response for $formattedDate: $data"); // ✅ Debugging
+    print("API Response for $formattedDate: $data");
 
     if (data.isNotEmpty) {
       setState(() {
@@ -104,7 +112,7 @@ class _CalenderState extends State<Calender> {
       backgroundColor: const Color(0xffF2F2F2),
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         title: Text(
           DateFormat('MMMM yyyy').format(_focusedDay),
           style: GoogleFonts.poppins(
@@ -144,25 +152,33 @@ class _CalenderState extends State<Calender> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CalenderWidget(
-            calendarFormat: CalendarFormat.month,
-            onDateSelected: _handleDateSelection,
-          ),
-          AppointmentWidget(
-            appointments: appointments,
-            onDateSelected: _fetchAppointments,
-            selectedDate: _focusedDay,
-          ),
-          EventWidget(
-            upcomingFollowupsCount: upcomingFollowupsCount,
-            overdueFollowupsCount: overdueFollowupsCount,
-            upcomingAppointmentsCount: upcomingAppointmentsCount,
-            overdueAppointmentsCount: overdueAppointmentsCount,
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CalenderWidget(
+              calendarFormat: CalendarFormat.month,
+              onDateSelected: _handleDateSelection,
+            ),
+            AppointmentWidget(
+              appointments: appointments,
+              onDateSelected: _fetchAppointments,
+              selectedDate: _selectedDay ?? _focusedDay,
+            ),
+            CalenderTask(
+                appointments: appointments,
+                selectedDate: _selectedDay ?? _focusedDay,
+                onDateSelected: _fetchTasks),
+            EventWidget(
+              // selectedDate: _focusedDay,
+              selectedDate: _selectedDay ?? _focusedDay,
+              upcomingFollowupsCount: upcomingFollowupsCount,
+              overdueFollowupsCount: overdueFollowupsCount,
+              upcomingAppointmentsCount: upcomingAppointmentsCount,
+              overdueAppointmentsCount: overdueAppointmentsCount,
+            ),
+          ],
+        ),
       ),
     );
   }

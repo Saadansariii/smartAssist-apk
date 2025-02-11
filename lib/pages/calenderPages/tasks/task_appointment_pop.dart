@@ -9,7 +9,8 @@ import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 
 class TaskAppointmentPop extends StatefulWidget {
-  const TaskAppointmentPop({super.key});
+  final DateTime? selectedDate;
+  const TaskAppointmentPop({super.key, this.selectedDate});
 
   @override
   State<TaskAppointmentPop> createState() => _TaskAppointmentPopState();
@@ -23,6 +24,11 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
   void initState() {
     super.initState();
     fetchDropdownData();
+
+    if (widget.selectedDate != null) {
+      startdateController.text =
+          DateFormat('dd/MM/yyyy hh:mm a').format(widget.selectedDate!);
+    }
   }
 
   Future<void> fetchDropdownData() async {
@@ -297,38 +303,39 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
               ),
 
               const SizedBox(height: 10),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Start Date',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              ),
-              const SizedBox(height: 10),
+              // const Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text('Start Date',
+              //       style:
+              //           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              // ),
+              // const SizedBox(height: 10),
 
-              GestureDetector(
-                onTap: () => _pickDate(isStartDate: true),
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 243, 238, 238),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Text(
-                    startdateController.text.isEmpty
-                        ? "Select Date"
-                        : startdateController.text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: startdateController.text.isEmpty
-                          ? Colors.grey
-                          : Colors.black,
-                    ),
-                  ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () => _pickDate(isStartDate: true),
+              //   child: Container(
+              //     width: double.infinity,
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(8),
+              //       color: const Color.fromARGB(255, 243, 238, 238),
+              //     ),
+              //     padding:
+              //         const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+              //     child: Text(
+              //       startdateController.text.isEmpty
+              //           ? "Select Date"
+              //           : startdateController.text,
+              //       style: GoogleFonts.poppins(
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w500,
+              //         color: startdateController.text.isEmpty
+              //             ? Colors.grey
+              //             : Colors.black,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
               const SizedBox(height: 10),
               const Align(
                 alignment: Alignment.centerLeft,
@@ -416,27 +423,71 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
     );
   }
 
+//   Future<void> submitForm() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     String? spId = prefs.getString('user_id');
+//     String? leadId = prefs.getString('lead_id');
+//     String date = widget.selectedDate!
+//     // Convert the selected date-time into DateTime objects
+//     // DateTime startDateTime =
+//     //     DateFormat('dd/MM/yyyy hh:mm a').parse(startdateController.text);
+//     DateTime endDateTime =
+//         DateFormat('dd/MM/yyyy hh:mm a').parse(enddateController.text);
+
+//     // Extract date in 'yyyy-MM-dd' format
+//     String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDateTime);
+//     String formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateTime);
+
+//     // Extract time in 'hh:mm a' format
+//     String formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
+//     String formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
+
+//     print('Retrieved sp_id: $spId');
+//     print('Retrieved lead_id: $leadId');
+
+//     if (spId == null || leadId == null) {
+//       showErrorMessage(context,
+//           message: 'User ID or Lead ID not found. Please log in again.');
+//       return;
+//     }
+
+//     // Prepare the lead data
+//     final newTaskForLead = {
+//       'start_date': startdateController.text,
+//       'end_date': enddateController.text,
+//       'priority': selectedPriority,
+//       'start_time': formattedStartTime, // hh:mm a format
+//       'end_time': formattedEndTime,
+//       'subject': 'Showroom Appointment',
+//       'sp_id': spId,
+//     };
+
+//     print('Lead Data: $newTaskForLead');
+
+//     // Pass the leadId to the submitFollowups function
+//     bool success = await LeadsSrv.submitAppoinment(newTaskForLead, leadId);
+
+//     if (success) {
+//       print('Lead submitted successfully!');
+
+//       // Close modal if submission is successful
+//       if (context.mounted) {
+//         Navigator.pop(context); // Closes the modal
+//       }
+
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Form Submit Successful.')),
+//       );
+//     } else {
+//       print('Failed to submit lead.');
+//     }
+//   }
+// }
+
   Future<void> submitForm() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? spId = prefs.getString('user_id');
     String? leadId = prefs.getString('lead_id');
-
-    // Convert the selected date-time into DateTime objects
-    DateTime startDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(startdateController.text);
-    DateTime endDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(enddateController.text);
-
-    // Extract date in 'yyyy-MM-dd' format
-    String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDateTime);
-    String formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateTime);
-
-    // Extract time in 'hh:mm a' format
-    String formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
-    String formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
-
-    print('Retrieved sp_id: $spId');
-    print('Retrieved lead_id: $leadId');
 
     if (spId == null || leadId == null) {
       showErrorMessage(context,
@@ -444,95 +495,101 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
       return;
     }
 
-    // Prepare the lead data
+    // Use widget.selectedDate if available, otherwise use manually selected date
+    DateTime startDateTime = widget.selectedDate ??
+        DateFormat('dd/MM/yyyy hh:mm a').parse(startdateController.text);
+    DateTime endDateTime =
+        DateFormat('dd/MM/yyyy hh:mm a').parse(enddateController.text);
+
+    // Format dates
+    String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDateTime);
+    String formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateTime);
+    String formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
+    String formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
+
     final newTaskForLead = {
-      'start_date': startdateController.text,
-      'end_date': enddateController.text,
+      'start_date': formattedStartDate, // ✅ Ensuring selected date is used
+      'end_date': formattedEndDate,
       'priority': selectedPriority,
-      'start_time': formattedStartTime, // hh:mm a format
+      'start_time': formattedStartTime,
       'end_time': formattedEndTime,
-      'subject': 'Showroom Appointment',
+      'subject': selectedSubject ?? 'Showroom Appointment',
       'sp_id': spId,
     };
 
     print('Lead Data: $newTaskForLead');
 
-    // Pass the leadId to the submitFollowups function
     bool success = await LeadsSrv.submitAppoinment(newTaskForLead, leadId);
 
     if (success) {
       print('Lead submitted successfully!');
-
-      // Close modal if submission is successful
       if (context.mounted) {
-        Navigator.pop(context); // Closes the modal
+        Navigator.pop(context);
       }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Form Submit Successful.')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Form Submit Successful.')));
     } else {
       print('Failed to submit lead.');
     }
   }
-}
 
 // Reusable Dropdown Builder
-Widget _buildDropdown({
-  required String label,
-  required String hint,
-  required String? value,
-  required List<String> items,
-  required ValueChanged<String?> onChanged,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Text(
-        label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-      ),
-      const SizedBox(height: 10),
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: const Color.fromARGB(255, 243, 238, 238),
+  Widget _buildDropdown({
+    required String label,
+    required String hint,
+    required String? value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
-        child: DropdownButton<String>(
-          value: value,
-          hint: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Text(
-              hint,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey,
-              ),
-            ),
+        const SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: const Color.fromARGB(255, 243, 238, 238),
           ),
-          isExpanded: true,
-          underline: const SizedBox.shrink(),
-          items: items.map((String item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Text(
-                  item,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
+          child: DropdownButton<String>(
+            value: value,
+            hint: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                hint,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
                 ),
               ),
-            );
-          }).toList(),
-          onChanged: onChanged,
+            ),
+            isExpanded: true,
+            underline: const SizedBox.shrink(),
+            items: items.map((String item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    item,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+            onChanged: onChanged,
+          ),
         ),
-      ),
-      const SizedBox(height: 10),
-    ],
-  );
+        const SizedBox(height: 10),
+      ],
+    );
+  }
 }

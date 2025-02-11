@@ -24,7 +24,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
   void initState() {
     super.initState();
     fetchDropdownData();
-    print('this is the second page ${selectedDate = widget.selectedDate!}');
+    // print('this is the second page ${selectedDate = widget.selectedDate!}');
   }
 
   Future<void> fetchDropdownData() async {
@@ -381,7 +381,10 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
 
   Future<void> submitForm() async {
     String description = descriptionController.text;
-    String date = dateController.text;
+    String date = widget.selectedDate != null
+        ? DateFormat('dd/MM/yyyy')
+            .format(widget.selectedDate!)  
+        : dateController.text;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? spId = prefs.getString('user_id');
@@ -401,7 +404,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
       'subject': selectedSubject,
       'status': selectedStatus,
       'priority': selectedPriority,
-      'due_date': dateController.text,
+      'due_date': date,
       'comments': descriptionController.text,
       'sp_id': spId,
     };
