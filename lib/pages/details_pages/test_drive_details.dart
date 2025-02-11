@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/pages/test_drive_pages/finish_drive.dart';
+import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/widgets/details/testdrive_details.dart';
 import 'package:smart_assist/widgets/details/timeline.dart';
 import 'package:smart_assist/widgets/timeline/timeline_eight_wid.dart';
@@ -35,7 +36,7 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
         leading: IconButton(
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
+                MaterialPageRoute(builder: (context) =>   BottomNavigation()));
           },
           icon: const Icon(Icons.arrow_back_ios_outlined, color: Colors.white),
         ),

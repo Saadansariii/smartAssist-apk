@@ -22,6 +22,7 @@ class _CalenderState extends State<Calender> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   bool _isMonthView = true;
   List<dynamic> appointments = [];
+  List<dynamic> tasks = [];
   DateTime? _selectedDay;
   int upcomingFollowupsCount = 0;
   int overdueFollowupsCount = 0;
@@ -56,12 +57,12 @@ class _CalenderState extends State<Calender> {
   //     appointments = data;
   //   });
   // }
+  
   Future<void> _fetchTasks(DateTime? selectedDate) async {
-    final DateTime finalDate =
-        selectedDate ?? DateTime.now();  
+    final DateTime finalDate = selectedDate ?? DateTime.now();
     final data = await LeadsSrv.fetchtasks(finalDate);
     setState(() {
-      appointments = data;
+      tasks = data;
     });
   }
 
@@ -166,7 +167,7 @@ class _CalenderState extends State<Calender> {
               selectedDate: _selectedDay ?? _focusedDay,
             ),
             CalenderTask(
-                appointments: appointments,
+                tasks: tasks,
                 selectedDate: _selectedDay ?? _focusedDay,
                 onDateSelected: _fetchTasks),
             EventWidget(

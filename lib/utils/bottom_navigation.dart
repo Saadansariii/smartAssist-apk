@@ -114,7 +114,7 @@ Widget _buildNavItem({
 class NavigationController extends GetxController {
   final RxInt selectedIndex = 0.obs;
   final screens = [
-    const HomeScreen(),
+    const HomeScreen(greeting: '', leadId: '',),
     const Opportunity(leadId: ''),
     const Calender()
   ];

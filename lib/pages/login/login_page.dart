@@ -7,6 +7,7 @@ import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/pages/login/first_screen.dart';
 import 'package:smart_assist/services/login_srv.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:smart_assist/services/notifacation_srv.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
@@ -343,7 +344,66 @@ class _LoginPageState extends State<LoginPage> {
   //   }
   // }
 
-  Future<void> submitBtn() async {
+
+// work fine
+  // Future<void> submitBtn() async {
+  //   if (!mounted) return;
+
+  //   final email = newEmailController.text.trim();
+  //   final pwd = newPwdController.text.trim();
+
+  //   if (email.isEmpty || pwd.isEmpty) {
+  //     showErrorMessage(context, message: 'Email and Password cannot be empty.');
+  //     return;
+  //   }
+
+  //   setState(() => isLoading = true);
+
+  //   try {
+  //     final deviceToken = await FirebaseMessaging.instance.getToken();
+  //     if (deviceToken == null) {
+  //       throw Exception('Failed to retrieve device token.');
+  //     }
+
+  //     final response = await LoginSrv.onLogin({
+  //       "email": email,
+  //       "password": pwd,
+  //       "device_token": deviceToken,
+  //     });
+
+  //     if (!mounted) return;
+
+  //     if (response['isSuccess'] == true && response['user'] != null) {
+  //       final user = response['user'];
+  //       final userId = user['user_id'];
+  //       final authToken = response['token'];
+
+  //       if (userId != null && authToken != null) {
+  //         // Save authentication data
+  //         await TokenManager.saveAuthData(authToken, userId);
+
+  //         showSuccessMessage(context, message: 'Login Successful!');
+  //         Get.offAll(() => BottomNavigation());
+
+  //         widget.onLoginSuccess?.call();
+  //       } else {
+  //         throw Exception('Invalid user data or token received');
+  //       }
+  //     } else {
+  //       throw Exception(
+  //           'Login failed: ${response['message'] ?? 'Unknown error'}');
+  //     }
+  //   } catch (error) {
+  //     if (!mounted) return;
+  //     showErrorMessage(context, message: error.toString());
+  //   } finally {
+  //     if (mounted) {
+  //       setState(() => isLoading = false);
+  //     }
+  //   }
+  // }
+
+Future<void> submitBtn() async {
     if (!mounted) return;
 
     final email = newEmailController.text.trim();
@@ -378,6 +438,9 @@ class _LoginPageState extends State<LoginPage> {
         if (userId != null && authToken != null) {
           // Save authentication data
           await TokenManager.saveAuthData(authToken, userId);
+
+          // Initialize FCM after successful login
+          await NotificationService.instance.initialize();
 
           showSuccessMessage(context, message: 'Login Successful!');
           Get.offAll(() => BottomNavigation());

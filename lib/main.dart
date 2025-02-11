@@ -59,29 +59,27 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-// notification not work here  
+// notification also have some error work here
 // import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:get/get.dart'; 
+// import 'package:get/get.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:smart_assist/pages/login/login_page.dart'; 
+// import 'package:smart_assist/pages/login/login_page.dart';
 // import 'package:smart_assist/utils/app_initializer.dart';
-// import 'package:smart_assist/utils/bottom_navigation.dart';
-// import 'package:smart_assist/utils/check_authtoken.dart';
-// import 'package:smart_assist/utils/error_screen.dart';
+// import 'package:smart_assist/utils/bottom_navigation.dart'; 
 
 // Future<Widget> getInitialScreen() async {
 //   try {
 //     SharedPreferences prefs = await SharedPreferences.getInstance();
 //     String? token = prefs.getString('auth_token');
 
-//     if (token != null && await TokenValidator.isTokenValid(token)) {
+//     // Only check if token exists, not if it's valid
+//     if (token != null) {
 //       return BottomNavigation();
 //     } else {
 //       return LoginPage(
 //         onLoginSuccess: () {
-//           Get.off(() => BottomNavigation());
+//           Get.offAll(() => BottomNavigation());
 //         },
 //         email: '',
 //       );
@@ -90,7 +88,7 @@ class MyApp extends StatelessWidget {
 //     print("❌ Error determining initial screen: $e");
 //     return LoginPage(
 //       onLoginSuccess: () {
-//         Get.off(() => BottomNavigation());
+//         Get.offAll(() => BottomNavigation());
 //       },
 //       email: '',
 //     );
@@ -111,13 +109,17 @@ class MyApp extends StatelessWidget {
 //     print("❌ Fatal error during app initialization: $e");
 //     runApp(
 //       GetMaterialApp(
-//         home: ErrorScreen(error: e.toString()),
+//         home: LoginPage(
+//           onLoginSuccess: () {
+//             Get.offAll(() => BottomNavigation());
+//           },
+//           email: '',
+//         ),
+//         debugShowCheckedModeBanner: false,
 //       ),
 //     );
 //   }
 // }
- 
-
 // class MyApp extends StatelessWidget {
 //   final Widget initialScreen;
 //   const MyApp({super.key, required this.initialScreen});
@@ -125,7 +127,7 @@ class MyApp extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
 //     return GetMaterialApp(
-//       debugShowCheckedModeBanner: true,
+//       debugShowCheckedModeBanner: false,
 //       home: initialScreen, // Set dynamic initial screen
 //       debugShowMaterialGrid: false,
 //       theme: ThemeData(

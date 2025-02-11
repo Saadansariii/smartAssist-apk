@@ -17,42 +17,52 @@ import 'package:http/http.dart' as http;
 
 class Threebtn extends StatefulWidget {
   final String leadId;
-  const Threebtn({super.key, required this.leadId});
+  final List<dynamic> upcomingFollowups;
+  final List<dynamic> overdueFollowups;
+  final List<dynamic> upcomingAppointments;
+  final List<dynamic> overdueAppointments;
+  const Threebtn(
+      {super.key,
+      required this.leadId,
+      required this.upcomingFollowups,
+      required this.overdueFollowups,
+      required this.upcomingAppointments,
+      required this.overdueAppointments});
 
   @override
   State<Threebtn> createState() => _ThreebtnState();
 }
 
 class _ThreebtnState extends State<Threebtn> {
-  String? leadId;
   final Widget _leadFirstStep = const LeadFirstStep();
   final Widget _createFollowups = const CreateFollowupsPopups();
   final Widget _createAppoinment = const AppointmentPopup();
 
-  List<dynamic> upcomingFollowups = [];
-  List<dynamic> overdueFollowups = [];
-  List<dynamic> upcomingAppointments = [];
-  List<dynamic> overdueAppointments = [];
+  // List<dynamic> upcomingFollowups = [];
+  // List<dynamic> overdueFollowups = [];
+  // List<dynamic> upcomingAppointments = [];
+  // List<dynamic> overdueAppointments = [];
+
 // add more field
 
   bool isLoading = true;
-  late Widget currentWidget;
+  late Widget? currentWidget;
 
   @override
   void initState() {
     super.initState();
     _childButtonIndex = 0;
     currentWidget = FollowupsUpcoming(
-      upcomingFollowups: upcomingFollowups,
+      upcomingFollowups: widget.upcomingFollowups,
     );
 
     // fetchDashboardData();
-    fetchDashboardData().then((_) {
-      setState(() {
-        isLoading = false;
-        followUps(_upcomingBtnFollowups);
-      });
-    });
+    // fetchDashboardData().then((_) {
+    //   setState(() {
+    //     isLoading = false;
+    //     followUps(_upcomingBtnFollowups);
+    //   });
+    // });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
@@ -468,19 +478,19 @@ class _ThreebtnState extends State<Threebtn> {
         ),
 
         // show data
-        currentWidget,
-        // SizedBox(height: 10),
+        currentWidget ?? SizedBox(height: 10),
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
               onTap: () {
-                if (leadId != null && leadId!.isNotEmpty) {
+                // if (widget.leadId != null && widget.leadId!.isNotEmpty) {
+                if (widget.leadId.isNotEmpty) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AddFollowups(leadId: leadId!),
+                      builder: (context) => AddFollowups(leadId: widget.leadId),
                     ),
                   );
                 } else {
@@ -498,57 +508,39 @@ class _ThreebtnState extends State<Threebtn> {
     );
   }
 
-  Future<void> fetchDashboardData() async {
-    final token = await Storage.getToken();
-    try {
-      final response = await http.get(
-        Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
+  // Future<void> fetchDashboardData() async {
+  //   final token = await Storage.getToken();
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
 
-      if (response.statusCode == 200) {
-        // final Map<String, dynamic> data = json.decode(response.body);
-        final Map<String, dynamic> data = json.decode(response.body);
-        print('Decoded Data: $data');
-        setState(() {
-          upcomingFollowups = data['upcomingFollowups'];
-          overdueFollowups = data['overdueFollowups'];
-          overdueAppointments = data['overdueAppointments'];
-          upcomingAppointments = data['upcomingAppointments'];
-          // print("widget.upcomingFollowups8888");
-          // print(data['upcomingFollowups']);
-          // Extract leadId from the first upcoming follow-up (if available)
-          if (upcomingFollowups.isNotEmpty) {
-            leadId = upcomingFollowups[0]['lead_id'];
-          }
-        });
-      } else {
-        print("Failed to load data: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Error fetching data: $e");
-    }
-  }
-  // LeadFirstStep(),
-
-  // void followUps(int type) {
-  //   setState(() {
-  //     _upcomingBtnFollowups = type;
-  //     print("widget.upcomingFollowups");
-  //     print(upcomingFollowups);
-  //     if (type == 0) {
-  //       currentWidget = FollowupsUpcoming(
-  //         upcomingFollowups: upcomingFollowups,
-  //       ); // Upcoming Follow-ups
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data = json.decode(response.body);
+  //       print('Decoded Data: $data');
+  //       setState(() {
+  //         upcomingFollowups = data['upcomingFollowups'];
+  //         overdueFollowups = data['overdueFollowups'];
+  //         overdueAppointments = data['overdueAppointments'];
+  //         upcomingAppointments = data['upcomingAppointments'];
+  //         greeting = data.containsKey('greetings') && data['greetings'] is List
+  //             ? data['greetings']
+  //             : [];
+  //         print(data['greetings']);
+  //         if (upcomingFollowups.isNotEmpty) {
+  //           leadId = upcomingFollowups[0]['lead_id'];
+  //         }
+  //       });
   //     } else {
-  //       currentWidget = OverdueFollowup(
-  //         overdueeFollowups: overdueFollowups,
-  //       );
+  //       print("Failed to load data: ${response.statusCode}");
   //     }
-  //   });
+  //   } catch (e) {
+  //     print("Error fetching data: $e");
+  //   }
   // }
 
   void followUps(int type) {
@@ -557,11 +549,11 @@ class _ThreebtnState extends State<Threebtn> {
 
       if (type == 0) {
         currentWidget = FollowupsUpcoming(
-          upcomingFollowups: upcomingFollowups,
+          upcomingFollowups: widget.upcomingFollowups,
         );
       } else {
         currentWidget = OverdueFollowup(
-          overdueeFollowups: overdueFollowups,
+          overdueeFollowups: widget.overdueFollowups,
         );
       }
     });
@@ -585,10 +577,10 @@ class _ThreebtnState extends State<Threebtn> {
       _upcomingBtnAppointments = index;
       if (index == 0) {
         currentWidget = OppUpcoming(
-          upcomingOpp: upcomingAppointments,
+          upcomingOpp: widget.upcomingAppointments,
         ); // Upcoming Appointments
       } else if (index == 1) {
-        currentWidget = OppOverdue(overdueeOpp: overdueAppointments);
+        currentWidget = OppOverdue(overdueeOpp: widget.overdueAppointments);
       }
     });
   }

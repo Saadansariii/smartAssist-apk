@@ -3,15 +3,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class CalenderTask extends StatefulWidget {
-  final List<dynamic> appointments;
+  final List<dynamic> tasks;
   final DateTime selectedDate;
   final Function(DateTime) onDateSelected;
 
   const CalenderTask({
     super.key,
-    required this.appointments,
     required this.selectedDate,
     required this.onDateSelected,
+    required this.tasks,
   });
 
   @override
@@ -50,7 +50,7 @@ class _CalenderTaskState extends State<CalenderTask> {
               ),
             );
           }
-          if (widget.appointments.isEmpty) {
+          if (widget.tasks.isEmpty) {
             return SizedBox(
               height: 100,
               child: Center(
@@ -73,7 +73,7 @@ class _CalenderTaskState extends State<CalenderTask> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ...widget.appointments.map((appointment) {
+                    ...widget.tasks.map((appointment) {
                       print(
                           appointment); // Add a print statement to see each appointment's data
 

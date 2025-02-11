@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:smart_assist/pages/calenderPages/tasks/task_appointment_pop.dart';
 import 'package:smart_assist/pages/calenderPages/tasks/task_followups_pop.dart';
+import 'package:smart_assist/pages/navbar_page/leads.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class AddTaskPopup extends StatefulWidget {
@@ -160,54 +161,99 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                   ),
                 ),
               ),
+              // Container(
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8),
+              //     color: const Color.fromARGB(255, 243, 238, 238),
+              //   ),
+              //   child: isLoading
+              //       ? const Center(child: CircularProgressIndicator())
+              //       : DropdownButton<String>(
+              //           value: selectedLeads,
+              //           hint: Padding(
+              //             padding: const EdgeInsets.only(left: 10),
+              //             child: Text(
+              //               "Select",
+              //               style: GoogleFonts.poppins(
+              //                 fontSize: 14,
+              //                 fontWeight: FontWeight.w500,
+              //                 color: Colors.grey,
+              //               ),
+              //             ),
+              //           ),
+              //           icon: const Icon(Icons.arrow_drop_down),
+              //           isExpanded: true,
+              //           underline: const SizedBox.shrink(),
+              //           items: dropdownItems.map((String value) {
+              //             return DropdownMenuItem<String>(
+              //               value: value,
+              //               child: Padding(
+              //                 padding: const EdgeInsets.only(left: 10.0),
+              //                 child: Text(
+              //                   value,
+              //                   style: GoogleFonts.poppins(
+              //                     fontSize: 14,
+              //                     fontWeight: FontWeight.w500,
+              //                     color: Colors.black,
+              //                   ),
+              //                 ),
+              //               ),
+              //             );
+              //           }).toList(),
+              //           onChanged: (value) {
+              //             setState(
+              //               () {
+              //                 selectedLeads = value;
+              //               },
+              //             );
+              //           },
+              //         ),
+              // ),
+
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: const Color.fromARGB(255, 243, 238, 238),
                 ),
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : DropdownButton<String>(
-                        value: selectedLeads,
-                        hint: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            "Select",
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
+                child: GestureDetector(
+                  onTap: () async {
+                    final selectedLead = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LeadsAll(),
+                      ),
+                    );
+
+                    // if (selectedLead != null) {
+                    //   setState(() {
+                    //     selectedLeads = selectedLead; // Update selected lead
+                    //   });
+                    // }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          selectedLeads ??
+                              "Select", // Show selected lead or default text
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: selectedLeads != null
+                                ? Colors.black
+                                : Colors.grey,
                           ),
                         ),
-                        icon: const Icon(Icons.arrow_drop_down),
-                        isExpanded: true,
-                        underline: const SizedBox.shrink(),
-                        items: dropdownItems.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                value,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(
-                            () {
-                              selectedLeads = value;
-                            },
-                          );
-                        },
-                      ),
+                        const Icon(Icons.arrow_drop_down, color: Colors.black),
+                      ],
+                    ),
+                  ),
+                ),
               ),
 
               const SizedBox(height: 30),

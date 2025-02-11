@@ -99,7 +99,10 @@ class _OpportunityState extends State<Opportunity> {
                 ),
               ),
 
-                Threebtn(leadId:widget.leadId,),
+              Threebtn(
+                leadId: widget.leadId, upcomingFollowups: [], overdueFollowups: [], upcomingAppointments: [], overdueAppointments: [],
+                
+              ),
 
               const BottomBtnSecond(),
             ],

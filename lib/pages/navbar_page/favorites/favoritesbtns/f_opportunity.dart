@@ -1,19 +1,4 @@
 import 'package:flutter/material.dart';
-
-// class FOpportunity extends StatefulWidget {
-//   const FOpportunity({super.key});
-
-//   @override
-//   State<FOpportunity> createState() => _FOpportunityState();
-// }
-
-// class _FOpportunityState extends State<FOpportunity> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:smart_assist/utils/storage.dart';

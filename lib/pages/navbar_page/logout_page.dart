@@ -3,6 +3,7 @@ import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/login/login_page.dart';
+import 'package:smart_assist/utils/bottom_navigation.dart';
 
 class LogoutPage extends StatelessWidget {
   const LogoutPage({super.key});
@@ -17,7 +18,7 @@ class LogoutPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const HomeScreen(),
+                builder: (context) =>  BottomNavigation(),
               ),
             );
           },
@@ -75,7 +76,7 @@ class LogoutPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
+                                  builder: (context) => BottomNavigation()));
                         },
                         child: Text(
                           'Cancel',

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,12 +10,18 @@ import 'package:smart_assist/pages/navbar_page/leads.dart';
 import 'package:smart_assist/pages/navbar_page/logout_page.dart';
 import 'package:smart_assist/pages/home_screens/opportunity.dart';
 import 'package:smart_assist/pages/notification/notification.dart';
+import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
+  final String greeting;
+  final String leadId;
   const HomeScreen({
     super.key,
+    required this.greeting,
+    required this.leadId,
   });
 
   @override
@@ -22,6 +30,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = false;
+  String? leadId;
+  String greeting = '';
+  List<dynamic> upcomingFollowups = [];
+  List<dynamic> overdueFollowups = [];
+  List<dynamic> upcomingAppointments = [];
+  List<dynamic> overdueAppointments = [];
+  //  List<dynamic> greeting = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDashboardData(); 
+  }
 
   Future<void> fetchData() async {
     setState(() {
@@ -35,6 +56,43 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> fetchDashboardData() async {
+    final token = await Storage.getToken();
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        print('Decoded Data: $data');
+        setState(() {
+          upcomingFollowups = data['upcomingFollowups'];
+          overdueFollowups = data['overdueFollowups'];
+          overdueAppointments = data['overdueAppointments'];
+          upcomingAppointments = data['upcomingAppointments'];
+          greeting =
+              data.containsKey('greetings') && data['greetings'] is String
+                  ? data['greetings']
+                  : 'Welcome!';
+
+          print(data['greetings']);
+          if (upcomingFollowups.isNotEmpty) {
+            leadId = upcomingFollowups[0]['lead_id'];
+          }
+        });
+      } else {
+        print("Failed to load data: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF1380FE),
         title: Text(
-          'Good morning Richard!',
+          ' $greeting',
           style: GoogleFonts.poppins(
             fontSize: 12,
             fontWeight: FontWeight.w400,
@@ -188,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              const LeadsAll(),
+                                                              LeadsAll(),
                                                         ),
                                                       );
                                                     },
@@ -267,7 +325,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 3,
                       ),
                       Threebtn(
-                        leadId: '',
+                        leadId: leadId ?? '',
+                        upcomingFollowups: upcomingFollowups,
+                        overdueFollowups: overdueFollowups,
+                        upcomingAppointments: upcomingAppointments,
+                        overdueAppointments: overdueAppointments,
                       ),
                       const BottomBtnSecond(),
                     ],
@@ -275,36 +337,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: const [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(FontAwesomeIcons.magnifyingGlass, color: Colors.blue),
-      //       label: "Leads",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(FontAwesomeIcons.fireFlameCurved),
-      //       label: "Opportunity",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(FontAwesomeIcons.calendarDays),
-      //       label: "Calendar",
-      //     ),
-      //   ],
-      //   onTap: (index) {
-      //     if (index == 1) {
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //             builder: (context) => const Opportunity(leadId: '')),
-      //       );
-      //     } else if (index == 2) {
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(builder: (context) => const Calender()),
-      //       );
-      //     }
-      //   },
-      // ),
     );
   }
 }
