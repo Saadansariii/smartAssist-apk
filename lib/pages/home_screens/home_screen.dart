@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => NotificationPage(
-                            leadId: '',
+                            leadId: leadId!,
                           )));
             },
             icon: const Icon(Icons.notifications),

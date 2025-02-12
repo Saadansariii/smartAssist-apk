@@ -11,7 +11,10 @@ import 'package:smart_assist/utils/storage.dart';
 
 class NotificationPage extends StatefulWidget {
   final String leadId;
-  const NotificationPage({super.key, required this.leadId});
+  const NotificationPage({
+    super.key,
+    required this.leadId,
+  });
 
   @override
   State<NotificationPage> createState() => _NotificationPageState();
@@ -19,6 +22,7 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   int _selectedButtonIndex = 0;
+  String? leadId;
   List<dynamic> notifications = [];
   final List<String> categories = [
     'All',

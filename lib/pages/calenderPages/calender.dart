@@ -33,7 +33,10 @@ class _CalenderState extends State<Calender> {
   @override
   void initState() {
     super.initState();
-    _createTask = AddTaskPopup(selectedDate: _selectedDay);
+    _createTask = AddTaskPopup(
+      selectedDate: _selectedDay,
+      leadId: '',
+    );
     _fetchInitialData();
   }
 
@@ -57,7 +60,7 @@ class _CalenderState extends State<Calender> {
   //     appointments = data;
   //   });
   // }
-  
+
   Future<void> _fetchTasks(DateTime? selectedDate) async {
     final DateTime finalDate = selectedDate ?? DateTime.now();
     final data = await LeadsSrv.fetchtasks(finalDate);
@@ -93,15 +96,18 @@ class _CalenderState extends State<Calender> {
 
   void _handleDateSelection(DateTime selectedDay) {
     String formattedDate = DateFormat('dd-MM-yyyy')
-        .format(selectedDay); // ✅ Convert to "dd-MM-yyyy"
+        .format(selectedDay); 
 
     setState(() {
       _selectedDay = selectedDay;
       _focusedDay = selectedDay;
-      _createTask = AddTaskPopup(selectedDate: selectedDay);
+      _createTask = AddTaskPopup(
+        selectedDate: selectedDay,
+        leadId: '',
+      );
     });
 
-    print("Fetching data for date: $formattedDate"); // ✅ Now logs "10-02-2025"
+    print("Fetching data for date: $formattedDate");
 
     _fetchAppointments(selectedDay);
     _fetchCount(selectedDay);

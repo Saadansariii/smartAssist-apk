@@ -615,6 +615,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:smart_assist/pages/calenderPages/tasks/addTask.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class LeadsAll extends StatefulWidget {
@@ -666,7 +667,7 @@ class _LeadsAllState extends State<LeadsAll> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Leads List',
+          'Leads All',
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w400,
@@ -681,6 +682,32 @@ class _LeadsAllState extends State<LeadsAll> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    child: TextField(
+                      // controller: searchController,
+                      // onChanged: _filterTasks,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFE1EFFF),
+                        contentPadding: const EdgeInsets.fromLTRB(1, 4, 0, 4),
+                        border: InputBorder.none,
+                        hintText: 'Search',
+                        hintStyle: const TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        prefixIcon:
+                            const Icon(Icons.search, color: Colors.grey),
+                        suffixIcon: const Icon(Icons.mic, color: Colors.grey),
+                      ),
+                    ),
+                  ),
                   _buildTasksList(upcomingTasks),
                 ],
               ),
@@ -739,6 +766,7 @@ class TaskItem extends StatefulWidget {
 
 class _TaskItemState extends State<TaskItem> {
   late bool isFav;
+  String? leadId;
 
   @override
   void initState() {
@@ -749,15 +777,12 @@ class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-        final selectedLead = await showDialog(
-          context: context,
-          builder: (context) => AddTaskPopup(leadId: widget.leadId),
-        );
-
-        if (selectedLead != null) {
-          widget.onFavoriteToggled(); // Refresh the list after returning
-        }
+      onTap: () {
+        // Instead of showing the popup, we'll return the selected lead info
+        Navigator.pop(context, {
+          'leadId': widget.leadId,
+          'leadName': widget.name,
+        });
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -824,79 +849,79 @@ class _TaskItemState extends State<TaskItem> {
   }
 }
 
-class AddTaskPopup extends StatefulWidget {
-  final String leadId;
-  const AddTaskPopup({super.key, required this.leadId});
+// class AddTaskPopup extends StatefulWidget {
+//   final String leadId;
+//   const AddTaskPopup({super.key, required this.leadId});
 
-  @override
-  State<AddTaskPopup> createState() => _AddTaskPopupState();
-}
+//   @override
+//   State<AddTaskPopup> createState() => _AddTaskPopupState();
+// }
 
-class _AddTaskPopupState extends State<AddTaskPopup> {
-  bool isLoading = true;
-  Map<String, dynamic>? leadData;
+// class _AddTaskPopupState extends State<AddTaskPopup> {
+//   bool isLoading = true;
+//   Map<String, dynamic>? leadData;
 
-  @override
-  void initState() {
-    super.initState();
-    fetchLeadDetails();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     fetchLeadDetails();
+//   }
 
-  Future<void> fetchLeadDetails() async {
-    final token = await Storage.getToken();
-    try {
-      final response = await http.get(
-        Uri.parse('https://api.smartassistapp.in/api/leads/${widget.leadId}'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
+//   Future<void> fetchLeadDetails() async {
+//     final token = await Storage.getToken();
+//     try {
+//       final response = await http.get(
+//         Uri.parse('https://api.smartassistapp.in/api/leads/${widget.leadId}'),
+//         headers: {
+//           'Authorization': 'Bearer $token',
+//           'Content-Type': 'application/json',
+//         },
+//       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          leadData = data;
-          isLoading = false;
-        });
-      } else {
-        print("Failed to load lead details: ${response.statusCode}");
-        setState(() => isLoading = false);
-      }
-    } catch (e) {
-      print("Error fetching lead details: $e");
-      setState(() => isLoading = false);
-    }
-  }
+//       if (response.statusCode == 200) {
+//         final data = json.decode(response.body);
+//         setState(() {
+//           leadData = data;
+//           isLoading = false;
+//         });
+//       } else {
+//         print("Failed to load lead details: ${response.statusCode}");
+//         setState(() => isLoading = false);
+//       }
+//     } catch (e) {
+//       print("Error fetching lead details: $e");
+//       setState(() => isLoading = false);
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    leadData?['fname'] ?? "Unknown Lead",
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  Text("Lead ID: ${widget.leadId}"),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context, widget.leadId);
-                    },
-                    child: const Text("Select This Lead"),
-                  ),
-                ],
-              ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Dialog(
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+//       child: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: isLoading
+//             ? const Center(child: CircularProgressIndicator())
+//             : Column(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   Text(
+//                     leadData?['fname'] ?? "Unknown Lead",
+//                     style: const TextStyle(
+//                         fontSize: 18, fontWeight: FontWeight.bold),
+//                   ),
+//                   const SizedBox(height: 10),
+//                   Text("Lead ID: ${widget.leadId}"),
+//                   const SizedBox(height: 20),
+//                   ElevatedButton(
+//                     onPressed: () {
+//                       Navigator.pop(context, widget.leadId);
+//                     },
+//                     child: const Text("Select This Lead"),
+//                   ),
+//                 ],
+//               ),
+//       ),
+//     );
+//   }
+// }

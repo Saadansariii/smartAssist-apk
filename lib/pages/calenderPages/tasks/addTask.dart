@@ -9,7 +9,9 @@ import 'package:smart_assist/utils/storage.dart';
 
 class AddTaskPopup extends StatefulWidget {
   final DateTime? selectedDate;
-  const AddTaskPopup({super.key, this.selectedDate});
+  final String leadId;
+
+  const AddTaskPopup({super.key, this.selectedDate, required this.leadId});
 
   @override
   State<AddTaskPopup> createState() => _AddTaskPopupState();
@@ -18,6 +20,8 @@ class AddTaskPopup extends StatefulWidget {
 class _AddTaskPopupState extends State<AddTaskPopup> {
   String? selectedEvent;
   String? selectedCustomer;
+  String? selectedLeadName;
+  String? selectedLeadId;
 
   List<String> dropdownItems = [];
   bool isLoading = false;
@@ -28,6 +32,13 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
   void initState() {
     super.initState();
     fetchDropdownData();
+    selectedLeads = widget.leadId;
+    selectedLeadId = widget.leadId;
+    print('this is the selected leadid come from .. ${widget.leadId}');
+    // If leadId is provided, fetch the lead name
+    if (selectedLeadId != null) {
+      // fetchLeadName();
+    }
     print('this is the selected widget ${widget.selectedDate}');
   }
 
@@ -219,32 +230,35 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                 ),
                 child: GestureDetector(
                   onTap: () async {
-                    final selectedLead = await Navigator.push(
+                    final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => LeadsAll(),
                       ),
                     );
 
-                    // if (selectedLead != null) {
-                    //   setState(() {
-                    //     selectedLeads = selectedLead; // Update selected lead
-                    //   });
-                    // }
+                    if (result != null && result is Map<String, dynamic>) {
+                      setState(() {
+                        selectedLeadId = result['leadId'];
+                        selectedLeadName =
+                            result['leadName']; // This will be the fname
+                      });
+                    }
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 12),
+                      horizontal: 10,
+                      vertical: 12,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          selectedLeads ??
-                              "Select", // Show selected lead or default text
+                          selectedLeadName ?? "Select Lead",
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: selectedLeads != null
+                            color: selectedLeadName != null
                                 ? Colors.black
                                 : Colors.grey,
                           ),
@@ -255,7 +269,6 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 30),
 
               // Row with Buttons
