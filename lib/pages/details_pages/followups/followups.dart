@@ -6,6 +6,7 @@ import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popu
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
 import 'package:smart_assist/widgets/leads_details_popup/create_appointment.dart';
 import 'package:smart_assist/widgets/leads_details_popup/create_followups.dart';
+import 'package:smart_assist/widgets/timeline/timeline_eight_wid.dart';
 import 'package:smart_assist/widgets/timeline/timeline_seven_wid.dart';
 
 class FollowupsDetails extends StatefulWidget {
@@ -25,6 +26,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   String address = 'Loading...';
   String lead_owner = 'Loading....';
 
+  bool isLoading = false;
   // fetchevent data
 
   List<String> subjectList = [];
@@ -37,11 +39,14 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   final Widget _createFollowups = const LeadsCreateFollowup();
   final Widget _createAppoinment = const CreateAppointment();
 
+  int _childButtonIndex = 0;
+
   @override
   void initState() {
     super.initState();
     fetchSingleIdData(widget.leadId);
     fetchSingleEvent(widget.leadId);
+    // fetchSingleTask(widget.leadId);
   }
 
   Future<void> fetchSingleIdData(String leadId) async {
@@ -60,68 +65,120 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     }
   }
 
-  // Future<void> fetchSingleEvent(String leadId) async {
-  //   try {
-  //     final List<Map<String, dynamic>> events =
-  //         await LeadsSrv.singleEventById(leadId);
+  void _updateDisplayData() {
+    setState(() {
+      subjectList = [];
+      priorityList = [];
+      startTimeList = [];
+      endTimeList = [];
+      startDateList = [];
 
-  //     setState(() {
-  //       if (events.isNotEmpty) {
-  //         allEvents = events;
+      final dataSource = _childButtonIndex == 0 ? allEvents : allTasks;
 
-  //         // Initialize lists to store event data
-  //         subjectList = [];
-  //         priorityList = [];
-  //         startTimeList = [];
-  //         endTimeList = [];
-  //         startDateList = [];
+      for (var item in dataSource) {
+        if (_childButtonIndex == 0) {
+          // Event data
+          subjectList.add(item['subject'] ?? 'N/A');
+          priorityList.add(item['priority'] ?? 'N/A');
+          startTimeList.add(_formatTime(item['start_time']));
+          endTimeList.add(_formatTime(item['end_time']));
+          startDateList.add(item['start_date'] ?? 'N/A');
+        } else {
+          // Task data
+          subjectList.add(item['subject'] ?? 'N/A');
+          priorityList.add(item['priority'] ?? 'N/A');
+          startTimeList.add(_formatTime(item['due_time']));
+          // endTimeList.add(_formatTime(item['flag']));
+          // startDateList.add(item['updated'] ?? 'N/A');
+        }
+      }
+    });
+  }
 
-  //         // Loop through all events and store their details
-  //         for (var event in events) {
-  //           subjectList.add(event['subject'] ?? 'N/A');
-  //           priorityList.add(event['priority'] ?? 'N/A');
-  //           startTimeList.add(_formatTime(
-  //               event['start_time'])); // Convert time to 12-hour format
-  //           endTimeList.add(_formatTime(event['end_time']));
-  //           startDateList.add(event['start_date'] ?? 'N/A');
-  //         }
-  //       } else {
-  //         print("No events available.");
-  //       }
-  //     });
-  //   } catch (e) {
-  //     print('Error Fetching data: $e');
-  //   }
-  // }
   List<Map<String, dynamic>> allEvents = [];
+  List<Map<String, dynamic>> allTasks = [];
 
   Future<void> fetchSingleEvent(String leadId) async {
+    setState(() => isLoading = true);
     try {
       // Fetch API response
       final List<Map<String, dynamic>> events =
           await LeadsSrv.singleEventById(leadId);
 
+      //   setState(() {
+      //     allEvents = events;
+
+      //     // Initialize lists to store event data
+      //     subjectList = [];
+      //     priorityList = [];
+      //     startTimeList = [];
+      //     endTimeList = [];
+      //     startDateList = [];
+
+      //     // Loop through all events and store their details
+      //     for (var event in events) {
+      //       subjectList.add(event['subject'] ?? 'N/A');
+      //       priorityList.add(event['priority'] ?? 'N/A');
+      //       startTimeList.add(_formatTime(event['start_time']));
+      //       endTimeList.add(_formatTime(event['end_time']));
+      //       startDateList.add(event['start_date'] ?? 'N/A');
+      //     }
+      //   });
+      // } catch (e) {
+      //   print('Error Fetching data: $e');
+      // }
       setState(() {
         allEvents = events;
-
-        // Initialize lists to store event data
-        subjectList = [];
-        priorityList = [];
-        startTimeList = [];
-        endTimeList = [];
-        startDateList = [];
-
-        // Loop through all events and store their details
-        for (var event in events) {
-          subjectList.add(event['subject'] ?? 'N/A');
-          priorityList.add(event['priority'] ?? 'N/A');
-          startTimeList.add(_formatTime(event['start_time']));
-          endTimeList.add(_formatTime(event['end_time']));
-          startDateList.add(event['start_date'] ?? 'N/A');
+        if (_childButtonIndex == 0) {
+          _updateDisplayData();
         }
       });
     } catch (e) {
-      print('Error Fetching data: $e');
+      print('Error Fetching events: $e');
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  Future<void> fetchSingleTask(String leadId) async {
+    setState(() => isLoading = true);
+    try {
+      // Fetch API response
+      final List<Map<String, dynamic>> tasks =
+          await LeadsSrv.singleTasksById(leadId);
+
+      //   setState(() {
+      //     allTasks = tasks;
+
+      //     // Initialize lists to store event data
+      //     subjectList = [];
+      //     priorityList = [];
+      //     startTimeList = [];
+      //     endTimeList = [];
+      //     startDateList = [];
+
+      //     // Loop through all events and store their details
+      //     for (var task in tasks) {
+      //       subjectList.add(task['subject'] ?? 'N/A');
+      //       priorityList.add(task['priority'] ?? 'N/A');
+      //       startTimeList.add(_formatTime(task['due_time']));
+      //       endTimeList.add(_formatTime(task['flag']));
+      //       startDateList.add(task['updated'] ?? 'N/A');
+      //     }
+      //   });
+      // } catch (e) {
+      //   print('Error Fetching data: $e');
+      // }
+      setState(() {
+        allTasks = tasks;
+        if (_childButtonIndex == 1) {
+          _updateDisplayData();
+        }
+      });
+    } catch (e) {
+      print('Error Fetching tasks: $e');
+    } finally {
+      setState(() => isLoading = false);
     }
   }
 
@@ -384,9 +441,120 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20), // Spacer
+                const SizedBox(height: 10), // Spacer
                 // History Section
-          // Text('hiii'),
+                // Text('hiii'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+                      child: Container(
+                        width: 150, // Set width of the container
+                        height: 30,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: const Color(0xFF767676).withOpacity(0.3),
+                              width: 0.6), // Border around the container
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Row(
+                          children: [
+                            // Upcoming Button
+                            Expanded(
+                              child: TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _childButtonIndex = 0;
+                                      _updateDisplayData();
+                                      if (allEvents.isEmpty) {
+                                        fetchSingleEvent(widget.leadId);
+                                      }
+                                    });
+                                  },
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: _childButtonIndex == 0
+                                        ? const Color(0xFF51DF79).withOpacity(
+                                            0.29) // Green for Upcoming
+                                        : Colors.transparent,
+                                    foregroundColor: _childButtonIndex == 0
+                                        ? Colors.white
+                                        : Colors.black,
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    side: BorderSide(
+                                      color: _childButtonIndex == 0
+                                          ? const Color.fromARGB(
+                                              255, 81, 223, 121)
+                                          : Colors.transparent,
+                                      width: 1, // Border width
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          30), // Optional: Rounded corners
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Events',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                        color: const Color(0xff000000)
+                                            .withOpacity(0.56)),
+                                  )),
+                            ),
+
+                            // Overdue Button
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _childButtonIndex = 1;
+                                    _updateDisplayData();
+                                    if (allTasks.isEmpty) {
+                                      fetchSingleTask(widget.leadId);
+                                    }
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: _childButtonIndex == 1
+                                      ? const Color.fromARGB(
+                                          255, 159, 174, 239) // Red for Overdue
+                                      : Colors.transparent,
+                                  foregroundColor: _childButtonIndex == 1
+                                      ? Colors.white
+                                      : Colors.black,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  side: BorderSide(
+                                    color: _childButtonIndex == 1
+                                        ? const Color.fromARGB(
+                                                255, 78, 109, 248)
+                                            .withOpacity(0.59)
+                                            
+                                        : Colors.transparent,
+                                    width: 1, // Border width
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        30), // Optional: Rounded corners
+                                  ),
+                                ),
+                                child: Text('Tasks',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                        color: const Color(0xff000000)
+                                            .withOpacity(0.56))),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -400,16 +568,29 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                     ],
                   ),
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // TimelineTenWid(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TimelineSevenWid(events: allEvents),
-                    ],
-                  ),
+                  // child: Column(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     // TimelineTenWid(),
+                  //     SizedBox(
+                  //       height: 10,
+                  //     ),
+                  //     TimelineSevenWid(events: allEvents),
+                  //     TimelineEightWid(events: allEvents)
+                  //   ],
+                  // ),
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const SizedBox(height: 10),
+                            if (_childButtonIndex == 0)
+                              TimelineSevenWid(events: allEvents)
+                            else
+                              TimelineEightWid(events: allTasks),
+                          ],
+                        ),
                 ),
               ],
             ),

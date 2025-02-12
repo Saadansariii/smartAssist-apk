@@ -8,12 +8,12 @@ class TimelineSevenWid extends StatelessWidget {
 
   const TimelineSevenWid({super.key, required this.events});
 
-  String _formatTime(String time) {
+  String _formatDate(String date) {
     try {
-      final DateTime parsedTime = DateFormat("HH:mm").parse(time);
-      return DateFormat("h:mm a").format(parsedTime);
+      final DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
+      return DateFormat("d MMM").format(parsedDate); // Outputs "22 May"
     } catch (e) {
-      print('Error formatting time: $e');
+      print('Error formatting date: $e');
       return 'N/A';
     }
   }
@@ -26,7 +26,7 @@ class TimelineSevenWid extends StatelessWidget {
     return Column(
       children: List.generate(reversedEvents.length, (index) {
         final event = reversedEvents[index];
-        String startTime = _formatTime(event['start_time'] ?? 'N/A');
+        String startTime = _formatDate(event['start_date'] ?? 'N/A');
         String subject = event['subject'] ?? 'No Subject';
         String priority = event['priority'] ?? 'N/A';
         String startDate = event['start_date'] ?? 'N/A';

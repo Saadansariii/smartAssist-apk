@@ -190,7 +190,7 @@ class _AddFollowupsState extends State<AddFollowups> {
                               index: 0,
                               text: 'All',
                               activeColor:
-                                  const Color.fromARGB(255, 78, 109, 248),
+                                  const Color.fromARGB(255, 81, 109, 121),
                             ),
                             _buildFilterButton(
                               index: 1,

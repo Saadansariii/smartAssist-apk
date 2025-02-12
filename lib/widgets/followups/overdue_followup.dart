@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -213,10 +214,8 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
       children: [
         Text(
           widget.name,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Color.fromARGB(255, 139, 138, 138)),
+          style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
         ),
         const SizedBox(height: 5),
         Row(

@@ -1,60 +1,181 @@
 import 'package:flutter/material.dart';
-
-import 'package:timeline_tile/timeline_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:timeline_tile/timeline_tile.dart';
+import 'package:intl/intl.dart';
 
 class TimelineEightWid extends StatelessWidget {
-    final List<Map<String, dynamic>> events;
+  final List<Map<String, dynamic>> events;
+
   const TimelineEightWid({super.key, required this.events});
+
+  String _formatDate(String date) {
+    try {
+      final DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
+      return DateFormat("d MMM").format(parsedDate); // Outputs "22 May"
+    } catch (e) {
+      print('Error formatting date: $e');
+      return 'N/A';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return TimelineTile(
-      alignment: TimelineAlign.start,
-      beforeLineStyle: const LineStyle(
-        color: Colors.transparent, // Remove the line
-        thickness: 0, // No thickness
-      ),
-      afterLineStyle: const LineStyle(
-        color: Colors.transparent, // Remove the line
-        thickness: 0, // No thickness
-      ),
-      indicatorStyle: const IndicatorStyle(
-        width: 0, // No indicator
-        height: 0, // No indicator
-        color: Colors.transparent, // Transparent to ensure it's not visible
-      ),
-      endChild: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '22',
-              style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue),
+    // Reverse the events list to show from bottom to top
+    final reversedEvents = events.reversed.toList();
+
+    return Column(
+      children: List.generate(reversedEvents.length, (index) {
+        final event = reversedEvents[index];
+        String dueDate = _formatDate(event['due_date'] ?? 'N/A');
+        String subject = event['subject'] ?? 'No Subject';
+        String priority = event['priority'] ?? 'N/A';
+        String startDate = event['start_date'] ?? 'N/A';
+        String endDate = event['due_date'] ?? 'N/A';
+
+        return TimelineTile(
+          alignment: TimelineAlign.manual,
+          lineXY: 0.25,
+          // First item (bottom) is last, last item (top) is first
+          isFirst: index == (reversedEvents.length - 11),
+          isLast: index == (reversedEvents.length - 0),
+          beforeLineStyle: const LineStyle(
+            color: Color.fromARGB(255, 102, 102, 102),
+            thickness: 2,
+          ),
+          afterLineStyle: const LineStyle(
+            color: Color.fromARGB(255, 102, 102, 102),
+            thickness: 2,
+          ),
+          indicatorStyle: IndicatorStyle(
+            padding: const EdgeInsets.only(left: 5),
+            width: 30,
+            height: 30,
+            color: Colors.blue,
+            iconStyle: IconStyle(
+              iconData: Icons.keyboard_double_arrow_down_rounded,
+              color: Colors.white,
             ),
-            Text(
-              'nd',
-              style: TextStyle(
-                fontSize: 14,
-                height: 0.5,
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
+          ),
+          startChild: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xffE7F2FF),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              dueDate,
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: Colors.grey,
               ),
             ),
-            Text(
-              'OCT',
-              style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue), // Regular size for 13
+          ),
+          endChild: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffE7F2FF),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.all(10.0),
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Start Time: ',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '$dueDate\n',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Subject: ',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '$subject\n',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Priority: ',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '$startDate\n',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Start Date: ',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '$startDate\n',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
+                        // TextSpan(
+                        //   text: 'End Date: ',
+                        //   style: GoogleFonts.poppins(
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.w500,
+                        //     color: Colors.grey,
+                        //   ),
+                        // ),
+                        // TextSpan(
+                        //   text: '$endDate\n',
+                        //   style: GoogleFonts.poppins(
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.w500,
+                        //     color: Colors.black,
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      }),
     );
   }
 }

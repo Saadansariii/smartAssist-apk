@@ -10,7 +10,7 @@ class LeadsSecond extends StatefulWidget {
   final String selectedBrand;
   final String firstName;
   final String lastName;
-  final String email;
+  final String email; 
   const LeadsSecond({
     super.key,
     required this.firstName,
@@ -50,7 +50,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
   //   selectedEvent: '',
   //   selectedSource: '',
   // );
-  final Widget _leadFirstStep = const LeadFirstStep();
+  // final Widget _leadFirstStep = const LeadFirstStep(firstName: firstName , lastName: lastName,);
 
   String? selectedPurchaseType;
   String? selectedFuelType;
@@ -123,7 +123,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
               label: 'Brand:',
               hint: 'Select Brand',
               value: selectedBrand,
-              items: ['Land Rover', 'Range Rover', 'Others'],
+              items: ['Land Rover', 'Jaguar'],
               onChanged: (value) {
                 setState(() {
                   selectedBrand = value;
@@ -147,6 +147,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
                       ),
                     ),
                     onPressed: () {
+                      
                       // Close the current dialog and open the second dialog
                       Navigator.pop(context); // Close the first dialog
                       Future.microtask(() {
@@ -158,7 +159,10 @@ class _LeadsSecondState extends State<LeadsSecond> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: _leadFirstStep, // Your second modal widget
+                            child: LeadFirstStep(
+                               firstName: widget.firstName,
+                              lastName: widget.lastName,
+                            ), // Your second modal widget
                           ),
                         );
                       });

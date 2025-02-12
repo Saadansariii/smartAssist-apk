@@ -34,7 +34,7 @@ class Threebtn extends StatefulWidget {
 }
 
 class _ThreebtnState extends State<Threebtn> {
-  final Widget _leadFirstStep = const LeadFirstStep();
+  // final Widget _leadFirstStep = const LeadFirstStep();
   final Widget _createFollowups = const CreateFollowupsPopups();
   final Widget _createAppoinment = const AppointmentPopup();
 
@@ -365,7 +365,9 @@ class _ThreebtnState extends State<Threebtn> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: _leadFirstStep, // Lead modal
+                                      child: LeadFirstStep(
+                                          firstName: '',
+                                          lastName: ''), // Lead modal
                                     );
                                   },
                                 );
@@ -443,7 +445,9 @@ class _ThreebtnState extends State<Threebtn> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: _leadFirstStep, // Lead modal
+                                      child: LeadFirstStep(
+                                          firstName: '',
+                                          lastName: ''), // Lead modal
                                     );
                                   },
                                 );

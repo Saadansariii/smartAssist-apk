@@ -97,7 +97,7 @@ class _LeadsThirdState extends State<LeadsThird> {
                       alignment: Alignment.center,
                       child: _buildTitle('Add New Leads')),
                   const SizedBox(height: 5),
-                  _buildSectionTitle('Primary Model Input:'),
+                  _buildSectionTitle('Primary Model Intrest:'),
                   _buildDropdown(
                     label: 'Discovery',
                     value: selectedEvent,
@@ -134,12 +134,9 @@ class _LeadsThirdState extends State<LeadsThird> {
                   const SizedBox(height: 10),
                   _buildSectionTitle('Enquiry Type:'),
                   _buildDropdown(
-                    label: 'KMI',
+                    label: 'Enquiry Type:',
                     value: selectedEnquiryType,
-                    items: [
-                      'Generic',
-                      '(Generic) Purchase intent within 90 days'
-                    ],
+                    items: ['KMI', '(Generic) Purchase intent within 90 days'],
                     onChanged: (value) {
                       setState(() {
                         selectedEnquiryType = value;

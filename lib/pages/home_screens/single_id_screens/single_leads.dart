@@ -30,7 +30,7 @@ class _SingleLeadsByIdState extends State<SingleLeadsById> {
   void initState() {
     super.initState();
     fetchLeadData(widget.leadId);
-    print('widget.leadId');
+    print('this is lead id $widget.leadId');
     print(widget.leadId);
   }
 

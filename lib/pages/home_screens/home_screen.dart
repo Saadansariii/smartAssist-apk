@@ -29,7 +29,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isLoading = false;
   String? leadId;
   String greeting = '';
   List<dynamic> upcomingFollowups = [];
@@ -37,26 +36,19 @@ class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> upcomingAppointments = [];
   List<dynamic> overdueAppointments = [];
   //  List<dynamic> greeting = [];
+  bool isDashboardLoading = false;
 
   @override
   void initState() {
     super.initState();
-    fetchDashboardData(); 
-  }
-
-  Future<void> fetchData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    setState(() {
-      isLoading = false;
-    });
+    fetchDashboardData();
+    // isDashboardLoading = true;
   }
 
   Future<void> fetchDashboardData() async {
+    setState(() {
+      isDashboardLoading = true;
+    });
     final token = await Storage.getToken();
     try {
       final response = await http.get(
@@ -90,6 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       print("Error fetching data: $e");
+    } finally {
+      setState(() {
+        isDashboardLoading = false;
+      });
     }
   }
 
@@ -125,8 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: fetchData,
-          child: isLoading
+          onRefresh: fetchDashboardData,
+          child: isDashboardLoading
               ? const Center(
                   child:
                       CircularProgressIndicator()) // Show loader when refreshing
@@ -324,13 +320,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 3,
                       ),
-                      Threebtn(
-                        leadId: leadId ?? '',
-                        upcomingFollowups: upcomingFollowups,
-                        overdueFollowups: overdueFollowups,
-                        upcomingAppointments: upcomingAppointments,
-                        overdueAppointments: overdueAppointments,
-                      ),
+                      isDashboardLoading
+                          ? const Center(
+                              child:
+                                  CircularProgressIndicator()) // Show loader only when data is loading
+                          : Threebtn(
+                              leadId: leadId ?? '',
+                              upcomingFollowups: upcomingFollowups,
+                              overdueFollowups: overdueFollowups,
+                              upcomingAppointments: upcomingAppointments,
+                              overdueAppointments: overdueAppointments,
+                            ),
                       const BottomBtnSecond(),
                     ],
                   ),

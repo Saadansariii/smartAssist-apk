@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:smart_assist/utils/storage.dart';
@@ -218,7 +219,8 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.name,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            style:
+                GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 12)),
         const SizedBox(height: 5),
         Row(
           children: [
