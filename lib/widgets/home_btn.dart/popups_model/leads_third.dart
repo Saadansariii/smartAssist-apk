@@ -6,7 +6,7 @@ import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_second.dar
 class LeadsThird extends StatefulWidget {
   final String selectedSource;
   final String selectedPurchaseType;
-  final String subType;
+  final String selectedSubType;
   final String selectedFuelType;
   final String selectedBrand;
   final String firstName;
@@ -14,6 +14,8 @@ class LeadsThird extends StatefulWidget {
   final String email;
   final String selectedEnquiryType;
   final String selectedEvent;
+  final String? mobile;
+  final String? pmi;
   LeadsThird({
     super.key,
     required,
@@ -21,12 +23,14 @@ class LeadsThird extends StatefulWidget {
     required this.lastName,
     required this.email,
     required this.selectedPurchaseType,
-    required this.subType,
+    required this.selectedSubType,
     required this.selectedFuelType,
     required this.selectedBrand,
     required this.selectedEnquiryType,
     required this.selectedEvent,
     required this.selectedSource,
+    this.mobile,
+    this.pmi,
   });
 
   @override
@@ -34,29 +38,8 @@ class LeadsThird extends StatefulWidget {
 }
 
 class _LeadsThirdState extends State<LeadsThird> {
-  // final Widget _leadSecondStep = const LeadsSecond(
-  //   firstName: '',
-  //   lastName: '',
-  //   email: '',
-  //   selectedPurchaseType: '',
-  //   selectedFuelType: '',
-  //   subType: '',
-  //   selectedBrand: '',
-  // );
-  // final Widget _leadLastStep = const LeadsLast(
-  //   selectedSource: '',
-  //   selectedEvent: '',
-  //   firstName: '',
-  //   lastName: '',
-  //   email: '',
-  //   mobile: '',
-  //   selectedPurchaseType: '',
-  //   selectedFuelType: '',
-  //   subType: '',
-  //   selectedBrand: '',
-  //   selectedEnquiryType: '',   String: null,
-  // );
-
+ 
+  
   String? selectedPurchaseType;
   String? selectedFuelType;
   String? selectedBrand;
@@ -65,18 +48,35 @@ class _LeadsThirdState extends State<LeadsThird> {
   String? selectedSource;
   String? selectedEnquiryType;
   String? selectedCustomer;
+  String? selectedSubType;
 
   void initState() {
     // TODO: implement initState
     super.initState();
-    selectedPurchaseType = widget.selectedPurchaseType!;
-    selectedFuelType = widget.selectedFuelType!;
-    selectedBrand = widget.selectedBrand!;
+    // selectedPurchaseType = widget.selectedPurchaseType!;
+    // selectedFuelType = widget.selectedFuelType!;
+    // selectedBrand = widget.selectedBrand!;
+    // selectedSubType = widget.selectedSubType!;
+
+    selectedPurchaseType = widget.selectedPurchaseType;
+    selectedFuelType = widget.selectedFuelType;
+    selectedBrand = widget.selectedBrand;
+    selectedSubType = widget.selectedSubType;
+    selectedSource = widget.selectedSource;
+    selectedEnquiryType = widget.selectedEnquiryType;
+
+    // Initialize controllers with passed values if they exist
+    if (widget.mobile != null) {
+      mobileController.text = widget.mobile!;
+    }
+    if (widget.pmi != null) {
+      pmiController.text = widget.pmi!;
+    }
   }
 
   // Controller for mobile number input
   TextEditingController mobileController = TextEditingController();
-
+  TextEditingController pmiController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return StatefulBuilder(
@@ -98,15 +98,11 @@ class _LeadsThirdState extends State<LeadsThird> {
                       child: _buildTitle('Add New Leads')),
                   const SizedBox(height: 5),
                   _buildSectionTitle('Primary Model Intrest:'),
-                  _buildDropdown(
-                    label: 'Discovery',
-                    value: selectedEvent,
-                    items: ['Land Rover', 'Jaguar'],
+                  _buildTextField(
+                    controller: pmiController,
+                    hintText: 'PMI',
                     onChanged: (value) {
-                      setState(() {
-                        selectedEvent = value;
-                      });
-                      print("Selected Event: $selectedEvent");
+                      print("Mobile Number: $value");
                     },
                   ),
                   const SizedBox(height: 10),
@@ -126,7 +122,7 @@ class _LeadsThirdState extends State<LeadsThird> {
                   _buildSectionTitle('Mobile*'),
                   _buildTextField(
                     controller: mobileController,
-                    hintText: '0000000000',
+                    hintText: '123',
                     onChanged: (value) {
                       print("Mobile Number: $value");
                     },
@@ -188,6 +184,9 @@ class _LeadsThirdState extends State<LeadsThird> {
     required List<String> items,
     required ValueChanged<String?> onChanged,
   }) {
+    final bool valueExists = value == null || items.contains(value);
+    final currentValue = valueExists ? value : null;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -195,7 +194,7 @@ class _LeadsThirdState extends State<LeadsThird> {
         color: const Color.fromARGB(255, 243, 238, 238),
       ),
       child: DropdownButton<String>(
-        value: value,
+        value: currentValue,
         hint: Padding(
           padding: const EdgeInsets.only(left: 10),
           child: Text(
@@ -263,41 +262,158 @@ class _LeadsThirdState extends State<LeadsThird> {
   }
 
   // Navigation buttons (Previous and Next)
+  // Widget _buildNavigationButtons() {
+  //   return Row(
+  //     children: [
+  //       Expanded(
+  //         child: ElevatedButton(
+  //           style: ElevatedButton.styleFrom(
+  //             backgroundColor: Colors.black,
+  //             shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(8),
+  //             ),
+  //           ),
+  //           onPressed: () {
+  //             Navigator.pop(context); // Close the current dialog
+  //             Future.microtask(() {
+  //               showDialog(
+  //                 context: context,
+  //                 builder: (context) => Dialog(
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(10),
+  //                   ),
+  //                   // child: _leadSecondStep,
+  //                 ),
+  //               );
+  //             });
+  //           },
+  //           child: Text(
+  //             'Previous',
+  //             style: GoogleFonts.poppins(
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.w600,
+  //               color: Colors.white,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //       const SizedBox(width: 20),
+  //       Expanded(
+  //         child: ElevatedButton(
+  //           style: ElevatedButton.styleFrom(
+  //             backgroundColor: Colors.blue,
+  //             shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(8),
+  //             ),
+  //           ),
+  //           onPressed: () {
+  //             Navigator.pop(context); // Close the current dialog
+  //             Future.microtask(() {
+  //               showDialog(
+  //                 context: context,
+  //                 builder: (context) => Dialog(
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(10),
+  //                   ),
+  //                   child: LeadsLast(
+  //                     firstName: widget.firstName,
+  //                     lastName: widget.lastName,
+  //                     email: widget.email,
+  //                     mobile: mobileController.text.toString(),
+  //                     selectedPurchaseType: selectedPurchaseType!,
+  //                     selectedEnquiryType: selectedEnquiryType!,
+  //                     PMI: pmiController.text.toString(),
+  //                     selectedSource: selectedSource!,
+  //                     selectedSubType: selectedSubType!,
+  //                     selectedFuelType: selectedFuelType!,
+  //                     selectedBrand: selectedBrand!,
+  //                   ),
+  //                 ),
+  //               );
+  //             });
+  //           },
+  //           child: Text(
+  //             'Next',
+  //             style: GoogleFonts.poppins(
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.w600,
+  //               color: Colors.white,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+
   Widget _buildNavigationButtons() {
     return Row(
       children: [
-        Expanded(
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+        // Expanded(
+        //   child: ElevatedButton(
+        //     style: ElevatedButton.styleFrom(
+        //       backgroundColor: Colors.black,
+        //       shape: RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(8),
+        //       ),
+        //     ),
+        //     onPressed: () {
+        //       Navigator.pop(context);
+        //     },
+        //     child: Text(
+        //       'Previous',
+        //       style: GoogleFonts.poppins(
+        //         fontSize: 16,
+        //         fontWeight: FontWeight.w600,
+        //         color: Colors.white,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+       
+       Expanded(
+          child: Container(
+            height: 45,
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(8),
             ),
-            onPressed: () {
-              Navigator.pop(context); // Close the current dialog
-              Future.microtask(() {
-                showDialog(
-                  context: context,
-                  builder: (context) => Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+            child: TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Future.microtask(() {
+                  showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: LeadsSecond(
+                        firstName: widget.firstName,
+                        lastName: widget.lastName,
+                        email: widget.email,
+                        selectedEvent: widget.selectedEvent,
+                        selectedPurchaseType: selectedPurchaseType!,
+                        selectedSubType: selectedSubType!,
+                        selectedFuelType: selectedFuelType!,
+                        selectedBrand: selectedBrand!, 
+                        // selectedEnquiryType: selectedEnquiryType!,
+                        // selectedSource: selectedSource!,
+                        // mobile: widget.mobile,
+                        // pmi: widget.PMI,
+                      ),
                     ),
-                    // child: _leadSecondStep,
-                  ),
-                );
-              });
-            },
-            child: Text(
-              'Previous',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
+                  );
+                });
+              },
+              child: Text('Previous',
+                  style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white)),
             ),
           ),
         ),
+                            
         const SizedBox(width: 20),
         Expanded(
           child: ElevatedButton(
@@ -308,7 +424,17 @@ class _LeadsThirdState extends State<LeadsThird> {
               ),
             ),
             onPressed: () {
-              Navigator.pop(context); // Close the current dialog
+              if (selectedSource == null || selectedEnquiryType == null) {
+                // Show error message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please fill in all required fields'),
+                  ),
+                );
+                return;
+              }
+
+              Navigator.pop(context);
               Future.microtask(() {
                 showDialog(
                   context: context,
@@ -320,12 +446,12 @@ class _LeadsThirdState extends State<LeadsThird> {
                       firstName: widget.firstName,
                       lastName: widget.lastName,
                       email: widget.email,
-                      mobile: mobileController.text.toString(),
+                      mobile: mobileController.text,
                       selectedPurchaseType: selectedPurchaseType!,
                       selectedEnquiryType: selectedEnquiryType!,
-                      selectedEvent: selectedEvent!,
+                      PMI: pmiController.text,
                       selectedSource: selectedSource!,
-                      subType: '',
+                      selectedSubType: selectedSubType!,
                       selectedFuelType: selectedFuelType!,
                       selectedBrand: selectedBrand!,
                     ),
@@ -346,4 +472,45 @@ class _LeadsThirdState extends State<LeadsThird> {
       ],
     );
   }
+
+  //   Widget _buildTextField({
+  //   required String label,
+  //   required String hintText,
+  //   required ValueChanged<String> onChanged,
+  // }) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.stretch,
+  //     children: [
+  //       Text(
+  //         label,
+  //         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+  //       ),
+  //       const SizedBox(height: 10),
+  //       Container(
+  //         decoration: BoxDecoration(
+  //           borderRadius: BorderRadius.circular(8),
+  //           color: const Color.fromARGB(255, 243, 238, 238),
+  //         ),
+  //         child: TextField(
+  //           style: GoogleFonts.poppins(
+  //             fontSize: 14,
+  //             fontWeight: FontWeight.w500,
+  //             color: Colors.black,
+  //           ),
+  //           decoration: InputDecoration(
+  //             hintText: hintText,
+  //             hintStyle: TextStyle(color: Colors.grey),
+  //             contentPadding: const EdgeInsets.symmetric(
+  //               horizontal: 10,
+  //               vertical: 12,
+  //             ),
+  //             border: InputBorder.none,
+  //           ),
+  //           onChanged: onChanged,
+  //         ),
+  //       ),
+  //       const SizedBox(height: 10),
+  //     ],
+  //   );
+  // }
 }

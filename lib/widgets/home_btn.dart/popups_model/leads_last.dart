@@ -8,7 +8,7 @@ import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_third.dart
 
 class LeadsLast extends StatefulWidget {
   final String selectedPurchaseType;
-  final String subType;
+  final String selectedSubType;
   final String selectedFuelType;
   final String selectedBrand;
   final String firstName;
@@ -16,7 +16,7 @@ class LeadsLast extends StatefulWidget {
   final String email;
   final String mobile;
   final String selectedSource;
-  final String selectedEvent;
+  final String PMI;
   final String selectedEnquiryType;
   LeadsLast(
       {super.key,
@@ -25,11 +25,11 @@ class LeadsLast extends StatefulWidget {
       required this.email,
       required this.mobile,
       required this.selectedPurchaseType,
-      required this.subType,
+      required this.selectedSubType,
       required this.selectedFuelType,
       required this.selectedBrand,
       required this.selectedSource,
-      required this.selectedEvent,
+      required this.PMI,
       required this.selectedEnquiryType});
 
   @override
@@ -56,11 +56,11 @@ class _LeadsLastState extends State<LeadsLast> {
   String? selectedFuelType;
   String? selectedPurchaseType;
   String? selectedBrand;
-  String? selectedEvent;
+  // String? selectedEvent;
   String? selectedSource;
   String? selectedEnquiryType;
   String? selectedCustomer;
-  String? subType;
+  String? selectedSubType;
   String? selectedStatus;
 
   void initState() {
@@ -68,10 +68,10 @@ class _LeadsLastState extends State<LeadsLast> {
     super.initState();
     selectedFuelType = widget.selectedFuelType!;
     selectedPurchaseType = widget.selectedPurchaseType!;
-    subType = widget.subType!;
+    selectedSubType = widget.selectedSubType!;
     selectedEnquiryType = widget.selectedEnquiryType!;
     selectedSource = widget.selectedSource!;
-    selectedEvent = widget.selectedEvent!;
+    // selectedEvent = widget.selectedEvent!;
     selectedBrand = widget.selectedBrand!;
     print(selectedFuelType);
   }
@@ -138,7 +138,7 @@ class _LeadsLastState extends State<LeadsLast> {
                             padding: const EdgeInsets.symmetric(vertical: 5.0),
                             child: Text(
                               textAlign: TextAlign.start,
-                              'Assign to',
+                              'Status',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -344,10 +344,9 @@ class _LeadsLastState extends State<LeadsLast> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: TextButton(
-                                  onPressed: () { 
-                                    Navigator.pop(
-                                        context); 
-                                    Future.microtask(() { 
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Future.microtask(() {
                                       showDialog(
                                         context: context,
                                         builder: (context) => Dialog(
@@ -356,16 +355,19 @@ class _LeadsLastState extends State<LeadsLast> {
                                                 BorderRadius.circular(10),
                                           ),
                                           child: LeadsThird(
-                                            firstName: '',
-                                            lastName: '',
-                                            email: '',
-                                            selectedPurchaseType: '',
-                                            subType: '',
-                                            selectedFuelType: '',
-                                            selectedBrand: '',
-                                            selectedEnquiryType: '',
-                                            selectedEvent: '',
-                                            selectedSource: '',
+                                            firstName: widget.firstName,
+                                            lastName: widget.lastName,
+                                            email: widget.email,
+                                            selectedPurchaseType:
+                                                selectedPurchaseType!,
+                                            selectedSubType: selectedSubType!,
+                                            selectedFuelType: selectedFuelType!,
+                                            selectedBrand: selectedBrand!,
+                                            selectedEnquiryType:
+                                                selectedEnquiryType!, 
+                                            selectedSource: selectedSource!,
+                                            mobile: widget.mobile,
+                                            pmi: widget.PMI, selectedEvent: '',
                                           ),
                                         ),
                                       );
@@ -481,7 +483,7 @@ class _LeadsLastState extends State<LeadsLast> {
   //     print('Failed to submit lead.');
   //   }
   // }
-  
+
   Future<void> submitForm() async {
     String description = descriptionController.text;
     String phone = phoneController.text;
@@ -508,11 +510,11 @@ class _LeadsLastState extends State<LeadsLast> {
       'purchase_type': selectedPurchaseType,
       'brand': selectedBrand,
       'type': selectedFuelType,
-      'sub_type': subType,
+      'sub_type': selectedSubType,
       'sp_id': spId,
       'status': selectedStatus,
       'lead_source': selectedSource,
-      'PMI': selectedEvent,
+      'PMI': widget.PMI,
       'enquiry_type': selectedEnquiryType,
     };
 

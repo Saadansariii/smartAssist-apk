@@ -366,8 +366,14 @@ class _ThreebtnState extends State<Threebtn> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: LeadFirstStep(
-                                          firstName: '',
-                                          lastName: ''), // Lead modal
+                                        firstName: '',
+                                        lastName: '',
+                                        selectedPurchaseType: '',
+                                        selectedSubType: '',
+                                        selectedFuelType: '',
+                                        selectedBrand: '',
+                                        email: '', selectedEvent: '',
+                                      ), // Lead modal
                                     );
                                   },
                                 );
@@ -446,8 +452,14 @@ class _ThreebtnState extends State<Threebtn> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: LeadFirstStep(
-                                          firstName: '',
-                                          lastName: ''), // Lead modal
+                                        firstName: '',
+                                        lastName: '',
+                                        selectedPurchaseType: '',
+                                        selectedSubType: '',
+                                        selectedFuelType: '',
+                                        selectedBrand: '',
+                                        email: '', selectedEvent: '',
+                                      ), // Lead modal
                                     );
                                   },
                                 );

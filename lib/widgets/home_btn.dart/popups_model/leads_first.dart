@@ -9,10 +9,23 @@ import 'package:smart_assist/utils/storage.dart';
 class LeadFirstStep extends StatefulWidget {
   final String firstName;
   final String lastName;
+  final String selectedPurchaseType;
+  final String selectedSubType;
+  final String selectedFuelType;
+  final String selectedBrand;
+  final String email;
+  final String selectedEvent;
+
   const LeadFirstStep({
     Key? key,
     required this.firstName,
     required this.lastName,
+    required this.selectedPurchaseType,
+    required this.selectedSubType,
+    required this.selectedFuelType,
+    required this.selectedBrand,
+    required this.email,
+    required this.selectedEvent,
   }) : super(key: key);
 
   @override
@@ -25,12 +38,13 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
-// privous
-  // final Widget _leadSecondStep = const LeadsSecond(
-  //   firstName: '',
-  //   lastName: '', email: '', selectedPurchaseType: '', selectedFuelType: '', subType: '', selectedBrand: '',
-  // );
+  String fName = '';
+
+  String? firstName;
+  String? lastName;
+  String? email;
   String? selectedEvent;
+  String? selectedEventId;
   // List<String> dropdownItems = [];
   List<Map<String, String>> dropdownItems = [];
 
@@ -40,46 +54,11 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
   void initState() {
     super.initState();
     fetchDropdownData();
+    firstName = widget.firstName;
+    lastName = widget.lastName;
+    email = widget.email;
+    selectedEvent = widget.selectedEvent;
   }
-
-  // Future<void> fetchDropdownData() async {
-  //   const String apiUrl = "https://api.smartassistapp.in/api/admin/users/all";
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     print("No token found. Please login.");
-  //     return;
-  //   }
-
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Authorization': 'Bearer $token', // Add the token to the headers
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       final rows = data['rows'] as List;
-  //       print(data);
-
-  //       setState(() {
-  //         dropdownItems = rows.map((row) => row['name'] as String).toList();
-  //         isLoading = false;
-  //       });
-  //     } else {
-  //       print("Failed with status code: ${response.statusCode}");
-  //       print("Response body: ${response.body}");
-  //       throw Exception('Failed to fetch data');
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching dropdown data: $e");
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
 
   Future<void> fetchDropdownData() async {
     const String apiUrl = "https://api.smartassistapp.in/api/admin/users/all";
@@ -163,227 +142,229 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                 ),
               ),
               const SizedBox(height: 5),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Text(
-                    textAlign: TextAlign.start,
-                    'Assign to',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-              // Container(
-              //     width: double.infinity,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(8),
-              //       color: const Color.fromARGB(255, 243, 238, 238),
+              // const Align(
+              //   alignment: Alignment.topLeft,
+              //   child: Padding(
+              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
+              //     child: Text(
+              //       textAlign: TextAlign.start,
+              //       'Assign to',
+              //       style: const TextStyle(
+              //         fontSize: 16,
+              //         fontWeight: FontWeight.w500,
+              //       ),
               //     ),
-              //     child: isLoading
-              //         ? const Center(child: CircularProgressIndicator())
-              //         : DropdownButtonFormField<String>(
-              //             value: selectedEvent,
-              //             decoration: const InputDecoration(
-              //               contentPadding: EdgeInsets.symmetric(
-              //                   horizontal: 10, vertical: 5),
-              //               border: InputBorder.none,
+              //   ),
+              // ),
+
+              // Container(
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8),
+              //     color: const Color.fromARGB(255, 243, 238, 238),
+              //   ),
+              //   child: isLoading
+              //       ? const Center(child: CircularProgressIndicator())
+              //       : DropdownButtonFormField<String>(
+              //           value: dropdownItems.isNotEmpty
+              //               ? selectedEvent
+              //               : null, // Prevent null issues
+              //           decoration: const InputDecoration(
+              //             contentPadding:
+              //                 EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              //             border: InputBorder.none,
+              //           ),
+              //           hint: Text(
+              //             "Select",
+              //             style: GoogleFonts.poppins(
+              //               fontSize: 14,
+              //               fontWeight: FontWeight.w500,
+              //               color: Colors.grey,
               //             ),
-              //             hint: Text(
-              //               "Select",
-              //               style: GoogleFonts.poppins(
-              //                 fontSize: 14,
-              //                 fontWeight: FontWeight.w500,
-              //                 color: Colors.grey,
-              //               ),
-              //             ),
-              //             icon: const Icon(Icons.keyboard_arrow_down),
-              //             isExpanded: true,
-              //             items: dropdownItems.map((item) {
-              //               return DropdownMenuItem<String>(
-              //                 value:
-              //                     item["id"], // Use user_id as the unique value
-              //                 child: Text(
-              //                   item["name"] ?? '', // Show only the name
-              //                   style: GoogleFonts.poppins(
-              //                     fontSize: 14,
-              //                     fontWeight: FontWeight.w500,
-              //                     color: Colors.black,
-              //                   ),
+              //           ),
+              //           icon: const Icon(Icons.keyboard_arrow_down),
+              //           isExpanded: true,
+              //           items: dropdownItems.map((item) {
+              //             return DropdownMenuItem<String>(
+              //               value: item["id"], // Unique ID as value
+              //               child: Text(
+              //                 item["name"] ?? '',
+              //                 style: GoogleFonts.poppins(
+              //                   fontSize: 14,
+              //                   fontWeight: FontWeight.w500,
+              //                   color: Colors.black,
               //                 ),
-              //               );
-              //             }).toList(),
-              //             onChanged: (String? newValue) {
-              //               setState(() {
-              //                 selectedEvent = newValue;
-              //               });
-              //             },
-              //             validator: (value) {
-              //               if (value == null || value.isEmpty) {
-              //                 return 'Please select a value';
-              //               }
-              //               return null;
-              //             },
-              //           )),
+              //               ),
+              //             );
+              //           }).toList(),
+              //           onChanged: (String? newValue) {
+              //             setState(() {
+              //               selectedEvent = newValue; // Set selected value
+              //             });
+              //           },
+              //           validator: (value) {
+              //             if (value == null || value.isEmpty) {
+              //               return 'Please select a value';
+              //             }
+              //             return null;
+              //           },
+              //         ),
+              // ),
 
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 243, 238, 238),
-                ),
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : DropdownButtonFormField<String>(
-                        value: dropdownItems.isNotEmpty
-                            ? selectedEvent
-                            : null, // Prevent null issues
-                        decoration: const InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          border: InputBorder.none,
-                        ),
-                        hint: Text(
-                          "Select",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        isExpanded: true,
-                        items: dropdownItems.map((item) {
-                          return DropdownMenuItem<String>(
-                            value: item["id"], // Unique ID as value
-                            child: Text(
-                              item["name"] ?? '',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedEvent = newValue; // Set selected value
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select a value';
-                          }
-                          return null;
-                        },
-                      ),
+              // _buildDropdown(
+              //   label: 'Assign to:',
+              //   hint: 'Select an Option',
+              //   value: selectedEvent,
+              //   items: dropdownItems.map((e) => e['name']!).toList(),
+              //   onChanged: (String? newValue) {
+              //     setState(() {
+              //       selectedEvent = newValue;
+              //     });
+              //   },
+              // ),
+
+              _buildDropdown(
+                label: 'Assign to:',
+                hint: 'Select an Option',
+                value: selectedEventId, // Now storing ID instead of name
+                items:
+                    dropdownItems, // Must be a List of { "id": ..., "name": ... }
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedEventId = newValue; // Store selected ID
+                  });
+                },
               ),
 
               const SizedBox(height: 10),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text('First name*',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              // const Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text('First name*',
+              //       style:
+              //           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              // ),
+              const SizedBox(height: 10),
+              // showText(fName),
+              // Container(
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8),
+              //     color: const Color.fromARGB(255, 243, 238, 238),
+              //   ),
+              //   child: TextField(
+              //     controller: firstNameController,
+              //     style: GoogleFonts.poppins(
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w500,
+              //         color: Colors.black),
+              //     decoration: const InputDecoration(
+              //       hintText: 'Alex', // Placeholder text
+              //       hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+              //       contentPadding: EdgeInsets.symmetric(
+              //           horizontal: 10,
+              //           vertical: 12), // Padding inside the TextField
+              //       border: InputBorder.none, // Remove border for custom design
+              //     ),
+              //     onChanged: (value) {
+              //       // Handle text change (optional)
+              //       print(value);
+              //     },
+              //   ),
+              // ),
+
+              _buildSectionTitle('First Name:'),
+              _buildTextField(
+                controller: firstNameController,
+                hintText: 'John',
+                onChanged: (value) {
+                  print("lastName: $value");
+                },
               ),
               const SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 243, 238, 238),
-                ),
-                child: TextField(
-                  controller: firstNameController,
-                  style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black),
-                  decoration: const InputDecoration(
-                    hintText: 'Alex', // Placeholder text
-                    hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 12), // Padding inside the TextField
-                    border: InputBorder.none, // Remove border for custom design
-                  ),
-                  onChanged: (value) {
-                    // Handle text change (optional)
-                    print(value);
-                  },
-                ),
+              // const Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text('Last name*',
+              //       style:
+              //           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              // ),
+              // const SizedBox(height: 10),
+              // Container(
+              //   width: double.infinity, // Full width text field
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8),
+              //     color: const Color.fromARGB(255, 243, 238, 238),
+              //   ),
+              //   child: TextField(
+              //     controller: lastNameController,
+              //     style: GoogleFonts.poppins(
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w500,
+              //         color: Colors.black),
+              //     decoration: const InputDecoration(
+              //       hintText: 'Carter',
+              //       hintStyle: TextStyle(
+              //           color: Colors.grey, fontSize: 12), // Placeholder text
+              //       contentPadding: EdgeInsets.symmetric(
+              //           horizontal: 10,
+              //           vertical: 12), // Padding inside the TextField
+              //       border: InputBorder.none, // Remove border for custom design
+              //     ),
+              //     onChanged: (value) {
+              //       // Handle text change (optional)
+              //       print(value);
+              //     },
+              //   ),
+              // ),
+
+              _buildSectionTitle('Last Name:'),
+              _buildTextField(
+                controller: lastNameController,
+                hintText: 'Deo',
+                onChanged: (value) {
+                  print("lastName: $value");
+                },
               ),
               const SizedBox(height: 10),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Last name*',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                width: double.infinity, // Full width text field
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 243, 238, 238),
-                ),
-                child: TextField(
-                  controller: lastNameController,
-                  style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black),
-                  decoration: const InputDecoration(
-                    hintText: 'Carter',
-                    hintStyle: TextStyle(
-                        color: Colors.grey, fontSize: 12), // Placeholder text
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 12), // Padding inside the TextField
-                    border: InputBorder.none, // Remove border for custom design
-                  ),
-                  onChanged: (value) {
-                    // Handle text change (optional)
-                    print(value);
-                  },
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Email*',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              ),
-              const SizedBox(height: 5),
-              Container(
-                width: double.infinity, // Full width text field
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 243, 238, 238),
-                ),
-                child: TextField(
-                  controller: emailController,
-                  style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black),
-                  decoration: const InputDecoration(
-                    hintText: 'AlexCarter@gmail.com',
-                    hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 12), // Padding inside the TextField
-                    border: InputBorder.none, // Remove border for custom design
-                  ),
-                  onChanged: (value) {
-                    print(value);
-                  },
-                ),
+              // const Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text('Email*',
+              //       style:
+              //           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              // ),
+              // const SizedBox(height: 5),
+              // Container(
+              //   width: double.infinity, // Full width text field
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8),
+              //     color: const Color.fromARGB(255, 243, 238, 238),
+              //   ),
+              //   child: TextField(
+              //     controller: emailController,
+              //     style: GoogleFonts.poppins(
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w500,
+              //         color: Colors.black),
+              //     decoration: const InputDecoration(
+              //       hintText: 'AlexCarter@gmail.com',
+              //       hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+              //       contentPadding: EdgeInsets.symmetric(
+              //           horizontal: 10,
+              //           vertical: 12), // Padding inside the TextField
+              //       border: InputBorder.none, // Remove border for custom design
+              //     ),
+              //     onChanged: (value) {
+              //       print(value);
+              //     },
+              //   ),
+              // ),
+
+              _buildSectionTitle('Email:'),
+              _buildTextField(
+                controller: emailController,
+                hintText: 'AlexCarter@gmail.com',
+                onChanged: (value) {
+                  print("email: $value");
+                },
               ),
               const SizedBox(height: 30),
               // Row with Buttons
@@ -457,8 +438,10 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                                     email: emailController.text.toString(),
                                     selectedPurchaseType: '',
                                     selectedFuelType: '',
-                                    subType: '',
-                                    selectedBrand: '',
+                                    // subType: '',
+                                    selectedBrand: '', selectedSubType: '',
+                                    selectedEvent: selectedEvent!,
+                                    // previousfName: fName,
                                   ), // Your second modal widget
                                 ),
                               );
@@ -481,6 +464,132 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  //  String? selectedEventId;
+
+  Widget _buildDropdown({
+    required String label,
+    required String hint,
+    required String? value, // Store selected ID
+    required List<Map<String, dynamic>> items,
+    required Function(String?) onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(height: 5),
+        DropdownButtonFormField<String>(
+          value: value, // Ensure value is the selected ID
+          decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            filled: true,
+            fillColor: const Color.fromARGB(255, 243, 238, 238),
+          ),
+          hint: Text(
+            hint,
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            ),
+          ),
+          icon: const Icon(Icons.keyboard_arrow_down),
+          isExpanded: true,
+          items: items.map((item) {
+            return DropdownMenuItem<String>(
+              value: item["id"], // Store ID as value
+              child: Text(
+                item["name"] ?? '',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please select a value';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  // Reusable TextField Builder
+
+// Title widget
+  Widget _buildTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        title,
+        style: GoogleFonts.poppins(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+
+  // Section title widget
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required ValueChanged<String> onChanged,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: const Color.fromARGB(255, 243, 238, 238),
+      ),
+      child: TextField(
+        controller: controller, // Assign the controller
+        style: GoogleFonts.poppins(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: Colors.grey),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+          border: InputBorder.none,
+        ),
+        onChanged: onChanged,
       ),
     );
   }

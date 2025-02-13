@@ -674,6 +674,7 @@ class _LeadsAllState extends State<LeadsAll> {
             color: Colors.white,
           ),
         ),
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
       ),
       body: isLoading

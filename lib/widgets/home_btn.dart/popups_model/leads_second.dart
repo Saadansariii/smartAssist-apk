@@ -5,12 +5,14 @@ import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_third.dart
 
 class LeadsSecond extends StatefulWidget {
   final String selectedPurchaseType;
-  final String subType;
+  final String selectedSubType;
   final String selectedFuelType;
   final String selectedBrand;
   final String firstName;
   final String lastName;
-  final String email; 
+  final String email;
+  final String selectedEvent;
+  // final String previousfName;
   const LeadsSecond({
     super.key,
     required this.firstName,
@@ -18,8 +20,10 @@ class LeadsSecond extends StatefulWidget {
     required this.email,
     required this.selectedPurchaseType,
     required this.selectedFuelType,
-    required this.subType,
+    // required this.subType,
     required this.selectedBrand,
+    required this.selectedSubType,
+    required this.selectedEvent,
   });
 
   @override
@@ -38,6 +42,13 @@ class _LeadsSecondState extends State<LeadsSecond> {
   // );
   TextEditingController typeController = TextEditingController();
 
+  void initState() {
+    super.initState();
+    selectedPurchaseType = widget.selectedPurchaseType;
+    selectedFuelType = widget.selectedFuelType;
+    selectedBrand = widget.selectedBrand;
+    selectedSubType = widget.selectedSubType;
+  }
   // final Widget _leadThirdStep = LeadsThird(
   //   firstName: '',
   //   lastName: '',
@@ -55,7 +66,8 @@ class _LeadsSecondState extends State<LeadsSecond> {
   String? selectedPurchaseType;
   String? selectedFuelType;
   String? selectedBrand;
-  String subType = '';
+  String? selectedSubType;
+  String? selectedEvent;
 
   @override
   Widget build(BuildContext context) {
@@ -95,9 +107,10 @@ class _LeadsSecondState extends State<LeadsSecond> {
             // Fuel Type Dropdown
             _buildDropdown(
               label: 'Type:',
-              hint: 'Select Fuel Type',
+              hint: 'Select',
               value: selectedFuelType,
-              items: ['Petrol', 'Diesel', 'EV'],
+              // items: ['Petrol', 'Diesel', 'EV'],
+              items: ['Product', 'Service', 'Experience', 'Offer'],
               onChanged: (value) {
                 setState(() {
                   selectedFuelType = value;
@@ -107,14 +120,38 @@ class _LeadsSecondState extends State<LeadsSecond> {
             ),
 
             // Sub Type Input
-            _buildTextField(
+            // _buildTextField(
+            //   label: 'Sub Type:',
+            //   hintText: 'Retail',
+            //   onChanged: (value) {
+            //     setState(() {
+            //       subType = value;
+            //     });
+            //     print("Sub Type: $subType");
+            //   },
+            // ),
+
+            _buildDropdown(
               label: 'Sub Type:',
-              hintText: 'Retail',
+              hint: 'Select',
+              value: selectedSubType,
+              // items: ['Petrol', 'Diesel', 'EV'],
+              items: [
+                'Retail',
+                'Fleet',
+                'Approved Pre-Owned',
+                'Service/Repair',
+                'Branded Goods',
+                'Parts',
+                'Special Vehicle Ops',
+                'Accessories',
+                'EVHC'
+              ],
               onChanged: (value) {
                 setState(() {
-                  subType = value;
+                  selectedSubType = value;
                 });
-                print("Sub Type: $subType");
+                print("Selected Sub Type: $selectedSubType");
               },
             ),
 
@@ -147,7 +184,6 @@ class _LeadsSecondState extends State<LeadsSecond> {
                       ),
                     ),
                     onPressed: () {
-                      
                       // Close the current dialog and open the second dialog
                       Navigator.pop(context); // Close the first dialog
                       Future.microtask(() {
@@ -160,8 +196,14 @@ class _LeadsSecondState extends State<LeadsSecond> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: LeadFirstStep(
-                               firstName: widget.firstName,
+                              firstName: widget.firstName,
+                              email: widget.email,
                               lastName: widget.lastName,
+                              selectedPurchaseType: '',
+                              selectedSubType: '',
+                              selectedFuelType: '',
+                              selectedBrand: '',
+                              selectedEvent: selectedEvent!,
                             ), // Your second modal widget
                           ),
                         );
@@ -203,12 +245,12 @@ class _LeadsSecondState extends State<LeadsSecond> {
                                 firstName: widget.firstName,
                                 lastName: widget.lastName,
                                 email: widget.email,
-                                subType: typeController.text,
+                                selectedSubType: selectedSubType!,
                                 selectedPurchaseType: selectedPurchaseType!,
                                 selectedFuelType: selectedFuelType!,
                                 selectedBrand: selectedBrand!,
+                                selectedEvent: selectedEvent!,
                                 selectedEnquiryType: '',
-                                selectedEvent: '',
                                 selectedSource: '',
                               ),
                             ),
@@ -239,7 +281,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
     return selectedPurchaseType != null &&
         selectedFuelType != null &&
         selectedBrand != null &&
-        subType.isNotEmpty;
+        selectedSubType != null;
   }
 
   void _showValidationError(BuildContext context) {
@@ -266,6 +308,9 @@ class _LeadsSecondState extends State<LeadsSecond> {
     required List<String> items,
     required ValueChanged<String?> onChanged,
   }) {
+    // Ensure the current value exists in items list
+    final bool valueExists = value == null || items.contains(value);
+    final currentValue = valueExists ? value : null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -280,7 +325,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
             color: const Color.fromARGB(255, 243, 238, 238),
           ),
           child: DropdownButton<String>(
-            value: value,
+            value: currentValue,
             hint: Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Text(
@@ -313,6 +358,49 @@ class _LeadsSecondState extends State<LeadsSecond> {
             onChanged: onChanged,
           ),
         ),
+
+        // Container(
+        //   decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(8),
+        //     color: const Color.fromARGB(255, 243, 238, 238),
+        //   ),
+        //   child: DropdownButton<String>(
+        //     value:
+        //         items.contains(value) ? value : null, // Ensure value is valid
+        //     hint: Padding(
+        //       padding: const EdgeInsets.only(left: 10),
+        //       child: Text(
+        //         hint,
+        //         style: GoogleFonts.poppins(
+        //           fontSize: 14,
+        //           fontWeight: FontWeight.w500,
+        //           color: Colors.grey,
+        //         ),
+        //       ),
+        //     ),
+        //     isExpanded: true,
+        //     underline: const SizedBox.shrink(),
+        //     items: items.toSet().map((String item) {
+        //       // Remove duplicates
+        //       return DropdownMenuItem<String>(
+        //         value: item,
+        //         child: Padding(
+        //           padding: const EdgeInsets.only(left: 10.0),
+        //           child: Text(
+        //             item,
+        //             style: GoogleFonts.poppins(
+        //               fontSize: 14,
+        //               fontWeight: FontWeight.w500,
+        //               color: Colors.black,
+        //             ),
+        //           ),
+        //         ),
+        //       );
+        //     }).toList(),
+        //     onChanged: onChanged,
+        //   ),
+        // ),
+
         const SizedBox(height: 10),
       ],
     );
