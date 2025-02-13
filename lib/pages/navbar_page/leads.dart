@@ -784,6 +784,9 @@ class _TaskItemState extends State<TaskItem> {
           'leadId': widget.leadId,
           'leadName': widget.name,
         });
+        print('this is leadall');
+        
+        print(widget.leadId);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -849,80 +852,3 @@ class _TaskItemState extends State<TaskItem> {
     );
   }
 }
-
-// class AddTaskPopup extends StatefulWidget {
-//   final String leadId;
-//   const AddTaskPopup({super.key, required this.leadId});
-
-//   @override
-//   State<AddTaskPopup> createState() => _AddTaskPopupState();
-// }
-
-// class _AddTaskPopupState extends State<AddTaskPopup> {
-//   bool isLoading = true;
-//   Map<String, dynamic>? leadData;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     fetchLeadDetails();
-//   }
-
-//   Future<void> fetchLeadDetails() async {
-//     final token = await Storage.getToken();
-//     try {
-//       final response = await http.get(
-//         Uri.parse('https://api.smartassistapp.in/api/leads/${widget.leadId}'),
-//         headers: {
-//           'Authorization': 'Bearer $token',
-//           'Content-Type': 'application/json',
-//         },
-//       );
-
-//       if (response.statusCode == 200) {
-//         final data = json.decode(response.body);
-//         setState(() {
-//           leadData = data;
-//           isLoading = false;
-//         });
-//       } else {
-//         print("Failed to load lead details: ${response.statusCode}");
-//         setState(() => isLoading = false);
-//       }
-//     } catch (e) {
-//       print("Error fetching lead details: $e");
-//       setState(() => isLoading = false);
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Dialog(
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-//       child: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: isLoading
-//             ? const Center(child: CircularProgressIndicator())
-//             : Column(
-//                 mainAxisSize: MainAxisSize.min,
-//                 children: [
-//                   Text(
-//                     leadData?['fname'] ?? "Unknown Lead",
-//                     style: const TextStyle(
-//                         fontSize: 18, fontWeight: FontWeight.bold),
-//                   ),
-//                   const SizedBox(height: 10),
-//                   Text("Lead ID: ${widget.leadId}"),
-//                   const SizedBox(height: 20),
-//                   ElevatedButton(
-//                     onPressed: () {
-//                       Navigator.pop(context, widget.leadId);
-//                     },
-//                     child: const Text("Select This Lead"),
-//                   ),
-//                 ],
-//               ),
-//       ),
-//     );
-//   }
-// }

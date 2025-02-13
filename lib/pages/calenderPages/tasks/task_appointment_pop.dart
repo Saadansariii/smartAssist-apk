@@ -10,7 +10,9 @@ import 'package:smart_assist/utils/snackbar_helper.dart';
 
 class TaskAppointmentPop extends StatefulWidget {
   final DateTime? selectedDate;
-  const TaskAppointmentPop({super.key, this.selectedDate});
+  final String leadId;
+  const TaskAppointmentPop(
+      {super.key, this.selectedDate, required this.leadId});
 
   @override
   State<TaskAppointmentPop> createState() => _TaskAppointmentPopState();
@@ -19,80 +21,80 @@ class TaskAppointmentPop extends StatefulWidget {
 class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
   List<String> dropdownItems = [];
   bool isLoading = false;
-
+  String? leadId;
   @override
   void initState() {
     super.initState();
-    fetchDropdownData();
-
+    // fetchDropdownData();
+    leadId = widget.leadId;
     if (widget.selectedDate != null) {
       startdateController.text =
           DateFormat('dd/MM/yyyy hh:mm a').format(widget.selectedDate!);
     }
   }
 
-  Future<void> fetchDropdownData() async {
-    const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
+  // Future<void> fetchDropdownData() async {
+  //   const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
 
-    final token = await Storage.getToken();
-    if (token == null) {
-      print("No token found. Please login.");
-      return;
-    }
+  //   final token = await Storage.getToken();
+  //   if (token == null) {
+  //     print("No token found. Please login.");
+  //     return;
+  //   }
 
-    try {
-      setState(() {
-        isLoading = true;
-      });
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
 
-      final response = await http.get(
-        Uri.parse(apiUrl),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      );
+  //     final response = await http.get(
+  //       Uri.parse(apiUrl),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //       },
+  //     );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final rows = data['rows'] as List;
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+  //       final rows = data['rows'] as List;
 
-        print("Extracted Rows: $rows"); // Debug: Ensure rows are extracted
+  //       print("Extracted Rows: $rows"); // Debug: Ensure rows are extracted
 
-        if (rows.isNotEmpty) {
-          // Extract the lead_id from the first row (or any row you need)
-          String leadId =
-              rows[0]['lead_id']; // Assuming you're taking the first lead_id
-          storeLeadId(leadId); // Store lead_id in SharedPreferences
-        }
+  //       if (rows.isNotEmpty) {
+  //         // Extract the lead_id from the first row (or any row you need)
+  //         String leadId =
+  //             rows[0]['lead_id']; // Assuming you're taking the first lead_id
+  //         storeLeadId(leadId); // Store lead_id in SharedPreferences
+  //       }
 
-        setState(() {
-          dropdownItems = rows.map<String>((row) {
-            String leadName = row['lead_name'] ??
-                "${row['fname'] ?? ''} ${row['lname'] ?? ''}".trim();
-            return leadName.isNotEmpty ? leadName : "Unknown"; // Default name
-          }).toList();
+  //       setState(() {
+  //         dropdownItems = rows.map<String>((row) {
+  //           String leadName = row['lead_name'] ??
+  //               "${row['fname'] ?? ''} ${row['lname'] ?? ''}".trim();
+  //           return leadName.isNotEmpty ? leadName : "Unknown"; // Default name
+  //         }).toList();
 
-          isLoading = false;
-        });
+  //         isLoading = false;
+  //       });
 
-        print(
-            "Dropdown Items: $dropdownItems"); // Debug: Ensure dropdown is populated
-      } else {
-        print("Failed with status code: ${response.statusCode}");
-        print("Response body: ${response.body}");
-      }
-    } catch (e) {
-      print("Error fetching dropdown data: $e");
-    }
-  }
+  //       print(
+  //           "Dropdown Items: $dropdownItems"); // Debug: Ensure dropdown is populated
+  //     } else {
+  //       print("Failed with status code: ${response.statusCode}");
+  //       print("Response body: ${response.body}");
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching dropdown data: $e");
+  //   }
+  // }
 
 // Store lead_id in SharedPreferences
-  Future<void> storeLeadId(String leadId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        'lead_id', leadId); // Save lead_id in SharedPreferences
-    print("Stored lead_id: $leadId"); // Debugging
-  }
+  // Future<void> storeLeadId(String leadId) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setString(
+  //       'lead_id', leadId);
+  //   print("Stored lead_id: $leadId");
+  // }
 
   String? selectedLeads;
   String? selectedSubject;
@@ -103,12 +105,51 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
   TextEditingController enddateController = TextEditingController();
   // TextEditingController descriptionController = TextEditingController();
 
+  // Future<void> _pickDate({required bool isStartDate}) async {
+  //   DateTime? pickedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime.now(),
+  //     lastDate: DateTime(2100),
+  //   );
+
+  //   if (pickedDate != null) {
+  //     TimeOfDay? pickedTime = await showTimePicker(
+  //       context: context,
+  //       initialTime: TimeOfDay.now(),
+  //     );
+
+  //     if (pickedTime != null) {
+  //       // Combine Date and Time
+  //       DateTime combinedDateTime = DateTime(
+  //         pickedDate.year,
+  //         pickedDate.month,
+  //         pickedDate.day,
+  //         pickedTime.hour,
+  //         pickedTime.minute,
+  //       );
+
+  //       setState(() {
+  //         // Format Date & Time as 'dd/MM/yyyy hh:mm a'
+  //         String formattedDateTime =
+  //             DateFormat('dd/MM/yyyy hh:mm a').format(combinedDateTime);
+
+  //         if (isStartDate) {
+  //           startdateController.text = formattedDateTime;
+  //         } else {
+  //           enddateController.text = formattedDateTime;
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
   Future<void> _pickDate({required bool isStartDate}) async {
+    DateTime now = DateTime.now();
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+      initialDate: now,
+      firstDate: now, // Ensure you can't pick a past date
+      lastDate: DateTime(2100), // Allow future dates
     );
 
     if (pickedDate != null) {
@@ -118,7 +159,6 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
       );
 
       if (pickedTime != null) {
-        // Combine Date and Time
         DateTime combinedDateTime = DateTime(
           pickedDate.year,
           pickedDate.month,
@@ -128,7 +168,6 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
         );
 
         setState(() {
-          // Format Date & Time as 'dd/MM/yyyy hh:mm a'
           String formattedDateTime =
               DateFormat('dd/MM/yyyy hh:mm a').format(combinedDateTime);
 
@@ -137,6 +176,8 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
           } else {
             enddateController.text = formattedDateTime;
           }
+
+          print('Selected DateTime: $formattedDateTime'); // Debugging Output
         });
       }
     }
@@ -242,65 +283,65 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                 },
               ),
 
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Text(
-                    'Leads Name :',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 243, 238, 238),
-                ),
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : DropdownButton<String>(
-                        value: selectedLeads,
-                        hint: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            "Select",
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        icon: const Icon(Icons.arrow_drop_down),
-                        isExpanded: true,
-                        underline: const SizedBox.shrink(),
-                        items: dropdownItems.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                value,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(
-                            () {
-                              selectedLeads = value;
-                            },
-                          );
-                        },
-                      ),
-              ),
+              // Align(
+              //   alignment: Alignment.topLeft,
+              //   child: Padding(
+              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
+              //     child: Text(
+              //       'Leads Name :',
+              //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              //     ),
+              //   ),
+              // ),
+              // Container(
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8),
+              //     color: const Color.fromARGB(255, 243, 238, 238),
+              //   ),
+              //   child: isLoading
+              //       ? const Center(child: CircularProgressIndicator())
+              //       : DropdownButton<String>(
+              //           value: selectedLeads,
+              //           hint: Padding(
+              //             padding: const EdgeInsets.only(left: 10),
+              //             child: Text(
+              //               "Select",
+              //               style: GoogleFonts.poppins(
+              //                 fontSize: 14,
+              //                 fontWeight: FontWeight.w500,
+              //                 color: Colors.grey,
+              //               ),
+              //             ),
+              //           ),
+              //           icon: const Icon(Icons.arrow_drop_down),
+              //           isExpanded: true,
+              //           underline: const SizedBox.shrink(),
+              //           items: dropdownItems.map((String value) {
+              //             return DropdownMenuItem<String>(
+              //               value: value,
+              //               child: Padding(
+              //                 padding: const EdgeInsets.only(left: 10.0),
+              //                 child: Text(
+              //                   value,
+              //                   style: GoogleFonts.poppins(
+              //                     fontSize: 14,
+              //                     fontWeight: FontWeight.w500,
+              //                     color: Colors.black,
+              //                   ),
+              //                 ),
+              //               ),
+              //             );
+              //           }).toList(),
+              //           onChanged: (value) {
+              //             setState(
+              //               () {
+              //                 selectedLeads = value;
+              //               },
+              //             );
+              //           },
+              //         ),
+              // ),
 
               const SizedBox(height: 10),
               // const Align(
@@ -336,7 +377,6 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
               //   ),
               // ),
 
-              const SizedBox(height: 10),
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text('End Date',
@@ -484,31 +524,104 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
 //   }
 // }
 
+  // Future<void> submitForm() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? spId = prefs.getString('user_id');
+  //   // String? leadId = prefs.getString('lead_id');
+
+  //   if (spId == null || leadId == null) {
+  //     showErrorMessage(context,
+  //         message: 'User ID or Lead ID not found. Please log in again.');
+  //     return;
+  //   }
+
+  //   // Use widget.selectedDate if available, otherwise use manually selected date
+  //   DateTime startDateTime = widget.selectedDate ??
+  //       DateFormat('dd/MM/yyyy hh:mm a').parse(startdateController.text);
+  //   DateTime endDateTime =
+  //       DateFormat('dd/MM/yyyy hh:mm a').parse(enddateController.text);
+
+  //   // Format dates
+  //   String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDateTime);
+  //   String formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateTime);
+  //   String formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
+  //   String formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
+
+  //   if (spId == null || widget.leadId.isEmpty) {
+  //     showErrorMessage(context,
+  //         message: 'User ID or Lead ID not found. Please log in again.');
+  //     return;
+  //   }
+  //   final newTaskForLead = {
+  //     'start_date': formattedStartDate, // ✅ Ensuring selected date is used
+  //     'end_date': formattedEndDate,
+  //     'priority': selectedPriority,
+  //     'start_time': formattedStartTime,
+  //     'end_time': formattedEndTime,
+  //     'subject': selectedSubject ?? 'Showroom Appointment',
+  //     'sp_id': spId,
+  //   };
+
+  //   print('Lead Data: $newTaskForLead');
+
+  //   bool success =
+  //       await LeadsSrv.submitAppoinment(newTaskForLead, widget.leadId);
+
+  //   if (success) {
+  //     print('Lead submitted successfully!');
+  //     if (context.mounted) {
+  //       Navigator.pop(context);
+  //     }
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('Form Submit Successful.')));
+  //   } else {
+  //     print('Failed to submit lead.');
+  //   }
+  // }
+
   Future<void> submitForm() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? spId = prefs.getString('user_id');
-    String? leadId = prefs.getString('lead_id');
 
-    if (spId == null || leadId == null) {
-      showErrorMessage(context,
-          message: 'User ID or Lead ID not found. Please log in again.');
+    if (spId == null || widget.leadId.isEmpty) {
+      showErrorMessage(context, message: 'User ID or Lead ID not found.');
       return;
     }
 
-    // Use widget.selectedDate if available, otherwise use manually selected date
-    DateTime startDateTime = widget.selectedDate ??
-        DateFormat('dd/MM/yyyy hh:mm a').parse(startdateController.text);
-    DateTime endDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(enddateController.text);
+    // Parse dates safely
+    DateTime startDateTime;
+    if (startdateController.text.isNotEmpty) {
+      startDateTime =
+          DateFormat('dd/MM/yyyy hh:mm a').parse(startdateController.text);
+    } else {
+      startDateTime = widget.selectedDate ?? DateTime.now();
+    }
+
+    DateTime endDateTime;
+    if (enddateController.text.isNotEmpty) {
+      endDateTime =
+          DateFormat('dd/MM/yyyy hh:mm a').parse(enddateController.text);
+    } else {
+      // Default endDate to at least startDate
+      endDateTime = startDateTime;
+    }
+
+    // Ensure endDate is never before startDate
+    if (endDateTime.isBefore(startDateTime)) {
+      endDateTime = startDateTime;
+    }
 
     // Format dates
-    String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDateTime);
-    String formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateTime);
+    String formattedStartDate =
+        DateFormat('dd-MM-yyyy').format(startDateTime.toUtc());
+    String formattedEndDate =
+        DateFormat('dd-MM-yyyy').format(endDateTime.toUtc());
+
     String formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
     String formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
 
     final newTaskForLead = {
-      'start_date': formattedStartDate, // ✅ Ensuring selected date is used
+      'start_date': formattedStartDate,
       'end_date': formattedEndDate,
       'priority': selectedPriority,
       'start_time': formattedStartTime,
@@ -519,7 +632,8 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
 
     print('Lead Data: $newTaskForLead');
 
-    bool success = await LeadsSrv.submitAppoinment(newTaskForLead, leadId);
+    bool success =
+        await LeadsSrv.submitAppoinment(newTaskForLead, widget.leadId);
 
     if (success) {
       print('Lead submitted successfully!');

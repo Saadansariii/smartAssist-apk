@@ -16,6 +16,7 @@ class LeadsThird extends StatefulWidget {
   final String selectedEvent;
   final String? mobile;
   final String? pmi;
+  final String selectedFuel;
   LeadsThird({
     super.key,
     required,
@@ -31,6 +32,7 @@ class LeadsThird extends StatefulWidget {
     required this.selectedSource,
     this.mobile,
     this.pmi,
+    required this.selectedFuel,
   });
 
   @override
@@ -38,8 +40,6 @@ class LeadsThird extends StatefulWidget {
 }
 
 class _LeadsThirdState extends State<LeadsThird> {
- 
-  
   String? selectedPurchaseType;
   String? selectedFuelType;
   String? selectedBrand;
@@ -49,6 +49,7 @@ class _LeadsThirdState extends State<LeadsThird> {
   String? selectedEnquiryType;
   String? selectedCustomer;
   String? selectedSubType;
+  String? selectedFuel;
 
   void initState() {
     // TODO: implement initState
@@ -64,6 +65,7 @@ class _LeadsThirdState extends State<LeadsThird> {
     selectedSubType = widget.selectedSubType;
     selectedSource = widget.selectedSource;
     selectedEnquiryType = widget.selectedEnquiryType;
+    selectedFuel = widget.selectedFuel;
 
     // Initialize controllers with passed values if they exist
     if (widget.mobile != null) {
@@ -103,6 +105,18 @@ class _LeadsThirdState extends State<LeadsThird> {
                     hintText: 'PMI',
                     onChanged: (value) {
                       print("Mobile Number: $value");
+                    },
+                  ),
+                  _buildSectionTitle('Fuel Space Type:'),
+                  _buildDropdown(
+                    label: 'Fuel',
+                    value: selectedFuel,
+                    items: ['Petrol', 'Diesel', 'BEV', 'PHEV', 'MHEV'],
+                    onChanged: (value) {
+                      setState(() {
+                        selectedFuel = value;
+                      });
+                      print("Selected Source: $selectedFuel");
                     },
                   ),
                   const SizedBox(height: 10),
@@ -369,8 +383,8 @@ class _LeadsThirdState extends State<LeadsThird> {
         //     ),
         //   ),
         // ),
-       
-       Expanded(
+
+        Expanded(
           child: Container(
             height: 45,
             decoration: BoxDecoration(
@@ -395,7 +409,8 @@ class _LeadsThirdState extends State<LeadsThird> {
                         selectedPurchaseType: selectedPurchaseType!,
                         selectedSubType: selectedSubType!,
                         selectedFuelType: selectedFuelType!,
-                        selectedBrand: selectedBrand!, 
+                        selectedBrand: selectedBrand!,
+                        selectedFuel: selectedFuel!,
                         // selectedEnquiryType: selectedEnquiryType!,
                         // selectedSource: selectedSource!,
                         // mobile: widget.mobile,
@@ -413,7 +428,7 @@ class _LeadsThirdState extends State<LeadsThird> {
             ),
           ),
         ),
-                            
+
         const SizedBox(width: 20),
         Expanded(
           child: ElevatedButton(
@@ -454,6 +469,7 @@ class _LeadsThirdState extends State<LeadsThird> {
                       selectedSubType: selectedSubType!,
                       selectedFuelType: selectedFuelType!,
                       selectedBrand: selectedBrand!,
+                      selectedFuel: selectedFuel!,
                     ),
                   ),
                 );

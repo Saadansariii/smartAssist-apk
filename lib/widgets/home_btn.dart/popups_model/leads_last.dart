@@ -18,6 +18,7 @@ class LeadsLast extends StatefulWidget {
   final String selectedSource;
   final String PMI;
   final String selectedEnquiryType;
+  final String selectedFuel;
   LeadsLast(
       {super.key,
       required this.firstName,
@@ -30,7 +31,7 @@ class LeadsLast extends StatefulWidget {
       required this.selectedBrand,
       required this.selectedSource,
       required this.PMI,
-      required this.selectedEnquiryType});
+      required this.selectedEnquiryType, required this.selectedFuel});
 
   @override
   State<LeadsLast> createState() => _LeadsLastState();
@@ -62,6 +63,7 @@ class _LeadsLastState extends State<LeadsLast> {
   String? selectedCustomer;
   String? selectedSubType;
   String? selectedStatus;
+  String? selectedFuel;
 
   void initState() {
     // TODO: implement initState
@@ -71,6 +73,8 @@ class _LeadsLastState extends State<LeadsLast> {
     selectedSubType = widget.selectedSubType!;
     selectedEnquiryType = widget.selectedEnquiryType!;
     selectedSource = widget.selectedSource!;
+    selectedFuel = widget.selectedFuel!;
+    selectedFuel = widget.selectedFuel!;
     // selectedEvent = widget.selectedEvent!;
     selectedBrand = widget.selectedBrand!;
     print(selectedFuelType);
@@ -364,10 +368,11 @@ class _LeadsLastState extends State<LeadsLast> {
                                             selectedFuelType: selectedFuelType!,
                                             selectedBrand: selectedBrand!,
                                             selectedEnquiryType:
-                                                selectedEnquiryType!, 
+                                                selectedEnquiryType!,
                                             selectedSource: selectedSource!,
                                             mobile: widget.mobile,
-                                            pmi: widget.PMI, selectedEvent: '',
+                                            pmi: widget.PMI,
+                                            selectedEvent: '', selectedFuel: selectedFuel!,
                                           ),
                                         ),
                                       );
@@ -515,6 +520,8 @@ class _LeadsLastState extends State<LeadsLast> {
       'status': selectedStatus,
       'lead_source': selectedSource,
       'PMI': widget.PMI,
+      'expected_date_purchase': date,
+      'fuel_type': selectedFuel,
       'enquiry_type': selectedEnquiryType,
     };
 

@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 
 class BottomNavigation extends StatelessWidget {
-  
   BottomNavigation({super.key});
 
   final NavigationController controller = Get.put(NavigationController());
@@ -114,8 +113,13 @@ Widget _buildNavItem({
 class NavigationController extends GetxController {
   final RxInt selectedIndex = 0.obs;
   final screens = [
-    const HomeScreen(greeting: '', leadId: '',),
+    const HomeScreen(
+      greeting: '',
+      leadId: '',
+    ),
     const Opportunity(leadId: ''),
-    const Calender()
+    const Calender(
+      leadId: '',
+    )
   ];
 }

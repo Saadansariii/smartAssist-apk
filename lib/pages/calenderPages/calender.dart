@@ -11,7 +11,10 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
 class Calender extends StatefulWidget {
-  const Calender({super.key});
+  final String leadId;
+  const Calender({super.key, required this.leadId});
+  
+
 
   @override
   State<Calender> createState() => _CalenderState();
@@ -35,7 +38,7 @@ class _CalenderState extends State<Calender> {
     super.initState();
     _createTask = AddTaskPopup(
       selectedDate: _selectedDay,
-      leadId: '',
+      leadId: '', leadName: widget.leadId, selectedLeadId: '',
     );
     _fetchInitialData();
   }
@@ -95,15 +98,14 @@ class _CalenderState extends State<Calender> {
   }
 
   void _handleDateSelection(DateTime selectedDay) {
-    String formattedDate = DateFormat('dd-MM-yyyy')
-        .format(selectedDay); 
+    String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDay);
 
     setState(() {
       _selectedDay = selectedDay;
       _focusedDay = selectedDay;
       _createTask = AddTaskPopup(
         selectedDate: selectedDay,
-        leadId: '',
+        leadId: '', leadName: '', selectedLeadId: '',
       );
     });
 

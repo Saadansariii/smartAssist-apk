@@ -10,8 +10,14 @@ import 'package:smart_assist/utils/storage.dart';
 class AddTaskPopup extends StatefulWidget {
   final DateTime? selectedDate;
   final String leadId;
-
-  const AddTaskPopup({super.key, this.selectedDate, required this.leadId});
+  final String leadName;
+  final String selectedLeadId;
+  const AddTaskPopup(
+      {super.key,
+      this.selectedDate,
+      required this.leadId,
+      required this.leadName,
+      required this.selectedLeadId});
 
   @override
   State<AddTaskPopup> createState() => _AddTaskPopupState();
@@ -20,9 +26,8 @@ class AddTaskPopup extends StatefulWidget {
 class _AddTaskPopupState extends State<AddTaskPopup> {
   String? selectedEvent;
   String? selectedCustomer;
-  String? selectedLeadName;
-  String? selectedLeadId;
-
+  String? leadName; 
+  String? leadId;
   List<String> dropdownItems = [];
   bool isLoading = false;
 
@@ -31,18 +36,18 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
   @override
   void initState() {
     super.initState();
-    fetchDropdownData();
-    selectedLeads = widget.leadId;
-    selectedLeadId = widget.leadId;
-    print('this is the selected leadid come from .. ${widget.leadId}');
-    // If leadId is provided, fetch the lead name
-    if (selectedLeadId != null) {
-      // fetchLeadName();
-    }
+    fetchLeadsData();
+    selectedLeads = widget.leadName;
+    leadId = widget.leadId;
+    print('this is the selected leadid come from taskkkkkkkk .. $leadId');
+    // print(widget.leadName);
+    print(
+        'this is the selected leadid come from taskkkkkkkk .. ${widget.leadId}');
+    if (leadId != null) {}
     print('this is the selected widget ${widget.selectedDate}');
   }
 
-  Future<void> fetchDropdownData() async {
+  Future<void> fetchLeadsData() async {
     const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
 
     final token = await Storage.getToken();
@@ -239,9 +244,10 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
 
                     if (result != null && result is Map<String, dynamic>) {
                       setState(() {
-                        selectedLeadId = result['leadId'];
-                        selectedLeadName =
-                            result['leadName']; // This will be the fname
+                        leadId = result['leadId'];
+                        leadName = result['leadName']; // This will be the fname
+                        print('this is the data on add task page $leadName');
+                        print('this is the data on add task page $leadId');
                       });
                     }
                   },
@@ -254,13 +260,12 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          selectedLeadName ?? "Select Lead",
+                          leadName ?? "Select Lead",
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: selectedLeadName != null
-                                ? Colors.black
-                                : Colors.grey,
+                            color:
+                                leadName != null ? Colors.black : Colors.grey,
                           ),
                         ),
                         const Icon(Icons.arrow_drop_down, color: Colors.black),
@@ -301,6 +306,10 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                       ),
                       child: TextButton(
                         onPressed: () {
+                           if (leadId == null || leadName == null) {
+                            print('No lead selected!');
+                            return;
+                          }
                           Navigator.pop(context); // Close the current dialog
                           Future.microtask(() {
                             showDialog(
@@ -311,15 +320,20 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                                 ),
                                 child: selectedEvent == 'Appointment'
                                     ? TaskAppointmentPop(
+                                      leadId: leadId!,
                                         selectedDate: widget.selectedDate ??
                                             DateTime.now(),
                                       )
                                     : selectedEvent == 'Test Drive'
                                         ? TaskFollowupsPop(
+                                            leadId: leadId!,
+                                            leadName: leadName!,
                                             selectedDate: widget.selectedDate ??
                                                 DateTime
                                                     .now()) //add testdrive here in future
                                         : TaskFollowupsPop(
+                                            leadId: leadId!,
+                                            leadName: leadName!,
                                             selectedDate: widget.selectedDate ??
                                                 DateTime.now(),
                                           ),

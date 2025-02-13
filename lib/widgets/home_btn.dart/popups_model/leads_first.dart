@@ -7,25 +7,25 @@ import 'package:smart_assist/utils/storage.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LeadFirstStep extends StatefulWidget {
-  final String firstName;
-  final String lastName;
+  final String? firstName;
+  final String? lastName;
   final String selectedPurchaseType;
   final String selectedSubType;
   final String selectedFuelType;
   final String selectedBrand;
-  final String email;
+  final String? email;
   final String selectedEvent;
 
   const LeadFirstStep({
     Key? key,
-    required this.firstName,
-    required this.lastName,
     required this.selectedPurchaseType,
     required this.selectedSubType,
     required this.selectedFuelType,
     required this.selectedBrand,
-    required this.email,
     required this.selectedEvent,
+    this.firstName,
+    this.lastName,
+    this.email,
   }) : super(key: key);
 
   @override
@@ -37,9 +37,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-
   String fName = '';
-
   String? firstName;
   String? lastName;
   String? email;
@@ -54,10 +52,18 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
   void initState() {
     super.initState();
     fetchDropdownData();
-    firstName = widget.firstName;
-    lastName = widget.lastName;
-    email = widget.email;
     selectedEvent = widget.selectedEvent;
+
+    // Initialize controllers if values exist
+    if (widget.firstName != null) {
+      firstNameController.text = widget.firstName!;
+    }
+    if (widget.lastName != null) {
+      lastNameController.text = widget.lastName!;
+    }
+    if (widget.email != null) {
+      emailController.text = widget.email!;
+    }
   }
 
   Future<void> fetchDropdownData() async {
@@ -142,89 +148,9 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                 ),
               ),
               const SizedBox(height: 5),
-              // const Align(
-              //   alignment: Alignment.topLeft,
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
-              //     child: Text(
-              //       textAlign: TextAlign.start,
-              //       'Assign to',
-              //       style: const TextStyle(
-              //         fontSize: 16,
-              //         fontWeight: FontWeight.w500,
-              //       ),
-              //     ),
-              //   ),
-              // ),
-
-              // Container(
-              //   width: double.infinity,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //     color: const Color.fromARGB(255, 243, 238, 238),
-              //   ),
-              //   child: isLoading
-              //       ? const Center(child: CircularProgressIndicator())
-              //       : DropdownButtonFormField<String>(
-              //           value: dropdownItems.isNotEmpty
-              //               ? selectedEvent
-              //               : null, // Prevent null issues
-              //           decoration: const InputDecoration(
-              //             contentPadding:
-              //                 EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              //             border: InputBorder.none,
-              //           ),
-              //           hint: Text(
-              //             "Select",
-              //             style: GoogleFonts.poppins(
-              //               fontSize: 14,
-              //               fontWeight: FontWeight.w500,
-              //               color: Colors.grey,
-              //             ),
-              //           ),
-              //           icon: const Icon(Icons.keyboard_arrow_down),
-              //           isExpanded: true,
-              //           items: dropdownItems.map((item) {
-              //             return DropdownMenuItem<String>(
-              //               value: item["id"], // Unique ID as value
-              //               child: Text(
-              //                 item["name"] ?? '',
-              //                 style: GoogleFonts.poppins(
-              //                   fontSize: 14,
-              //                   fontWeight: FontWeight.w500,
-              //                   color: Colors.black,
-              //                 ),
-              //               ),
-              //             );
-              //           }).toList(),
-              //           onChanged: (String? newValue) {
-              //             setState(() {
-              //               selectedEvent = newValue; // Set selected value
-              //             });
-              //           },
-              //           validator: (value) {
-              //             if (value == null || value.isEmpty) {
-              //               return 'Please select a value';
-              //             }
-              //             return null;
-              //           },
-              //         ),
-              // ),
-
-              // _buildDropdown(
-              //   label: 'Assign to:',
-              //   hint: 'Select an Option',
-              //   value: selectedEvent,
-              //   items: dropdownItems.map((e) => e['name']!).toList(),
-              //   onChanged: (String? newValue) {
-              //     setState(() {
-              //       selectedEvent = newValue;
-              //     });
-              //   },
-              // ),
-
+              _buildSectionTitle('Assign to:'),
               _buildDropdown(
-                label: 'Assign to:',
+                // label: 'Assign to:',
                 hint: 'Select an Option',
                 value: selectedEventId, // Now storing ID instead of name
                 items:
@@ -236,41 +162,9 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                 },
               ),
 
+              // const SizedBox(height: 10),
+
               const SizedBox(height: 10),
-              // const Align(
-              //   alignment: Alignment.centerLeft,
-              //   child: Text('First name*',
-              //       style:
-              //           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              // ),
-              const SizedBox(height: 10),
-              // showText(fName),
-              // Container(
-              //   width: double.infinity,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //     color: const Color.fromARGB(255, 243, 238, 238),
-              //   ),
-              //   child: TextField(
-              //     controller: firstNameController,
-              //     style: GoogleFonts.poppins(
-              //         fontSize: 14,
-              //         fontWeight: FontWeight.w500,
-              //         color: Colors.black),
-              //     decoration: const InputDecoration(
-              //       hintText: 'Alex', // Placeholder text
-              //       hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
-              //       contentPadding: EdgeInsets.symmetric(
-              //           horizontal: 10,
-              //           vertical: 12), // Padding inside the TextField
-              //       border: InputBorder.none, // Remove border for custom design
-              //     ),
-              //     onChanged: (value) {
-              //       // Handle text change (optional)
-              //       print(value);
-              //     },
-              //   ),
-              // ),
 
               _buildSectionTitle('First Name:'),
               _buildTextField(
@@ -281,40 +175,6 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                 },
               ),
               const SizedBox(height: 10),
-              // const Align(
-              //   alignment: Alignment.centerLeft,
-              //   child: Text('Last name*',
-              //       style:
-              //           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              // ),
-              // const SizedBox(height: 10),
-              // Container(
-              //   width: double.infinity, // Full width text field
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //     color: const Color.fromARGB(255, 243, 238, 238),
-              //   ),
-              //   child: TextField(
-              //     controller: lastNameController,
-              //     style: GoogleFonts.poppins(
-              //         fontSize: 14,
-              //         fontWeight: FontWeight.w500,
-              //         color: Colors.black),
-              //     decoration: const InputDecoration(
-              //       hintText: 'Carter',
-              //       hintStyle: TextStyle(
-              //           color: Colors.grey, fontSize: 12), // Placeholder text
-              //       contentPadding: EdgeInsets.symmetric(
-              //           horizontal: 10,
-              //           vertical: 12), // Padding inside the TextField
-              //       border: InputBorder.none, // Remove border for custom design
-              //     ),
-              //     onChanged: (value) {
-              //       // Handle text change (optional)
-              //       print(value);
-              //     },
-              //   ),
-              // ),
 
               _buildSectionTitle('Last Name:'),
               _buildTextField(
@@ -325,38 +185,6 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                 },
               ),
               const SizedBox(height: 10),
-              // const Align(
-              //   alignment: Alignment.centerLeft,
-              //   child: Text('Email*',
-              //       style:
-              //           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              // ),
-              // const SizedBox(height: 5),
-              // Container(
-              //   width: double.infinity, // Full width text field
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //     color: const Color.fromARGB(255, 243, 238, 238),
-              //   ),
-              //   child: TextField(
-              //     controller: emailController,
-              //     style: GoogleFonts.poppins(
-              //         fontSize: 14,
-              //         fontWeight: FontWeight.w500,
-              //         color: Colors.black),
-              //     decoration: const InputDecoration(
-              //       hintText: 'AlexCarter@gmail.com',
-              //       hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
-              //       contentPadding: EdgeInsets.symmetric(
-              //           horizontal: 10,
-              //           vertical: 12), // Padding inside the TextField
-              //       border: InputBorder.none, // Remove border for custom design
-              //     ),
-              //     onChanged: (value) {
-              //       print(value);
-              //     },
-              //   ),
-              // ),
 
               _buildSectionTitle('Email:'),
               _buildTextField(
@@ -438,10 +266,10 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                                     email: emailController.text.toString(),
                                     selectedPurchaseType: '',
                                     selectedFuelType: '',
-                                    // subType: '',
-                                    selectedBrand: '', selectedSubType: '',
+                                    selectedBrand: '',
+                                    selectedSubType: '',
                                     selectedEvent: selectedEvent!,
-                                    // previousfName: fName,
+                                    selectedFuel: '',
                                   ), // Your second modal widget
                                 ),
                               );
@@ -471,7 +299,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
   //  String? selectedEventId;
 
   Widget _buildDropdown({
-    required String label,
+    // required String label,
     required String hint,
     required String? value, // Store selected ID
     required List<Map<String, dynamic>> items,
@@ -480,14 +308,14 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-          ),
-        ),
+        // Text(
+        //   label,
+        //   style: GoogleFonts.poppins(
+        //     fontSize: 14,
+        //     fontWeight: FontWeight.w500,
+        //     color: Colors.black,
+        //   ),
+        // ),
         const SizedBox(height: 5),
         DropdownButtonFormField<String>(
           value: value, // Ensure value is the selected ID
@@ -543,6 +371,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
+        textAlign: TextAlign.start,
         title,
         style: GoogleFonts.poppins(
           fontSize: 18,
@@ -557,9 +386,12 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Text(
-        title,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          title,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
       ),
     );
   }

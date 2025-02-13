@@ -9,85 +9,36 @@ import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 
 class TaskFollowupsPop extends StatefulWidget {
-   final DateTime? selectedDate; 
-  const TaskFollowupsPop({super.key, required this.selectedDate});
+  final DateTime? selectedDate;
+  final String leadId;
+  final String leadName;
+  const TaskFollowupsPop({
+    super.key,
+    required this.selectedDate,
+    required this.leadName,
+    required this.leadId,
+  });
 
   @override
   State<TaskFollowupsPop> createState() => _TaskFollowupsPopState();
 }
 
 class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
-   DateTime? selectedDate; 
+  String? leadName;
+  String? leadId;
+  DateTime? selectedDate;
   List<String> dropdownItems = [];
   bool isLoading = false;
   @override
   void initState() {
     super.initState();
-    fetchDropdownData();
+    leadName = widget.leadName;
+    leadId = widget.leadId;
+    // fetchDropdownData();
+    print('this is coming from create followups $leadName');
+    print('this is coming from create followups $leadId');
+    leadName = widget.leadName;
     // print('this is the second page ${selectedDate = widget.selectedDate!}');
-  }
-
-  Future<void> fetchDropdownData() async {
-    const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
-
-    final token = await Storage.getToken();
-    if (token == null) {
-      print("No token found. Please login.");
-      return;
-    }
-
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      final response = await http.get(
-        Uri.parse(apiUrl),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final rows = data['rows'] as List;
-
-        print("Extracted Rows: $rows"); // Debug: Ensure rows are extracted
-
-        if (rows.isNotEmpty) {
-          // Extract the lead_id from the first row (or any row you need)
-          String leadId =
-              rows[0]['lead_id']; // Assuming you're taking the first lead_id
-          storeLeadId(leadId); // Store lead_id in SharedPreferences
-        }
-
-        setState(() {
-          dropdownItems = rows.map<String>((row) {
-            String leadName = row['lead_name'] ??
-                "${row['fname'] ?? ''} ${row['lname'] ?? ''}".trim();
-            return leadName.isNotEmpty ? leadName : "Unknown"; // Default name
-          }).toList();
-
-          isLoading = false;
-        });
-
-        print(
-            "Dropdown Items: $dropdownItems"); // Debug: Ensure dropdown is populated
-      } else {
-        print("Failed with status code: ${response.statusCode}");
-        print("Response body: ${response.body}");
-      }
-    } catch (e) {
-      print("Error fetching dropdown data: $e");
-    }
-  }
-
-// Store lead_id in SharedPreferences
-  Future<void> storeLeadId(String leadId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        'lead_id', leadId); // Save lead_id in SharedPreferences
-    print("Stored lead_id: $leadId"); // Debugging
   }
 
   String? selectedLeads;
@@ -101,8 +52,8 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now(),
     );
 
     if (pickedDate != null) {
@@ -144,7 +95,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                 ),
               ),
 
-              Align(
+              const Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -179,65 +130,65 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Text(
-                    'Leads Name :',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 243, 238, 238),
-                ),
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : DropdownButton<String>(
-                        value: selectedLeads,
-                        hint: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            "Select",
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        icon: const Icon(Icons.arrow_drop_down),
-                        isExpanded: true,
-                        underline: const SizedBox.shrink(),
-                        items: dropdownItems.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                value,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(
-                            () {
-                              selectedLeads = value;
-                            },
-                          );
-                        },
-                      ),
-              ),
+              // Align(
+              //   alignment: Alignment.topLeft,
+              //   child: Padding(
+              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
+              //     child: Text(
+              //       'Leads Name :',
+              //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              //     ),
+              //   ),
+              // ),
+              // Container(
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8),
+              //     color: const Color.fromARGB(255, 243, 238, 238),
+              //   ),
+              //   child: isLoading
+              //       ? const Center(child: CircularProgressIndicator())
+              //       : DropdownButton<String>(
+              //           value: selectedLeads,
+              //           hint: Padding(
+              //             padding: const EdgeInsets.only(left: 10),
+              //             child: Text(
+              //               "Select",
+              //               style: GoogleFonts.poppins(
+              //                 fontSize: 14,
+              //                 fontWeight: FontWeight.w500,
+              //                 color: Colors.grey,
+              //               ),
+              //             ),
+              //           ),
+              //           icon: const Icon(Icons.arrow_drop_down),
+              //           isExpanded: true,
+              //           underline: const SizedBox.shrink(),
+              //           items: dropdownItems.map((String value) {
+              //             return DropdownMenuItem<String>(
+              //               value: value,
+              //               child: Padding(
+              //                 padding: const EdgeInsets.only(left: 10.0),
+              //                 child: Text(
+              //                   value,
+              //                   style: GoogleFonts.poppins(
+              //                     fontSize: 14,
+              //                     fontWeight: FontWeight.w500,
+              //                     color: Colors.black,
+              //                   ),
+              //                 ),
+              //               ),
+              //             );
+              //           }).toList(),
+              //           onChanged: (value) {
+              //             setState(
+              //               () {
+              //                 selectedLeads = value;
+              //               },
+              //             );
+              //           },
+              //         ),
+              // ),
 
               const SizedBox(height: 10),
 
@@ -379,21 +330,70 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
     );
   }
 
+  // Future<void> submitForm() async {
+  //   String description = descriptionController.text;
+  //   String date = widget.selectedDate != null
+  //       ? DateFormat('dd/MM/yyyy').format(widget.selectedDate!)
+  //       : dateController.text;
+
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? spId = prefs.getString('user_id');
+  //   // String? leadId = prefs.getString('lead_id');
+
+  //   print('Retrieved sp_id: $spId');
+  //   // print('Retrieved lead_id: $leadId');
+
+  //   if (spId == null || leadId == null) {
+  //     showErrorMessage(context,
+  //         message: 'User ID or Lead ID not found. Please log in again.');
+  //     return;
+  //   }
+
+  //   // Prepare the lead data
+  //   final newTaskForLead = {
+  //     // 'lead_id': widget.leadId,
+  //     // 'lead_name': widget.leadName,
+  //     'subject': selectedSubject,
+  //     'status': selectedStatus,
+  //     'priority': selectedPriority,
+  //     'due_date': date,
+  //     'comments': descriptionController.text,
+  //     'sp_id': spId,
+  //   };
+
+  //   print('Lead Data: $newTaskForLead');
+
+  //   // Pass the leadId to the submitFollowups function
+  //   bool success = await LeadsSrv.submitFollowups(newTaskForLead, leadId);
+
+  //   if (success) {
+  //     print('Lead submitted successfully!');
+
+  //     // Close modal if submission is successful
+  //     if (context.mounted) {
+  //       Navigator.pop(context); // Closes the modal
+  //     }
+
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Form Submit Successful.')),
+  //     );
+  //   } else {
+  //     print('Failed to submit lead.');
+  //   }
+  // }
   Future<void> submitForm() async {
     String description = descriptionController.text;
     String date = widget.selectedDate != null
-        ? DateFormat('dd/MM/yyyy')
-            .format(widget.selectedDate!)  
+        ? DateFormat('dd/MM/yyyy').format(widget.selectedDate!)
         : dateController.text;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? spId = prefs.getString('user_id');
-    String? leadId = prefs.getString('lead_id');
 
     print('Retrieved sp_id: $spId');
-    print('Retrieved lead_id: $leadId');
+    print('Retrieved lead_id: ${widget.leadId}'); // Debugging leadId
 
-    if (spId == null || leadId == null) {
+    if (spId == null || widget.leadId.isEmpty) {
       showErrorMessage(context,
           message: 'User ID or Lead ID not found. Please log in again.');
       return;
@@ -411,15 +411,16 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
 
     print('Lead Data: $newTaskForLead');
 
-    // Pass the leadId to the submitFollowups function
-    bool success = await LeadsSrv.submitFollowups(newTaskForLead, leadId);
+    // Pass widget.leadId directly to submitFollowups
+    bool success =
+        await LeadsSrv.submitFollowups(newTaskForLead, widget.leadId);
 
     if (success) {
       print('Lead submitted successfully!');
 
       // Close modal if submission is successful
       if (context.mounted) {
-        Navigator.pop(context); // Closes the modal
+        Navigator.pop(context);
       }
 
       ScaffoldMessenger.of(context).showSnackBar(

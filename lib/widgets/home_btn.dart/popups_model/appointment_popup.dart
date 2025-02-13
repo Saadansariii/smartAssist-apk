@@ -56,7 +56,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
           // Extract the lead_id from the first row (or any row you need)
           String leadId =
               rows[0]['lead_id']; // Assuming you're taking the first lead_id
-          storeLeadId(leadId); // Store lead_id in SharedPreferences
+          // storeLeadId(leadId); // Store lead_id in SharedPreferences
         }
 
         setState(() {
@@ -81,12 +81,12 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
   }
 
 // Store lead_id in SharedPreferences
-  Future<void> storeLeadId(String leadId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        'lead_id', leadId); // Save lead_id in SharedPreferences
-    print("Stored lead_id: $leadId"); // Debugging
-  }
+  // Future<void> storeLeadId(String leadId) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setString(
+  //       'lead_id', leadId); // Save lead_id in SharedPreferences
+  //   print("Stored lead_id: $leadId"); // Debugging
+  // }
 
   String? selectedLeads;
   String? selectedSubject;

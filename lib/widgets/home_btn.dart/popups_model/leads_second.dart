@@ -12,6 +12,7 @@ class LeadsSecond extends StatefulWidget {
   final String lastName;
   final String email;
   final String selectedEvent;
+  final String selectedFuel;
   // final String previousfName;
   const LeadsSecond({
     super.key,
@@ -24,6 +25,7 @@ class LeadsSecond extends StatefulWidget {
     required this.selectedBrand,
     required this.selectedSubType,
     required this.selectedEvent,
+    required this.selectedFuel,
   });
 
   @override
@@ -47,7 +49,9 @@ class _LeadsSecondState extends State<LeadsSecond> {
     selectedPurchaseType = widget.selectedPurchaseType;
     selectedFuelType = widget.selectedFuelType;
     selectedBrand = widget.selectedBrand;
+    selectedFuel = widget.selectedFuel;
     selectedSubType = widget.selectedSubType;
+    selectedEvent = widget.selectedEvent;
   }
   // final Widget _leadThirdStep = LeadsThird(
   //   firstName: '',
@@ -68,6 +72,8 @@ class _LeadsSecondState extends State<LeadsSecond> {
   String? selectedBrand;
   String? selectedSubType;
   String? selectedEvent;
+  String? firstName;
+  String? selectedFuel;
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +210,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
                               selectedFuelType: '',
                               selectedBrand: '',
                               selectedEvent: selectedEvent!,
+                              // initailSelectedEvent: selectedEvent!,
                             ), // Your second modal widget
                           ),
                         );
@@ -252,6 +259,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
                                 selectedEvent: selectedEvent!,
                                 selectedEnquiryType: '',
                                 selectedSource: '',
+                                selectedFuel: selectedFuel!,
                               ),
                             ),
                           );
