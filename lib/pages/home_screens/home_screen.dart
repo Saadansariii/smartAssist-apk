@@ -1,14 +1,10 @@
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/calenderPages/calender.dart';
+import 'dart:convert'; 
+import 'package:flutter/material.dart'; 
+import 'package:google_fonts/google_fonts.dart'; 
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
-import 'package:smart_assist/pages/navbar_page/favorite.dart';
-import 'package:smart_assist/pages/navbar_page/leads.dart';
-import 'package:smart_assist/pages/navbar_page/logout_page.dart';
-import 'package:smart_assist/pages/home_screens/opportunity.dart';
+import 'package:smart_assist/pages/navbar_page/favorite.dart'; 
+import 'package:smart_assist/pages/navbar_page/leads_all.dart';
+import 'package:smart_assist/pages/navbar_page/logout_page.dart'; 
 import 'package:smart_assist/pages/notification/notification.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
@@ -25,7 +21,8 @@ class HomeScreen extends StatefulWidget {
   });
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+   // ignore: library_private_types_in_public_api
+   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -42,10 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     fetchDashboardData();
+
     // isDashboardLoading = true;
   }
 
   Future<void> fetchDashboardData() async {
+    print('hiiii');
     setState(() {
       isDashboardLoading = true;
     });
@@ -107,12 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => NotificationPage(
-                            leadId: leadId!,
-                          )));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) =>const NotificationPage()));
             },
             icon: const Icon(Icons.notifications),
             color: Colors.white,
@@ -242,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              LeadsAll(),
+                                                              AllLeads(),
                                                         ),
                                                       );
                                                     },

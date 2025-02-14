@@ -19,12 +19,16 @@ class OppOverdue extends StatefulWidget {
 
 class _OppOverdueState extends State<OppOverdue> {
   bool isLoading = false;
+  bool _showLoader = true;
   List<dynamic> overdueAppointments = [];
 
   @override
   void initState() {
     super.initState();
-    fetchDashboardData();
+    // fetchDashboardData();
+    overdueAppointments = widget.overdueeOpp;
+    print('this is widget.overdue appointmnet');
+    print(widget.overdueeOpp);
   }
 
   // Future<void> fetchDashboardData() async {
@@ -51,41 +55,47 @@ class _OppOverdueState extends State<OppOverdue> {
   //   }
   // }
 
-  Future<void> fetchDashboardData() async {
-    final token = await Storage.getToken();
-    try {
-      final response = await http.get(
-        Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json'
-        },
-      );
+  // Future<void> fetchDashboardData() async {
+  //   final token = await Storage.getToken();
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json'
+  //       },
+  //     );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        print("Full API Response: $data"); // 🔍 Debugging
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+  //       print("Full API Response: $data"); // 🔍 Debugging
 
-        if (data.containsKey('upcomingAppointments')) {
-          print(
-              "Upcoming Appointments Data: ${data['upcomingAppointments']}"); // Debug
-        }
+  //       if (data.containsKey('upcomingAppointments')) {
+  //         print(
+  //             "Upcoming Appointments Data: ${data['upcomingAppointments']}"); // Debug
+  //       }
 
-        setState(() {
-          overdueAppointments = data['overdueAppointments'] ?? [];
-        });
-      } else {
-        print("Failed to load data: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Error fetching data: $e");
-    }
-  }
+  //       setState(() {
+  //         overdueAppointments = data['overdueAppointments'] ?? [];
+  //       });
+  //     } else {
+  //       print("Failed to load data: ${response.statusCode}");
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching data: $e");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    // if (widget.overdueeOpp.isEmpty) {
+    //   return const Center(child: Text('No upcoming followups available'));
+    // }
     if (widget.overdueeOpp.isEmpty) {
-      return const Center(child: Text('No upcoming followups available'));
+      return Container(
+        height: 250,
+        child: const Center(child: Text('No upcoming followups available')),
+      );
     }
     return isLoading
         ? const Center(child: CircularProgressIndicator())
@@ -105,7 +115,7 @@ class _OppOverdueState extends State<OppOverdue> {
                       leadId: item['lead_id'],
                       eventId: item['event_id'],
                       isFavorite: item['favourite'] ?? false,
-                      fetchDashboardData: fetchDashboardData,
+                      fetchDashboardData: () {},
                     )
                   : ListTile(title: Text('Invalid data at index $index'));
             },

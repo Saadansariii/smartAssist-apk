@@ -1,9 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/pages/login/first_screen.dart';
 import 'package:smart_assist/services/login_srv.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,7 +10,6 @@ import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/utils/token_manager.dart';
 
 class LoginPage extends StatefulWidget {
@@ -33,9 +30,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-       
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Stack(
@@ -52,8 +47,8 @@ class _LoginPageState extends State<LoginPage> {
                         'assets/loginbro.png',
                         width: 250,
                       ),
-                      StyleText('Login to Smart Assist'),
-                      SizedBox(height: 20),
+                      const StyleText('Login to Smart Assist'),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Text(
@@ -65,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       TextField(
                         style: GoogleFonts.poppins(
                           fontSize: 14,
@@ -84,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 25),
+                      const SizedBox(height: 25),
                       Row(
                         children: [
                           Text(
@@ -96,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       TextField(
                         style: GoogleFonts.poppins(
                           fontSize: 14,
@@ -106,10 +101,10 @@ class _LoginPageState extends State<LoginPage> {
                         controller: newPwdController,
                         obscureText: _isPasswordObscured,
                         decoration: InputDecoration(
-                          fillColor: Color(0xffF3F9FF),
+                          fillColor: const Color(0xffF3F9FF),
                           filled: true,
                           hintText: 'Enter Password',
-                          hintStyle: TextStyle(color: Colors.grey),
+                          hintStyle: const TextStyle(color: Colors.grey),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _isPasswordObscured
@@ -166,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                       ), // Next Step Button
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       RichText(
@@ -192,7 +187,8 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => SetPwd()));
+                                          builder: (context) =>
+                                              const SetPwd()));
                                 },
                             ),
                           ],
@@ -208,8 +204,9 @@ class _LoginPageState extends State<LoginPage> {
             if (isLoading)
               Container(
                 color: Colors.white
+                    // ignore: deprecated_member_use
                     .withOpacity(0.8), // Semi-transparent white background
-                child: Center(
+                child: const Center(
                   child: CircularProgressIndicator(), // Spinner
                 ),
               ),
@@ -344,7 +341,6 @@ class _LoginPageState extends State<LoginPage> {
   //   }
   // }
 
-
 // work fine
   // Future<void> submitBtn() async {
   //   if (!mounted) return;
@@ -403,7 +399,7 @@ class _LoginPageState extends State<LoginPage> {
   //   }
   // }
 
-Future<void> submitBtn() async {
+  Future<void> submitBtn() async {
     if (!mounted) return;
 
     final email = newEmailController.text.trim();

@@ -618,14 +618,14 @@ import 'package:http/http.dart' as http;
 import 'package:smart_assist/pages/calenderPages/tasks/addTask.dart';
 import 'package:smart_assist/utils/storage.dart';
 
-class LeadsAll extends StatefulWidget {
-  const LeadsAll({super.key});
+class LeadsList extends StatefulWidget {
+  const LeadsList({super.key});
 
   @override
-  State<LeadsAll> createState() => _LeadsAllState();
+  State<LeadsList> createState() => LeadsListState();
 }
 
-class _LeadsAllState extends State<LeadsAll> {
+class LeadsListState extends State<LeadsList> {
   bool isLoading = true;
   List<dynamic> upcomingTasks = [];
 
@@ -667,7 +667,7 @@ class _LeadsAllState extends State<LeadsAll> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Leads All',
+          'Leads',
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w400,

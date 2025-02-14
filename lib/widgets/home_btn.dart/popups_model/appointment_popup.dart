@@ -221,11 +221,12 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                 hint: 'Select',
                 value: selectedSubject,
                 items: [
-                  'Call',
-                  'Provide Quotation',
-                  'Send Email',
-                  'Vehicle Selection',
-                  'Send SMS',
+                  "Meeting",
+                  "Test Drive",
+                  "Showroom appointment",
+                  "Service Appointment",
+                  "Quotation",
+                  "Trade in evaluation"
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -448,9 +449,9 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
       'start_date': startdateController.text,
       'end_date': enddateController.text,
       'priority': selectedPriority,
-      'start_time': formattedStartTime, // hh:mm a format
+      'start_time': formattedStartTime,
       'end_time': formattedEndTime,
-      'subject': 'Showroom Appointment',
+      'subject': selectedSubject,
       'sp_id': spId,
     };
 

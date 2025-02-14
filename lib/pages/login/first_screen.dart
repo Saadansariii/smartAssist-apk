@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/login/verify_mail.dart';
+import 'package:smart_assist/pages/login/second_screen.dart';
 import 'package:smart_assist/services/email_srv.dart';
 import 'package:smart_assist/utils/button.dart';
 import 'package:smart_assist/utils/paragraph_text.dart';

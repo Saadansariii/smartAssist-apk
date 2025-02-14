@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
+import 'package:http/http.dart' as http; 
 import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
@@ -38,7 +37,7 @@ class _AddFollowupsState extends State<AddFollowups> {
     super.initState();
     fetchTasks();
     // leadId = widget.leadId;
-    print('this is the leadId ${widget.leadId}');
+    // print('this is the leadId ${widget.leadId}');
   }
 
   Future<void> fetchTasks() async {
@@ -257,6 +256,7 @@ class _AddFollowupsState extends State<AddFollowups> {
         onPressed: () => setState(() => _upcommingButtonIndex = index),
         style: TextButton.styleFrom(
           backgroundColor: _upcommingButtonIndex == index
+              // ignore: deprecated_member_use
               ? activeColor.withOpacity(0.29)
               : null,
           foregroundColor:

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
+import 'package:google_fonts/google_fonts.dart'; 
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 
@@ -25,13 +24,15 @@ class _SingleLeadsByIdState extends State<SingleLeadsById> {
   String leadOwner = '';
   String flag = '';
   String enquiryType = '';
+  String leadName = '';
 
   @override
   void initState() {
     super.initState();
     fetchLeadData(widget.leadId);
-    print('this is lead id $widget.leadId');
-    print(widget.leadId);
+    
+    // print('this is lead id $widget.leadId');
+    // print(widget.leadId);
   }
 
   Future<void> fetchLeadData(String leadId) async {
@@ -43,16 +44,19 @@ class _SingleLeadsByIdState extends State<SingleLeadsById> {
         email = leadData['email'] ?? 'N/A';
         brand = leadData['brand'] ?? 'N/A';
         dealerName = leadData['dealer_name'] ?? 'N/A';
-        pmi = leadData['pmi'] ?? 'N/A';
+        pmi = leadData['PMI'] ?? 'N/A';
         status = leadData['status'] ?? 'N/A';
         leadSource = leadData['lead_source'] ?? 'N/A';
         purchaseType = leadData['purchase_type'] ?? 'N/A';
         leadOwner = leadData['lead_owner'] ?? 'N/A';
         flag = leadData['flag'] ?? 'N/A';
         enquiryType = leadData['enquiry_type'] ?? 'N/A';
+        leadName = leadData['lead_name'] ?? 'N/A';
       });
+      // ignore: avoid_print
       print("Leads data: $leadData");
     } catch (e) {
+      // ignore: avoid_print
       print('Error: $e');
     }
   }
@@ -98,7 +102,7 @@ class _SingleLeadsByIdState extends State<SingleLeadsById> {
           const Icon(Icons.person, size: 40),
           const SizedBox(height: 5),
           Text(
-            dealerName,
+            leadName,
             style:
                 GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w500),
           ),

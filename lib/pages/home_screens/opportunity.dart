@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:smart_assist/pages/calenderPages/calender.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
+import 'package:flutter/material.dart'; 
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,8 +33,8 @@ class _OpportunityState extends State<Opportunity> {
         ],
       ),
       endDrawer: Drawer(
-        child: ListView(
-          children: [
+        child:   ListView(
+          children: const [
             ListTile(
               title: Text('one'),
             ),
@@ -76,14 +73,14 @@ class _OpportunityState extends State<Opportunity> {
                               hintText: 'Search',
                               hintStyle: GoogleFonts.montserrat(
                                   fontSize: 16,
-                                  color: Color(0xff767676),
+                                  color: const Color(0xff767676),
                                   fontWeight: FontWeight.w400),
                               prefixIcon: GestureDetector(
                                 onTap: () {
                                   // Open the endDrawer when the menu icon is tapped
                                   Scaffold.of(context).openEndDrawer();
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.menu,
                                   color: Colors.grey,
                                 ),
@@ -100,7 +97,7 @@ class _OpportunityState extends State<Opportunity> {
               ),
 
               Threebtn(
-                leadId: widget.leadId, upcomingFollowups: [], overdueFollowups: [], upcomingAppointments: [], overdueAppointments: [],
+                leadId: widget.leadId, upcomingFollowups: const [], overdueFollowups: const [], upcomingAppointments: const [], overdueAppointments: const [],
                 
               ),
 

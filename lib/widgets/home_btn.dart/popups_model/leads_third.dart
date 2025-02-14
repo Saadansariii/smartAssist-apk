@@ -275,114 +275,12 @@ class _LeadsThirdState extends State<LeadsThird> {
     );
   }
 
-  // Navigation buttons (Previous and Next)
-  // Widget _buildNavigationButtons() {
-  //   return Row(
-  //     children: [
-  //       Expanded(
-  //         child: ElevatedButton(
-  //           style: ElevatedButton.styleFrom(
-  //             backgroundColor: Colors.black,
-  //             shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.circular(8),
-  //             ),
-  //           ),
-  //           onPressed: () {
-  //             Navigator.pop(context); // Close the current dialog
-  //             Future.microtask(() {
-  //               showDialog(
-  //                 context: context,
-  //                 builder: (context) => Dialog(
-  //                   shape: RoundedRectangleBorder(
-  //                     borderRadius: BorderRadius.circular(10),
-  //                   ),
-  //                   // child: _leadSecondStep,
-  //                 ),
-  //               );
-  //             });
-  //           },
-  //           child: Text(
-  //             'Previous',
-  //             style: GoogleFonts.poppins(
-  //               fontSize: 16,
-  //               fontWeight: FontWeight.w600,
-  //               color: Colors.white,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //       const SizedBox(width: 20),
-  //       Expanded(
-  //         child: ElevatedButton(
-  //           style: ElevatedButton.styleFrom(
-  //             backgroundColor: Colors.blue,
-  //             shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.circular(8),
-  //             ),
-  //           ),
-  //           onPressed: () {
-  //             Navigator.pop(context); // Close the current dialog
-  //             Future.microtask(() {
-  //               showDialog(
-  //                 context: context,
-  //                 builder: (context) => Dialog(
-  //                   shape: RoundedRectangleBorder(
-  //                     borderRadius: BorderRadius.circular(10),
-  //                   ),
-  //                   child: LeadsLast(
-  //                     firstName: widget.firstName,
-  //                     lastName: widget.lastName,
-  //                     email: widget.email,
-  //                     mobile: mobileController.text.toString(),
-  //                     selectedPurchaseType: selectedPurchaseType!,
-  //                     selectedEnquiryType: selectedEnquiryType!,
-  //                     PMI: pmiController.text.toString(),
-  //                     selectedSource: selectedSource!,
-  //                     selectedSubType: selectedSubType!,
-  //                     selectedFuelType: selectedFuelType!,
-  //                     selectedBrand: selectedBrand!,
-  //                   ),
-  //                 ),
-  //               );
-  //             });
-  //           },
-  //           child: Text(
-  //             'Next',
-  //             style: GoogleFonts.poppins(
-  //               fontSize: 16,
-  //               fontWeight: FontWeight.w600,
-  //               color: Colors.white,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
+ 
 
   Widget _buildNavigationButtons() {
     return Row(
       children: [
-        // Expanded(
-        //   child: ElevatedButton(
-        //     style: ElevatedButton.styleFrom(
-        //       backgroundColor: Colors.black,
-        //       shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.circular(8),
-        //       ),
-        //     ),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //     child: Text(
-        //       'Previous',
-        //       style: GoogleFonts.poppins(
-        //         fontSize: 16,
-        //         fontWeight: FontWeight.w600,
-        //         color: Colors.white,
-        //       ),
-        //     ),
-        //   ),
-        // ),
+        
 
         Expanded(
           child: Container(
@@ -489,44 +387,5 @@ class _LeadsThirdState extends State<LeadsThird> {
     );
   }
 
-  //   Widget _buildTextField({
-  //   required String label,
-  //   required String hintText,
-  //   required ValueChanged<String> onChanged,
-  // }) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.stretch,
-  //     children: [
-  //       Text(
-  //         label,
-  //         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-  //       ),
-  //       const SizedBox(height: 10),
-  //       Container(
-  //         decoration: BoxDecoration(
-  //           borderRadius: BorderRadius.circular(8),
-  //           color: const Color.fromARGB(255, 243, 238, 238),
-  //         ),
-  //         child: TextField(
-  //           style: GoogleFonts.poppins(
-  //             fontSize: 14,
-  //             fontWeight: FontWeight.w500,
-  //             color: Colors.black,
-  //           ),
-  //           decoration: InputDecoration(
-  //             hintText: hintText,
-  //             hintStyle: TextStyle(color: Colors.grey),
-  //             contentPadding: const EdgeInsets.symmetric(
-  //               horizontal: 10,
-  //               vertical: 12,
-  //             ),
-  //             border: InputBorder.none,
-  //           ),
-  //           onChanged: onChanged,
-  //         ),
-  //       ),
-  //       const SizedBox(height: 10),
-  //     ],
-  //   );
-  // }
+   
 }

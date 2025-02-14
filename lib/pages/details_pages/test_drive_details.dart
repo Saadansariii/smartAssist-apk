@@ -1,11 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
-import 'package:smart_assist/pages/test_drive_pages/finish_drive.dart';
+import 'package:flutter/material.dart'; 
 import 'package:smart_assist/utils/bottom_navigation.dart';
-import 'package:smart_assist/widgets/details/testdrive_details.dart';
-import 'package:smart_assist/widgets/details/timeline.dart';
+import 'package:smart_assist/widgets/details/testdrive_details.dart'; 
 import 'package:smart_assist/widgets/timeline/timeline_eight_wid.dart';
 import 'package:smart_assist/widgets/timeline/timeline_five_wid.dart';
 import 'package:smart_assist/widgets/timeline/timeline_four_wid.dart';
@@ -15,8 +10,7 @@ import 'package:smart_assist/widgets/timeline/timeline_seven_wid.dart';
 import 'package:smart_assist/widgets/timeline/timeline_six_wid.dart';
 import 'package:smart_assist/widgets/timeline/timeline_ten_wid.dart';
 import 'package:smart_assist/widgets/timeline/timeline_thee_wid.dart';
-import 'package:smart_assist/widgets/timeline/timeline_two_wid.dart';
-import 'package:timeline_tile/timeline_tile.dart';
+import 'package:smart_assist/widgets/timeline/timeline_two_wid.dart'; 
 
 class TestDriveDetails extends StatefulWidget {
   const TestDriveDetails({super.key});
@@ -64,7 +58,7 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            TestdriveDetailsWidget(),
+            const TestdriveDetailsWidget(),
             const SizedBox(height: 30),
             // Second widget
             Container(
@@ -82,25 +76,25 @@ class _TestDriveDetailsState extends State<TestDriveDetails> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TimelineTenWid(),
-                  SizedBox(
+                 const TimelineTenWid(),
+                 const SizedBox(
                     height: 10,
                   ),
 
                   // timeline 2 Tira
-                  TimelineNineWid(),
+                 const TimelineNineWid(),
                   // 22oct
                   TimelineEightWid(events: allEvents),
                   // first column first
                   TimelineSevenWid(events: allEvents, ),
-                  TimelineSixWid(),
-                  TimelineFiveWid(),
+                 const TimelineSixWid(),
+                const  TimelineFiveWid(),
                   // third
-                  TimelineFourWid(),
+                 const TimelineFourWid(),
 // add
-                  TimelineOneWidget(),
-                  TimelineTwoWid(),
-                  TimelineTheeWid()
+                 const TimelineOneWidget(),
+                const  TimelineTwoWid(),
+                 const TimelineTheeWid()
                 ],
               ),
             ),

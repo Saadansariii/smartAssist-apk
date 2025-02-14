@@ -1,39 +1,31 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
-import 'package:smart_assist/pages/login/login_page.dart';
-import 'package:smart_assist/services/set_pwd_srv.dart';
-import 'package:smart_assist/utils/bottom_navigation.dart';
+import 'package:smart_assist/pages/login/first_screen.dart';
+import 'package:smart_assist/pages/login/last_screen.dart';
+import 'package:smart_assist/services/otp_srv.dart';
 import 'package:smart_assist/utils/button.dart';
-import 'package:smart_assist/utils/paragraph_text.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
-class SetNewPwd extends StatefulWidget {
+class VerifyMail extends StatefulWidget {
+  final int _otpLength = 6; // Number of OTP digits
+  final List<TextEditingController> _controllers =
+      List.generate(6, (index) => TextEditingController());
+
   final String email;
-  const SetNewPwd({super.key, required this.email});
+  VerifyMail({super.key, required this.email});
 
   @override
-  State<SetNewPwd> createState() => _SetPwdState();
+  State<VerifyMail> createState() => _SetPwdState();
 }
 
-class _SetPwdState extends State<SetNewPwd> {
-  final TextEditingController newPwdController = TextEditingController();
-  final TextEditingController confirmPwdController = TextEditingController();
-  // Controllers for text fields
-  final TextEditingController _passwordController1 = TextEditingController();
-  // final TextEditingController _passwordController2 = TextEditingController();
-
-  // Password visibility toggle
-  bool _isPasswordObscured1 = true;
-  bool _isPasswordObscured2 = true;
-
+class _SetPwdState extends State<VerifyMail> {
   // Form key for validation );
-
+  TextEditingController otpController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       resizeToAvoidBottomInset: true, // Prevents bottom overflow
 
       body: Center(
@@ -49,198 +41,129 @@ class _SetPwdState extends State<SetNewPwd> {
                   children: [
                     // Image
                     Image.asset(
-                      'assets/loginbro.png',
+                      'assets/lock.png',
                       width: 250,
                     ),
 
                     // Title
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
-                      child: StyleText('Set Your Password'),
+                      child: StyleText('Verify Your Email address'),
                     ),
 
                     // Subtitle
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                      child: ParagraphText(
-                        'In order to keep your account safe, you need to create a strong password.',
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      child: RichText(
                         textAlign: TextAlign.center,
-                        maxLines: 2,
-                      ),
-                    ),
-
-                    // const Row(
-                    //   children: [
-                    //     Padding(
-                    //         padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
-                    //         child: Text('Password'))
-                    //   ],
-                    // ),
-                    // // Password TextField
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 10),
-                    //   child: TextField(
-                    //     // controller: _passwordController,
-                    //     controller: newPwdController,
-                    //     obscureText: _isPasswordObscured,
-                    //     decoration: InputDecoration(
-                    //       hintText:
-                    //           'Enter your password', // Only placeholder text
-                    //       fillColor: Colors.grey,
-                    //       suffixIcon: IconButton(
-                    //         icon: Icon(
-                    //           _isPasswordObscured
-                    //               ? Icons.visibility_off
-                    //               : Icons.visibility,
-                    //         ),
-                    //         onPressed: () {
-                    //           setState(() {
-                    //             _isPasswordObscured = !_isPasswordObscured;
-                    //           });
-                    //         },
-                    //       ),
-                    //       border: OutlineInputBorder(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-
-                    Row(
-                      children: [
-                        SizedBox(
-                          height: 5,
-                          width: 5,
-                        ),
-                        Text(
-                          'Password',
-                          style: GoogleFonts.poppins(
-                              fontSize: 14, fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    // Password TextField
-                    TextField(
-                      obscureText: _isPasswordObscured1,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black),
-                      // controller: _passwordController,
-                      controller: newPwdController,
-                      decoration: InputDecoration(
-                        fillColor: Color(0xffF3F9FF),
-                        filled: true,
-                        hintText: 'Password', // Only placeholder text
-                        hintStyle: TextStyle(color: Colors.grey),
-                        // fillColor: Colors.grey,
-                        suffixIcon: IconButton(
-                          icon: Icon(_isPasswordObscured1
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordObscured1 = !_isPasswordObscured1;
-                            });
-                          },
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(10),
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.grey), // Default text color
+                          children: [
+                            const TextSpan(
+                              text: 'An 6-digit code has been sent to ',
+                              style: TextStyle(fontSize: 16, height: 2),
+                            ),
+                            TextSpan(
+                              text: '${widget.email}',
+                              style: const TextStyle(
+                                  color:
+                                      Colors.black), // Dark color for the email
+                            ),
+                            TextSpan(
+                              text: ' Change',
+                              style: const TextStyle(
+                                color: Colors.blue, // Link-like color
+                                decoration: TextDecoration
+                                    .underline, // Underline the "Change" text
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SetPwd()));
+                                },
+                            ),
+                          ],
                         ),
                       ),
                     ),
 
-                    // const Row(
-                    //   children: [
-                    //     Padding(
-                    //         padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
-                    //         child: Text('Confirm Password'))
-                    //   ],
+                    // TextField(
+                    //   controller: otpController,
+                    //   decoration: const InputDecoration(hintText: 'Enter otp'),
                     // ),
-
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 10),
-                    //   child: TextFormField(
-                    //     controller: confirmPwdController,
-                    //     obscureText: _isPasswordObscured,
-                    //     decoration: InputDecoration(
-                    //       hintText: 'Enter Confirm Password',
-                    //       suffixIcon: IconButton(
-                    //         icon: Icon(_isPasswordObscured
-                    //             ? Icons.visibility_off
-                    //             : Icons.visibility),
-                    //         onPressed: () {
-                    //           setState(() {
-                    //             _isPasswordObscured = !_isPasswordObscured;
-                    //           });
-                    //         },
-                    //       ),
-                    //       border: OutlineInputBorder(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-
                     SizedBox(
                       height: 20,
                     ),
                     Row(
-                      children: [
-                        SizedBox(
-                          height: 5,
-                          width: 5,
-                        ),
-                        Text(
-                          'Confirm Password',
-                          style: GoogleFonts.poppins(
-                              fontSize: 14, fontWeight: FontWeight.w500),
-                        )
-                      ],
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(widget._otpLength, (index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          width: 45,
+                          child: TextField(
+                            controller: widget._controllers[index],
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            maxLength: 1,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: const InputDecoration(
+                              counterText: '',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              if (value.isNotEmpty &&
+                                  index < widget._otpLength - 1) {
+                                FocusScope.of(context).nextFocus();
+                              } else if (value.isEmpty && index > 0) {
+                                FocusScope.of(context).previousFocus();
+                              }
+                            },
+                          ),
+                        );
+                      }),
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 20,
                     ),
-                    // Password TextField
-                    TextField(
-                      obscureText: _isPasswordObscured2,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black),
-                      controller: confirmPwdController,
-                      decoration: InputDecoration(
-                        fillColor: Color(0xffF3F9FF),
-                        filled: true,
-                        hintText: 'Confirm Password', // Only placeholder text
-                        hintStyle: TextStyle(color: Colors.grey),
-                        // fillColor: Colors.grey,
-                        suffixIcon: IconButton(
-                          icon: Icon(_isPasswordObscured2
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordObscured2 = !_isPasswordObscured2;
-                            });
-                          },
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        text:
+                            "Didn't receive the code? ", // Text before the link
+                        style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16), // Default style for the first part
+                        children: [
+                          TextSpan(
+                            text: 'Resend',
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration
+                                  .underline, // Underline the link
+                            ),
+                            recognizer: TapGestureRecognizer()..onTap = () {},
+                          ),
+                        ],
                       ),
-                    ),
-
-                    // Next Step Button
+                    ), // Next Step Button
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 26, horizontal: 8),
                       child: ElevatedButton(
-                        onPressed: submitBtn,
+                        onPressed: onVerify,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF0276FE),
                           foregroundColor: Colors.white,
@@ -249,7 +172,7 @@ class _SetPwdState extends State<SetNewPwd> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        child: const Button('Next Step'),
+                        child: const Button('Verify'),
                       ),
                     ),
                   ],
@@ -262,59 +185,42 @@ class _SetPwdState extends State<SetNewPwd> {
     );
   }
 
-  Future<void> submitBtn() async {
-    final newPwd = newPwdController.text.trim();
-    final confirmPwd = confirmPwdController.text.trim();
+  Future<void> onVerify() async {
+    // Combine all the text from the individual controllers to form the OTP as a string
+    final otpString =
+        widget._controllers.map((controller) => controller.text).join();
 
-    // Check if fields are empty
-    if (newPwd.isEmpty || confirmPwd.isEmpty) {
-      showErrorMessage(context, message: 'Please fill in all fields');
+    // Ensure the OTP is valid (numeric and correct length)
+    if (otpString.length != widget._otpLength ||
+        int.tryParse(otpString) == null) {
+      showErrorMessage(context,
+          message: 'Invalid OTP. Please enter a valid code.');
       return;
     }
 
-    // Optional: Add further validation, like password length or matching passwords
-    if (newPwd != confirmPwd) {
-      showErrorMessage(context, message: 'Passwords do not match');
-      return;
-    }
+    // Convert the OTP string to an integer for the API
+    final otp = int.parse(otpString);
 
-    final deviceToken = await FirebaseMessaging.instance.getToken();
-
-    // Check if the token is available
-    if (deviceToken == null) {
-      print('Failed to retrieve device token');
-      return;
-    }
-
-    // Prepare the body with email, new password, confirm password, and device token
-    final body = {
-      "email": widget.email,
-      "newPwd": newPwd,
-      "confirmPwd": confirmPwd,
-      "device_token": deviceToken,
-    };
+    final body = {"otp": otp, "email": widget.email};
 
     try {
-      final response = await SetPwdSrv.SetPwd(body);
+      final response = await OtpSrv.verifyEmail(body);
 
       print('API Response: $response');
 
       if (response['isSuccess'] == true) {
         showSuccessMessage(context, message: 'Email Verified Successfully');
 
-        // Navigate to LoginPage
         Navigator.push(
-          // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
-            builder: (context) => BottomNavigation(),
+            builder: (context) => SetNewPwd(email: widget.email),
           ),
         );
       } else {
         showErrorMessage(context, message: 'Check the Email or OTP');
       }
     } catch (error) {
-      // ignore: use_build_context_synchronously
       showErrorMessage(context, message: 'Error during API call');
     }
   }

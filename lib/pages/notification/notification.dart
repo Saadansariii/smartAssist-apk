@@ -10,10 +10,10 @@ import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class NotificationPage extends StatefulWidget {
-  final String leadId;
+  // final String leadId;
   const NotificationPage({
     super.key,
-    required this.leadId,
+    // required this.leadId,
   });
 
   @override
@@ -22,8 +22,15 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   int _selectedButtonIndex = 0;
-  String? leadId;
   List<dynamic> notifications = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchNotifications();
+    // fetchNotifications();
+  }
+
   final List<String> categories = [
     'All',
     'Lead',
@@ -37,48 +44,6 @@ class _NotificationPageState extends State<NotificationPage> {
     'Vehicle Selection',
     'Send SMS'
   ];
-
-  // Fetch notifications from API
-  // Future<void> fetchNotifications({String? category}) async {
-  //   final token = await Storage.getToken();
-  //   String url = 'https://api.smartassistapp.in/api/users/notifications/all';
-  //   if (category != null && category != 'All') {
-  //     url += '?category=$category';
-  //   }
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(url),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json',
-  //       },
-  //     );
-
-  //     print('this is the current url ${url}');
-
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> data = json.decode(response.body);
-
-  //       // Combine unread and read notifications
-  //       List<dynamic> allNotifications = [];
-  //       if (data['unread'] != null && data['unread']['rows'] != null) {
-  //         allNotifications.addAll(data['unread']['rows']);
-  //       }
-  //       if (data['read'] != null && data['read']['rows'] != null) {
-  //         allNotifications.addAll(data['read']['rows']);
-  //       }
-
-  //       setState(() {
-  //         notifications =
-  //             allNotifications; // Combine both unread and read notifications
-  //       });
-  //     } else {
-  //       print("Failed to load data: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching data: $e");
-  //   }
-  // }
 
   Future<void> fetchNotifications({String? category}) async {
     final token = await Storage.getToken();
@@ -111,7 +76,7 @@ class _NotificationPageState extends State<NotificationPage> {
         if (data['read'] != null && data['read']['rows'] != null) {
           allNotifications.addAll(data['read']['rows']);
         }
-
+        print(data);
         setState(() {
           notifications = allNotifications;
         });
@@ -123,11 +88,11 @@ class _NotificationPageState extends State<NotificationPage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    fetchNotifications();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchNotifications();
+  // }
 
   // Mark notification as read
   // Mark notification as read
@@ -160,6 +125,9 @@ class _NotificationPageState extends State<NotificationPage> {
           // Update the notification status in the UI
           notifications = notifications.map((notification) {
             if (notification['notification_id'] == notificationId) {
+              notification['read'] = true;
+            }
+            if (notification['recordId'] == notificationId) {
               notification['read'] = true;
             }
             return notification;
@@ -281,8 +249,8 @@ class _NotificationPageState extends State<NotificationPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      FollowupsDetails(leadId: widget.leadId)));
+                                  builder: (context) => FollowupsDetails(
+                                      leadId: notification['recordId'])));
                           if (!isRead) {
                             markAsRead(notification['notification_id']);
                           }

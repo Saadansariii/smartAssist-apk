@@ -24,38 +24,40 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
     super.initState();
     print("widget.upcomingFollowups");
     print(widget.overdueeFollowups);
-    fetchDashboardData();
+    // fetchDashboardData();
   }
 
-  Future<void> fetchDashboardData() async {
-    final token = await Storage.getToken();
-    try {
-      final response = await http.get(
-        Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json'
-        },
-      );
+  // Future<void> fetchDashboardData() async {
+  //   final token = await Storage.getToken();
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json'
+  //       },
+  //     );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          overdueFollowups = data['overdueFollowups'];
-        });
-      } else {
-        print("Failed to load data: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Error fetching data: $e");
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+  //       setState(() {
+  //         overdueFollowups = data['overdueFollowups'];
+  //       });
+  //     } else {
+  //       print("Failed to load data: ${response.statusCode}");
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching data: $e");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    
     if (widget.overdueeFollowups.isEmpty) {
-      return const Center(
-        child: Text('No upcoming followups available'),
+      return Container(
+        height: 240,
+        child: const Center(child: Text('No overdue followups available')),
       );
     }
     return isLoading
@@ -76,7 +78,7 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
                   taskId: item['task_id'],
                   leadId: item['lead_id'],
                   isFavorite: item['favourite'] ?? false,
-                  fetchDashboardData: fetchDashboardData,
+                  fetchDashboardData: () {},
                 );
               } else {
                 return ListTile(title: Text('Invalid data at index $index'));

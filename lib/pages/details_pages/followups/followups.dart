@@ -44,6 +44,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   @override
   void initState() {
     super.initState();
+
     fetchSingleIdData(widget.leadId);
     fetchSingleEvent(widget.leadId);
     // fetchSingleTask(widget.leadId);
@@ -531,7 +532,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                         ? const Color.fromARGB(
                                                 255, 78, 109, 248)
                                             .withOpacity(0.59)
-                                            
                                         : Colors.transparent,
                                     width: 1, // Border width
                                   ),
@@ -555,6 +555,32 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                   ],
                 ),
 
+                // Container(
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(10),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.grey.shade300,
+                //         blurRadius: 6,
+                //         offset: const Offset(0, 3),
+                //       ),
+                //     ],
+                //   ),
+                //   padding: const EdgeInsets.all(16.0),
+                //   child: isLoading
+                //       ? const Center(child: CircularProgressIndicator())
+                //       : Column(
+                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //           children: [
+                //             const SizedBox(height: 50),
+                //             if (_childButtonIndex == 0)
+                //               TimelineSevenWid(events: allEvents)
+                //             else
+                //               TimelineEightWid(events: allTasks),
+                //           ],
+                //         ),
+                // ),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -568,30 +594,45 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                     ],
                   ),
                   padding: const EdgeInsets.all(16.0),
-                  // child: Column(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     // TimelineTenWid(),
-                  //     SizedBox(
-                  //       height: 10,
-                  //     ),
-                  //     TimelineSevenWid(events: allEvents),
-                  //     TimelineEightWid(events: allEvents)
-                  //   ],
-                  // ),
                   child: isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 0),
                             if (_childButtonIndex == 0)
-                              TimelineSevenWid(events: allEvents)
+                              allEvents.isNotEmpty
+                                  ? TimelineSevenWid(
+                                      events: allEvents) // Show data if exists
+                                  : const Center(
+                                      child: Text(
+                                        textAlign: TextAlign.start,
+                                        "No Events Found....",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ) // Show message if no data
                             else
-                              TimelineEightWid(events: allTasks),
+                              allTasks.isNotEmpty
+                                  ? TimelineEightWid(
+                                      events: allTasks) // Show data if exists
+                                  : const Center(
+                                      child: Text(
+                                        textAlign: TextAlign.center,
+                                        "No Tasks Found...",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ), // Show message if no data
                           ],
                         ),
-                ),
+                )
               ],
             ),
           ),

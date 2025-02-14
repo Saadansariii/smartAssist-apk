@@ -25,7 +25,10 @@ class _OppUpcomingState extends State<OppUpcoming> {
   @override
   void initState() {
     super.initState();
-    fetchDashboardData();
+    // fetchDashboardData();
+    upcomingAppointments = widget.upcomingOpp;
+    print('this is widget.upcoming appointmnet');
+    print(widget.upcomingOpp);
   }
 
   // Future<void> fetchDashboardData() async {
@@ -52,64 +55,57 @@ class _OppUpcomingState extends State<OppUpcoming> {
   //   }
   // }
 
-  Future<void> fetchDashboardData() async {
-    final token = await Storage.getToken();
-    try {
-      final response = await http.get(
-        Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json'
-        },
-      );
+  // Future<void> fetchDashboardData() async {
+  //   final token = await Storage.getToken();
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json'
+  //       },
+  //     );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        print("Full API Response: $data");
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+  //       print("Full API Response: $data");
 
-        if (data.containsKey('upcomingAppointments')) {
-          print(
-              "Upcoming Appointments Data: ${data['upcomingAppointments']}"); // Debug
-        }
+  //       if (data.containsKey('upcomingAppointments')) {
+  //         print(
+  //             "Upcoming Appointments Data: ${data['upcomingAppointments']}"); // Debug
+  //       }
 
-        setState(() {
-          upcomingAppointments = data['upcomingAppointments'] ?? [];
-          _showLoader = false;
-        });
-      } else {
-        print("Failed to load data: ${response.statusCode}");
-        setState(() {
-          _showLoader = false;
-        });
-      }
-    } catch (e) {
-      print("Error fetching data: $e");
-      setState(() {
-        _showLoader = false;
-      });
-    }
-  }
+  //       setState(() {
+  //         upcomingAppointments = data['upcomingAppointments'] ?? [];
+  //         _showLoader = false;
+  //       });
+  //     } else {
+  //       print("Failed to load data: ${response.statusCode}");
+  //       setState(() {
+  //         _showLoader = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching data: $e");
+  //     setState(() {
+  //       _showLoader = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    if (_showLoader) {
+    if (widget.upcomingOpp.isEmpty) {
       return Container(
         height: 250,
-        child: const Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (upcomingAppointments.isEmpty) {
-      return Container(
-        height: 250,
-        child: const Center(child: Text('No upcoming Appointment available')),
+        child: const Center(child: Text('No upcoming followups available')),
       );
     }
     return ListView.builder(
       shrinkWrap: true,
       itemCount: upcomingAppointments.length,
       itemBuilder: (context, index) {
-        var item = upcomingAppointments[index];
+        var item = widget.upcomingOpp[index];
         return (item.containsKey('assigned_to') &&
                 item.containsKey('start_date') &&
                 item.containsKey('lead_id') &&
@@ -121,7 +117,7 @@ class _OppUpcomingState extends State<OppUpcoming> {
                 leadId: item['lead_id'],
                 eventId: item['event_id'],
                 isFavorite: item['favourite'] ?? false,
-                fetchDashboardData: fetchDashboardData,
+                fetchDashboardData: () {},
               )
             : ListTile(title: Text('Invalid data at index $index'));
       },

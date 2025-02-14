@@ -31,7 +31,8 @@ class LeadsLast extends StatefulWidget {
       required this.selectedBrand,
       required this.selectedSource,
       required this.PMI,
-      required this.selectedEnquiryType, required this.selectedFuel});
+      required this.selectedEnquiryType,
+      required this.selectedFuel});
 
   @override
   State<LeadsLast> createState() => _LeadsLastState();
@@ -372,7 +373,8 @@ class _LeadsLastState extends State<LeadsLast> {
                                             selectedSource: selectedSource!,
                                             mobile: widget.mobile,
                                             pmi: widget.PMI,
-                                            selectedEvent: '', selectedFuel: selectedFuel!,
+                                            selectedEvent: '',
+                                            selectedFuel: selectedFuel!,
                                           ),
                                         ),
                                       );
@@ -419,76 +421,7 @@ class _LeadsLastState extends State<LeadsLast> {
       },
     );
   }
-
-  // Future<void> storeLeadId(String leadId) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString(
-  //       'lead_id', leadId); // Save lead_id in SharedPreferences
-  //   print("Stored lead_id: $leadId"); // Debugging
-  // }
-
-  // This function will call the API and pass the captured data
-  // Future<void> submitForm() async {
-  //   String description = descriptionController.text;
-  //   String phone = phoneController.text;
-  //   String date = dateController.text;
-
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? spId = prefs.getString('user_id');
-
-  //   print('Retrieved sp_id: $spId'); // Debugging
-
-  //   if (spId == null) {
-  //     showErrorMessage(context,
-  //         message: 'User ID not found. Please log in again.');
-  //     return;
-  //   }
-
-  //   // Prepare the lead data
-  //   final leadData = {
-  //     'fname': widget.firstName,
-  //     'lname': widget.lastName,
-  //     'email': widget.email,
-  //     'lead_code': phone,
-  //     'mobile': widget.mobile,
-  //     'purchase_type': selectedPurchaseType,
-  //     'brand': selectedBrand,
-  //     'type': selectedFuelType,
-  //     'sub_type': subType,
-  //     'sp_id': spId,
-  //     'status': selectedStatus,
-  //     'lead_source': selectedSource,
-  //     'PMI': selectedEvent,
-  //     'enquiry_type': selectedEnquiryType,
-
-  //   };
-
-  //   print('Lead Data: $leadData');
-  //   bool success = await LeadsSrv.submitLead(leadData, leadId);
-
-  //   if (success) {
-  //     print('Lead submitted successfully!');
-
-  //     //  String leadId = 'lead_id';
-  //     // Close modal if submission is successful
-  //     if (context.mounted) {
-  //       // Navigator.pop(context);
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => SingleLeadsById(leadId: leadId!),
-  //         ),
-  //       );
-  //     }
-
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Form Submit Successful.')),
-  //     );
-  //   } else {
-  //     print('Failed to submit lead.');
-  //   }
-  // }
-
+ 
   Future<void> submitForm() async {
     String description = descriptionController.text;
     String phone = phoneController.text;
@@ -497,15 +430,15 @@ class _LeadsLastState extends State<LeadsLast> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? spId = prefs.getString('user_id');
 
-    print('Retrieved sp_id: $spId'); // Debugging
-
     if (spId == null) {
-      showErrorMessage(context,
-          message: 'User ID not found. Please log in again.');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('User ID not found. Please log in again.')),
+        );
+      }
       return;
     }
 
-    // Prepare the lead data
     final leadData = {
       'fname': widget.firstName,
       'lname': widget.lastName,
@@ -525,29 +458,32 @@ class _LeadsLastState extends State<LeadsLast> {
       'enquiry_type': selectedEnquiryType,
     };
 
-    print('Lead Data: $leadData');
-
     Map<String, dynamic>? response = await LeadsSrv.submitLead(leadData);
 
-    if (response != null && response.containsKey('newLead')) {
-      String leadId = response['newLead']['lead_id']; // Extract lead_id
-      print('Lead ID: $leadId');
-
-      // Navigate to SingleLeadsById with the extracted leadId
-      if (context.mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SingleLeadsById(leadId: leadId),
-          ),
+    if (response != null) {
+      if (response.containsKey('newLead')) {
+        String leadId = response['newLead']['lead_id'];
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SingleLeadsById(leadId: leadId),
+            ),
+          );
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Form Submit Successful.')),
+        );
+      } else if (response.containsKey('error')) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(response['error']), backgroundColor: Colors.red),
         );
       }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Form Submit Successful.')),
-      );
     } else {
-      print('Failed to submit lead.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to submit lead. Please try again.')),
+      );
     }
   }
 }

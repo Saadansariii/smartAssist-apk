@@ -93,6 +93,44 @@ class LeadsSrv {
   //   }
   // }
 
+  // static Future<Map<String, dynamic>?> submitLead(
+  //     Map<String, dynamic> leadData) async {
+  //   const String apiUrl =
+  //       "https://api.smartassistapp.in/api/admin/leads/create";
+
+  //   final token = await Storage.getToken();
+  //   if (token == null) {
+  //     print("No token found. Please login.");
+  //     return null;
+  //   }
+
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(apiUrl),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: jsonEncode(leadData),
+  //     );
+
+  //     print('Response status code: ${response.statusCode}');
+  //     print('Response body: ${response.body}');
+
+  //     final responseData = json.decode(response.body);
+  //     if (response.statusCode == 201) {
+  //       final data = json.decode(response.body);
+  //       // return data; // Return the full API response
+  //       return data['message'];
+  //     } else {
+  //       return response['error'];
+  //     }
+  //   } catch (e) {
+  //     print('Error submitting lead: $e');
+  //     return null;
+  //   }
+  // }
+
   static Future<Map<String, dynamic>?> submitLead(
       Map<String, dynamic> leadData) async {
     const String apiUrl =
@@ -100,8 +138,7 @@ class LeadsSrv {
 
     final token = await Storage.getToken();
     if (token == null) {
-      print("No token found. Please login.");
-      return null;
+      return {"error": "No token found. Please login."};
     }
 
     try {
@@ -114,18 +151,15 @@ class LeadsSrv {
         body: jsonEncode(leadData),
       );
 
-      print('Response status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      final responseData = json.decode(response.body);
 
       if (response.statusCode == 201) {
-        final data = json.decode(response.body);
-        return data; // Return the full API response
+        return responseData;
       } else {
-        return null;
+        return {"error": responseData['error'] ?? "Failed."};
       }
     } catch (e) {
-      print('Error submitting lead: $e');
-      return null;
+      return {"error": "An error occurred: $e"};
     }
   }
 
@@ -141,6 +175,7 @@ class LeadsSrv {
       'Content-Type': 'application/json',
       'recordId': leadId,
     }}');
+    
     print('Request body: ${jsonEncode(followupsData)}');
 
     try {
@@ -157,6 +192,8 @@ class LeadsSrv {
 
       print('API Response Status: ${response.statusCode}');
       print('API Response Body: ${response.body}');
+
+      //  final followupsData = json.decode(response.body);
 
       if (response.statusCode == 201) {
         return true; // Task created successfully

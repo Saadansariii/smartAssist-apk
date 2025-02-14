@@ -372,7 +372,8 @@ class _ThreebtnState extends State<Threebtn> {
                                         selectedSubType: '',
                                         selectedFuelType: '',
                                         selectedBrand: '',
-                                        email: '', selectedEvent: '',
+                                        email: '',
+                                        selectedEvent: '',
                                       ), // Lead modal
                                     );
                                   },
@@ -458,7 +459,8 @@ class _ThreebtnState extends State<Threebtn> {
                                         selectedSubType: '',
                                         selectedFuelType: '',
                                         selectedBrand: '',
-                                        email: '', selectedEvent: '',
+                                        email: '',
+                                        selectedEvent: '',
                                       ), // Lead modal
                                     );
                                   },
@@ -567,10 +569,14 @@ class _ThreebtnState extends State<Threebtn> {
         currentWidget = FollowupsUpcoming(
           upcomingFollowups: widget.upcomingFollowups,
         );
+        print('this is upcoming');
+        // print(widget.upcomingFollowups);
       } else {
         currentWidget = OverdueFollowup(
           overdueeFollowups: widget.overdueFollowups,
         );
+        print('this is overdue');
+        print(widget.overdueFollowups);
       }
     });
   }
