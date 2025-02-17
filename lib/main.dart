@@ -4,10 +4,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:smart_assist/pages/login/login_page.dart';
+import 'package:smart_assist/config/route/route.dart';
+import 'package:smart_assist/config/route/route_name.dart'; 
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:smart_assist/services/notifacation_srv.dart';
-import 'package:smart_assist/utils/bottom_navigation.dart';
+import 'package:smart_assist/pages/login/splash_screen.dart'; 
+import 'package:smart_assist/services/notifacation_srv.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,16 +32,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      // home: LoginPage(
-      //   email: '',
-      // ),
-      // home: BottomNavigation(),
-      home: LoginPage(
-        onLoginSuccess: () {
-          Get.off(() => BottomNavigation());
-        },
-        email: '',
-      ),
+      initialRoute: RoutesName.splashScreen,
+      onGenerateRoute: Routes.generateRoute ,
+
+      // home: SplashScreen(),
       theme: ThemeData(
         buttonTheme: const ButtonThemeData(),
         textTheme: const TextTheme(
@@ -58,6 +53,43 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // notification also have some error work here
 // import 'package:flutter/material.dart';
