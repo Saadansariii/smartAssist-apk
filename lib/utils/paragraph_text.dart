@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
 
 class ParagraphText extends StatelessWidget {
   final String text;
@@ -22,8 +23,8 @@ class ParagraphText extends StatelessWidget {
       overflow: overflow,
       maxLines: maxLines,
       style: const TextStyle(
-        color: Colors.grey,
-        fontSize: 16,
+        color: AppColors.fontColor,
+        fontSize: 14,
         fontWeight: FontWeight.normal,
       ),
     );

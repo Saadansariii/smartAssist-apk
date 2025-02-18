@@ -151,6 +151,7 @@
 //   }
 // }
 
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/route/route_name.dart';
@@ -232,7 +233,7 @@ class _SplashScreenState extends State<SplashScreen>
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 2500), () {
+      Future.delayed(const Duration(milliseconds: 3000), () {
         Navigator.of(context).pushReplacementNamed(RoutesName.login);
       });
     });

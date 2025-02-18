@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Button extends StatelessWidget {
   final String text;
 
-  const Button(this.text, {super.key});
+  const Button(this.text, {super.key, required TextStyle style});
 
   @override
   Widget build(BuildContext context) {

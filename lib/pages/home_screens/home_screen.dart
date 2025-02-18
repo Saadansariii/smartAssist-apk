@@ -1,10 +1,12 @@
-import 'dart:convert'; 
-import 'package:flutter/material.dart'; 
-import 'package:google_fonts/google_fonts.dart'; 
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
-import 'package:smart_assist/pages/navbar_page/favorite.dart'; 
+import 'package:smart_assist/pages/navbar_page/favorite.dart';
 import 'package:smart_assist/pages/navbar_page/leads_all.dart';
-import 'package:smart_assist/pages/navbar_page/logout_page.dart'; 
+import 'package:smart_assist/pages/navbar_page/logout_page.dart';
 import 'package:smart_assist/pages/notification/notification.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
@@ -21,8 +23,8 @@ class HomeScreen extends StatefulWidget {
   });
 
   @override
-   // ignore: library_private_types_in_public_api
-   _HomeScreenState createState() => _HomeScreenState();
+  // ignore: library_private_types_in_public_api
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -106,8 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) =>const NotificationPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const NotificationPage()));
             },
             icon: const Icon(Icons.notifications),
             color: Colors.white,
@@ -126,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       // Search Field
-                      SizedBox(
+                      const SizedBox(
                         height: 3,
                       ),
                       Padding(
@@ -136,9 +140,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Expanded(
                               child: SizedBox(
-                                height: 45,
+                                height: 35,
                                 child: TextField(
-                                  textAlignVertical: TextAlignVertical.bottom,
+                                  textAlignVertical: TextAlignVertical.center,
                                   decoration: InputDecoration(
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(30),
@@ -149,12 +153,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderSide: BorderSide.none,
                                     ),
                                     filled: true,
-                                    fillColor: const Color(0xFFE1EFFF),
+                                    fillColor: AppColors.searchBar,
                                     hintText: 'Search',
                                     hintStyle: GoogleFonts.poppins(
-                                      fontSize: 16,
-                                      color: const Color(0xff767676),
-                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: AppColors.fontBlack,
+                                      fontWeight: FontWeight.w300,
                                     ),
                                     prefixIcon: GestureDetector(
                                       onTap: () {
@@ -211,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              FavoritePage(
+                                                              const FavoritePage(
                                                             leadId: '',
                                                           ),
                                                         ),
@@ -298,13 +302,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                       child: const Icon(
                                         Icons.menu,
-                                        color: Colors.grey,
-                                        size: 30,
+                                        color: AppColors.fontColor,
+                                        size: 20,
                                         // weight: 500,
                                       ),
                                     ),
-                                    suffixIcon: const Icon(Icons.mic,
-                                        color: Colors.grey),
+                                    suffixIcon: const Icon(
+                                      FontAwesomeIcons.microphone,
+                                      color: AppColors.fontColor,
+                                      size: 15,
+                                    ),
                                   ),
                                 ),
                               ),

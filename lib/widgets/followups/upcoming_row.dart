@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 
@@ -247,62 +248,139 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: AppColors.containerBg,
         borderRadius: BorderRadius.circular(10),
         border: const Border(
-            left: BorderSide(
-                width: 8.0, color: Color.fromARGB(255, 81, 223, 121))),
+          left:
+              BorderSide(width: 8.0, color: Color.fromARGB(255, 81, 223, 121)),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          IconButton(
-            icon: Icon(isFav ? Icons.star_rounded : Icons.star_border_rounded,
-                color: isFav ? Colors.amber : Colors.grey, size: 40),
-            onPressed: _toggleFavorite,
+          // Icon and User Details in one row
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  isFav ? Icons.star_rounded : Icons.star_border_rounded,
+                  color: isFav ? Colors.amber : Colors.grey,
+                  size: 40,
+                ),
+                onPressed: _toggleFavorite,
+              ),
+              const SizedBox(width: 8), // Spacing
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildUserDetails(),
+                  const SizedBox(
+                      height: 4), // Spacing between user details and date-car
+                  Row(
+                    children: [
+                      _date(),
+                      _buildVerticalDivider(),
+                      _buildCarModel(),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
-          _buildUserDetails(),
-          _buildVerticalDivider(),
-          _buildCarModel(),
           _buildNavigationButton(),
         ],
       ),
     );
   }
 
+  // Widget _buildFollowupCard() {
+  //   return Container(
+  //     padding: const EdgeInsets.symmetric(vertical: 10),
+  //     decoration: BoxDecoration(
+  //       color: AppColors.containerBg,
+  //       borderRadius: BorderRadius.circular(10),
+  //       border: const Border(
+  //           left: BorderSide(
+  //               width: 8.0, color: Color.fromARGB(255, 81, 223, 121))),
+  //     ),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //       // crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         IconButton(
+  //           icon: Icon(isFav ? Icons.star_rounded : Icons.star_border_rounded,
+  //               color: isFav ? Colors.amber : Colors.grey, size: 40),
+  //           onPressed: _toggleFavorite,
+  //         ),
+  //         Row(
+  //           children: [
+  //             _buildUserDetails(),
+  //           ],
+  //         ),
+  //         Row(
+  //           children: [
+  //             Row(
+  //               children: [
+  //                 _date(),
+  //               ],
+  //             ),
+  //             Row(
+  //               children: [
+  //                 _buildVerticalDivider(),
+  //                 _buildCarModel(),
+  //               ],
+  //             )
+  //           ],
+  //         ),
+  //         _buildNavigationButton(),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget _buildUserDetails() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.name,
-            style:
-                GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 12)),
+            style: GoogleFonts.poppins(
+                color: AppColors.fontColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 14)),
         const SizedBox(height: 5),
-        Row(
-          children: [
-            const Icon(Icons.calendar_today, color: Colors.blue, size: 14),
-            const SizedBox(width: 5),
-            Text(widget.date,
-                style: const TextStyle(fontSize: 12, color: Colors.grey)),
-          ],
-        ),
+      ],
+    );
+  }
+
+  Widget _date() {
+    return Row(
+      children: [
+        const Icon(Icons.phone_in_talk, color: Colors.blue, size: 14),
+        const SizedBox(width: 5),
+        Text(widget.date,
+            style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
   }
 
   Widget _buildVerticalDivider() {
     return Container(
-      // margin: const EdgeInsets.only(top: 20),
-      height: 20,
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      height: 15,
       width: 1,
       decoration: const BoxDecoration(
-          border: Border(right: BorderSide(color: Colors.grey))),
+          border: Border(right: BorderSide(color: AppColors.fontColor))),
     );
   }
 
   Widget _buildCarModel() {
-    return Text(widget.vehicle,
-        style: const TextStyle(fontSize: 12, color: Colors.grey));
+    return Container(
+      // margin: const EdgeInsets.only(top: 2),
+      child: Text(widget.vehicle,
+          textAlign: TextAlign.start,
+          style: GoogleFonts.poppins(fontSize: 10, color: AppColors.fontColor)),
+    );
   }
 
   Widget _buildNavigationButton() {

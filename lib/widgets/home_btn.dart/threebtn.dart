@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/home_screens/all_followups.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -94,11 +95,11 @@ class _ThreebtnState extends State<Threebtn> {
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(0xFFE1EFFF),
+              color: AppColors.searchBar,
               borderRadius: BorderRadius.circular(5),
             ),
             child: SizedBox(
-              height: 37,
+              height: 32,
               width: double.infinity,
               child: Row(
                 children: [
@@ -121,14 +122,17 @@ class _ThreebtnState extends State<Threebtn> {
                             : Colors.transparent,
                         foregroundColor: _activeButtonIndex == 0
                             ? Colors.white
-                            : Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        textStyle: const TextStyle(fontSize: 14),
+                            : AppColors.fontColor,
+                        // padding: const EdgeInsets.symmetric(vertical: 0),
+                        textStyle: const TextStyle(fontSize: 10),
                       ),
-                      child: Text(
-                        'FollowUps(6)',
-                        style: GoogleFonts.poppins(
-                            fontSize: 12, fontWeight: FontWeight.w400),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          'FollowUps(6)',
+                          style: GoogleFonts.poppins(
+                              fontSize: 11, fontWeight: FontWeight.w300),
+                        ),
                       ),
                     ),
                   ),
@@ -151,13 +155,15 @@ class _ThreebtnState extends State<Threebtn> {
                             : Colors.transparent,
                         foregroundColor: _activeButtonIndex == 1
                             ? Colors.white
-                            : Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        textStyle: const TextStyle(fontSize: 14),
+                            : AppColors.fontColor,
                       ),
-                      child: Text('Appointments(5)',
-                          style: GoogleFonts.poppins(
-                              fontSize: 12, fontWeight: FontWeight.w400)),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Text('Appointments(5)',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                                fontSize: 11, fontWeight: FontWeight.w300)),
+                      ),
                     ),
                   ),
 
@@ -179,13 +185,16 @@ class _ThreebtnState extends State<Threebtn> {
                             : Colors.transparent,
                         foregroundColor: _activeButtonIndex == 2
                             ? Colors.white
-                            : Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        textStyle: const TextStyle(fontSize: 14),
+                            : AppColors.fontColor,
+                        // padding: const EdgeInsets.symmetric(vertical: 10),
+                        textStyle: const TextStyle(fontSize: 11),
                       ),
-                      child: Text('Test Drive(5)',
-                          style: GoogleFonts.poppins(
-                              fontSize: 12, fontWeight: FontWeight.w400)),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Text('Test Drive(5)',
+                            style: GoogleFonts.poppins(
+                                fontSize: 11, fontWeight: FontWeight.w400)),
+                      ),
                     ),
                   ),
                 ],
