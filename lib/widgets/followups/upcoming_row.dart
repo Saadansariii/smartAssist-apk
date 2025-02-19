@@ -181,11 +181,11 @@ class UpcomingFollowupItem extends StatefulWidget {
 
 class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
   late bool isFav;
-
+  String? leadId;
   @override
   void initState() {
     super.initState();
-
+    leadId = widget.leadId;
     isFav = widget.isFavorite;
   }
 

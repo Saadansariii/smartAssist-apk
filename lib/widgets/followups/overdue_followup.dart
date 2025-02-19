@@ -115,10 +115,12 @@ class overdueeFollowupsItem extends StatefulWidget {
 
 class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
   late bool isFav;
+  String? leadId;
   @override
   void initState() {
     super.initState();
     isFav = widget.isFavorite;
+    leadId = widget.leadId;
   }
 
   Future<void> _toggleFavorite() async {
@@ -401,7 +403,7 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => FollowupsDetails(leadId: widget.leadId),
+              builder: (context) => FollowupsDetails(leadId: leadId),
             ),
           );
         } else {

@@ -192,29 +192,31 @@ class _LeadsSecondState extends State<LeadsSecond> {
                     onPressed: () {
                       // Close the current dialog and open the second dialog
                       Navigator.pop(context); // Close the first dialog
-                      Future.microtask(() {
-                        // Immediately queue the second dialog to open after the first closes
+                      Future.microtask(
+                        () {
+                          // Immediately queue the second dialog to open after the first closes
 
-                        showDialog(
-                          context: context,
-                          builder: (context) => Dialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                          showDialog(
+                            context: context,
+                            builder: (context) => Dialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: LeadFirstStep(
+                                firstName: widget.firstName,
+                                email: widget.email,
+                                lastName: widget.lastName,
+                                selectedPurchaseType: '',
+                                selectedSubType: '',
+                                selectedFuelType: '',
+                                selectedBrand: '',
+                                selectedEvent: selectedEvent!,
+                                // initailSelectedEvent: selectedEvent!,
+                              ), // Your second modal widget
                             ),
-                            child: LeadFirstStep(
-                              firstName: widget.firstName,
-                              email: widget.email,
-                              lastName: widget.lastName,
-                              selectedPurchaseType: '',
-                              selectedSubType: '',
-                              selectedFuelType: '',
-                              selectedBrand: '',
-                              selectedEvent: selectedEvent!,
-                              // initailSelectedEvent: selectedEvent!,
-                            ), // Your second modal widget
-                          ),
-                        );
-                      });
+                          );
+                        },
+                      );
                     },
                     child: Text(
                       'Previous',

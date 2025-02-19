@@ -166,7 +166,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                   decoration: InputDecoration(
                     hintText: "Add Comments",
                     hintStyle: GoogleFonts.poppins(
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey,
                     ),
@@ -213,7 +213,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                           child: Text(
                             "Select",
                             style: GoogleFonts.poppins(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey,
                             ),
@@ -338,7 +338,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                               ? "Select Date"
                               : dateController.text,
                           style: GoogleFonts.poppins(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: dateController.text.isEmpty
                                 ? Colors.grey
@@ -487,7 +487,7 @@ Widget _buildDropdown({
             child: Text(
               hint,
               style: GoogleFonts.poppins(
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey,
               ),

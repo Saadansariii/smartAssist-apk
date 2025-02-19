@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
@@ -141,7 +142,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -152,19 +153,18 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Center(
-                    child: Text(
-                      'Create Appoinment',
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+                child: Text(
+                  'Create Appoinment',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
                   ),
                 ),
+              ),
+
+              SizedBox(
+                height: 10,
               ),
 
               // Align(
@@ -242,7 +242,8 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
                     'Leads Name :',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: GoogleFonts.poppins(
+                        fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
@@ -250,7 +251,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 243, 238, 238),
+                  color: AppColors.containerPopBg,
                 ),
                 child: isLoading
                     ? const Center(child: CircularProgressIndicator())
@@ -267,7 +268,10 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                             ),
                           ),
                         ),
-                        icon: const Icon(Icons.arrow_drop_down),
+                        icon: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Icon(Icons.keyboard_arrow_down_rounded),
+                        ),
                         isExpanded: true,
                         underline: const SizedBox.shrink(),
                         items: dropdownItems.map((String value) {
@@ -297,11 +301,11 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
               ),
 
               const SizedBox(height: 10),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text('Start Date',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                    style: GoogleFonts.poppins(
+                        fontSize: 14, fontWeight: FontWeight.w500)),
               ),
               const SizedBox(height: 10),
 
@@ -311,30 +315,40 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 243, 238, 238),
+                    color: AppColors.containerPopBg,
                   ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Text(
-                    startdateController.text.isEmpty
-                        ? "Select Date"
-                        : startdateController.text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: startdateController.text.isEmpty
-                          ? Colors.grey
-                          : Colors.black,
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          startdateController.text.isEmpty
+                              ? "Select Date"
+                              : startdateController.text,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: startdateController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        // color: AppColors.colorsBlue,
+                      ),
+                    ],
                   ),
                 ),
               ),
               const SizedBox(height: 10),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text('End Date',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                    style: GoogleFonts.poppins(
+                        fontSize: 14, fontWeight: FontWeight.w500)),
               ),
               const SizedBox(height: 10),
 
@@ -344,21 +358,31 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 243, 238, 238),
+                    color: AppColors.containerPopBg,
                   ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Text(
-                    enddateController.text.isEmpty
-                        ? "Select Date"
-                        : enddateController.text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: enddateController.text.isEmpty
-                          ? Colors.grey
-                          : Colors.black,
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          enddateController.text.isEmpty
+                              ? "Select Date"
+                              : enddateController.text,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: enddateController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        // color: AppColors.colorsBlue,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -490,13 +514,13 @@ Widget _buildDropdown({
     children: [
       Text(
         label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500),
       ),
       const SizedBox(height: 10),
       Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: const Color.fromARGB(255, 243, 238, 238),
+          color: AppColors.containerPopBg,
         ),
         child: DropdownButton<String>(
           value: value,
@@ -509,6 +533,14 @@ Widget _buildDropdown({
                 fontWeight: FontWeight.w500,
                 color: Colors.grey,
               ),
+            ),
+          ),
+          icon: const Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Icon(
+              Icons.keyboard_arrow_down_sharp,
+              color: AppColors.fontColor,
+              size: 25,
             ),
           ),
           isExpanded: true,
