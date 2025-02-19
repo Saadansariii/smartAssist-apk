@@ -92,7 +92,7 @@ class _ThreebtnState extends State<Threebtn> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.searchBar,
@@ -209,7 +209,7 @@ class _ThreebtnState extends State<Threebtn> {
               padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
               child: Container(
                 width: 150, // Set width of the container
-                height: 30,
+                height: 27,
                 decoration: BoxDecoration(
                   border: Border.all(
                       color: const Color(0xFF767676).withOpacity(0.3),
@@ -324,7 +324,7 @@ class _ThreebtnState extends State<Threebtn> {
             //   ),
             // ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 if (_activeButtonIndex == 0)
                   GestureDetector(
@@ -334,70 +334,159 @@ class _ThreebtnState extends State<Threebtn> {
                         position: const RelativeRect.fromLTRB(200, 230, 30, 0),
                         items: [
                           PopupMenuItem<String>(
+                            padding: EdgeInsets.zero,
                             height: 20,
                             onTap: () {
                               Future.delayed(Duration.zero, () {
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (context) {
+                                //     return Dialog(
+                                //       insetPadding: EdgeInsets.zero,
+                                //       backgroundColor: Colors.white,
+                                //       shape: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius.circular(10),
+                                //       ),
+                                //       child: _createFollowups,
+                                //     );
+                                //   },
+                                // );
                                 showDialog(
                                   context: context,
                                   builder: (context) {
                                     return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                      backgroundColor: Colors.transparent,
+                                      insetPadding: EdgeInsets
+                                          .zero, // Remove default padding
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal:
+                                                16), // Add some margin for better UX
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: _createFollowups,
                                       ),
-                                      child: _createFollowups,
                                     );
                                   },
                                 );
                               });
                             },
                             value: 'followup',
-                            child: Center(
-                              child: Text(
-                                'Create Followups',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 0, vertical: 15),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  const Icon(
+                                    Icons.add_call,
+                                    size: 20,
+                                    color: AppColors.fontColor,
+                                  ),
+                                  const SizedBox(
+                                    width: 4,
+                                  ),
+                                  Text(
+                                    'Create Followups',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.fontColor),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          PopupMenuDivider(height: 0.1),
+                          // const PopupMenuDivider(height: 0.1),
                           PopupMenuItem<String>(
+                            padding: EdgeInsets.zero,
                             height: 20,
                             onTap: () {
                               Future.delayed(Duration.zero, () {
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (context) {
+                                //     return Dialog(
+                                //       shape: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius.circular(10),
+                                //       ),
+                                //       child: const LeadFirstStep(
+                                //         firstName: '',
+                                //         lastName: '',
+                                //         selectedPurchaseType: '',
+                                //         selectedSubType: '',
+                                //         selectedFuelType: '',
+                                //         selectedBrand: '',
+                                //         email: '',
+                                //         selectedEvent: '',
+                                //       ), // Lead modal
+                                //     );
+                                //   },
+                                // );
                                 showDialog(
                                   context: context,
                                   builder: (context) {
                                     return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                      backgroundColor: Colors.transparent,
+                                      insetPadding: EdgeInsets
+                                          .zero, // Remove default padding
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal:
+                                                16), // Add some margin for better UX
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: const LeadFirstStep(
+                                          firstName: '',
+                                          lastName: '',
+                                          selectedPurchaseType: '',
+                                          selectedSubType: '',
+                                          selectedFuelType: '',
+                                          selectedBrand: '',
+                                          email: '',
+                                          selectedEvent: '',
+                                        ),
                                       ),
-                                      child: LeadFirstStep(
-                                        firstName: '',
-                                        lastName: '',
-                                        selectedPurchaseType: '',
-                                        selectedSubType: '',
-                                        selectedFuelType: '',
-                                        selectedBrand: '',
-                                        email: '',
-                                        selectedEvent: '',
-                                      ), // Lead modal
                                     );
                                   },
                                 );
                               });
                             },
                             value: 'lead',
-                            child: Center(
-                              child: Text(
-                                'Create Lead',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 0, vertical: 15),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  const Icon(
+                                    Icons.person_add_alt_1,
+                                    size: 20,
+                                    color: AppColors.fontColor,
+                                  ),
+                                  const SizedBox(
+                                    width: 4,
+                                  ),
+                                  Text(
+                                    'Create Leads',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.fontColor),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -409,7 +498,11 @@ class _ThreebtnState extends State<Threebtn> {
                     },
                     child: const Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                      child: Icon(Icons.add, size: 30),
+                      child: Icon(
+                        Icons.add,
+                        size: 30,
+                        color: AppColors.fontColor,
+                      ),
                     ),
                   ),
                 if (_activeButtonIndex == 1)
@@ -454,23 +547,55 @@ class _ThreebtnState extends State<Threebtn> {
                             height: 20,
                             onTap: () {
                               Future.delayed(Duration.zero, () {
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (context) {
+                                //     return Dialog(
+                                //       shape: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius.circular(10),
+                                //       ),
+                                //       child:const LeadFirstStep(
+                                //         firstName: '',
+                                //         lastName: '',
+                                //         selectedPurchaseType: '',
+                                //         selectedSubType: '',
+                                //         selectedFuelType: '',
+                                //         selectedBrand: '',
+                                //         email: '',
+                                //         selectedEvent: '',
+                                //       ), // Lead modal
+                                //     );
+                                //   },
+                                // );
                                 showDialog(
                                   context: context,
                                   builder: (context) {
                                     return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                      backgroundColor: Colors.transparent,
+                                      insetPadding: EdgeInsets
+                                          .zero, // Remove default padding
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal:
+                                                16), // Add some margin for better UX
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: const LeadFirstStep(
+                                          firstName: '',
+                                          lastName: '',
+                                          selectedPurchaseType: '',
+                                          selectedSubType: '',
+                                          selectedFuelType: '',
+                                          selectedBrand: '',
+                                          email: '',
+                                          selectedEvent: '',
+                                        ),
                                       ),
-                                      child: LeadFirstStep(
-                                        firstName: '',
-                                        lastName: '',
-                                        selectedPurchaseType: '',
-                                        selectedSubType: '',
-                                        selectedFuelType: '',
-                                        selectedBrand: '',
-                                        email: '',
-                                        selectedEvent: '',
-                                      ), // Lead modal
                                     );
                                   },
                                 );
@@ -525,6 +650,7 @@ class _ThreebtnState extends State<Threebtn> {
                 }
               },
               child: const Icon(
+                color: AppColors.fontColor,
                 Icons.keyboard_arrow_down_outlined,
                 size: 36,
               ),

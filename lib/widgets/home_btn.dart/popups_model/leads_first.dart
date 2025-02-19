@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_assist/config/component/color/colors.dart';
 import 'dart:convert';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_second.dart';
 import 'package:smart_assist/utils/storage.dart';
@@ -135,19 +136,17 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Center(
-                    child: Text(
-                      'Add New Leads',
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                  child: Text(
+                    'Add New Leads',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               _buildSectionTitle('Assign to:'),
               _buildDropdown(
                 // label: 'Assign to:',
@@ -327,17 +326,21 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
               borderSide: BorderSide.none,
             ),
             filled: true,
-            fillColor: const Color.fromARGB(255, 243, 238, 238),
+            fillColor: AppColors.containerPopBg,
           ),
           hint: Text(
             hint,
             style: GoogleFonts.poppins(
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
             ),
           ),
-          icon: const Icon(Icons.keyboard_arrow_down),
+          icon: const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: AppColors.fontColor,
+            size: 30,
+          ),
           isExpanded: true,
           items: items.map((item) {
             return DropdownMenuItem<String>(
@@ -390,7 +393,8 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
         alignment: Alignment.centerLeft,
         child: Text(
           title,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+              fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
         ),
       ),
     );
@@ -405,7 +409,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: const Color.fromARGB(255, 243, 238, 238),
+        color: AppColors.containerPopBg,
       ),
       child: TextField(
         controller: controller, // Assign the controller
@@ -416,7 +420,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
         ),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey),
+          hintStyle: GoogleFonts.poppins(color: Colors.grey, fontSize: 12),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
           border: InputBorder.none,

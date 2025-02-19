@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -53,9 +55,8 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
 
   @override
   Widget build(BuildContext context) {
-    
     if (widget.overdueeFollowups.isEmpty) {
-      return Container(
+      return SizedBox(
         height: 240,
         child: const Center(child: Text('No overdue followups available')),
       );
@@ -152,102 +153,243 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
       child: Slidable(
-        endActionPane: ActionPane(
-          motion: const StretchMotion(),
+        endActionPane: const ActionPane(
+          motion: StretchMotion(),
           children: [
             ReusableSlidableAction(
-              onPressed: () => _phoneAction(),
-              backgroundColor: Colors.blue,
-              icon: Icons.phone,
-            ),
+                onPressed: _phoneAction,
+                backgroundColor: Colors.blue,
+                icon: Icons.phone),
             ReusableSlidableAction(
-              onPressed: () => _messageAction(),
-              backgroundColor: Colors.green,
-              icon: Icons.message_rounded,
-            ),
+                onPressed: _messageAction,
+                backgroundColor: Colors.green,
+                icon: Icons.message_rounded),
             ReusableSlidableAction(
-              onPressed: () => _mailAction(),
-              backgroundColor: const Color.fromARGB(255, 231, 225, 225),
-              icon: Icons.mail,
-              foregroundColor: Colors.red,
-            ),
+                onPressed: _mailAction,
+                backgroundColor: Colors.grey,
+                icon: Icons.mail,
+                foregroundColor: Colors.red),
           ],
         ),
-        child: SizedBox(
-          height: 80,
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 245, 244, 244),
-              borderRadius: BorderRadius.circular(10),
-              border: const Border(
-                left: BorderSide(width: 8.0, color: Colors.red),
-              ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    isFav ? Icons.star_rounded : Icons.star_border_rounded,
-                    color: isFav ? Colors.amber : Colors.grey,
-                    size: 40,
-                  ),
-                  onPressed: _toggleFavorite, // Call API on tap
-                ),
-                _buildUserDetails(),
-                _buildVerticalDivider(),
-                _buildCarModel(),
-                _buildNavigationButton(context, widget.leadId),
-              ],
-            ),
-          ),
-        ),
+        child: _buildOverdueCard(),
       ),
     );
   }
 
+  // Widget build(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+  //     child: Slidable(
+  //       endActionPane: ActionPane(
+  //         motion: const StretchMotion(),
+  //         children: [
+  //           ReusableSlidableAction(
+  //             onPressed: () => _phoneAction(),
+  //             backgroundColor: Colors.blue,
+  //             icon: Icons.phone,
+  //           ),
+  //           ReusableSlidableAction(
+  //             onPressed: () => _messageAction(),
+  //             backgroundColor: Colors.green,
+  //             icon: Icons.message_rounded,
+  //           ),
+  //           ReusableSlidableAction(
+  //             onPressed: () => _mailAction(),
+  //             backgroundColor: const Color.fromARGB(255, 231, 225, 225),
+  //             icon: Icons.mail,
+  //             foregroundColor: Colors.red,
+  //           ),
+  //         ],
+  //       ),
+  //       child: _buildOverdueCard(),
+  //       // child: SizedBox(
+  //       //   height: 80,
+  //       //   child: Container(
+  //       //     decoration: BoxDecoration(
+  //       //       color: const Color.fromARGB(255, 245, 244, 244),
+  //       //       borderRadius: BorderRadius.circular(10),
+  //       //       border: const Border(
+  //       //         left: BorderSide(width: 8.0, color: Colors.red),
+  //       //       ),
+  //       //     ),
+  //       //     child: Row(
+  //       //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //       //       children: [
+  //       //         IconButton(
+  //       //           icon: Icon(
+  //       //             isFav ? Icons.star_rounded : Icons.star_border_rounded,
+  //       //             color: isFav ? Colors.amber : AppColors.starBorderColor,
+  //       //             size: 40,
+  //       //           ),
+  //       //           onPressed: _toggleFavorite, // Call API on tap
+  //       //         ),
+  //       //         Column(
+  //       //           crossAxisAlignment: CrossAxisAlignment.start,
+  //       //           children: [
+  //       //             _buildUserDetails(),
+  //       //              const SizedBox(height: 4),
+  //       //           ],
+  //       //         ),
+  //       //         _date(),
+  //       //         _buildVerticalDivider(),
+  //       //         _buildCarModel(),
+  //       //         _buildNavigationButton(context, widget.leadId),
+  //       //       ],
+  //       //     ),
+  //       //   ),
+  //       // ),
+  //     ),
+  //   );
+  // }
+
+  Widget _buildOverdueCard() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.containerBg,
+        borderRadius: BorderRadius.circular(10),
+        border: const Border(
+          left: BorderSide(width: 8.0, color: AppColors.sideRed),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment:
+            CrossAxisAlignment.center, // Ensures vertical centering
+        children: [
+          // Star Icon - Centered
+          IconButton(
+            icon: Icon(
+              isFav ? Icons.star_rounded : Icons.star_border_rounded,
+              color: isFav
+                  ? AppColors.starColorsYellow
+                  : AppColors.starBorderColor,
+              size: 40,
+            ),
+            onPressed: _toggleFavorite,
+          ),
+
+          // User Details (Aligned to Left)
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildUserDetails(),
+                const SizedBox(height: 4), // Spacing between name and details
+                Row(
+                  children: [
+                    _date(),
+                    const SizedBox(
+                        width: 8), // Add spacing between date and divider
+                    _buildVerticalDivider(20),
+                    const SizedBox(
+                        width: 8), // Add spacing between divider and car model
+                    _buildCarModel(),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          // Arrow Button - Centered
+          _buildNavigationButton(context, widget.leadId),
+        ],
+      ),
+    );
+  }
+
+  // Widget _buildUserDetails() {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         widget.name,
+  //         style: GoogleFonts.poppins(
+  //             fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
+  //       ),
+  //       const SizedBox(height: 5),
+  //       Row(
+  //         children: [
+  //           const Icon(Icons.phone, color: Colors.blue, size: 14),
+  //           const SizedBox(width: 10),
+  //           Text(widget.date,
+  //               style: const TextStyle(fontSize: 12, color: Colors.grey)),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
+
   Widget _buildUserDetails() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.name,
-          style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
-        ),
-        const SizedBox(height: 5),
-        Row(
-          children: [
-            const Icon(Icons.phone, color: Colors.blue, size: 14),
-            const SizedBox(width: 10),
-            Text(widget.date,
-                style: const TextStyle(fontSize: 12, color: Colors.grey)),
-          ],
-        ),
+        Text(widget.name,
+            style: GoogleFonts.poppins(
+                color: AppColors.fontColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 14)),
+        // const SizedBox(height: 5),
       ],
     );
   }
 
-  Widget _buildVerticalDivider() {
+  Widget _date() {
+    String formattedDate = '';
+    try {
+      DateTime parseDate = DateTime.parse(widget.date);
+      formattedDate = DateFormat('dd/MM/yyyy').format(parseDate);
+    } catch (e) {
+      formattedDate = widget.date;
+    }
+    return Row(
+      children: [
+        const Icon(Icons.phone_in_talk, color: Colors.blue, size: 14),
+        const SizedBox(width: 5),
+        Text(formattedDate,
+            style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    );
+  }
+
+  // Widget _buildVerticalDivider() {
+  //   return Container(
+  //     height: 15,
+  //     width: 1,
+  //     decoration: const BoxDecoration(
+  //         border: Border(right: BorderSide(color: AppColors.fontColor))),
+  //   );
+  // }
+
+  // Widget _buildCarModel() {
+  //   return Text(widget.vehicle,
+  //       style: const TextStyle(fontSize: 10, color: AppColors.fontColor));
+  // }
+
+  Widget _buildVerticalDivider(double height) {
     return Container(
-      margin: const EdgeInsets.only(top: 20),
-      height: 20,
-      width: 1,
+      height: height,
+      width: 1.5,
       decoration: const BoxDecoration(
-          border: Border(right: BorderSide(color: Colors.grey))),
+        border: Border(right: BorderSide(color: AppColors.fontColor)),
+      ),
     );
   }
 
   Widget _buildCarModel() {
-    return Container(
-      margin: const EdgeInsets.only(top: 22),
-      child: Text(widget.vehicle,
-          style: const TextStyle(
-              fontSize: 12, fontWeight: FontWeight.w400, color: Colors.grey)),
+    return ConstrainedBox(
+      constraints:
+          const BoxConstraints(maxWidth: 100), // Adjust width as needed
+      child: Text(
+        widget.vehicle,
+        style: GoogleFonts.poppins(fontSize: 10, color: AppColors.fontColor),
+        overflow: TextOverflow.visible, // Allow text wrapping
+        softWrap: true, // Enable wrapping
+      ),
     );
   }
 
@@ -259,7 +401,7 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => FollowupsDetails(leadId: leadId),
+              builder: (context) => FollowupsDetails(leadId: widget.leadId),
             ),
           );
         } else {
@@ -267,9 +409,9 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-            color: const Color(0xffD9D9D9),
+            color: AppColors.arrowContainerColor,
             borderRadius: BorderRadius.circular(30)),
         child: const Icon(Icons.arrow_forward_ios_sharp,
             size: 25, color: Colors.white),

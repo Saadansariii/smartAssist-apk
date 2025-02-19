@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/pages/details_pages/followups/followups.dart';
@@ -251,8 +252,7 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
         color: AppColors.containerBg,
         borderRadius: BorderRadius.circular(10),
         border: const Border(
-          left:
-              BorderSide(width: 8.0, color: Color.fromARGB(255, 81, 223, 121)),
+          left: BorderSide(width: 8.0, color: AppColors.sideGreen),
         ),
       ),
       child: Row(
@@ -265,7 +265,9 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
               IconButton(
                 icon: Icon(
                   isFav ? Icons.star_rounded : Icons.star_border_rounded,
-                  color: isFav ? Colors.amber : Colors.grey,
+                  color: isFav
+                      ? AppColors.starColorsYellow
+                      : AppColors.starBorderColor,
                   size: 40,
                 ),
                 onPressed: _toggleFavorite,
@@ -280,7 +282,7 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
                   Row(
                     children: [
                       _date(),
-                      _buildVerticalDivider(),
+                      _buildVerticalDivider(20),
                       _buildCarModel(),
                     ],
                   ),
@@ -354,20 +356,27 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
   }
 
   Widget _date() {
+    String formattedDate = '';
+    try {
+      DateTime parseDate = DateTime.parse(widget.date);
+      formattedDate = DateFormat('dd/MM/yyyy').format(parseDate);
+    } catch (e) {
+      formattedDate = widget.date;
+    }
     return Row(
       children: [
         const Icon(Icons.phone_in_talk, color: Colors.blue, size: 14),
         const SizedBox(width: 5),
-        Text(widget.date,
+        Text(formattedDate,
             style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
   }
 
-  Widget _buildVerticalDivider() {
+  Widget _buildVerticalDivider(double height) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
-      height: 15,
+      height: height,
       width: 1,
       decoration: const BoxDecoration(
           border: Border(right: BorderSide(color: AppColors.fontColor))),
@@ -375,11 +384,12 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
   }
 
   Widget _buildCarModel() {
-    return Container(
-      // margin: const EdgeInsets.only(top: 2),
-      child: Text(widget.vehicle,
-          textAlign: TextAlign.start,
-          style: GoogleFonts.poppins(fontSize: 10, color: AppColors.fontColor)),
+    return Text(
+      widget.vehicle,
+      textAlign: TextAlign.start,
+      style: GoogleFonts.poppins(fontSize: 10, color: AppColors.fontColor),
+      softWrap: true,
+      overflow: TextOverflow.visible,
     );
   }
 
@@ -397,10 +407,11 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-            color: Colors.grey[400], borderRadius: BorderRadius.circular(30)),
-        child: const Icon(Icons.arrow_forward_ios_sharp,
+            color: AppColors.arrowContainerColor,
+            borderRadius: BorderRadius.circular(30)),
+        child: const Icon(Icons.arrow_forward_ios_rounded,
             size: 25, color: Colors.white),
       ),
     );

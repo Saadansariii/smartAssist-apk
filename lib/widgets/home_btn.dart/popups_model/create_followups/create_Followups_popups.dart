@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
@@ -115,7 +116,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -128,41 +129,44 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Center(
-                    child: Text(
-                      'Create Followups',
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                  child: Text(
+                    'Create followups',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.fontBlack,
                     ),
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 6,
               ),
 
               Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  padding: EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
                     'Comments :',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: GoogleFonts.poppins(
+                        fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
               Container(
+                height: 45,
                 width: double.infinity, // Full width
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 243, 238, 238),
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColors.containerPopBg,
                 ),
                 child: TextField(
                   controller: descriptionController,
                   decoration: InputDecoration(
                     hintText: "Add Comments",
                     hintStyle: GoogleFonts.poppins(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey,
                     ),
@@ -176,24 +180,32 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 6,
+              ),
               Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
                     'Leads Name :',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: GoogleFonts.poppins(
+                        fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
               Container(
+                height: 45,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 243, 238, 238),
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColors.containerPopBg,
                 ),
                 child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                        color: AppColors.colorsBlue,
+                      ))
                     : DropdownButton<String>(
                         value: selectedLeads,
                         hint: Padding(
@@ -201,13 +213,19 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                           child: Text(
                             "Select",
                             style: GoogleFonts.poppins(
-                              fontSize: 14,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey,
                             ),
                           ),
                         ),
-                        icon: const Icon(Icons.arrow_drop_down),
+                        icon: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.keyboard_arrow_down_sharp,
+                            size: 30,
+                          ),
+                        ),
                         isExpanded: true,
                         underline: const SizedBox.shrink(),
                         items: dropdownItems.map((String value) {
@@ -290,11 +308,13 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                 },
               ),
               const SizedBox(height: 10),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Followup Date',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                child: Text(
+                  'Followup Date',
+                  style: GoogleFonts.poppins(
+                      fontSize: 14, fontWeight: FontWeight.w500),
+                ),
               ),
               const SizedBox(height: 10),
 
@@ -304,21 +324,33 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 243, 238, 238),
+                    color: AppColors.containerPopBg,
                   ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Text(
-                    dateController.text.isEmpty
-                        ? "Select Date"
-                        : dateController.text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: dateController.text.isEmpty
-                          ? Colors.grey
-                          : Colors.black,
-                    ),
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween, // Ensures spacing
+                    children: [
+                      Expanded(
+                        child: Text(
+                          dateController.text.isEmpty
+                              ? "Select Date"
+                              : dateController.text,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: dateController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        color: Colors.grey,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -347,12 +379,14 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(
+                    width: 30,
+                  ),
                   Expanded(
                     child: Container(
                       height: 45,
                       decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: AppColors.colorsBlue,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextButton(
@@ -438,13 +472,13 @@ Widget _buildDropdown({
     children: [
       Text(
         label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500),
       ),
       const SizedBox(height: 10),
       Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: const Color.fromARGB(255, 243, 238, 238),
+          color: AppColors.containerPopBg,
         ),
         child: DropdownButton<String>(
           value: value,
@@ -453,10 +487,17 @@ Widget _buildDropdown({
             child: Text(
               hint,
               style: GoogleFonts.poppins(
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey,
               ),
+            ),
+          ),
+          icon: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.keyboard_arrow_down,
+              size: 30,
             ),
           ),
           isExpanded: true,
