@@ -38,7 +38,7 @@ class _ThreebtnState extends State<Threebtn> {
   // final Widget _leadFirstStep = const LeadFirstStep();
   final Widget _createFollowups = const CreateFollowupsPopups();
   final Widget _createAppoinment = const AppointmentPopup();
-
+  String? leadId;
   // List<dynamic> upcomingFollowups = [];
   // List<dynamic> overdueFollowups = [];
   // List<dynamic> upcomingAppointments = [];
@@ -52,6 +52,9 @@ class _ThreebtnState extends State<Threebtn> {
   @override
   void initState() {
     super.initState();
+    leadId = widget.leadId;
+    print('this is the lead id $leadId');
+    print(widget.leadId);
     _childButtonIndex = 0;
     currentWidget = FollowupsUpcoming(
       upcomingFollowups: widget.upcomingFollowups,
@@ -92,7 +95,7 @@ class _ThreebtnState extends State<Threebtn> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.searchBar,
@@ -128,10 +131,12 @@ class _ThreebtnState extends State<Threebtn> {
                       ),
                       child: SizedBox(
                         width: double.infinity,
-                        child: Text(
-                          'FollowUps(6)',
-                          style: GoogleFonts.poppins(
-                              fontSize: 11, fontWeight: FontWeight.w300),
+                        child: Center(
+                          child: Text(
+                            'FollowUps',
+                            style: GoogleFonts.poppins(
+                                fontSize: 11, fontWeight: FontWeight.w300),
+                          ),
                         ),
                       ),
                     ),
@@ -159,10 +164,12 @@ class _ThreebtnState extends State<Threebtn> {
                       ),
                       child: SizedBox(
                         width: double.infinity,
-                        child: Text('Appointments(5)',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                                fontSize: 11, fontWeight: FontWeight.w300)),
+                        child: Center(
+                          child: Text('Appointments',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 11, fontWeight: FontWeight.w300)),
+                        ),
                       ),
                     ),
                   ),
@@ -191,9 +198,11 @@ class _ThreebtnState extends State<Threebtn> {
                       ),
                       child: SizedBox(
                         width: double.infinity,
-                        child: Text('Test Drive(5)',
-                            style: GoogleFonts.poppins(
-                                fontSize: 11, fontWeight: FontWeight.w400)),
+                        child: Center(
+                          child: Text('Test Drive',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 11, fontWeight: FontWeight.w400)),
+                        ),
                       ),
                     ),
                   ),
@@ -544,35 +553,30 @@ class _ThreebtnState extends State<Threebtn> {
                               });
                             },
                             value: 'appointment',
-                            child: Container(
-                              decoration:
-                                  const BoxDecoration(color: Colors.black),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 15),
-                                child: Row(
-                                  children: [
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(15, 0, 10, 0),
-                                      child: Icon(
-                                        Icons.add_call,
-                                        size: 20,
-                                        color: AppColors.fontColor,
-                                      ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 0, vertical: 15),
+                              child: Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
+                                    child: Icon(
+                                      Icons.add_call,
+                                      size: 20,
+                                      color: AppColors.fontColor,
                                     ),
-                                    const SizedBox(
-                                      width: 4,
-                                    ),
-                                    Text(
-                                      'Create Appointment',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.fontColor),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(
+                                    width: 4,
+                                  ),
+                                  Text(
+                                    'Create Appointment',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.fontColor),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -757,17 +761,12 @@ class _ThreebtnState extends State<Threebtn> {
           children: [
             GestureDetector(
               onTap: () {
-                // if (widget.leadId != null && widget.leadId!.isNotEmpty) {
-                if (widget.leadId.isNotEmpty) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddFollowups(leadId: widget.leadId),
-                    ),
-                  );
-                } else {
-                  print("Error: leadId is null or empty");
-                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddFollowups(),
+                  ),
+                );
               },
               child: const Icon(
                 color: AppColors.fontColor,

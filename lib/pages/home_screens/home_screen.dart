@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     fetchDashboardData();
-
+    // print(widget.leadId);
     // isDashboardLoading = true;
   }
 
@@ -327,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child:
                                   CircularProgressIndicator()) // Show loader only when data is loading
                           : Threebtn(
-                              leadId: leadId ?? '',
+                              leadId: leadId ?? 'empty',
                               upcomingFollowups: upcomingFollowups,
                               overdueFollowups: overdueFollowups,
                               upcomingAppointments: upcomingAppointments,

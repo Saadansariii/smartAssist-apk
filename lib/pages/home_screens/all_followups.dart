@@ -8,10 +8,10 @@ import 'package:smart_assist/widgets/followups/upcoming_row.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
 
 class AddFollowups extends StatefulWidget {
-  final String leadId;
+  // final String leadId;
   const AddFollowups({
     super.key,
-    required this.leadId,
+    // required this.leadId,
   });
 
   @override
@@ -44,8 +44,8 @@ class _AddFollowupsState extends State<AddFollowups> {
     setState(() => _isLoading = true);
     try {
       final token = await Storage.getToken();
-      final String apiUrl =
-          "https://api.smartassistapp.in/api/admin/leads/tasks/all/${widget.leadId}";
+      const String apiUrl = "https://api.smartassistapp.in/api/tasks/all-tasks";
+          // "https://api.smartassistapp.in/api/admin/leads/tasks/all/${widget.leadId}";
 
       final response = await http.get(
         Uri.parse(apiUrl),
