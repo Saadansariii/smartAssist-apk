@@ -59,7 +59,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
         status = leadData['status'] ?? 'N/A';
         company = leadData['brand'] ?? 'N/A';
         address = leadData['address'] ?? 'N/A';
-        lead_owner = leadData['lead_owner'] ?? 'N/A';
+        lead_owner = leadData['lead_name'] ?? 'N/A';
       });
     } catch (e) {
       print('Error fetching data: $e');
@@ -381,7 +381,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              padding: EdgeInsets.all(2),
+                              padding: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
                                   color: const Color.fromARGB(255, 80, 78, 78),
                                   border: Border.all(
@@ -389,47 +389,47 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                           255, 88, 87, 87)),
                                   borderRadius: BorderRadius.circular(50)),
                               child: Container(
-                                padding: EdgeInsets.all(5),
+                                padding: const EdgeInsets.all(5),
                                 decoration: BoxDecoration(
                                     color: Colors.grey,
                                     borderRadius: BorderRadius.circular(50)),
-                                child: Icon(
+                                child: const Icon(
                                   size: 60,
                                   Icons.person,
                                   color: Colors.white,
                                 ),
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
                               lead_owner,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               ),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-                                  padding: EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(5),
                                   decoration: BoxDecoration(
                                       color: Colors.green,
                                       borderRadius: BorderRadius.circular(10)),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.phone,
                                     color: Colors.white,
                                   ),
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Container(
-                                  padding: EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(5),
                                   decoration: BoxDecoration(
                                       color: const Color.fromARGB(
                                           255, 233, 163, 84),
                                       borderRadius: BorderRadius.circular(10)),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.message,
                                     color: Colors.white,
                                   ),

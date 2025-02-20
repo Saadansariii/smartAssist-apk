@@ -635,8 +635,7 @@ class LeadsSrv {
     final DateTime finalDate = selectedDate ?? DateTime.now();
     final String formattedDate = DateFormat('dd-MM-yyyy').format(finalDate);
     final String apiUrl =
-        'https://api.smartassistapp.in/api/calendar/tasks/all/asondate?date=$formattedDate';
-    // https: //api.smartassistapp.in/api/calendar/tasks/all/asondate?date=13-02-2025
+        'https://api.smartassistapp.in/api/calendar/tasks/all/asondate?date=$formattedDate'; 
 
     final token = await Storage.getToken();
 

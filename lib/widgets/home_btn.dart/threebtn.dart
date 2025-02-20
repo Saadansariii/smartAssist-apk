@@ -678,6 +678,7 @@ class _ThreebtnState extends State<Threebtn> {
                                 // );
                                 showDialog(
                                   context: context,
+                                  // barrierDismissible: false, it work for click outside not closed
                                   builder: (context) {
                                     return Dialog(
                                       backgroundColor: Colors.transparent,

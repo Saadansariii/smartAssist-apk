@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
@@ -155,7 +157,7 @@ class _LeadsLastState extends State<LeadsLast> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: const Color.fromARGB(255, 243, 238, 238),
+                            color: AppColors.containerPopBg,
                           ),
                           child: isLoading
                               ? const Center(child: CircularProgressIndicator())
@@ -163,14 +165,8 @@ class _LeadsLastState extends State<LeadsLast> {
                                   value: selectedStatus,
                                   hint: Padding(
                                     padding: const EdgeInsets.only(left: 10),
-                                    child: Text(
-                                      "Select",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                    child: Text("Select",
+                                        style: AppFont.dropDown()),
                                   ),
                                   icon: const Icon(Icons.keyboard_arrow_down),
                                   isExpanded: true,
@@ -200,18 +196,18 @@ class _LeadsLastState extends State<LeadsLast> {
                                         ),
                                       ),
                                     ),
-                                    DropdownMenuItem<String>(
-                                      value: "Qualified",
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 10.0),
-                                        child: Text(
-                                          "Qualified",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                    ),
+                                    // DropdownMenuItem<String>(
+                                    //   value: "Qualified",
+                                    //   child: Padding(
+                                    //     padding: EdgeInsets.only(left: 10.0),
+                                    //     child: Text(
+                                    //       "Qualified",
+                                    //       style: TextStyle(
+                                    //           fontSize: 14,
+                                    //           fontWeight: FontWeight.w500),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     DropdownMenuItem<String>(
                                       value: "Lost",
                                       child: Padding(
@@ -241,25 +237,20 @@ class _LeadsLastState extends State<LeadsLast> {
                           padding: const EdgeInsets.symmetric(vertical: 5.0),
                           child: Text(
                             'Description :',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                            style: AppFont.dropDowmLabel(),
                           ),
                         ),
                         Container(
                           width: double.infinity, // Full width
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: const Color.fromARGB(255, 243, 238, 238),
+                            color: AppColors.containerPopBg,
                           ),
                           child: TextField(
                             controller: descriptionController,
                             decoration: InputDecoration(
                               hintText: "Description",
-                              hintStyle: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey,
-                              ),
+                              hintStyle: AppFont.dropDown(),
                               contentPadding: const EdgeInsets.only(left: 10),
                               border: InputBorder.none,
                             ),
@@ -284,7 +275,7 @@ class _LeadsLastState extends State<LeadsLast> {
                           width: double.infinity, // Full width
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: const Color.fromARGB(255, 243, 238, 238),
+                            color: AppColors.containerPopBg,
                           ),
                           child: TextField(
                             controller: phoneController,
@@ -306,7 +297,7 @@ class _LeadsLastState extends State<LeadsLast> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Padding(
+                        const Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5.0),
                           child: Text(
                             'Expected Date Purchased:',
@@ -320,74 +311,145 @@ class _LeadsLastState extends State<LeadsLast> {
                             width: double.infinity,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              color: const Color.fromARGB(255, 243, 238, 238),
+                              color: AppColors.containerPopBg,
                             ),
                             padding: const EdgeInsets.symmetric(
                                 vertical: 12, horizontal: 10),
-                            child: Text(
-                              dateController.text.isEmpty
-                                  ? "Select Date"
-                                  : dateController.text,
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: dateController.text.isEmpty
-                                    ? Colors.grey
-                                    : Colors.black,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  dateController.text.isEmpty
+                                      ? "Select Date"
+                                      : dateController.text,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: dateController.text.isEmpty
+                                        ? Colors.grey
+                                        : Colors.black,
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 10.0),
+                                  child: Icon(
+                                    Icons.calendar_month_outlined,
+                                    color: Colors.grey,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),
                         const SizedBox(height: 30),
                         Row(
                           children: [
+                            // Expanded(
+                            //   child: Container(
+                            //     height: 45,
+                            //     decoration: BoxDecoration(
+                            //       color: Colors.black,
+                            //       borderRadius: BorderRadius.circular(8),
+                            //     ),
+                            //     child: TextButton(
+                            //       onPressed: () {
+                            //         Navigator.pop(context);
+                            //         Future.microtask(() {
+                            //           showDialog(
+                            //             context: context,
+                            //             builder: (context) => Dialog(
+                            //               shape: RoundedRectangleBorder(
+                            //                 borderRadius:
+                            //                     BorderRadius.circular(10),
+                            //               ),
+                            //               child: LeadsThird(
+                            //                 firstName: widget.firstName,
+                            //                 lastName: widget.lastName,
+                            //                 email: widget.email,
+                            //                 selectedPurchaseType:
+                            //                     selectedPurchaseType!,
+                            //                 selectedSubType: selectedSubType!,
+                            //                 selectedFuelType: selectedFuelType!,
+                            //                 selectedBrand: selectedBrand!,
+                            //                 selectedEnquiryType:
+                            //                     selectedEnquiryType!,
+                            //                 selectedSource: selectedSource!,
+                            //                 mobile: widget.mobile,
+                            //                 pmi: widget.PMI,
+                            //                 selectedEvent: '',
+                            //                 selectedFuel: selectedFuel!,
+                            //               ),
+                            //             ),
+                            //           );
+                            //         });
+                            //       },
+                            //       child: Text('Previous',
+                            //           style: GoogleFonts.poppins(
+                            //               fontSize: 16,
+                            //               fontWeight: FontWeight.w600,
+                            //               color: Colors.white)),
+                            //     ),
+                            //   ),
+                            // ),
+
                             Expanded(
-                              child: Container(
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(8),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Future.microtask(() {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => Dialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: LeadsThird(
-                                            firstName: widget.firstName,
-                                            lastName: widget.lastName,
-                                            email: widget.email,
-                                            selectedPurchaseType:
-                                                selectedPurchaseType!,
-                                            selectedSubType: selectedSubType!,
-                                            selectedFuelType: selectedFuelType!,
-                                            selectedBrand: selectedBrand!,
-                                            selectedEnquiryType:
-                                                selectedEnquiryType!,
-                                            selectedSource: selectedSource!,
-                                            mobile: widget.mobile,
-                                            pmi: widget.PMI,
-                                            selectedEvent: '',
-                                            selectedFuel: selectedFuel!,
-                                          ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      backgroundColor: Colors.transparent,
+                                      insetPadding: EdgeInsets.zero,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
-                                      );
-                                    });
-                                  },
-                                  child: Text('Previous',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white)),
+                                        child: LeadsThird(
+                                          firstName: widget.firstName,
+                                          lastName: widget.lastName,
+                                          email: widget.email,
+                                          selectedPurchaseType:
+                                              selectedPurchaseType!,
+                                          selectedSubType: selectedSubType!,
+                                          selectedFuelType: selectedFuelType!,
+                                          selectedBrand: selectedBrand!,
+                                          selectedEnquiryType:
+                                              selectedEnquiryType!,
+                                          selectedSource: selectedSource!,
+                                          mobile: widget.mobile,
+                                          pmi: widget.PMI,
+                                          selectedEvent: '',
+                                          selectedFuel: selectedFuel!,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'Previous',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
+
                             const SizedBox(width: 20),
                             Expanded(
                               child: Container(
@@ -421,7 +483,7 @@ class _LeadsLastState extends State<LeadsLast> {
       },
     );
   }
- 
+
   Future<void> submitForm() async {
     String description = descriptionController.text;
     String phone = phoneController.text;

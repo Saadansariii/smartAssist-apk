@@ -265,7 +265,7 @@ class _OppUpcomingItemState extends State<OppUpcomingItem> {
             ),
           ),
 
-          _buildNavigationButton(context , widget.leadId),
+          _buildNavigationButton(context, widget.leadId),
         ],
       ),
     );
@@ -275,11 +275,13 @@ class _OppUpcomingItemState extends State<OppUpcomingItem> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.name,
-            style: GoogleFonts.poppins(
-                color: AppColors.fontColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 14)),
+        Text(
+          widget.name,
+          style: GoogleFonts.poppins(
+              color: AppColors.fontColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 14),
+        ),
       ],
     );
   }
@@ -343,7 +345,7 @@ class _OppUpcomingItemState extends State<OppUpcomingItem> {
     );
   }
 
-   Widget _buildNavigationButton(BuildContext context, String leadId) {
+  Widget _buildNavigationButton(BuildContext context, String leadId) {
     return GestureDetector(
       onTap: () {
         if (leadId.isNotEmpty) {

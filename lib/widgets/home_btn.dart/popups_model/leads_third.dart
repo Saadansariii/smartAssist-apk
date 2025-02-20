@@ -275,60 +275,164 @@ class _LeadsThirdState extends State<LeadsThird> {
     );
   }
 
- 
-
   Widget _buildNavigationButtons() {
     return Row(
       children: [
-        
-
+        // Expanded(
+        //   child: Container(
+        //     height: 45,
+        //     decoration: BoxDecoration(
+        //       color: Colors.black,
+        //       borderRadius: BorderRadius.circular(8),
+        //     ),
+        //     child: TextButton(
+        //       onPressed: () {
+        //         Navigator.pop(context);
+        //         Future.microtask(() {
+        //           showDialog(
+        //             context: context,
+        //             builder: (context) => Dialog(
+        //               shape: RoundedRectangleBorder(
+        //                 borderRadius: BorderRadius.circular(10),
+        //               ),
+        //               child: LeadsSecond(
+        //                 firstName: widget.firstName,
+        //                 lastName: widget.lastName,
+        //                 email: widget.email,
+        //                 selectedEvent: widget.selectedEvent,
+        //                 selectedPurchaseType: selectedPurchaseType!,
+        //                 selectedSubType: selectedSubType!,
+        //                 selectedFuelType: selectedFuelType!,
+        //                 selectedBrand: selectedBrand!,
+        //                 selectedFuel: selectedFuel!,
+        //                 // selectedEnquiryType: selectedEnquiryType!,
+        //                 // selectedSource: selectedSource!,
+        //                 // mobile: widget.mobile,
+        //                 // pmi: widget.PMI,
+        //               ),
+        //             ),
+        //           );
+        //         });
+        //       },
+        //       child: Text('Previous',
+        //           style: GoogleFonts.poppins(
+        //               fontSize: 16,
+        //               fontWeight: FontWeight.w600,
+        //               color: Colors.white)),
+        //     ),
+        //   ),
+        // ),
         Expanded(
-          child: Container(
-            height: 45,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(8),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            child: TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Future.microtask(() {
-                  showDialog(
-                    context: context,
-                    builder: (context) => Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: LeadsSecond(
-                        firstName: widget.firstName,
-                        lastName: widget.lastName,
-                        email: widget.email,
-                        selectedEvent: widget.selectedEvent,
-                        selectedPurchaseType: selectedPurchaseType!,
-                        selectedSubType: selectedSubType!,
-                        selectedFuelType: selectedFuelType!,
-                        selectedBrand: selectedBrand!,
-                        selectedFuel: selectedFuel!,
-                        // selectedEnquiryType: selectedEnquiryType!,
-                        // selectedSource: selectedSource!,
-                        // mobile: widget.mobile,
-                        // pmi: widget.PMI,
-                      ),
+            onPressed: () {
+              Navigator.of(context).pop();
+
+              showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  backgroundColor: Colors.transparent,
+                  insetPadding: EdgeInsets.zero,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  );
-                });
-              },
-              child: Text('Previous',
-                  style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white)),
+                    child: LeadsSecond(
+                      firstName: widget.firstName,
+                      lastName: widget.lastName,
+                      email: widget.email,
+                      selectedEvent: widget.selectedEvent,
+                      selectedPurchaseType: selectedPurchaseType!,
+                      selectedSubType: selectedSubType!,
+                      selectedFuelType: selectedFuelType!,
+                      selectedBrand: selectedBrand!,
+                      selectedFuel: selectedFuel!,
+                      // selectedEnquiryType: selectedEnquiryType!,
+                      // selectedSource: selectedSource!,
+                      // mobile: widget.mobile,
+                      // pmi: widget.PMI,
+                    ),
+                  ),
+                ),
+              );
+            },
+            child: Text(
+              'Previous',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
 
         const SizedBox(width: 20),
-        Expanded(
+        // Expanded(
+        //   child: ElevatedButton(
+        //     style: ElevatedButton.styleFrom(
+        //       backgroundColor: Colors.blue,
+        //       shape: RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(8),
+        //       ),
+        //     ),
+        //     onPressed: () {
+        //       if (selectedSource == null || selectedEnquiryType == null) {
+        //         // Show error message
+        //         ScaffoldMessenger.of(context).showSnackBar(
+        //           const SnackBar(
+        //             content: Text('Please fill in all required fields'),
+        //           ),
+        //         );
+        //         return;
+        //       }
+
+        //       Navigator.pop(context);
+        //       Future.microtask(() {
+        //         showDialog(
+        //           context: context,
+        //           builder: (context) => Dialog(
+        //             shape: RoundedRectangleBorder(
+        //               borderRadius: BorderRadius.circular(10),
+        //             ),
+        //             child: LeadsLast(
+        //               firstName: widget.firstName,
+        //               lastName: widget.lastName,
+        //               email: widget.email,
+        //               mobile: mobileController.text,
+        //               selectedPurchaseType: selectedPurchaseType!,
+        //               selectedEnquiryType: selectedEnquiryType!,
+        //               PMI: pmiController.text,
+        //               selectedSource: selectedSource!,
+        //               selectedSubType: selectedSubType!,
+        //               selectedFuelType: selectedFuelType!,
+        //               selectedBrand: selectedBrand!,
+        //               selectedFuel: selectedFuel!,
+        //             ),
+        //           ),
+        //         );
+        //       });
+        //     },
+        //     child: Text(
+        //       'Next',
+        //       style: GoogleFonts.poppins(
+        //         fontSize: 16,
+        //         fontWeight: FontWeight.w600,
+        //         color: Colors.white,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+
+          Expanded(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
@@ -337,25 +441,21 @@ class _LeadsThirdState extends State<LeadsThird> {
               ),
             ),
             onPressed: () {
-              if (selectedSource == null || selectedEnquiryType == null) {
-                // Show error message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please fill in all required fields'),
-                  ),
-                );
-                return;
-              }
+              Navigator.of(context).pop();
 
-              Navigator.pop(context);
-              Future.microtask(() {
-                showDialog(
-                  context: context,
-                  builder: (context) => Dialog(
-                    shape: RoundedRectangleBorder(
+              showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  backgroundColor: Colors.transparent,
+                  insetPadding: EdgeInsets.zero,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: LeadsLast(
+                     child: LeadsLast(
                       firstName: widget.firstName,
                       lastName: widget.lastName,
                       email: widget.email,
@@ -370,8 +470,8 @@ class _LeadsThirdState extends State<LeadsThird> {
                       selectedFuel: selectedFuel!,
                     ),
                   ),
-                );
-              });
+                ),
+              );
             },
             child: Text(
               'Next',
@@ -382,10 +482,10 @@ class _LeadsThirdState extends State<LeadsThird> {
               ),
             ),
           ),
-        ),
+        )
+              
+      
       ],
     );
   }
-
-   
 }
