@@ -15,12 +15,13 @@ class TaskFollowupsPop extends StatefulWidget {
   final DateTime? selectedDate;
   final String leadId;
   final String leadName;
-  const TaskFollowupsPop({
-    super.key,
-    required this.selectedDate,
-    required this.leadName,
-    required this.leadId,
-  });
+  final String? selectedEvent;
+  const TaskFollowupsPop(
+      {super.key,
+      required this.selectedDate,
+      required this.leadName,
+      required this.leadId,
+      this.selectedEvent});
 
   @override
   State<TaskFollowupsPop> createState() => _TaskFollowupsPopState();
@@ -95,7 +96,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                   child: Text('Create Followups', style: AppFont.popupTitle()),
                 ),
               ),
-             const SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Align(
@@ -214,6 +215,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                                 leadId: leadId ?? '', // Pass the actual leadId
                                 leadName: leadName ?? 'check',
                                 selectedLeadId: leadId ?? '',
+                                initialEvent: widget.selectedEvent,
                               ),
                             ),
                           ),

@@ -14,12 +14,14 @@ class AddTaskPopup extends StatefulWidget {
   final String leadId;
   final String leadName;
   final String selectedLeadId;
+  final String? initialEvent;
   const AddTaskPopup(
       {super.key,
       this.selectedDate,
       required this.leadId,
       required this.leadName,
-      required this.selectedLeadId});
+      required this.selectedLeadId,
+      this.initialEvent});
 
   @override
   State<AddTaskPopup> createState() => _AddTaskPopupState();
@@ -40,7 +42,8 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
     super.initState();
     fetchLeadsData();
     selectedLeads = widget.leadName;
-    leadId = widget.leadId; 
+    selectedEvent = widget.initialEvent;
+    leadId = widget.leadId;
     if (leadId != null) {}
     // print('this is the selected widget ${widget.selectedDate}');
   }
@@ -287,9 +290,33 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
+                                // child: selectedEvent == 'Appointment'
+                                //     ? TaskAppointmentPop(
+                                //         leadId: leadId!,
+                                //         leadName: leadName!,
+                                //         selectedEvent = selectedEvent,
+                                //         selectedDate: widget.selectedDate ??
+                                //             DateTime.now(),
+                                //       )
+                                //     : selectedEvent == 'Test Drive'
+                                //         ? TaskFollowupsPop(
+                                //             leadId: leadId!,
+                                //             selectedEvent = selectedEvent,
+                                //             leadName: leadName!,
+                                //             selectedDate: widget.selectedDate ??
+                                //                 DateTime
+                                //                     .now()) //add testdrive here in future
+                                //         : TaskFollowupsPop(
+                                //             leadId: leadId!,
+                                //             selectedEvent = selectedEvent,
+                                //             leadName: leadName!,
+                                //             selectedDate: widget.selectedDate ??
+                                //                 DateTime.now(),
+                                //           ),
                                 child: selectedEvent == 'Appointment'
                                     ? TaskAppointmentPop(
                                         leadId: leadId!,
+                                        selectedEvent: selectedEvent,
                                         selectedDate: widget.selectedDate ??
                                             DateTime.now(),
                                       )
@@ -297,12 +324,14 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                                         ? TaskFollowupsPop(
                                             leadId: leadId!,
                                             leadName: leadName!,
+                                            selectedEvent: selectedEvent,
                                             selectedDate: widget.selectedDate ??
-                                                DateTime
-                                                    .now()) //add testdrive here in future
+                                                DateTime.now(),
+                                          )
                                         : TaskFollowupsPop(
                                             leadId: leadId!,
                                             leadName: leadName!,
+                                            selectedEvent: selectedEvent,
                                             selectedDate: widget.selectedDate ??
                                                 DateTime.now(),
                                           ),
@@ -324,55 +353,55 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
   }
 
   // Reusable Dropdown Builder
-  Widget _buildDropdown({
-    required String label,
-    required String hint,
-    required String? value,
-    required List<String> items,
-    required ValueChanged<String?> onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          label,
-          style: AppFont.dropDowmLabel(),
-        ),
-        const SizedBox(height: 10),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: AppColors.containerPopBg,
-          ),
-          child: DropdownButton<String>(
-            value: value,
-            hint: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(hint, style: AppFont.dropDown()),
-            ),
-            icon: const Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: Colors.grey,
-              ),
-            ),
-            isExpanded: true,
-            underline: const SizedBox.shrink(),
-            items: items.map((String item) {
-              return DropdownMenuItem<String>(
-                value: item,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Text(item, style: AppFont.dropDowmLabel()),
-                ),
-              );
-            }).toList(),
-            onChanged: onChanged,
-          ),
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
-  }
+  // Widget _buildDropdown({
+  //   required String label,
+  //   required String hint,
+  //   required String? value,
+  //   required List<String> items,
+  //   required ValueChanged<String?> onChanged,
+  // }) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.stretch,
+  //     children: [
+  //       Text(
+  //         label,
+  //         style: AppFont.dropDowmLabel(),
+  //       ),
+  //       const SizedBox(height: 10),
+  //       Container(
+  //         decoration: BoxDecoration(
+  //           borderRadius: BorderRadius.circular(8),
+  //           color: AppColors.containerPopBg,
+  //         ),
+  //         child: DropdownButton<String>(
+  //           value: value,
+  //           hint: Padding(
+  //             padding: const EdgeInsets.only(left: 10),
+  //             child: Text(hint, style: AppFont.dropDown()),
+  //           ),
+  //           icon: const Padding(
+  //             padding: EdgeInsets.only(right: 10.0),
+  //             child: Icon(
+  //               Icons.keyboard_arrow_down_rounded,
+  //               color: Colors.grey,
+  //             ),
+  //           ),
+  //           isExpanded: true,
+  //           underline: const SizedBox.shrink(),
+  //           items: items.map((String item) {
+  //             return DropdownMenuItem<String>(
+  //               value: item,
+  //               child: Padding(
+  //                 padding: const EdgeInsets.only(left: 10.0),
+  //                 child: Text(item, style: AppFont.dropDowmLabel()),
+  //               ),
+  //             );
+  //           }).toList(),
+  //           onChanged: onChanged,
+  //         ),
+  //       ),
+  //       const SizedBox(height: 10),
+  //     ],
+  //   );
+  // }
 }
