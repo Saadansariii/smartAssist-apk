@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:smart_assist/utils/storage.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_assist/pages/calenderPages/tasks/addTask.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 
@@ -33,69 +33,6 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
     }
   }
 
-  // Future<void> fetchDropdownData() async {
-  //   const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     print("No token found. Please login.");
-  //     return;
-  //   }
-
-  //   try {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
-
-  //     final response = await http.get(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       final rows = data['rows'] as List;
-
-  //       print("Extracted Rows: $rows"); // Debug: Ensure rows are extracted
-
-  //       if (rows.isNotEmpty) {
-  //         // Extract the lead_id from the first row (or any row you need)
-  //         String leadId =
-  //             rows[0]['lead_id']; // Assuming you're taking the first lead_id
-  //         storeLeadId(leadId); // Store lead_id in SharedPreferences
-  //       }
-
-  //       setState(() {
-  //         dropdownItems = rows.map<String>((row) {
-  //           String leadName = row['lead_name'] ??
-  //               "${row['fname'] ?? ''} ${row['lname'] ?? ''}".trim();
-  //           return leadName.isNotEmpty ? leadName : "Unknown"; // Default name
-  //         }).toList();
-
-  //         isLoading = false;
-  //       });
-
-  //       print(
-  //           "Dropdown Items: $dropdownItems"); // Debug: Ensure dropdown is populated
-  //     } else {
-  //       print("Failed with status code: ${response.statusCode}");
-  //       print("Response body: ${response.body}");
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching dropdown data: $e");
-  //   }
-  // }
-
-// Store lead_id in SharedPreferences
-  // Future<void> storeLeadId(String leadId) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString(
-  //       'lead_id', leadId);
-  //   print("Stored lead_id: $leadId");
-  // }
-
   String? selectedLeads;
   String? selectedSubject;
   String? selectedStatus;
@@ -105,44 +42,6 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
   TextEditingController enddateController = TextEditingController();
   // TextEditingController descriptionController = TextEditingController();
 
-  // Future<void> _pickDate({required bool isStartDate}) async {
-  //   DateTime? pickedDate = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime.now(),
-  //     lastDate: DateTime(2100),
-  //   );
-
-  //   if (pickedDate != null) {
-  //     TimeOfDay? pickedTime = await showTimePicker(
-  //       context: context,
-  //       initialTime: TimeOfDay.now(),
-  //     );
-
-  //     if (pickedTime != null) {
-  //       // Combine Date and Time
-  //       DateTime combinedDateTime = DateTime(
-  //         pickedDate.year,
-  //         pickedDate.month,
-  //         pickedDate.day,
-  //         pickedTime.hour,
-  //         pickedTime.minute,
-  //       );
-
-  //       setState(() {
-  //         // Format Date & Time as 'dd/MM/yyyy hh:mm a'
-  //         String formattedDateTime =
-  //             DateFormat('dd/MM/yyyy hh:mm a').format(combinedDateTime);
-
-  //         if (isStartDate) {
-  //           startdateController.text = formattedDateTime;
-  //         } else {
-  //           enddateController.text = formattedDateTime;
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
   Future<void> _pickDate({required bool isStartDate}) async {
     DateTime now = DateTime.now();
     DateTime? pickedDate = await showDatePicker(
@@ -201,55 +100,19 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Center(
-                    child: Text(
-                      'Create Appoinment',
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Text('Create Appoinment',
+                          style: AppFont.popupTitle()),
                     ),
                   ),
                 ),
               ),
-
-              // Align(
-              //   alignment: Alignment.topLeft,
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
-              //     child: Text(
-              //       'Comments :',
-              //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              //     ),
-              //   ),
-              // ),
-              // Container(
-              //   width: double.infinity, // Full width
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //     color: const Color.fromARGB(255, 243, 238, 238),
-              //   ),
-              //   child: TextField(
-              //     controller: descriptionController,
-              //     decoration: InputDecoration(
-              //       hintText: "Add Comments",
-              //       hintStyle: GoogleFonts.poppins(
-              //         fontSize: 14,
-              //         fontWeight: FontWeight.w500,
-              //         color: Colors.grey,
-              //       ),
-              //       contentPadding: const EdgeInsets.only(left: 10),
-              //       border: InputBorder.none,
-              //     ),
-              //     style: GoogleFonts.poppins(
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.w500,
-              //       color: Colors.black,
-              //     ),
-              //   ),
-              // ),
-
+              const SizedBox(
+                height: 10,
+              ),
               _buildDropdown(
                 label: 'Priority:',
                 hint: 'Select',
@@ -283,105 +146,11 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                 },
               ),
 
-              // Align(
-              //   alignment: Alignment.topLeft,
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
-              //     child: Text(
-              //       'Leads Name :',
-              //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              //     ),
-              //   ),
-              // ),
-              // Container(
-              //   width: double.infinity,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //     color: const Color.fromARGB(255, 243, 238, 238),
-              //   ),
-              //   child: isLoading
-              //       ? const Center(child: CircularProgressIndicator())
-              //       : DropdownButton<String>(
-              //           value: selectedLeads,
-              //           hint: Padding(
-              //             padding: const EdgeInsets.only(left: 10),
-              //             child: Text(
-              //               "Select",
-              //               style: GoogleFonts.poppins(
-              //                 fontSize: 14,
-              //                 fontWeight: FontWeight.w500,
-              //                 color: Colors.grey,
-              //               ),
-              //             ),
-              //           ),
-              //           icon: const Icon(Icons.arrow_drop_down),
-              //           isExpanded: true,
-              //           underline: const SizedBox.shrink(),
-              //           items: dropdownItems.map((String value) {
-              //             return DropdownMenuItem<String>(
-              //               value: value,
-              //               child: Padding(
-              //                 padding: const EdgeInsets.only(left: 10.0),
-              //                 child: Text(
-              //                   value,
-              //                   style: GoogleFonts.poppins(
-              //                     fontSize: 14,
-              //                     fontWeight: FontWeight.w500,
-              //                     color: Colors.black,
-              //                   ),
-              //                 ),
-              //               ),
-              //             );
-              //           }).toList(),
-              //           onChanged: (value) {
-              //             setState(
-              //               () {
-              //                 selectedLeads = value;
-              //               },
-              //             );
-              //           },
-              //         ),
-              // ),
+              const SizedBox(height: 5),
 
-              const SizedBox(height: 10),
-              // const Align(
-              //   alignment: Alignment.centerLeft,
-              //   child: Text('Start Date',
-              //       style:
-              //           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              // ),
-              // const SizedBox(height: 10),
-
-              // GestureDetector(
-              //   onTap: () => _pickDate(isStartDate: true),
-              //   child: Container(
-              //     width: double.infinity,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(8),
-              //       color: const Color.fromARGB(255, 243, 238, 238),
-              //     ),
-              //     padding:
-              //         const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-              //     child: Text(
-              //       startdateController.text.isEmpty
-              //           ? "Select Date"
-              //           : startdateController.text,
-              //       style: GoogleFonts.poppins(
-              //         fontSize: 14,
-              //         fontWeight: FontWeight.w500,
-              //         color: startdateController.text.isEmpty
-              //             ? Colors.grey
-              //             : Colors.black,
-              //       ),
-              //     ),
-              //   ),
-              // ),
-
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
-                child: Text('End Date',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                child: Text('End Date', style: AppFont.dropDowmLabel()),
               ),
               const SizedBox(height: 10),
 
@@ -391,21 +160,34 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 243, 238, 238),
+                    color: AppColors.containerPopBg,
                   ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Text(
-                    enddateController.text.isEmpty
-                        ? "Select Date"
-                        : enddateController.text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: enddateController.text.isEmpty
-                          ? Colors.grey
-                          : Colors.black,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        enddateController.text.isEmpty
+                            ? "Select Date"
+                            : enddateController.text,
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: enddateController.text.isEmpty
+                              ? Colors.grey
+                              : Colors.black,
+                        ),
+                      ),
+                      const Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Icon(
+                          Icons.calendar_today_outlined,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -415,42 +197,79 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
               // Row with Buttons
               Row(
                 children: [
+                  // Expanded(
+                  //   child: Container(
+                  //     height: 45,
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.black, // Cancel button color
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //     child: TextButton(
+                  //       onPressed: () {
+                  //         Navigator.pop(context); // Close modal on cancel
+                  //       },
+                  //       child: Text('Previous', style: AppFont.buttons()),
+                  //     ),
+                  //   ),
+                  // ),
+
                   Expanded(
-                    child: Container(
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.black, // Cancel button color
-                        borderRadius: BorderRadius.circular(8),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context); // Close modal on cancel
-                        },
-                        child: Text('Cancel',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+
+                        showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            backgroundColor: Colors.transparent,
+                            insetPadding: EdgeInsets.zero,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const AddTaskPopup(
+                                leadId: '',
+                                leadName: '',
+                                selectedLeadId: '',
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Previous',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
+
                   const SizedBox(width: 20),
                   Expanded(
                     child: Container(
                       height: 45,
                       decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: AppColors.colorsBlue,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextButton(
                         onPressed: () {
                           submitForm();
                         },
-                        child: Text('Submit',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
+                        child: Text('Submit', style: AppFont.buttons()),
                       ),
                     ),
                   ),
@@ -462,122 +281,6 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
       ),
     );
   }
-
-//   Future<void> submitForm() async {
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     String? spId = prefs.getString('user_id');
-//     String? leadId = prefs.getString('lead_id');
-//     String date = widget.selectedDate!
-//     // Convert the selected date-time into DateTime objects
-//     // DateTime startDateTime =
-//     //     DateFormat('dd/MM/yyyy hh:mm a').parse(startdateController.text);
-//     DateTime endDateTime =
-//         DateFormat('dd/MM/yyyy hh:mm a').parse(enddateController.text);
-
-//     // Extract date in 'yyyy-MM-dd' format
-//     String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDateTime);
-//     String formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateTime);
-
-//     // Extract time in 'hh:mm a' format
-//     String formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
-//     String formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
-
-//     print('Retrieved sp_id: $spId');
-//     print('Retrieved lead_id: $leadId');
-
-//     if (spId == null || leadId == null) {
-//       showErrorMessage(context,
-//           message: 'User ID or Lead ID not found. Please log in again.');
-//       return;
-//     }
-
-//     // Prepare the lead data
-//     final newTaskForLead = {
-//       'start_date': startdateController.text,
-//       'end_date': enddateController.text,
-//       'priority': selectedPriority,
-//       'start_time': formattedStartTime, // hh:mm a format
-//       'end_time': formattedEndTime,
-//       'subject': 'Showroom Appointment',
-//       'sp_id': spId,
-//     };
-
-//     print('Lead Data: $newTaskForLead');
-
-//     // Pass the leadId to the submitFollowups function
-//     bool success = await LeadsSrv.submitAppoinment(newTaskForLead, leadId);
-
-//     if (success) {
-//       print('Lead submitted successfully!');
-
-//       // Close modal if submission is successful
-//       if (context.mounted) {
-//         Navigator.pop(context); // Closes the modal
-//       }
-
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Form Submit Successful.')),
-//       );
-//     } else {
-//       print('Failed to submit lead.');
-//     }
-//   }
-// }
-
-  // Future<void> submitForm() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? spId = prefs.getString('user_id');
-  //   // String? leadId = prefs.getString('lead_id');
-
-  //   if (spId == null || leadId == null) {
-  //     showErrorMessage(context,
-  //         message: 'User ID or Lead ID not found. Please log in again.');
-  //     return;
-  //   }
-
-  //   // Use widget.selectedDate if available, otherwise use manually selected date
-  //   DateTime startDateTime = widget.selectedDate ??
-  //       DateFormat('dd/MM/yyyy hh:mm a').parse(startdateController.text);
-  //   DateTime endDateTime =
-  //       DateFormat('dd/MM/yyyy hh:mm a').parse(enddateController.text);
-
-  //   // Format dates
-  //   String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDateTime);
-  //   String formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateTime);
-  //   String formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
-  //   String formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
-
-  //   if (spId == null || widget.leadId.isEmpty) {
-  //     showErrorMessage(context,
-  //         message: 'User ID or Lead ID not found. Please log in again.');
-  //     return;
-  //   }
-  //   final newTaskForLead = {
-  //     'start_date': formattedStartDate, // ✅ Ensuring selected date is used
-  //     'end_date': formattedEndDate,
-  //     'priority': selectedPriority,
-  //     'start_time': formattedStartTime,
-  //     'end_time': formattedEndTime,
-  //     'subject': selectedSubject ?? 'Showroom Appointment',
-  //     'sp_id': spId,
-  //   };
-
-  //   print('Lead Data: $newTaskForLead');
-
-  //   bool success =
-  //       await LeadsSrv.submitAppoinment(newTaskForLead, widget.leadId);
-
-  //   if (success) {
-  //     print('Lead submitted successfully!');
-  //     if (context.mounted) {
-  //       Navigator.pop(context);
-  //     }
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text('Form Submit Successful.')));
-  //   } else {
-  //     print('Failed to submit lead.');
-  //   }
-  // }
 
   Future<void> submitForm() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -660,25 +363,25 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          style: AppFont.dropDowmLabel(),
         ),
         const SizedBox(height: 10),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: const Color.fromARGB(255, 243, 238, 238),
+            color: AppColors.containerPopBg,
           ),
           child: DropdownButton<String>(
             value: value,
             hint: Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                hint,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                ),
+              child: Text(hint, style: AppFont.dropDown()),
+            ),
+            icon: const Padding(
+              padding: EdgeInsets.only(right: 10.0),
+              child: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: Colors.grey,
               ),
             ),
             isExpanded: true,
@@ -688,14 +391,7 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                 value: item,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    item,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
+                  child: Text(item, style: AppFont.dropDowmLabel()),
                 ),
               );
             }).toList(),

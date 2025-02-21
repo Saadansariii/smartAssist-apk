@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/home_screens/all_followups.dart';
@@ -340,49 +342,33 @@ class _ThreebtnState extends State<Threebtn> {
                     onTap: () async {
                       final result = await showMenu<String>(
                         context: context,
-                        position:
-                            const RelativeRect.fromLTRB(200, 230, 30, 0),
+                        position: const RelativeRect.fromLTRB(200, 230, 30, 0),
+                        color: Colors.white,
                         items: [
                           PopupMenuItem<String>(
                             padding: EdgeInsets.zero,
                             height: 20,
                             onTap: () {
                               Future.delayed(Duration.zero, () {
-                                // showDialog(
-                                //   context: context,
-                                //   builder: (context) {
-                                //     return Dialog(
-                                //       insetPadding: EdgeInsets.zero,
-                                //       backgroundColor: Colors.white,
-                                //       shape: RoundedRectangleBorder(
-                                //         borderRadius: BorderRadius.circular(10),
-                                //       ),
-                                //       child: _createFollowups,
-                                //     );
-                                //   },
-                                // );
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return Container(
-                                      child: Dialog(
-                                        backgroundColor: Colors.transparent,
-                                        insetPadding: EdgeInsets
-                                            .zero, // Remove default padding
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                              .size
-                                              .width,
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal:
-                                                  16), // Add some margin for better UX
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: _createFollowups,
+                                    return Dialog(
+                                      backgroundColor: Colors.transparent,
+                                      insetPadding: EdgeInsets
+                                          .zero,  
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal:
+                                                16), // Add some margin for better UX
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
+                                        child: _createFollowups,
                                       ),
                                     );
                                   },
@@ -394,23 +380,27 @@ class _ThreebtnState extends State<Threebtn> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 0, vertical: 15),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  const Icon(
-                                    Icons.add_call,
-                                    size: 20,
-                                    color: AppColors.fontColor,
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
+                                    child: Icon(
+                                      Icons.add_call,
+                                      size: 20,
+                                      color: AppColors.fontColor,
+                                    ),
                                   ),
                                   const SizedBox(
                                     width: 4,
                                   ),
-                                  Text(
-                                    'Create Followups',
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.fontColor),
+                                  Container(
+                                    margin: const EdgeInsets.only(right: 13),
+                                    child: Text(
+                                      'Create Followups',
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.fontColor),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -422,26 +412,6 @@ class _ThreebtnState extends State<Threebtn> {
                             height: 20,
                             onTap: () {
                               Future.delayed(Duration.zero, () {
-                                // showDialog(
-                                //   context: context,
-                                //   builder: (context) {
-                                //     return Dialog(
-                                //       shape: RoundedRectangleBorder(
-                                //         borderRadius: BorderRadius.circular(10),
-                                //       ),
-                                //       child: const LeadFirstStep(
-                                //         firstName: '',
-                                //         lastName: '',
-                                //         selectedPurchaseType: '',
-                                //         selectedSubType: '',
-                                //         selectedFuelType: '',
-                                //         selectedBrand: '',
-                                //         email: '',
-                                //         selectedEvent: '',
-                                //       ), // Lead modal
-                                //     );
-                                //   },
-                                // );
                                 showDialog(
                                   context: context,
                                   builder: (context) {
@@ -481,13 +451,14 @@ class _ThreebtnState extends State<Threebtn> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 0, vertical: 15),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  const Icon(
-                                    Icons.person_add_alt_1,
-                                    size: 20,
-                                    color: AppColors.fontColor,
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
+                                    child: Icon(
+                                      Icons.person_add_alt_1,
+                                      size: 20,
+                                      color: AppColors.fontColor,
+                                    ),
                                   ),
                                   const SizedBox(
                                     width: 4,
@@ -522,9 +493,10 @@ class _ThreebtnState extends State<Threebtn> {
                   GestureDetector(
                     onTap: () async {
                       final result = await showMenu<String>(
+                        elevation: 2,
+                        color: Colors.white,
                         context: context,
-                        position:
-                            const RelativeRect.fromLTRB(200, 220, 30, 0),
+                        position: const RelativeRect.fromLTRB(200, 220, 30, 0),
                         items: [
                           PopupMenuItem<String>(
                             padding: EdgeInsets.zero,
@@ -539,9 +511,8 @@ class _ThreebtnState extends State<Threebtn> {
                                         insetPadding: EdgeInsets
                                             .zero, // Remove default padding
                                         child: Container(
-                                          width: MediaQuery.of(context)
-                                              .size
-                                              .width,
+                                          width:
+                                              MediaQuery.of(context).size.width,
                                           margin: const EdgeInsets.symmetric(
                                               horizontal:
                                                   16), // Add some margin for better UX
@@ -550,7 +521,7 @@ class _ThreebtnState extends State<Threebtn> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-            
+
                                           child: _createAppoinment,
                                           // Appointment modal
                                         ));
@@ -565,8 +536,7 @@ class _ThreebtnState extends State<Threebtn> {
                               child: Row(
                                 children: [
                                   const Padding(
-                                    padding:
-                                        EdgeInsets.fromLTRB(15, 0, 10, 0),
+                                    padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
                                     child: Icon(
                                       Icons.add_call,
                                       size: 20,
@@ -587,105 +557,13 @@ class _ThreebtnState extends State<Threebtn> {
                               ),
                             ),
                           ),
-                          // const PopupMenuDivider(height: 1),
-                          // PopupMenuItem<String>(
-                          //   height: 20,
-                          //   onTap: () {
-                          //     Future.delayed(Duration.zero, () {
-                          //       // showDialog(
-                          //       //   context: context,
-                          //       //   builder: (context) {
-                          //       //     return Dialog(
-                          //       //       shape: RoundedRectangleBorder(
-                          //       //         borderRadius: BorderRadius.circular(10),
-                          //       //       ),
-                          //       //       child:const LeadFirstStep(
-                          //       //         firstName: '',
-                          //       //         lastName: '',
-                          //       //         selectedPurchaseType: '',
-                          //       //         selectedSubType: '',
-                          //       //         selectedFuelType: '',
-                          //       //         selectedBrand: '',
-                          //       //         email: '',
-                          //       //         selectedEvent: '',
-                          //       //       ), // Lead modal
-                          //       //     );
-                          //       //   },
-                          //       // );
-                          //       showDialog(
-                          //         context: context,
-                          //         builder: (context) {
-                          //           return Dialog(
-                          //             backgroundColor: Colors.transparent,
-                          //             insetPadding: EdgeInsets
-                          //                 .zero, // Remove default padding
-                          //             child: Container(
-                          //               width:
-                          //                   MediaQuery.of(context).size.width,
-                          //               margin: const EdgeInsets.symmetric(
-                          //                   horizontal:
-                          //                       16), // Add some margin for better UX
-                          //               decoration: BoxDecoration(
-                          //                 color: Colors.white,
-                          //                 borderRadius:
-                          //                     BorderRadius.circular(10),
-                          //               ),
-                          //               child: const LeadFirstStep(
-                          //                 firstName: '',
-                          //                 lastName: '',
-                          //                 selectedPurchaseType: '',
-                          //                 selectedSubType: '',
-                          //                 selectedFuelType: '',
-                          //                 selectedBrand: '',
-                          //                 email: '',
-                          //                 selectedEvent: '',
-                          //               ),
-                          //             ),
-                          //           );
-                          //         },
-                          //       );
-                          //     });
-                          //   },
-                          //   value: 'lead',
-                          //   child: Center(
-                          //     child: Text(
-                          //       'Create Lead',
-                          //       textAlign: TextAlign.center,
-                          //       style: GoogleFonts.poppins(
-                          //         fontSize: 12,
-                          //         fontWeight: FontWeight.w400,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                           PopupMenuItem<String>(
                             padding: EdgeInsets.zero,
                             height: 20,
                             onTap: () {
                               Future.delayed(Duration.zero, () {
-                                // showDialog(
-                                //   context: context,
-                                //   builder: (context) {
-                                //     return Dialog(
-                                //       shape: RoundedRectangleBorder(
-                                //         borderRadius: BorderRadius.circular(10),
-                                //       ),
-                                //       child: const LeadFirstStep(
-                                //         firstName: '',
-                                //         lastName: '',
-                                //         selectedPurchaseType: '',
-                                //         selectedSubType: '',
-                                //         selectedFuelType: '',
-                                //         selectedBrand: '',
-                                //         email: '',
-                                //         selectedEvent: '',
-                                //       ), // Lead modal
-                                //     );
-                                //   },
-                                // );
                                 showDialog(
                                   context: context,
-                                  // barrierDismissible: false, it work for click outside not closed
                                   builder: (context) {
                                     return Dialog(
                                       backgroundColor: Colors.transparent,
@@ -724,8 +602,7 @@ class _ThreebtnState extends State<Threebtn> {
                               child: Row(
                                 children: [
                                   const Padding(
-                                    padding:
-                                        EdgeInsets.fromLTRB(15, 0, 10, 0),
+                                    padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
                                     child: Icon(
                                       Icons.person_add_alt_1,
                                       size: 20,
@@ -763,8 +640,9 @@ class _ThreebtnState extends State<Threebtn> {
         ),
 
         // show data
-        currentWidget ?? SizedBox(height: 10),
+        currentWidget ?? const SizedBox(height: 10),
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -788,41 +666,6 @@ class _ThreebtnState extends State<Threebtn> {
       ],
     );
   }
-
-  // Future<void> fetchDashboardData() async {
-  //   final token = await Storage.getToken();
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json',
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> data = json.decode(response.body);
-  //       print('Decoded Data: $data');
-  //       setState(() {
-  //         upcomingFollowups = data['upcomingFollowups'];
-  //         overdueFollowups = data['overdueFollowups'];
-  //         overdueAppointments = data['overdueAppointments'];
-  //         upcomingAppointments = data['upcomingAppointments'];
-  //         greeting = data.containsKey('greetings') && data['greetings'] is List
-  //             ? data['greetings']
-  //             : [];
-  //         print(data['greetings']);
-  //         if (upcomingFollowups.isNotEmpty) {
-  //           leadId = upcomingFollowups[0]['lead_id'];
-  //         }
-  //       });
-  //     } else {
-  //       print("Failed to load data: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching data: $e");
-  //   }
-  // }
 
   void followUps(int type) {
     setState(() {
@@ -849,7 +692,7 @@ class _ThreebtnState extends State<Threebtn> {
     setState(() {
       _upcomingBtnTestdrive = index;
       if (index == 0) {
-        currentWidget = TestUpcoming(); // Upcoming Test Drive
+        currentWidget = const TestUpcoming(); // Upcoming Test Drive
       } else if (index == 1) {
         currentWidget = const TestOverdue(); // Overdue Test Drive
       }

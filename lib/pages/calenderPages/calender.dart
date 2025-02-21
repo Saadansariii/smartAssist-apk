@@ -13,8 +13,6 @@ import 'package:intl/intl.dart';
 class Calender extends StatefulWidget {
   final String leadId;
   const Calender({super.key, required this.leadId});
-  
-
 
   @override
   State<Calender> createState() => _CalenderState();
@@ -38,7 +36,9 @@ class _CalenderState extends State<Calender> {
     super.initState();
     _createTask = AddTaskPopup(
       selectedDate: _selectedDay,
-      leadId: '', leadName: widget.leadId, selectedLeadId: '',
+      leadId: '',
+      leadName: widget.leadId,
+      selectedLeadId: '',
     );
     _fetchInitialData();
   }
@@ -56,8 +56,6 @@ class _CalenderState extends State<Calender> {
       appointments = data;
     });
   }
-
-  
 
   Future<void> _fetchTasks(DateTime? selectedDate) async {
     final DateTime finalDate = selectedDate ?? DateTime.now();
@@ -100,7 +98,9 @@ class _CalenderState extends State<Calender> {
       _focusedDay = selectedDay;
       _createTask = AddTaskPopup(
         selectedDate: selectedDay,
-        leadId: '', leadName: '', selectedLeadId: '',
+        leadId: '',
+        leadName: '',
+        selectedLeadId: '',
       );
     });
 
@@ -144,6 +144,8 @@ class _CalenderState extends State<Calender> {
                 context: context,
                 builder: (context) {
                   return Dialog(
+                    backgroundColor: Colors.white,
+                    insetPadding: const EdgeInsets.symmetric(horizontal: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -187,5 +189,3 @@ class _CalenderState extends State<Calender> {
     );
   }
 }
-
- 

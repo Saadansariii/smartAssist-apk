@@ -41,4 +41,23 @@ class AppFont {
       fontWeight: FontWeight.bold,
     );
   }
+
+  static TextStyle popupTitle({
+    double fontSize = 20,
+    Color color = Colors.black,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: fontSize,
+      color: color,
+      fontWeight: FontWeight.w600,
+    );
+  }
+
+  static TextStyle buttons({
+    double fontSize = 16,
+    Color color = Colors.white,
+  }) {
+    return GoogleFonts.poppins(
+        fontSize: fontSize, color: color, fontWeight: FontWeight.w700);
+  }
 }
