@@ -95,7 +95,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                   child: Text('Create Followups', style: AppFont.popupTitle()),
                 ),
               ),
-              SizedBox(
+             const SizedBox(
                 height: 10,
               ),
               Align(
@@ -125,65 +125,6 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                     ),
                     style: AppFont.dropDowmLabel()),
               ),
-              // Align(
-              //   alignment: Alignment.topLeft,
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
-              //     child: Text(
-              //       'Leads Name :',
-              //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              //     ),
-              //   ),
-              // ),
-              // Container(
-              //   width: double.infinity,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //     color: const Color.fromARGB(255, 243, 238, 238),
-              //   ),
-              //   child: isLoading
-              //       ? const Center(child: CircularProgressIndicator())
-              //       : DropdownButton<String>(
-              //           value: selectedLeads,
-              //           hint: Padding(
-              //             padding: const EdgeInsets.only(left: 10),
-              //             child: Text(
-              //               "Select",
-              //               style: GoogleFonts.poppins(
-              //                 fontSize: 14,
-              //                 fontWeight: FontWeight.w500,
-              //                 color: Colors.grey,
-              //               ),
-              //             ),
-              //           ),
-              //           icon: const Icon(Icons.arrow_drop_down),
-              //           isExpanded: true,
-              //           underline: const SizedBox.shrink(),
-              //           items: dropdownItems.map((String value) {
-              //             return DropdownMenuItem<String>(
-              //               value: value,
-              //               child: Padding(
-              //                 padding: const EdgeInsets.only(left: 10.0),
-              //                 child: Text(
-              //                   value,
-              //                   style: GoogleFonts.poppins(
-              //                     fontSize: 14,
-              //                     fontWeight: FontWeight.w500,
-              //                     color: Colors.black,
-              //                   ),
-              //                 ),
-              //               ),
-              //             );
-              //           }).toList(),
-              //           onChanged: (value) {
-              //             setState(
-              //               () {
-              //                 selectedLeads = value;
-              //               },
-              //             );
-              //           },
-              //         ),
-              // ),
 
               const SizedBox(height: 10),
 
@@ -239,64 +180,12 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                 },
               ),
               const SizedBox(height: 10),
-              // const Align(
-              //   alignment: Alignment.centerLeft,
-              //   child: Text('Followup Date',
-              //       style:
-              //           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              // ),
-              // const SizedBox(height: 10),
-
-              // GestureDetector(
-              //   onTap: _pickDate,
-              //   child: Container(
-              //     width: double.infinity,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(8),
-              //       color: const Color.fromARGB(255, 243, 238, 238),
-              //     ),
-              //     padding:
-              //         const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-              //     child: Text(
-              //       dateController.text.isEmpty
-              //           ? "Select Date"
-              //           : dateController.text,
-              //       style: GoogleFonts.poppins(
-              //         fontSize: 14,
-              //         fontWeight: FontWeight.w500,
-              //         color: dateController.text.isEmpty
-              //             ? Colors.grey
-              //             : Colors.black,
-              //       ),
-              //     ),
-              //   ),
-              // ),
 
               // buttons
               const SizedBox(height: 10),
               // Row with Buttons
               Row(
                 children: [
-                  // Expanded(
-                  //   child: Container(
-                  //     height: 45,
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.black, // Cancel button color
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //     child: TextButton(
-                  //       onPressed: () {
-                  //         Navigator.pop(context); // Close modal on cancel
-                  //       },
-                  //       child: Text('Cancel',
-                  //           style: GoogleFonts.poppins(
-                  //               fontSize: 16,
-                  //               fontWeight: FontWeight.w600,
-                  //               color: Colors.white)),
-                  //     ),
-                  //   ),
-                  // ),
-
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -340,7 +229,6 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                       ),
                     ),
                   ),
-
                   const SizedBox(width: 20),
                   Expanded(
                     child: Container(
@@ -366,57 +254,6 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
     );
   }
 
-  // Future<void> submitForm() async {
-  //   String description = descriptionController.text;
-  //   String date = widget.selectedDate != null
-  //       ? DateFormat('dd/MM/yyyy').format(widget.selectedDate!)
-  //       : dateController.text;
-
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? spId = prefs.getString('user_id');
-  //   // String? leadId = prefs.getString('lead_id');
-
-  //   print('Retrieved sp_id: $spId');
-  //   // print('Retrieved lead_id: $leadId');
-
-  //   if (spId == null || leadId == null) {
-  //     showErrorMessage(context,
-  //         message: 'User ID or Lead ID not found. Please log in again.');
-  //     return;
-  //   }
-
-  //   // Prepare the lead data
-  //   final newTaskForLead = {
-  //     // 'lead_id': widget.leadId,
-  //     // 'lead_name': widget.leadName,
-  //     'subject': selectedSubject,
-  //     'status': selectedStatus,
-  //     'priority': selectedPriority,
-  //     'due_date': date,
-  //     'comments': descriptionController.text,
-  //     'sp_id': spId,
-  //   };
-
-  //   print('Lead Data: $newTaskForLead');
-
-  //   // Pass the leadId to the submitFollowups function
-  //   bool success = await LeadsSrv.submitFollowups(newTaskForLead, leadId);
-
-  //   if (success) {
-  //     print('Lead submitted successfully!');
-
-  //     // Close modal if submission is successful
-  //     if (context.mounted) {
-  //       Navigator.pop(context); // Closes the modal
-  //     }
-
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Form Submit Successful.')),
-  //     );
-  //   } else {
-  //     print('Failed to submit lead.');
-  //   }
-  // }
   Future<void> submitForm() async {
     String description = descriptionController.text;
     String date = widget.selectedDate != null

@@ -40,11 +40,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
     super.initState();
     fetchLeadsData();
     selectedLeads = widget.leadName;
-    leadId = widget.leadId;
-    // print('this is the selected leadid come from taskkkkkkkk .. $leadId');
-    // print(widget.leadName);
-    // print(
-    //     'this is the selected leadid come from taskkkkkkkk .. ${widget.leadId}');
+    leadId = widget.leadId; 
     if (leadId != null) {}
     // print('this is the selected widget ${widget.selectedDate}');
   }
@@ -182,7 +178,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                   ),
                 ),
               ),
-               
+
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -324,6 +320,59 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
           ),
         ),
       ),
+    );
+  }
+
+  // Reusable Dropdown Builder
+  Widget _buildDropdown({
+    required String label,
+    required String hint,
+    required String? value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          label,
+          style: AppFont.dropDowmLabel(),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: AppColors.containerPopBg,
+          ),
+          child: DropdownButton<String>(
+            value: value,
+            hint: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(hint, style: AppFont.dropDown()),
+            ),
+            icon: const Padding(
+              padding: EdgeInsets.only(right: 10.0),
+              child: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: Colors.grey,
+              ),
+            ),
+            isExpanded: true,
+            underline: const SizedBox.shrink(),
+            items: items.map((String item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Text(item, style: AppFont.dropDowmLabel()),
+                ),
+              );
+            }).toList(),
+            onChanged: onChanged,
+          ),
+        ),
+        const SizedBox(height: 10),
+      ],
     );
   }
 }
