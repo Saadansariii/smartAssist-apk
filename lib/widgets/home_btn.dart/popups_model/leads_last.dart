@@ -129,20 +129,21 @@ class _LeadsLastState extends State<LeadsLast> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Center(
-                              child: Text('Add New Leads',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black)),
-                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 10),
+                            child: Text('Add New Leads',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
                           ),
                         ),
-                        Align(
+                        // const SizedBox(height: 5),
+                        const Align(
                           alignment: Alignment.topLeft,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10),
                             child: Text(
                               textAlign: TextAlign.start,
                               'Status',
@@ -153,191 +154,182 @@ class _LeadsLastState extends State<LeadsLast> {
                             ),
                           ),
                         ),
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: AppColors.containerPopBg,
-                          ),
-                          child: isLoading
-                              ? const Center(child: CircularProgressIndicator())
-                              : DropdownButton<String>(
-                                  value: selectedStatus,
-                                  hint: Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Text("Select",
-                                        style: AppFont.dropDown()),
-                                  ),
-                                  icon: const Icon(Icons.keyboard_arrow_down),
-                                  isExpanded: true,
-                                  underline: const SizedBox.shrink(),
-                                  items: const [
-                                    DropdownMenuItem<String>(
-                                      value: "New",
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 10.0),
-                                        child: Text(
-                                          "New",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                    ),
-                                    DropdownMenuItem<String>(
-                                      value: "Follow Up",
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 10.0),
-                                        child: Text(
-                                          "Followup",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                    ),
-                                    // DropdownMenuItem<String>(
-                                    //   value: "Qualified",
-                                    //   child: Padding(
-                                    //     padding: EdgeInsets.only(left: 10.0),
-                                    //     child: Text(
-                                    //       "Qualified",
-                                    //       style: TextStyle(
-                                    //           fontSize: 14,
-                                    //           fontWeight: FontWeight.w500),
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                    DropdownMenuItem<String>(
-                                      value: "Lost",
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 10.0),
-                                        child: Text(
-                                          "Lost",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedStatus =
-                                          value!; // Corrected assignment
-                                    });
-
-                                    print(
-                                        "Selected Status: $selectedStatus"); // Debugging
-                                  },
-                                ),
-                        ),
-                        const SizedBox(height: 5),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text(
-                            'Description :',
-                            style: AppFont.dropDowmLabel(),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity, // Full width
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: AppColors.containerPopBg,
-                          ),
-                          child: TextField(
-                            controller: descriptionController,
-                            decoration: InputDecoration(
-                              hintText: "Description",
-                              hintStyle: AppFont.dropDown(),
-                              contentPadding: const EdgeInsets.only(left: 10),
-                              border: InputBorder.none,
-                            ),
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text(
-                            'Lead code :',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                        Container(
-                          width: double.infinity, // Full width
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: AppColors.containerPopBg,
-                          ),
-                          child: TextField(
-                            controller: phoneController,
-                            decoration: InputDecoration(
-                              hintText: "Lead Code",
-                              hintStyle: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey,
-                              ),
-                              contentPadding: const EdgeInsets.only(left: 10),
-                              border: InputBorder.none,
-                            ),
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text(
-                            'Expected Date Purchased:',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: _pickDate,
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               color: AppColors.containerPopBg,
                             ),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  dateController.text.isEmpty
-                                      ? "Select Date"
-                                      : dateController.text,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: dateController.text.isEmpty
-                                        ? Colors.grey
-                                        : Colors.black,
+                            child: isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : DropdownButton<String>(
+                                    value: selectedStatus,
+                                    hint: Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text("Select",
+                                          style: AppFont.dropDown()),
+                                    ),
+                                    icon: const Icon(Icons.keyboard_arrow_down),
+                                    isExpanded: true,
+                                    underline: const SizedBox.shrink(),
+                                    items: [
+                                      DropdownMenuItem<String>(
+                                        value: "New",
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 10.0),
+                                          child: Text("New",
+                                              style: AppFont.dropDowmLabel()),
+                                        ),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "Follow Up",
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 10.0),
+                                          child: Text("Followup",
+                                              style: AppFont.dropDowmLabel()),
+                                        ),
+                                      ),
+                                      // DropdownMenuItem<String>(
+                                      //   value: "Qualified",
+                                      //   child: Padding(
+                                      //     padding: EdgeInsets.only(left: 10.0),
+                                      //     child: Text(
+                                      //       "Qualified",
+                                      //       style: TextStyle(
+                                      //           fontSize: 14,
+                                      //           fontWeight: FontWeight.w500),
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      DropdownMenuItem<String>(
+                                        value: "Lost",
+                                        child: Padding(
+                                            padding:
+                                                EdgeInsets.only(left: 10.0),
+                                            child: Text("Lost",
+                                                style:
+                                                    AppFont.dropDowmLabel())),
+                                      ),
+                                    ],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedStatus =
+                                            value!; // Corrected assignment
+                                      });
+
+                                      print(
+                                          "Selected Status: $selectedStatus"); // Debugging
+                                    },
                                   ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10),
+                          child: Text(
+                            'Description :',
+                            style: AppFont.dropDowmLabel(),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Container(
+                            width: double.infinity, // Full width
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.containerPopBg,
+                            ),
+                            child: TextField(
+                                controller: descriptionController,
+                                decoration: InputDecoration(
+                                  hintText: "Description",
+                                  hintStyle: AppFont.dropDown(),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 10),
+                                  border: InputBorder.none,
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 10.0),
-                                  child: Icon(
-                                    Icons.calendar_month_outlined,
-                                    color: Colors.grey,
+                                style: AppFont.dropDown()),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10),
+                          child: Text(
+                            'Lead code :',
+                            style: AppFont.dropDowmLabel(),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Container(
+                            width: double.infinity, // Full width
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.containerPopBg,
+                            ),
+                            child: TextField(
+                              controller: phoneController,
+                              decoration: InputDecoration(
+                                hintText: "Lead Code",
+                                hintStyle: AppFont.dropDown(),
+                                contentPadding: const EdgeInsets.only(left: 10),
+                                border: InputBorder.none,
+                              ),
+                              style: AppFont.dropDowmLabel(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10),
+                          child: Text('Expected Date Purchased:',
+                              style: AppFont.dropDowmLabel()),
+                        ),
+                        GestureDetector(
+                          onTap: _pickDate,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: AppColors.containerPopBg,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    dateController.text.isEmpty
+                                        ? "Select Date"
+                                        : dateController.text,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: dateController.text.isEmpty
+                                          ? Colors.grey
+                                          : Colors.black,
+                                    ),
                                   ),
-                                )
-                              ],
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 10.0),
+                                    child: Icon(
+                                      Icons.calendar_month_outlined,
+                                      color: Colors.grey,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),

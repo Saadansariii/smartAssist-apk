@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_last.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_second.dart';
 
@@ -95,10 +97,13 @@ class _LeadsThirdState extends State<LeadsThird> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Align(
-                      alignment: Alignment.center,
-                      child: _buildTitle('Add New Leads')),
-                  const SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: _buildTitle('Add New Leads')),
+                  ),
+                  // const SizedBox(height: 5),
                   _buildSectionTitle('Primary Model Intrest:'),
                   _buildTextField(
                     controller: pmiController,
@@ -183,7 +188,7 @@ class _LeadsThirdState extends State<LeadsThird> {
   // Section title widget
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
       child: Text(
         title,
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -201,45 +206,47 @@ class _LeadsThirdState extends State<LeadsThird> {
     final bool valueExists = value == null || items.contains(value);
     final currentValue = valueExists ? value : null;
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: const Color.fromARGB(255, 243, 238, 238),
-      ),
-      child: DropdownButton<String>(
-        value: currentValue,
-        hint: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
-            ),
-          ),
-        ),
-        icon: const Icon(Icons.keyboard_arrow_down),
-        isExpanded: true,
-        underline: const SizedBox.shrink(),
-        items: items.map((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: Text(
-                value,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: AppColors.containerPopBg),
+        child: DropdownButton<String>(
+          value: currentValue,
+          hint: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text(
+              label,
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
               ),
             ),
-          );
-        }).toList(),
-        onChanged: onChanged,
+          ),
+          icon: const Icon(Icons.keyboard_arrow_down),
+          isExpanded: true,
+          underline: const SizedBox.shrink(),
+          items: items.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(
+                  value,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
+        ),
       ),
     );
   }
@@ -250,27 +257,26 @@ class _LeadsThirdState extends State<LeadsThird> {
     required String hintText,
     required ValueChanged<String> onChanged,
   }) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: const Color.fromARGB(255, 243, 238, 238),
-      ),
-      child: TextField(
-        controller: controller, // Assign the controller
-        style: GoogleFonts.poppins(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: Colors.black,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: AppColors.containerPopBg,
         ),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-          border: InputBorder.none,
+        child: TextField(
+          controller: controller, // Assign the controller
+          style: AppFont.dropDowmLabel(),
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: const TextStyle(color: Colors.grey),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            border: InputBorder.none,
+          ),
+          onChanged: onChanged,
         ),
-        onChanged: onChanged,
       ),
     );
   }
@@ -432,7 +438,7 @@ class _LeadsThirdState extends State<LeadsThird> {
         //   ),
         // ),
 
-          Expanded(
+        Expanded(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
@@ -455,7 +461,7 @@ class _LeadsThirdState extends State<LeadsThird> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                     child: LeadsLast(
+                    child: LeadsLast(
                       firstName: widget.firstName,
                       lastName: widget.lastName,
                       email: widget.email,
@@ -483,8 +489,6 @@ class _LeadsThirdState extends State<LeadsThird> {
             ),
           ),
         )
-              
-      
       ],
     );
   }

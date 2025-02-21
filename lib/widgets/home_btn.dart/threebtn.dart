@@ -340,7 +340,8 @@ class _ThreebtnState extends State<Threebtn> {
                     onTap: () async {
                       final result = await showMenu<String>(
                         context: context,
-                        position: const RelativeRect.fromLTRB(200, 230, 30, 0),
+                        position:
+                            const RelativeRect.fromLTRB(200, 230, 30, 0),
                         items: [
                           PopupMenuItem<String>(
                             padding: EdgeInsets.zero,
@@ -363,22 +364,25 @@ class _ThreebtnState extends State<Threebtn> {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return Dialog(
-                                      backgroundColor: Colors.transparent,
-                                      insetPadding: EdgeInsets
-                                          .zero, // Remove default padding
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal:
-                                                16), // Add some margin for better UX
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                    return Container(
+                                      child: Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        insetPadding: EdgeInsets
+                                            .zero, // Remove default padding
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width,
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal:
+                                                  16), // Add some margin for better UX
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: _createFollowups,
                                         ),
-                                        child: _createFollowups,
                                       ),
                                     );
                                   },
@@ -519,7 +523,8 @@ class _ThreebtnState extends State<Threebtn> {
                     onTap: () async {
                       final result = await showMenu<String>(
                         context: context,
-                        position: const RelativeRect.fromLTRB(200, 220, 30, 0),
+                        position:
+                            const RelativeRect.fromLTRB(200, 220, 30, 0),
                         items: [
                           PopupMenuItem<String>(
                             padding: EdgeInsets.zero,
@@ -534,8 +539,9 @@ class _ThreebtnState extends State<Threebtn> {
                                         insetPadding: EdgeInsets
                                             .zero, // Remove default padding
                                         child: Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width,
                                           margin: const EdgeInsets.symmetric(
                                               horizontal:
                                                   16), // Add some margin for better UX
@@ -544,7 +550,7 @@ class _ThreebtnState extends State<Threebtn> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-
+            
                                           child: _createAppoinment,
                                           // Appointment modal
                                         ));
@@ -559,7 +565,8 @@ class _ThreebtnState extends State<Threebtn> {
                               child: Row(
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
+                                    padding:
+                                        EdgeInsets.fromLTRB(15, 0, 10, 0),
                                     child: Icon(
                                       Icons.add_call,
                                       size: 20,
@@ -717,7 +724,8 @@ class _ThreebtnState extends State<Threebtn> {
                               child: Row(
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
+                                    padding:
+                                        EdgeInsets.fromLTRB(15, 0, 10, 0),
                                     child: Icon(
                                       Icons.person_add_alt_1,
                                       size: 20,

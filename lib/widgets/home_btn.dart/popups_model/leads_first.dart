@@ -146,7 +146,8 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              // const SizedBox(height: 5
+              // ),
               _buildSectionTitle('Assign to:'),
               _buildDropdown(
                 // label: 'Assign to:',
@@ -315,7 +316,7 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
                   //     ),
                   //   ),
                   // ),
-                   // For the Next button:
+                  // For the Next button:
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
