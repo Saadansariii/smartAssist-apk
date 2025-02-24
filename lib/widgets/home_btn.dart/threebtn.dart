@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/pages/home_screens/all_appointment.dart';
 import 'package:smart_assist/pages/home_screens/all_followups.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -355,8 +356,7 @@ class _ThreebtnState extends State<Threebtn> {
                                   builder: (context) {
                                     return Dialog(
                                       backgroundColor: Colors.transparent,
-                                      insetPadding: EdgeInsets
-                                          .zero,  
+                                      insetPadding: EdgeInsets.zero,
                                       child: Container(
                                         width:
                                             MediaQuery.of(context).size.width,
@@ -642,18 +642,56 @@ class _ThreebtnState extends State<Threebtn> {
         // show data
         currentWidget ?? const SizedBox(height: 10),
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     GestureDetector(
+        //       onTap: () {
+        //         Navigator.push(
+        //           context,
+        //           MaterialPageRoute(
+        //             builder: (context) => const AddFollowups(),
+        //           ),
+        //         );
+        //       },
+        //       child: const Icon(
+        //         color: AppColors.fontColor,
+        //         Icons.keyboard_arrow_down_outlined,
+        //         size: 36,
+        //       ),
+        //     ),
+        //   ],
+        // ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AddFollowups(),
-                  ),
-                );
+                if (_activeButtonIndex == 0) {
+                  setState(() {
+                    _activeButtonIndex = 0;
+                    followUps(0);
+                  });
+                  followUps(_upcomingBtnFollowups);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddFollowups(),
+                    ),
+                  );
+                } else if (_activeButtonIndex == 1) {
+                  setState(() {
+                    _activeButtonIndex = 1;
+                  });
+                  oppointment(_upcomingBtnAppointments);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const AllAppointment(), // Navigate to newFollowups() if selected 1
+                    ),
+                  );
+                }
               },
               child: const Icon(
                 color: AppColors.fontColor,
@@ -662,7 +700,7 @@ class _ThreebtnState extends State<Threebtn> {
               ),
             ),
           ],
-        ),
+        )
       ],
     );
   }

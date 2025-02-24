@@ -14,7 +14,7 @@ import 'package:smart_assist/utils/snackbar_helper.dart';
 class TaskFollowupsPop extends StatefulWidget {
   final DateTime? selectedDate;
   final String leadId;
-  final String leadName;
+  final String? leadName;
   final String? selectedEvent;
   const TaskFollowupsPop(
       {super.key,
@@ -43,8 +43,8 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
     // print('this is coming from create followups $leadId');
     print('this is coming from create followups $leadName');
     print('this is coming from create followups $leadId');
-    leadId = widget.leadId.isNotEmpty ? widget.leadId : null;
-    leadName = widget.leadName.isNotEmpty ? widget.leadName : null;
+    // leadId = widget.leadId.isNotEmpty ? widget.leadId : null;
+    // leadName = widget.leadName.isNotEmpty ? widget.leadName : null;
     print('InitState leadName: $leadName');
     print('InitState leadId: $leadId');
     leadName = widget.leadName;
@@ -213,7 +213,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                               ),
                               child: AddTaskPopup(
                                 leadId: leadId ?? '', // Pass the actual leadId
-                                leadName: leadName ?? 'check',
+                                leadName: leadName ?? '',
                                 selectedLeadId: leadId ?? '',
                                 initialEvent: widget.selectedEvent,
                               ),

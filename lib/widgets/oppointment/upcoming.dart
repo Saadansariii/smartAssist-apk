@@ -152,11 +152,13 @@ class OppUpcomingItem extends StatefulWidget {
 
 class _OppUpcomingItemState extends State<OppUpcomingItem> {
   late bool isFav;
-
+  String? leadId;
   @override
   void initState() {
     super.initState();
-
+    leadId = widget.leadId;
+    print('eventid');
+    print(widget.eventId);
     isFav = widget.isFavorite;
   }
 
@@ -172,7 +174,7 @@ class _OppUpcomingItemState extends State<OppUpcomingItem> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json'
         },
-        body: jsonEncode({'taskId': widget.eventId, 'favourite': !isFav}),
+        body: jsonEncode({'eventId': widget.eventId, 'favourite': !isFav}),
       );
 
       if (response.statusCode == 200) {
@@ -370,6 +372,7 @@ class _OppUpcomingItemState extends State<OppUpcomingItem> {
       ),
     );
   }
+
 }
 
 // ---------------- REUSABLE SLIDABLE ACTION ----------------

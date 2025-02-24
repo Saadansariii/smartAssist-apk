@@ -35,15 +35,6 @@ class LeadsSecond extends StatefulWidget {
 }
 
 class _LeadsSecondState extends State<LeadsSecond> {
-  // final Widget _leadSecondStep = const LeadsSecond(
-  //   firstName: '',
-  //   lastName: '',
-  //   email: '',
-  //   selectedPurchaseType: '',
-  //   selectedFuelType: '',
-  //   subType: '',
-  //   selectedBrand: '',
-  // );
   TextEditingController typeController = TextEditingController();
 
   void initState() {
@@ -55,19 +46,6 @@ class _LeadsSecondState extends State<LeadsSecond> {
     selectedSubType = widget.selectedSubType;
     selectedEvent = widget.selectedEvent;
   }
-  // final Widget _leadThirdStep = LeadsThird(
-  //   firstName: '',
-  //   lastName: '',
-  //   email: '',
-  //   selectedPurchaseType: '',
-  //   subType: '',
-  //   selectedFuelType: '',
-  //   selectedBrand: '',
-  //   selectedEnquiryType: '',
-  //   selectedEvent: '',
-  //   selectedSource: '',
-  // );
-  // final Widget _leadFirstStep = const LeadFirstStep(firstName: firstName , lastName: lastName,);
 
   String? selectedPurchaseType;
   String? selectedFuelType;
@@ -270,7 +248,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
                               selectedSubType: '',
                               selectedFuelType: '',
                               selectedBrand: '',
-                              selectedEvent: selectedEvent!,
+                              selectedEvent: selectedEvent,
                             ),
                           ),
                         ),
@@ -337,7 +315,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
                 //     ),
                 //   ),
                 // ),
-                
+
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -346,8 +324,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    onPressed: () { 
-
+                    onPressed: () {
                       Navigator.of(context).pop();
 
                       showDialog(

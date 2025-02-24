@@ -60,4 +60,12 @@ class AppFont {
     return GoogleFonts.poppins(
         fontSize: fontSize, color: color, fontWeight: FontWeight.w700);
   }
+
+  static TextStyle appbarfont({
+    double fontSize = 18,
+    Color color = Colors.white,
+  }) {
+    return GoogleFonts.poppins(
+        fontSize: fontSize, color: color, fontWeight: FontWeight.w500);
+  }
 }

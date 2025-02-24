@@ -15,18 +15,17 @@ class LeadFirstStep extends StatefulWidget {
   final String selectedFuelType;
   final String selectedBrand;
   final String? email;
-  final String selectedEvent;
+  final String? selectedEvent;
 
   const LeadFirstStep({
     Key? key,
     required this.selectedPurchaseType,
     required this.selectedSubType,
     required this.selectedFuelType,
-    required this.selectedBrand,
-    required this.selectedEvent,
+    required this.selectedBrand, 
     this.firstName,
     this.lastName,
-    this.email,
+    this.email, this.selectedEvent,
   }) : super(key: key);
 
   @override
@@ -52,10 +51,15 @@ class _LeadFirstStepState extends State<LeadFirstStep> {
   @override
   void initState() {
     super.initState();
-    fetchDropdownData();
+    // fetchDropdownData();
     selectedEvent = widget.selectedEvent;
 
     // Initialize controllers if values exist
+
+    if (selectedEventId == null) {
+      fetchDropdownData();
+    }
+
     if (widget.firstName != null) {
       firstNameController.text = widget.firstName!;
     }

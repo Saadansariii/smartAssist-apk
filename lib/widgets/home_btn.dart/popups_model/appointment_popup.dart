@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
@@ -17,7 +18,8 @@ class AppointmentPopup extends StatefulWidget {
 }
 
 class _AppointmentPopupState extends State<AppointmentPopup> {
-  List<String> dropdownItems = [];
+  // List<String> dropdownItems = [];
+  List<Map<String, String>> dropdownItems = [];
   bool isLoading = false;
 
   @override
@@ -25,6 +27,61 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     super.initState();
     fetchDropdownData();
   }
+
+  // Future<void> fetchDropdownData() async {
+  //   const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
+
+  //   final token = await Storage.getToken();
+  //   if (token == null) {
+  //     print("No token found. Please login.");
+  //     return;
+  //   }
+
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+
+  //     final response = await http.get(
+  //       Uri.parse(apiUrl),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //       },
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+  //       final rows = data['rows'] as List;
+
+  //       print("Extracted Rows: $rows"); // Debug: Ensure rows are extracted
+
+  //       if (rows.isNotEmpty) {
+  //         // Extract the lead_id from the first row (or any row you need)
+  //         String leadId =
+  //             rows[0]['lead_id']; // Assuming you're taking the first lead_id
+  //         // storeLeadId(leadId); // Store lead_id in SharedPreferences
+  //       }
+
+  //       setState(() {
+  //         dropdownItems = rows.map<String>((row) {
+  //           String leadName = row['lead_name'] ??
+  //               "${row['fname'] ?? ''} ${row['lname'] ?? ''}".trim();
+  //           return leadName.isNotEmpty ? leadName : "Unknown"; // Default name
+  //         }).toList();
+
+  //         isLoading = false;
+  //       });
+
+  //       print(
+  //           "Dropdown Items: $dropdownItems"); // Debug: Ensure dropdown is populated
+  //     } else {
+  //       print("Failed with status code: ${response.statusCode}");
+  //       print("Response body: ${response.body}");
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching dropdown data: $e");
+  //   }
+  // }
 
   Future<void> fetchDropdownData() async {
     const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
@@ -36,10 +93,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     }
 
     try {
-      setState(() {
-        isLoading = true;
-      });
-
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -51,33 +104,28 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
         final data = json.decode(response.body);
         final rows = data['rows'] as List;
 
-        print("Extracted Rows: $rows"); // Debug: Ensure rows are extracted
-
-        if (rows.isNotEmpty) {
-          // Extract the lead_id from the first row (or any row you need)
-          String leadId =
-              rows[0]['lead_id']; // Assuming you're taking the first lead_id
-          // storeLeadId(leadId); // Store lead_id in SharedPreferences
-        }
-
         setState(() {
-          dropdownItems = rows.map<String>((row) {
-            String leadName = row['lead_name'] ??
-                "${row['fname'] ?? ''} ${row['lname'] ?? ''}".trim();
-            return leadName.isNotEmpty ? leadName : "Unknown"; // Default name
+          dropdownItems = rows.map((row) {
+            return {
+              "name": row['lead_name'] as String,
+              "id": row['lead_id'] as String,
+            };
           }).toList();
 
-          isLoading = false;
+          // Do NOT auto-select any value
+          // selectedEvent = dropdownItems.isNotEmpty ? dropdownItems.first["id"] : null;
         });
 
-        print(
-            "Dropdown Items: $dropdownItems"); // Debug: Ensure dropdown is populated
+        isLoading = false;
       } else {
         print("Failed with status code: ${response.statusCode}");
-        print("Response body: ${response.body}");
+        throw Exception('Failed to fetch data');
       }
     } catch (e) {
       print("Error fetching dropdown data: $e");
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -274,19 +322,29 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                         ),
                         isExpanded: true,
                         underline: const SizedBox.shrink(),
-                        items: dropdownItems.map((String value) {
+                        // items: dropdownItems.map((String value) {
+                        //   return DropdownMenuItem<String>(
+                        //     value: value,
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.only(left: 10.0),
+                        //       child: Text(
+                        //         value,
+                        //         style: GoogleFonts.poppins(
+                        //           fontSize: 14,
+                        //           fontWeight: FontWeight.w500,
+                        //           color: Colors.black,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   );
+                        // }).toList(),
+                        items: dropdownItems.map((item) {
                           return DropdownMenuItem<String>(
-                            value: value,
+                            value: item["id"],
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                value,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
+                              child: Text(item["name"] ?? '',
+                                  style: AppFont.dropDowmLabel()),
                             ),
                           );
                         }).toList(),

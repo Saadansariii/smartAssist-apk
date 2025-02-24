@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_appointment.dart';
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_leads.dart';
@@ -51,7 +52,7 @@ class _FavoritePageState extends State<FavoritePage> {
         ); // Load follow-ups
       case 1:
         // return _buildDataList(appointmentData);
-        return FAppointment();
+        return const FAppointment();
       case 2:
         // return _buildDataList(testDriveData);
         return FTestdrive();
@@ -83,14 +84,7 @@ class _FavoritePageState extends State<FavoritePage> {
             color: Colors.white,
           ),
         ),
-        title: Text(
-          'Favorites',
-          style: GoogleFonts.poppins(
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
-        ),
+        title: Text('Favorites', style: AppFont.appbarfont()),
         backgroundColor: Colors.blue,
         automaticallyImplyLeading: false,
       ),

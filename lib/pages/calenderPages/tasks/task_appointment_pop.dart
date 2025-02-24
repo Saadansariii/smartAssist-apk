@@ -438,11 +438,13 @@ class TaskAppointmentPop extends StatefulWidget {
   final DateTime? selectedDate;
   final String leadId;
   final String? selectedEvent;
-  TaskAppointmentPop({
+  final String? leadName;
+  const TaskAppointmentPop({
     super.key,
     this.selectedDate,
     this.selectedEvent,
     required this.leadId,
+    this.leadName,
   });
 
   @override
@@ -463,6 +465,9 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
   @override
   void initState() {
     super.initState();
+    print('this is appointment oage ');
+    print(widget.leadName);
+    print(widget.leadId);
     if (widget.selectedDate != null) {
       dateController.text =
           DateFormat('dd/MM/yyyy').format(widget.selectedDate!);
@@ -645,10 +650,11 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: AddTaskPopup(
-                                leadId: '',
-                                leadName: '',
+                                leadId: widget.leadId,
+                                leadName: widget.leadName ?? 'check',
                                 selectedLeadId: '',
                                 initialEvent: widget.selectedEvent,
+                                selectedDate: widget.selectedDate,
                               ),
                             ),
                           ),

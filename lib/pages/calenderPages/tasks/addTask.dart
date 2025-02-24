@@ -41,10 +41,15 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
   void initState() {
     super.initState();
     fetchLeadsData();
+    leadName = widget.leadName.isNotEmpty ? widget.leadName : null;
+    leadId = widget.leadId.isNotEmpty ? widget.leadId : null;
     selectedLeads = widget.leadName;
     selectedEvent = widget.initialEvent;
     leadId = widget.leadId;
-    if (leadId != null) {}
+    // if (leadId != null) {}
+    if (leadName == null || leadId == null) {
+      fetchLeadsData();
+    }
     // print('this is the selected widget ${widget.selectedDate}');
   }
 
@@ -290,32 +295,10 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                // child: selectedEvent == 'Appointment'
-                                //     ? TaskAppointmentPop(
-                                //         leadId: leadId!,
-                                //         leadName: leadName!,
-                                //         selectedEvent = selectedEvent,
-                                //         selectedDate: widget.selectedDate ??
-                                //             DateTime.now(),
-                                //       )
-                                //     : selectedEvent == 'Test Drive'
-                                //         ? TaskFollowupsPop(
-                                //             leadId: leadId!,
-                                //             selectedEvent = selectedEvent,
-                                //             leadName: leadName!,
-                                //             selectedDate: widget.selectedDate ??
-                                //                 DateTime
-                                //                     .now()) //add testdrive here in future
-                                //         : TaskFollowupsPop(
-                                //             leadId: leadId!,
-                                //             selectedEvent = selectedEvent,
-                                //             leadName: leadName!,
-                                //             selectedDate: widget.selectedDate ??
-                                //                 DateTime.now(),
-                                //           ),
                                 child: selectedEvent == 'Appointment'
                                     ? TaskAppointmentPop(
                                         leadId: leadId!,
+                                        leadName: leadName,
                                         selectedEvent: selectedEvent,
                                         selectedDate: widget.selectedDate ??
                                             DateTime.now(),
@@ -323,14 +306,14 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                                     : selectedEvent == 'Test Drive'
                                         ? TaskFollowupsPop(
                                             leadId: leadId!,
-                                            leadName: leadName!,
+                                            leadName: leadName,
                                             selectedEvent: selectedEvent,
                                             selectedDate: widget.selectedDate ??
                                                 DateTime.now(),
                                           )
                                         : TaskFollowupsPop(
                                             leadId: leadId!,
-                                            leadName: leadName!,
+                                            leadName: leadName,
                                             selectedEvent: selectedEvent,
                                             selectedDate: widget.selectedDate ??
                                                 DateTime.now(),

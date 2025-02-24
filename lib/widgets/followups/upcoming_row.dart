@@ -417,6 +417,7 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
       ),
     );
   }
+
 }
 
 // ---------------- REUSABLE SLIDABLE ACTION ----------------

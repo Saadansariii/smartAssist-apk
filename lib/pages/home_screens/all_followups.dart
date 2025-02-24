@@ -28,24 +28,19 @@ class _AddFollowupsState extends State<AddFollowups> {
   List<dynamic> _filteredOverdueTasks = [];
   int _upcommingButtonIndex = 0;
   TextEditingController searchController = TextEditingController();
-  bool _isLoading = true;
-  // final leadId = widget.leadId;
-  // String? leadId;
+  bool _isLoading = true; 
 
   @override
   void initState() {
     super.initState();
-    fetchTasks();
-    // leadId = widget.leadId;
-    // print('this is the leadId ${widget.leadId}');
+    fetchTasks(); 
   }
 
   Future<void> fetchTasks() async {
     setState(() => _isLoading = true);
     try {
       final token = await Storage.getToken();
-      const String apiUrl = "https://api.smartassistapp.in/api/tasks/all-tasks";
-          // "https://api.smartassistapp.in/api/admin/leads/tasks/all/${widget.leadId}";
+      const String apiUrl = "https://api.smartassistapp.in/api/tasks/all-tasks"; 
 
       final response = await http.get(
         Uri.parse(apiUrl),
