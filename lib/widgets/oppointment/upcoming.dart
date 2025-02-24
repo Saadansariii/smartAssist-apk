@@ -11,9 +11,10 @@ import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 // ---------------- appointment UPCOMING LIST ----------------
 class OppUpcoming extends StatefulWidget {
   final List<dynamic> upcomingOpp;
+  final bool isNested;
   const OppUpcoming({
     super.key,
-    required this.upcomingOpp,
+    required this.upcomingOpp, required this.isNested,
   });
 
   @override
@@ -22,6 +23,7 @@ class OppUpcoming extends StatefulWidget {
 
 class _OppUpcomingState extends State<OppUpcoming> {
   bool isLoading = false;
+
   bool _showLoader = true;
   List<dynamic> upcomingAppointments = [];
 
@@ -34,68 +36,6 @@ class _OppUpcomingState extends State<OppUpcoming> {
     print(widget.upcomingOpp);
   }
 
-  // Future<void> fetchDashboardData() async {
-  //   final token = await Storage.getToken();
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json'
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       setState(() {
-  //         upcomingAppointments = data['upcomingAppointments'];
-  //       });
-  //     } else {
-  //       print("Failed to load data: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching data: $e");
-  //   }
-  // }
-
-  // Future<void> fetchDashboardData() async {
-  //   final token = await Storage.getToken();
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json'
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       print("Full API Response: $data");
-
-  //       if (data.containsKey('upcomingAppointments')) {
-  //         print(
-  //             "Upcoming Appointments Data: ${data['upcomingAppointments']}"); // Debug
-  //       }
-
-  //       setState(() {
-  //         upcomingAppointments = data['upcomingAppointments'] ?? [];
-  //         _showLoader = false;
-  //       });
-  //     } else {
-  //       print("Failed to load data: ${response.statusCode}");
-  //       setState(() {
-  //         _showLoader = false;
-  //       });
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching data: $e");
-  //     setState(() {
-  //       _showLoader = false;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     if (widget.upcomingOpp.isEmpty) {
@@ -106,6 +46,9 @@ class _OppUpcomingState extends State<OppUpcoming> {
     }
     return ListView.builder(
       shrinkWrap: true,
+       physics: widget.isNested
+          ? const NeverScrollableScrollPhysics()
+          : const AlwaysScrollableScrollPhysics(),
       itemCount: upcomingAppointments.length,
       itemBuilder: (context, index) {
         var item = widget.upcomingOpp[index];
@@ -372,7 +315,6 @@ class _OppUpcomingItemState extends State<OppUpcomingItem> {
       ),
     );
   }
-
 }
 
 // ---------------- REUSABLE SLIDABLE ACTION ----------------

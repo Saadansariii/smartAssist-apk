@@ -10,61 +10,43 @@ import 'package:http/http.dart' as http;
 import 'package:smart_assist/utils/storage.dart';
 
 class OverdueFollowup extends StatefulWidget {
+  final bool isNested;
   final List<dynamic> overdueeFollowups;
-  const OverdueFollowup({super.key, required this.overdueeFollowups});
+
+  const OverdueFollowup({super.key, required this.overdueeFollowups, required this.isNested});
 
   @override
   State<OverdueFollowup> createState() => _OverdueFollowupState();
 }
 
 class _OverdueFollowupState extends State<OverdueFollowup> {
-  bool isLoading = false;
+  bool isLoading = false; 
   List<dynamic> overdueFollowups = [];
 
   @override
   void initState() {
     super.initState();
     print("widget.upcomingFollowups");
-    print(widget.overdueeFollowups);
-    // fetchDashboardData();
+    print(widget.overdueeFollowups); 
   }
 
-  // Future<void> fetchDashboardData() async {
-  //   final token = await Storage.getToken();
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json'
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       setState(() {
-  //         overdueFollowups = data['overdueFollowups'];
-  //       });
-  //     } else {
-  //       print("Failed to load data: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching data: $e");
-  //   }
-  // }
+ 
 
   @override
   Widget build(BuildContext context) {
     if (widget.overdueeFollowups.isEmpty) {
-      return SizedBox(
+      return const SizedBox(
         height: 240,
-        child: const Center(child: Text('No overdue followups available')),
+        child:   Center(child: Text('No overdue followups available')),
       );
     }
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : ListView.builder(
             shrinkWrap: true,
+            physics: widget.isNested
+                ? const NeverScrollableScrollPhysics()
+                : const AlwaysScrollableScrollPhysics(),
             itemCount: widget.overdueeFollowups.length,
             itemBuilder: (context, index) {
               var item = widget.overdueeFollowups[index];
@@ -179,73 +161,7 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
       ),
     );
   }
-
-  // Widget build(BuildContext context) {
-  //   return Padding(
-  //     padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
-  //     child: Slidable(
-  //       endActionPane: ActionPane(
-  //         motion: const StretchMotion(),
-  //         children: [
-  //           ReusableSlidableAction(
-  //             onPressed: () => _phoneAction(),
-  //             backgroundColor: Colors.blue,
-  //             icon: Icons.phone,
-  //           ),
-  //           ReusableSlidableAction(
-  //             onPressed: () => _messageAction(),
-  //             backgroundColor: Colors.green,
-  //             icon: Icons.message_rounded,
-  //           ),
-  //           ReusableSlidableAction(
-  //             onPressed: () => _mailAction(),
-  //             backgroundColor: const Color.fromARGB(255, 231, 225, 225),
-  //             icon: Icons.mail,
-  //             foregroundColor: Colors.red,
-  //           ),
-  //         ],
-  //       ),
-  //       child: _buildOverdueCard(),
-  //       // child: SizedBox(
-  //       //   height: 80,
-  //       //   child: Container(
-  //       //     decoration: BoxDecoration(
-  //       //       color: const Color.fromARGB(255, 245, 244, 244),
-  //       //       borderRadius: BorderRadius.circular(10),
-  //       //       border: const Border(
-  //       //         left: BorderSide(width: 8.0, color: Colors.red),
-  //       //       ),
-  //       //     ),
-  //       //     child: Row(
-  //       //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //       //       children: [
-  //       //         IconButton(
-  //       //           icon: Icon(
-  //       //             isFav ? Icons.star_rounded : Icons.star_border_rounded,
-  //       //             color: isFav ? Colors.amber : AppColors.starBorderColor,
-  //       //             size: 40,
-  //       //           ),
-  //       //           onPressed: _toggleFavorite, // Call API on tap
-  //       //         ),
-  //       //         Column(
-  //       //           crossAxisAlignment: CrossAxisAlignment.start,
-  //       //           children: [
-  //       //             _buildUserDetails(),
-  //       //              const SizedBox(height: 4),
-  //       //           ],
-  //       //         ),
-  //       //         _date(),
-  //       //         _buildVerticalDivider(),
-  //       //         _buildCarModel(),
-  //       //         _buildNavigationButton(context, widget.leadId),
-  //       //       ],
-  //       //     ),
-  //       //   ),
-  //       // ),
-  //     ),
-  //   );
-  // }
+ 
 
   Widget _buildOverdueCard() {
     return Container(
@@ -358,20 +274,7 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
     );
   }
 
-  // Widget _buildVerticalDivider() {
-  //   return Container(
-  //     height: 15,
-  //     width: 1,
-  //     decoration: const BoxDecoration(
-  //         border: Border(right: BorderSide(color: AppColors.fontColor))),
-  //   );
-  // }
-
-  // Widget _buildCarModel() {
-  //   return Text(widget.vehicle,
-  //       style: const TextStyle(fontSize: 10, color: AppColors.fontColor));
-  // }
-
+ 
   Widget _buildVerticalDivider(double height) {
     return Container(
       height: height,

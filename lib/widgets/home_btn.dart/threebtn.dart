@@ -42,10 +42,7 @@ class _ThreebtnState extends State<Threebtn> {
   final Widget _createFollowups = const CreateFollowupsPopups();
   final Widget _createAppoinment = const AppointmentPopup();
   String? leadId;
-  // List<dynamic> upcomingFollowups = [];
-  // List<dynamic> overdueFollowups = [];
-  // List<dynamic> upcomingAppointments = [];
-  // List<dynamic> overdueAppointments = [];
+  Map<int, int> _childSelection = {0: 0, 1: 0, 2: 0};
 
 // add more field
 
@@ -61,6 +58,7 @@ class _ThreebtnState extends State<Threebtn> {
     _childButtonIndex = 0;
     currentWidget = FollowupsUpcoming(
       upcomingFollowups: widget.upcomingFollowups,
+      isNested: false,
     );
 
     // fetchDashboardData();
@@ -117,6 +115,7 @@ class _ThreebtnState extends State<Threebtn> {
                           _activeButtonIndex = 0;
                           followUps(0);
                         });
+                        followUps(_childSelection[0]!);
                         followUps(_upcomingBtnFollowups);
                       },
                       style: TextButton.styleFrom(
@@ -152,6 +151,7 @@ class _ThreebtnState extends State<Threebtn> {
                         setState(() {
                           _activeButtonIndex = 1;
                         });
+                        oppointment(_childSelection[0]!);
                         oppointment(_upcomingBtnAppointments);
                       },
                       style: TextButton.styleFrom(
@@ -236,6 +236,7 @@ class _ThreebtnState extends State<Threebtn> {
                           onPressed: () {
                             setState(() {
                               _childButtonIndex = 0; // Set Upcoming as active
+                              _childSelection[_activeButtonIndex] = 0;
                             });
 
                             if (_activeButtonIndex == 0) {
@@ -282,6 +283,7 @@ class _ThreebtnState extends State<Threebtn> {
                         onPressed: () {
                           setState(() {
                             _childButtonIndex = 1; // Set Overdue as active
+                            _childSelection[_activeButtonIndex] = 1; 
                           });
 
                           if (_activeButtonIndex == 0) {
@@ -324,17 +326,6 @@ class _ThreebtnState extends State<Threebtn> {
                 ),
               ),
             ),
-
-            //     // Optional: Handle menu item selection (if required)
-            //     if (result != null) {
-            //       print('Selected: $result');
-            //     }
-            //   },
-            //   child: const Padding(
-            //     padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            //     child: Icon(Icons.add, size: 30),
-            //   ),
-            // ),
             Row(
               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -642,26 +633,7 @@ class _ThreebtnState extends State<Threebtn> {
         // show data
         currentWidget ?? const SizedBox(height: 10),
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     GestureDetector(
-        //       onTap: () {
-        //         Navigator.push(
-        //           context,
-        //           MaterialPageRoute(
-        //             builder: (context) => const AddFollowups(),
-        //           ),
-        //         );
-        //       },
-        //       child: const Icon(
-        //         color: AppColors.fontColor,
-        //         Icons.keyboard_arrow_down_outlined,
-        //         size: 36,
-        //       ),
-        //     ),
-        //   ],
-        // ),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -712,12 +684,14 @@ class _ThreebtnState extends State<Threebtn> {
       if (type == 0) {
         currentWidget = FollowupsUpcoming(
           upcomingFollowups: widget.upcomingFollowups,
+          isNested: false,
         );
         print('this is upcoming');
         // print(widget.upcomingFollowups);
       } else {
         currentWidget = OverdueFollowup(
           overdueeFollowups: widget.overdueFollowups,
+          isNested: false,
         );
         print('this is overdue');
         print(widget.overdueFollowups);
@@ -744,9 +718,13 @@ class _ThreebtnState extends State<Threebtn> {
       if (index == 0) {
         currentWidget = OppUpcoming(
           upcomingOpp: widget.upcomingAppointments,
+          isNested: false,
         ); // Upcoming Appointments
       } else if (index == 1) {
-        currentWidget = OppOverdue(overdueeOpp: widget.overdueAppointments);
+        currentWidget = OppOverdue(
+          overdueeOpp: widget.overdueAppointments,
+          isNested: false,
+        );
       }
     });
   }

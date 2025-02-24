@@ -11,9 +11,10 @@ import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 // ---------------- appointment UPCOMING LIST ----------------
 class OppOverdue extends StatefulWidget {
   final List<dynamic> overdueeOpp;
+  final bool isNested;
   const OppOverdue({
     super.key,
-    required this.overdueeOpp,
+    required this.overdueeOpp, required this.isNested,
   });
 
   @override
@@ -104,6 +105,9 @@ class _OppOverdueState extends State<OppOverdue> {
         ? const Center(child: CircularProgressIndicator())
         : ListView.builder(
             shrinkWrap: true,
+             physics: widget.isNested
+                ? const NeverScrollableScrollPhysics()
+                : const AlwaysScrollableScrollPhysics(),
             itemCount: widget.overdueeOpp.length,
             itemBuilder: (context, index) {
               var item = widget.overdueeOpp[index];

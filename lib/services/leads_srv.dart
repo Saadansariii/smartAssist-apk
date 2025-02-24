@@ -51,85 +51,7 @@ class LeadsSrv {
     }
   }
 
-  // lead assign dropdown service
-
-  // Future<List<String>> fetchDropdownItems() async {
-  //   final url = Uri.parse("https://api.smartassistapp.in/api/admin/users/all");
-  //   final response = await http.get(url);
-
-  //   if (response.statusCode == 200) {
-  //     final data = jsonDecode(response.body);
-  //     return List<String>.from(data['items']);
-  //   } else {
-  //     throw Exception("Failed to load dropdown items");
-  //   }
-  // }
-
-  // static Future<bool> submitLead(Map<String, dynamic> leadData, leadId) async {
-  //   final token = await Storage.getToken();
-
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse('https://api.smartassistapp.in/api/admin/leads/create'),
-  //       headers: {
-  //         'Authorization': 'Bearer $token', // Add the token to the headers
-  //         'Content-Type': 'application/json', // Specify JSON content type
-  //       },
-  //       body: jsonEncode(leadData),
-  //     );
-
-  //     print('API Response Status: ${response.statusCode}');
-  //     print('API Response Body: ${response.body}');
-
-  //     if (response.statusCode == 201) {
-  //       return true; // Successful response
-  //     } else {
-  //       print('Error: ${response.statusCode}');
-  //       return false;
-  //     }
-  //   } catch (e) {
-  //     print('Error: $e');
-  //     return false;
-  //   }
-  // }
-
-  // static Future<Map<String, dynamic>?> submitLead(
-  //     Map<String, dynamic> leadData) async {
-  //   const String apiUrl =
-  //       "https://api.smartassistapp.in/api/admin/leads/create";
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     print("No token found. Please login.");
-  //     return null;
-  //   }
-
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: jsonEncode(leadData),
-  //     );
-
-  //     print('Response status code: ${response.statusCode}');
-  //     print('Response body: ${response.body}');
-
-  //     final responseData = json.decode(response.body);
-  //     if (response.statusCode == 201) {
-  //       final data = json.decode(response.body);
-  //       // return data; // Return the full API response
-  //       return data['message'];
-  //     } else {
-  //       return response['error'];
-  //     }
-  //   } catch (e) {
-  //     print('Error submitting lead: $e');
-  //     return null;
-  //   }
-  // }
+   
 
   static Future<Map<String, dynamic>?> submitLead(
       Map<String, dynamic> leadData) async {
@@ -256,46 +178,7 @@ class LeadsSrv {
     }
   }
 
-  // single leadsid
-
-  // static Future<Map<String, dynamic>> fetchLeadsById(String leadId) async {
-  //   const String apiUrl = "https://api.smartassistapp.in/api/leads/";
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     print("No token found. Please login.");
-  //     throw Exception("No token found. Please login.");
-  //   }
-
-  //   try {
-  //     // Ensure the actual leadId is being passed correctly
-  //     print('Fetching data for Lead ID: $leadId');
-
-  //     final response = await http.get(
-  //       Uri.parse('$apiUrl$leadId'),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json',
-  //         'leadId': leadId
-  //       },
-  //     );
-
-  //     // Debug: Print the response status code and body
-  //     print('Response status code: ${response.statusCode}');
-  //     print('Response body: ${response.body}');
-  //     print('this is the url $Uri');
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       return data; // Return the response data
-  //     } else {
-  //       throw Exception('Failed to load data: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching data: $e');
-  //     throw Exception('Error fetching data: $e');
-  //   }
-  // }
+  
 
   static Future<Map<String, dynamic>> fetchLeadsById(String leadId) async {
     const String apiUrl = "https://api.smartassistapp.in/api/leads/";
@@ -376,47 +259,7 @@ class LeadsSrv {
       throw Exception('Error fetching data: $e');
     }
   }
-
-  // static Future<Map<String, dynamic>> singleFollowupsById(String leadId) async {
-  //   const String apiUrl = "https://api.smartassistapp.in/api/admin/leads/";
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     // print("No token found. Please login.");
-  //     throw Exception("No token found. Please login.");
-  //   }
-
-  //   try {
-  //     // Ensure the actual leadId is being passed correctly
-  //     // print('Fetching data for Lead ID: $leadId');
-  //     // print(
-  //     //     'API URL: ${apiUrl + leadId}');
-
-  //     final response = await http.get(
-  //       Uri.parse('$apiUrl$leadId'),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json',
-  //         'leadId': leadId
-  //       },
-  //     );
-
-  //     // Debug: Print the response status code and body
-  //     // print('Response status code: ${response.statusCode}');
-  //     // print('Response body: ${response.body}');
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       return data;
-  //     } else {
-  //       throw Exception('Failed to load data: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching data: $e');
-  //     throw Exception('Error fetching data: $e');
-  //   }
-  // }
-
+ 
 // history data api
 
   static Future<List<Map<String, dynamic>>> singleEventById(
@@ -510,51 +353,7 @@ class LeadsSrv {
       throw Exception('Error fetching data: $e');
     }
   }
-
-  // static Future<List<Map<String, dynamic>>> singleEventById(
-  //     String leadId) async {
-  //   const String apiUrl =
-  //       "https://api.smartassistapp.in/api/admin/leads/events/all/"; //tasks for tasks
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     print("No token found. Please login.");
-  //     throw Exception("No token found. Please login.");
-  //   }
-
-  //   try {
-  //     print('Fetching data for Lead ID: $leadId');
-  //     print('API URL: ${apiUrl + leadId}');
-
-  //     final response = await http.get(
-  //       Uri.parse('$apiUrl$leadId'),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json',
-  //       },
-  //     );
-
-  //     print('Response status code: ${response.statusCode}');
-  //     print('Response body: ${response.body}');
-
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> data = json.decode(response.body);
-
-  //       // ✅ Return the full "rows" array instead of just the first event
-  //       if (data.containsKey('rows') && data['rows'] is List) {
-  //         return List<Map<String, dynamic>>.from(data['rows']);
-  //       } else {
-  //         throw Exception("No events found for this Lead ID.");
-  //       }
-  //     } else {
-  //       throw Exception('Failed to load data: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching data: $e');
-  //     throw Exception('Error fetching data: $e');
-  //   }
-  // }
-
+ 
 //
   static Future<Map<String, dynamic>> singleAppointmentById(
       String eventId) async {

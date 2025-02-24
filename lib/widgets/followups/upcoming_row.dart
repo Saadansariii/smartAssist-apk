@@ -8,109 +8,13 @@ import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 
-// ---------------- FOLLOWUPS UPCOMING LIST ----------------
-// class FollowupsUpcoming extends StatefulWidget {
-//   final List<dynamic> upcomingFollowups;
-//   const FollowupsUpcoming({
-//     super.key,
-//     required this.upcomingFollowups,
-//   });
-
-//   @override
-//   State<FollowupsUpcoming> createState() => _FollowupsUpcomingState();
-// }
-
-// class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
-//   bool isLoading = false;
-//   List<dynamic> upcomingFollowups = [];
-//   bool _showLoader = true;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     fetchDashboardData();
-//     upcomingFollowups = widget.upcomingFollowups;
-//     print('this is coming upcomingfollowups on page');
-//     print(widget.upcomingFollowups);
-//   }
-
-//   Future<void> fetchDashboardData() async {
-//     _showLoader = true;
-//     final token = await Storage.getToken();
-//     try {
-//       final response = await http.get(
-//         Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-//         headers: {
-//           'Authorization': 'Bearer $token',
-//           'Content-Type': 'application/json'
-//         },
-//       );
-
-//       if (response.statusCode == 200) {
-//         final data = json.decode(response.body);
-//         setState(() {
-//           upcomingFollowups = data['upcomingFollowups'];
-//           _showLoader = false;
-//         });
-//       } else {
-//         print("Failed to load data: ${response.statusCode}");
-//         setState(() {
-//           _showLoader = false;
-//         });
-//       }
-//     } catch (e) {
-//       print("Error fetching data: $e");
-//       setState(() {
-//         _showLoader = false;
-//       });
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     if (_showLoader) {
-//       return Container(
-//         height: 250,
-//         child: const Center(child: CircularProgressIndicator()),
-//       );
-//     }
-
-//     if (upcomingFollowups.isEmpty) {
-//       return Container(
-//         height: 250,
-//         child: const Center(child: Text('No upcoming followups available')),
-//       );
-//     }
-
-//     return ListView.builder(
-//       shrinkWrap: true,
-//       itemCount: upcomingFollowups.length,
-//       itemBuilder: (context, index) {
-//         var item = upcomingFollowups[index];
-//         return (item.containsKey('name') &&
-//                 item.containsKey('due_date') &&
-//                 item.containsKey('lead_id') &&
-//                 item.containsKey('task_id'))
-//             ? UpcomingFollowupItem(
-//                 name: item['name'],
-//                 date: item['due_date'],
-//                 vehicle: 'Discovery Sport',
-//                 leadId: item['lead_id'],
-//                 taskId: item['task_id'],
-//                 isFavorite: item['favourite'] ?? false,
-//                 fetchDashboardData: (){},
-//               )
-//             : ListTile(title: Text('Invalid data at index $index'));
-//       },
-//     );
-//   }
-// }
-
+ 
 class FollowupsUpcoming extends StatefulWidget {
   final List<dynamic> upcomingFollowups;
+  final bool isNested;
   const FollowupsUpcoming({
     super.key,
-    required this.upcomingFollowups,
+    required this.upcomingFollowups, required this.isNested,
   });
 
   @override
@@ -137,6 +41,9 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
 
     return ListView.builder(
       shrinkWrap: true,
+      physics: widget.isNested
+          ? const NeverScrollableScrollPhysics()
+          : const AlwaysScrollableScrollPhysics(),
       itemCount: widget.upcomingFollowups.length,
       itemBuilder: (context, index) {
         var item = widget.upcomingFollowups[index];
@@ -297,50 +204,7 @@ class _UpcomingFollowupItemState extends State<UpcomingFollowupItem> {
     );
   }
 
-  // Widget _buildFollowupCard() {
-  //   return Container(
-  //     padding: const EdgeInsets.symmetric(vertical: 10),
-  //     decoration: BoxDecoration(
-  //       color: AppColors.containerBg,
-  //       borderRadius: BorderRadius.circular(10),
-  //       border: const Border(
-  //           left: BorderSide(
-  //               width: 8.0, color: Color.fromARGB(255, 81, 223, 121))),
-  //     ),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       // crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         IconButton(
-  //           icon: Icon(isFav ? Icons.star_rounded : Icons.star_border_rounded,
-  //               color: isFav ? Colors.amber : Colors.grey, size: 40),
-  //           onPressed: _toggleFavorite,
-  //         ),
-  //         Row(
-  //           children: [
-  //             _buildUserDetails(),
-  //           ],
-  //         ),
-  //         Row(
-  //           children: [
-  //             Row(
-  //               children: [
-  //                 _date(),
-  //               ],
-  //             ),
-  //             Row(
-  //               children: [
-  //                 _buildVerticalDivider(),
-  //                 _buildCarModel(),
-  //               ],
-  //             )
-  //           ],
-  //         ),
-  //         _buildNavigationButton(),
-  //       ],
-  //     ),
-  //   );
-  // }
+ 
 
   Widget _buildUserDetails() {
     return Column(
