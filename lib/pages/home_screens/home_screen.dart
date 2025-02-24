@@ -1,14 +1,20 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/pages/login/login_page.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
 import 'package:smart_assist/pages/navbar_page/leads_all.dart';
 import 'package:smart_assist/pages/navbar_page/logout_page.dart';
 import 'package:smart_assist/pages/notification/notification.dart';
+import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/storage.dart';
+import 'package:smart_assist/utils/token_manager.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 import 'package:http/http.dart' as http;
@@ -45,44 +51,95 @@ class _HomeScreenState extends State<HomeScreen> {
     // isDashboardLoading = true;
   }
 
-  Future<void> fetchDashboardData() async {
-    print('hiiii');
+  // Future<void> fetchDashboardData() async {
+  //   print('hiiii');
+  //   setState(() {
+  //     isDashboardLoading = true;
+  //   });
+  //   final token = await Storage.getToken();
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
+  //       final Map<String, dynamic> data = jsonResponse['data'];
+  //       print('Decoded Data: $data');
+  //       setState(() {
+  //         upcomingFollowups = data['upcomingFollowups'];
+  //         overdueFollowups = data['overdueFollowups'];
+  //         upcomingAppointments = data['upcomingAppointments'];
+  //         overdueAppointments = data['overdueAppointments'];
+  //         greeting =
+  //             (data.containsKey('greetings') && data['greetings'] is String)
+  //                 ? data['greetings']
+  //                 : 'Welcome!';
+  //         print(data['greetings']);
+  //         if (upcomingFollowups.isNotEmpty) {
+  //           leadId = upcomingFollowups[0]['lead_id'];
+  //         }
+  //       });
+  //     } else {
+  //       final Map<String, dynamic> errorData = json.decode(response.body);
+  //       final String errorMessage =
+  //           errorData['message'] ?? 'Failed to load dashboard data';
+  //       print("Failed to load data: $errorMessage");
+
+  //       // Check if the error indicates an unauthorized request.
+  //       if (response.statusCode == 401 ||
+  //           errorMessage.toLowerCase().contains("unauthorized")) {
+  //         // Clear authentication data and navigate to login.
+  //         await TokenManager.clearAuthData();
+  //         Get.offAll(() => LoginPage(
+  //               email: '',
+  //               onLoginSuccess: () {},
+  //             ));
+  //       } else {
+  //         // Otherwise, just display the error message.
+  //         showErrorMessage(context, message: errorMessage);
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching data: $e");
+  //     showErrorMessage(context, message: e.toString());
+  //   } finally {
+  //     setState(() {
+  //       isDashboardLoading = false;
+  //     });
+  //   }
+  // }
+
+  Future<void> fetchDashboardData() async { 
+    
     setState(() {
       isDashboardLoading = true;
     });
-    final token = await Storage.getToken();
     try {
-      final response = await http.get(
-        Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        print('Decoded Data: $data');
-        setState(() {
-          upcomingFollowups = data['upcomingFollowups'];
-          overdueFollowups = data['overdueFollowups'];
-          overdueAppointments = data['overdueAppointments'];
-          upcomingAppointments = data['upcomingAppointments'];
-          greeting =
-              data.containsKey('greetings') && data['greetings'] is String
-                  ? data['greetings']
-                  : 'Welcome!';
-
-          print(data['greetings']);
-          if (upcomingFollowups.isNotEmpty) {
-            leadId = upcomingFollowups[0]['lead_id'];
-          }
-        });
-      } else {
-        print("Failed to load data: ${response.statusCode}");
-      }
+      // Call the service that returns the dashboard data.
+      final data = await LeadsSrv.fetchDashboardData();
+      print('Decoded Data: $data');
+      setState(() {
+        upcomingFollowups = data['upcomingFollowups'];
+        overdueFollowups = data['overdueFollowups'];
+        upcomingAppointments = data['upcomingAppointments'];
+        overdueAppointments = data['overdueAppointments'];
+        greeting =
+            (data.containsKey('greetings') && data['greetings'] is String)
+                ? data['greetings']
+                : 'Welcome!';
+        print(data['greetings']);
+        if (upcomingFollowups.isNotEmpty) {
+          leadId = upcomingFollowups[0]['lead_id'];
+        }
+      });
     } catch (e) {
-      print("Error fetching data: $e");
+      print("Error fetching dashboard data: $e");
+      showErrorMessage(context, message: e.toString());
     } finally {
       setState(() {
         isDashboardLoading = false;

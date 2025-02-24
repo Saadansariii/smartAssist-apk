@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:smart_assist/pages/login/login_page.dart';
+import 'package:smart_assist/services/helper.dart';
 import 'package:smart_assist/utils/storage.dart';
+import 'package:smart_assist/utils/token_manager.dart';
 
 class LeadsSrv {
   final String baseUrl = 'https://api.smartassistapp.in/api/admin';
@@ -495,8 +500,8 @@ class LeadsSrv {
     }
   }
 
-  // Fetch dashboard data (initial load)
-  static Future<Map<String, int>> fetchDashboardData() async {
+
+   static Future<Map<String, dynamic>> fetchDashboardData() async {
     final token = await Storage.getToken();
     try {
       final response = await http.get(
@@ -508,20 +513,69 @@ class LeadsSrv {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        return {
-          'upcomingFollowupsCount': data['upcomingFollowupsCount'] ?? 0,
-          'overdueFollowupsCount': data['overdueFollowupsCount'] ?? 0,
-          'upcomingAppointmentsCount': data['upcomingAppointmentsCount'] ?? 0,
-          'overdueAppointmentsCount': data['overdueAppointmentsCount'] ?? 0,
-        };
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        // Dashboard data is nested under "data"
+        final Map<String, dynamic> data = jsonResponse['data'];
+        return data;
       } else {
-        print("Failed to load dashboard data: ${response.statusCode}");
-        return {};
+        // Decode the error response
+        final Map<String, dynamic> errorData = json.decode(response.body);
+        final String errorMessage =
+            errorData['message'] ?? 'Failed to load dashboard data';
+        print("Failed to load data: $errorMessage");
+
+        // Check if unauthorized: status 401 or error message includes "unauthorized"
+        if (response.statusCode == 401 ||
+            errorMessage.toLowerCase().contains("unauthorized")) {
+          await TokenManager.clearAuthData();
+          // Navigate to the login page using GetX
+          Get.offAll(() => LoginPage(email: '', onLoginSuccess: () {}));
+          throw Exception('Unauthorized. Redirecting to login.');
+        } else {
+          throw Exception(errorMessage);
+        }
       }
     } catch (e) {
-      print("Error fetching dashboard data: $e");
-      return {};
+      throw Exception(e.toString());
     }
   }
+
+  // Fetch dashboard data (initial load)
+  // static Future<Map<String, int>> fetchDashboardData() async {
+  //   final token = await Storage.getToken();
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data = json.decode(response.body);
+  //       return {
+          
+  //         'upcomingFollowupsCount': data['upcomingFollowupsCount'] ?? 0,
+  //         'overdueFollowupsCount': data['overdueFollowupsCount'] ?? 0,
+  //         'upcomingAppointmentsCount': data['upcomingAppointmentsCount'] ?? 0,
+  //         'overdueAppointmentsCount': data['overdueAppointmentsCount'] ?? 0,
+  //       };
+  //     } else {
+  //       print("Failed to load dashboard data: ${response.statusCode}");
+  //       // Here, processResponse is expected to return a Map<String, int>
+  //       return await processResponse<Map<String, int>>(response, (data) {
+  //         return {
+  //           'upcomingFollowupsCount': data['upcomingFollowupsCount'] ?? 0,
+  //           'overdueFollowupsCount': data['overdueFollowupsCount'] ?? 0,
+  //           'upcomingAppointmentsCount': data['upcomingAppointmentsCount'] ?? 0,
+  //           'overdueAppointmentsCount': data['overdueAppointmentsCount'] ?? 0,
+  //         };
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching dashboard data: $e");
+  //     return {};
+  //   }
+  // }
 }
