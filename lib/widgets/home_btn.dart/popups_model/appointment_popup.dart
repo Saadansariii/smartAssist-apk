@@ -211,7 +211,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                 ),
               ),
 
-              SizedBox(
+             const SizedBox(
                 height: 10,
               ),
 
@@ -461,11 +461,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                         onPressed: () {
                           Navigator.pop(context); // Close modal on cancel
                         },
-                        child: Text('Cancel',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
+                        child: Text('Cancel', style: AppFont.buttons()),
                       ),
                     ),
                   ),
@@ -481,11 +477,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                         onPressed: () {
                           submitForm();
                         },
-                        child: Text('Submit',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
+                        child: Text('Submit', style: AppFont.buttons()),
                       ),
                     ),
                   ),

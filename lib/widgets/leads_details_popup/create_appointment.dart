@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
@@ -24,61 +26,6 @@ class _CreateAppointmentState extends State<CreateAppointment> {
     super.initState();
     // fetchDropdownData();
   }
-
-  // Future<void> fetchDropdownData() async {
-  //   const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     print("No token found. Please login.");
-  //     return;
-  //   }
-
-  //   try {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
-
-  //     final response = await http.get(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       final rows = data['rows'] as List;
-
-  //       print("Extracted Rows: $rows"); // Debug: Ensure rows are extracted
-
-  //       if (rows.isNotEmpty) {
-  //         // Extract the lead_id from the first row (or any row you need)
-  //         String leadId =
-  //             rows[0]['lead_id']; // Assuming you're taking the first lead_id
-  //         storeLeadId(leadId); // Store lead_id in SharedPreferences
-  //       }
-
-  //       setState(() {
-  //         dropdownItems = rows.map<String>((row) {
-  //           String leadName = row['lead_name'] ??
-  //               "${row['fname'] ?? ''} ${row['lname'] ?? ''}".trim();
-  //           return leadName.isNotEmpty ? leadName : "Unknown"; // Default name
-  //         }).toList();
-
-  //         isLoading = false;
-  //       });
-
-  //       print(
-  //           "Dropdown Items: $dropdownItems"); // Debug: Ensure dropdown is populated
-  //     } else {
-  //       print("Failed with status code: ${response.statusCode}");
-  //       print("Response body: ${response.body}");
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching dropdown data: $e");
-  //   }
-  // }
 
 // Store lead_id in SharedPreferences
   Future<void> storeLeadId(String leadId) async {
@@ -150,58 +97,17 @@ class _CreateAppointmentState extends State<CreateAppointment> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(
+                height: 10,
+              ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Center(
-                    child: Text(
-                      'Create Appoinment',
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
+                child: Text('Create Appoinment', style: AppFont.popupTitle()),
               ),
 
-              // Align(
-              //   alignment: Alignment.topLeft,
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
-              //     child: Text(
-              //       'Comments :',
-              //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              //     ),
-              //   ),
-              // ),
-              // Container(
-              //   width: double.infinity, // Full width
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //     color: const Color.fromARGB(255, 243, 238, 238),
-              //   ),
-              //   child: TextField(
-              //     controller: descriptionController,
-              //     decoration: InputDecoration(
-              //       hintText: "Add Comments",
-              //       hintStyle: GoogleFonts.poppins(
-              //         fontSize: 14,
-              //         fontWeight: FontWeight.w500,
-              //         color: Colors.grey,
-              //       ),
-              //       contentPadding: const EdgeInsets.only(left: 10),
-              //       border: InputBorder.none,
-              //     ),
-              //     style: GoogleFonts.poppins(
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.w500,
-              //       color: Colors.black,
-              //     ),
-              //   ),
-              // ),
+              const SizedBox(
+                height: 10,
+              ),
 
               _buildDropdown(
                 label: 'Priority:',
@@ -221,11 +127,12 @@ class _CreateAppointmentState extends State<CreateAppointment> {
                 hint: 'Select',
                 value: selectedSubject,
                 items: [
-                  'Call',
-                  'Provide Quotation',
-                  'Send Email',
-                  'Vehicle Selection',
-                  'Send SMS',
+                  "Meeting",
+                  "Test Drive",
+                  "Showroom appointment",
+                  "Service Appointment",
+                  "Quotation",
+                  "Trade in evaluation"
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -235,72 +142,10 @@ class _CreateAppointmentState extends State<CreateAppointment> {
                 },
               ),
 
-              // Align(
-              //   alignment: Alignment.topLeft,
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
-              //     child: Text(
-              //       '         :',
-              //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              //     ),
-              //   ),
-              // ),
-              // Container(
-              //   width: double.infinity,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //     color: const Color.fromARGB(255, 243, 238, 238),
-              //   ),
-              //   child: isLoading
-              //       ? const Center(child: CircularProgressIndicator())
-              //       : DropdownButton<String>(
-              //           value: selectedLeads,
-              //           hint: Padding(
-              //             padding: const EdgeInsets.only(left: 10),
-              //             child: Text(
-              //               "Select",
-              //               style: GoogleFonts.poppins(
-              //                 fontSize: 14,
-              //                 fontWeight: FontWeight.w500,
-              //                 color: Colors.grey,
-              //               ),
-              //             ),
-              //           ),
-              //           icon: const Icon(Icons.arrow_drop_down),
-              //           isExpanded: true,
-              //           underline: const SizedBox.shrink(),
-              //           items: dropdownItems.map((String value) {
-              //             return DropdownMenuItem<String>(
-              //               value: value,
-              //               child: Padding(
-              //                 padding: const EdgeInsets.only(left: 10.0),
-              //                 child: Text(
-              //                   value,
-              //                   style: GoogleFonts.poppins(
-              //                     fontSize: 14,
-              //                     fontWeight: FontWeight.w500,
-              //                     color: Colors.black,
-              //                   ),
-              //                 ),
-              //               ),
-              //             );
-              //           }).toList(),
-              //           onChanged: (value) {
-              //             setState(
-              //               () {
-              //                 selectedLeads = value;
-              //               },
-              //             );
-              //           },
-              //         ),
-              // ),
-
               const SizedBox(height: 10),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Start Date',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                child: Text('Start Date', style: AppFont.dropDowmLabel()),
               ),
               const SizedBox(height: 10),
 
@@ -310,30 +155,38 @@ class _CreateAppointmentState extends State<CreateAppointment> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 243, 238, 238),
+                    color: AppColors.containerPopBg,
                   ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Text(
-                    startdateController.text.isEmpty
-                        ? "Select Date"
-                        : startdateController.text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: startdateController.text.isEmpty
-                          ? Colors.grey
-                          : Colors.black,
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          startdateController.text.isEmpty
+                              ? "Select Date"
+                              : startdateController.text,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: startdateController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        color: AppColors.iconGrey,
+                      ),
+                    ],
                   ),
                 ),
               ),
               const SizedBox(height: 10),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
-                child: Text('End Date',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                child: Text('End Date', style: AppFont.dropDowmLabel()),
               ),
               const SizedBox(height: 10),
 
@@ -343,21 +196,31 @@ class _CreateAppointmentState extends State<CreateAppointment> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 243, 238, 238),
+                    color: AppColors.containerPopBg,
                   ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Text(
-                    enddateController.text.isEmpty
-                        ? "Select Date"
-                        : enddateController.text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: enddateController.text.isEmpty
-                          ? Colors.grey
-                          : Colors.black,
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          enddateController.text.isEmpty
+                              ? "Select Date"
+                              : enddateController.text,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: enddateController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        color: AppColors.iconGrey,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -378,11 +241,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
                         onPressed: () {
                           Navigator.pop(context); // Close modal on cancel
                         },
-                        child: Text('Cancel',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
+                        child: Text('Cancel', style: AppFont.buttons()),
                       ),
                     ),
                   ),
@@ -395,15 +254,13 @@ class _CreateAppointmentState extends State<CreateAppointment> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextButton(
-                        onPressed: () {
-                          submitForm();
-                        },
-                        child: Text('Submit',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
-                      ),
+                          onPressed: () {
+                            submitForm();
+                          },
+                          child: Text(
+                            'Submit',
+                            style: AppFont.buttons(),
+                          )),
                     ),
                   ),
                 ],
@@ -450,7 +307,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
       'priority': selectedPriority,
       'start_time': formattedStartTime, // hh:mm a format
       'end_time': formattedEndTime,
-      'subject': 'Showroom Appointment',
+      'subject': selectedSubject,
       'sp_id': spId,
     };
 
@@ -489,25 +346,26 @@ Widget _buildDropdown({
     children: [
       Text(
         label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        style: AppFont.dropDowmLabel(),
       ),
       const SizedBox(height: 10),
       Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: const Color.fromARGB(255, 243, 238, 238),
+          color: AppColors.containerPopBg,
         ),
         child: DropdownButton<String>(
           value: value,
           hint: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: Text(
-              hint,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey,
-              ),
+            child: Text(hint, style: AppFont.dropDown()),
+          ),
+          icon: const Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Icon(
+              Icons.keyboard_arrow_down_sharp,
+              color: AppColors.fontColor,
+              size: 25,
             ),
           ),
           isExpanded: true,
@@ -517,14 +375,7 @@ Widget _buildDropdown({
               value: item,
               child: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: Text(
-                  item,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
+                child: Text(item, style: AppFont.dropDowmLabel()),
               ),
             );
           }).toList(),

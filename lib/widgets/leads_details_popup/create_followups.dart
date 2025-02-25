@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
@@ -23,61 +25,6 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
     super.initState();
     // fetchDropdownData();
   }
-
-  // Future<void> fetchDropdownData() async {
-  //   const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     print("No token found. Please login.");
-  //     return;
-  //   }
-
-  //   try {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
-
-  //     final response = await http.get(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       final rows = data['rows'] as List;
-
-  //       print("Extracted Rows: $rows"); // Debug: Ensure rows are extracted
-
-  //       if (rows.isNotEmpty) {
-  //         // Extract the lead_id from the first row (or any row you need)
-  //         String leadId =
-  //             rows[0]['lead_id']; // Assuming you're taking the first lead_id
-  //         storeLeadId(leadId); // Store lead_id in SharedPreferences
-  //       }
-
-  //       setState(() {
-  //         dropdownItems = rows.map<String>((row) {
-  //           String leadName = row['lead_name'] ??
-  //               "${row['fname'] ?? ''} ${row['lname'] ?? ''}".trim();
-  //           return leadName.isNotEmpty ? leadName : "Unknown"; // Default name
-  //         }).toList();
-
-  //         isLoading = false;
-  //       });
-
-  //       print(
-  //           "Dropdown Items: $dropdownItems"); // Debug: Ensure dropdown is populated
-  //     } else {
-  //       print("Failed with status code: ${response.statusCode}");
-  //       print("Response body: ${response.body}");
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching dropdown data: $e");
-  //   }
-  // }
 
 // Store lead_id in SharedPreferences
   Future<void> storeLeadId(String leadId) async {
@@ -128,17 +75,18 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Center(
-                    child: Text(
-                      'Create Followups',
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                  child: Text(
+                    'Create followups',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.fontBlack,
                     ),
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 6,
               ),
 
               Align(
@@ -147,34 +95,24 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
                     'Comments :',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: AppFont.dropDowmLabel(),
                   ),
                 ),
               ),
               Container(
                 width: double.infinity, // Full width
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: const Color.fromARGB(255, 243, 238, 238),
-                ),
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.containerBg),
                 child: TextField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                    hintText: "Add Comments",
-                    hintStyle: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      hintText: "Add Comments",
+                      hintStyle: AppFont.dropDown(),
+                      contentPadding: const EdgeInsets.only(left: 10),
+                      border: InputBorder.none,
                     ),
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    border: InputBorder.none,
-                  ),
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
+                    style: AppFont.dropDowmLabel()),
               ),
               // Align(
               //   alignment: Alignment.topLeft,
@@ -290,12 +228,12 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                 },
               ),
               const SizedBox(height: 10),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Followup Date',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              ),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Followup Date',
+                    style: AppFont.dropDowmLabel(),
+                  )),
               const SizedBox(height: 10),
 
               GestureDetector(
@@ -304,21 +242,31 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 243, 238, 238),
+                    color: AppColors.containerPopBg,
                   ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Text(
-                    dateController.text.isEmpty
-                        ? "Select Date"
-                        : dateController.text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: dateController.text.isEmpty
-                          ? Colors.grey
-                          : Colors.black,
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          dateController.text.isEmpty
+                              ? "Select Date"
+                              : dateController.text,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: dateController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        color: AppColors.iconGrey,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -339,11 +287,7 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                         onPressed: () {
                           Navigator.pop(context); // Close modal on cancel
                         },
-                        child: Text('Cancel',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
+                        child: Text('Cancel', style: AppFont.buttons()),
                       ),
                     ),
                   ),
@@ -352,18 +296,14 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                     child: Container(
                       height: 45,
                       decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: AppColors.colorsBlue,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextButton(
                         onPressed: () {
                           submitForm();
                         },
-                        child: Text('Submit',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
+                        child: Text('Submit', style: AppFont.buttons()),
                       ),
                     ),
                   ),
@@ -438,25 +378,26 @@ Widget _buildDropdown({
     children: [
       Text(
         label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        style: AppFont.dropDowmLabel(),
       ),
       const SizedBox(height: 10),
       Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: const Color.fromARGB(255, 243, 238, 238),
+          color: AppColors.containerBg,
         ),
         child: DropdownButton<String>(
           value: value,
           hint: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: Text(
-              hint,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey,
-              ),
+            child: Text(hint, style: AppFont.dropDown()),
+          ),
+          icon: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.keyboard_arrow_down,
+              size: 30,
+              color: AppColors.iconGrey,
             ),
           ),
           isExpanded: true,
@@ -466,14 +407,7 @@ Widget _buildDropdown({
               value: item,
               child: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: Text(
-                  item,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
+                child: Text(item, style: AppFont.dropDowmLabel()),
               ),
             );
           }).toList(),

@@ -41,7 +41,7 @@ class _OppUpcomingState extends State<OppUpcoming> {
     if (widget.upcomingOpp.isEmpty) {
       return Container(
         height: 250,
-        child: const Center(child: Text('No upcoming followups available')),
+        child: const Center(child: Text('No upcoming Appointment available')),
       );
     }
     return ListView.builder(

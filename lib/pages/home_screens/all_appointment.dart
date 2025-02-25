@@ -4,7 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
+import 'package:smart_assist/widgets/leads_details_popup/create_appointment.dart';
 import 'package:smart_assist/widgets/oppointment/overdue.dart';
 import 'package:smart_assist/widgets/oppointment/upcoming.dart';
 
@@ -16,7 +18,7 @@ class AllAppointment extends StatefulWidget {
 }
 
 class _AllAppointmentState extends State<AllAppointment> {
-  final Widget _createFollowups = const CreateFollowupsPopups();
+  final Widget _createAppoinment = const AppointmentPopup();
   List<dynamic> _originalAllTasks = [];
   List<dynamic> _originalUpcomingTasks = [];
   List<dynamic> _originalOverdueTasks = [];
@@ -105,7 +107,7 @@ class _AllAppointmentState extends State<AllAppointment> {
         ),
         backgroundColor: Colors.blue,
         title: const Text(
-          'All Followups',
+          'All Appointment',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
@@ -124,7 +126,7 @@ class _AllAppointmentState extends State<AllAppointment> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: _createFollowups, // Your follow-up widget
+                    child: _createAppoinment, // Your follow-up widget
                   );
                 },
               );
@@ -206,25 +208,64 @@ class _AllAppointmentState extends State<AllAppointment> {
           ),
           // Main content: for "All", show both sections in one scroll;
           // for "Upcoming" or "Overdue", show just that section.
+          // SliverToBoxAdapter(
+          //   child: _isLoading
+          //       ? const Center(
+          //           child: CircularProgressIndicator(
+          //           color: AppColors.colorsBlue,
+          //         ))
+          //       : _upcommingButtonIndex == 0
+          //           ? Column(
+          //               children: [
+          //                 OppUpcoming(
+          //                   upcomingOpp: _filteredUpcomingTasks,
+          //                   isNested: true,
+          //                 ),
+          //                 OppOverdue(
+          //                   overdueeOpp: _filteredOverdueTasks,
+          //                   isNested: true,
+          //                 ),
+          //               ],
+          //             )
+          //           : _upcommingButtonIndex == 1
+          //               ? OppUpcoming(
+          //                   upcomingOpp: _filteredUpcomingTasks,
+          //                   isNested: false,
+          //                 )
+          //               : OppOverdue(
+          //                   overdueeOpp: _filteredOverdueTasks,
+          //                   isNested: false,
+          //                 ),
+          // ),
+
           SliverToBoxAdapter(
             child: _isLoading
                 ? const Center(
-                    child: CircularProgressIndicator(
-                    color: AppColors.colorsBlue,
-                  ))
+                    child:
+                        CircularProgressIndicator(color: AppColors.colorsBlue))
                 : _upcommingButtonIndex == 0
-                    ? Column(
-                        children: [
-                          OppUpcoming(
-                            upcomingOpp: _filteredUpcomingTasks,
-                            isNested: true,
-                          ),
-                          OppOverdue(
-                            overdueeOpp: _filteredOverdueTasks,
-                            isNested: true,
-                          ),
-                        ],
-                      )
+                    ? (_filteredUpcomingTasks.isEmpty &&
+                            _filteredOverdueTasks.isEmpty)
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20),
+                              child: Text("No appointments available"),
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              if (_filteredUpcomingTasks.isNotEmpty)
+                                OppUpcoming(
+                                  upcomingOpp: _filteredUpcomingTasks,
+                                  isNested: true,
+                                ),
+                              if (_filteredOverdueTasks.isNotEmpty)
+                                OppOverdue(
+                                  overdueeOpp: _filteredOverdueTasks,
+                                  isNested: true,
+                                ),
+                            ],
+                          )
                     : _upcommingButtonIndex == 1
                         ? OppUpcoming(
                             upcomingOpp: _filteredUpcomingTasks,
@@ -235,6 +276,37 @@ class _AllAppointmentState extends State<AllAppointment> {
                             isNested: false,
                           ),
           ),
+
+          // SliverToBoxAdapter(
+          //   child: _isLoading
+          //       ? const Center(
+          //           child:
+          //               CircularProgressIndicator(color: AppColors.colorsBlue))
+          //       : _upcommingButtonIndex == 0
+          //           ? Column(
+          //               children: [
+          //                 if (_filteredUpcomingTasks.isNotEmpty)
+          //                   OppUpcoming(
+          //                     upcomingOpp: _filteredUpcomingTasks,
+          //                     isNested: true,
+          //                   ),
+          //                 if (_filteredOverdueTasks.isNotEmpty)
+          //                   OppOverdue(
+          //                     overdueeOpp: _filteredOverdueTasks,
+          //                     isNested: true,
+          //                   ),
+          //               ],
+          //             )
+          //           : _upcommingButtonIndex == 1
+          //               ? OppUpcoming(
+          //                   upcomingOpp: _filteredUpcomingTasks,
+          //                   isNested: false,
+          //                 )
+          //               : OppOverdue(
+          //                   overdueeOpp: _filteredOverdueTasks,
+          //                   isNested: false,
+          //                 ),
+          // ),
         ],
       ),
     );

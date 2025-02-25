@@ -204,13 +204,95 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              // GestureDetector(
+              //   onTap: () async {
+              //     final result = await showMenu<String>(
+              //       context: context,
+              //       position: const RelativeRect.fromLTRB(70, 90, 30, 100),
+              //       items: [
+              //         PopupMenuItem<String>(
+              //           height: 20,
+              //           onTap: () {
+              //             Future.delayed(Duration.zero, () {
+              //               showDialog(
+              //                 context: context,
+              //                 builder: (context) {
+              //                   return Dialog(
+              //                     shape: RoundedRectangleBorder(
+              //                       borderRadius: BorderRadius.circular(10),
+              //                     ),
+              //                     child: _createFollowups,
+              //                   );
+              //                 },
+              //               );
+              //             });
+              //           },
+              //           value: 'followup',
+              //           child: Center(
+              //             child: Text(
+              //               'Create Followups',
+              //               textAlign: TextAlign.center,
+              //               style: GoogleFonts.poppins(
+              //                 fontSize: 12,
+              //                 fontWeight: FontWeight.w400,
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //         PopupMenuItem<String>(
+              //           height: 20,
+              //           onTap: () {
+              //             Future.delayed(Duration.zero, () {
+              //               showDialog(
+              //                 context: context,
+              //                 builder: (context) {
+              //                   return Dialog(
+              //                     shape: RoundedRectangleBorder(
+              //                       borderRadius: BorderRadius.circular(10),
+              //                     ),
+              //                     child: _createAppoinment,
+              //                     // Appointment modal
+              //                   );
+              //                 },
+              //               );
+              //             });
+              //           },
+              //           value: 'appointment',
+              //           child: Center(
+              //             child: Text(
+              //               'Create Appointment',
+              //               textAlign: TextAlign.center,
+              //               style: GoogleFonts.poppins(
+              //                 fontSize: 12,
+              //                 fontWeight: FontWeight.w400,
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     );
+              //     if (result != null) {
+              //       print('Selected: $result');
+              //     }
+              //   },
+              //   child: const Padding(
+              //     padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+              //     child: Icon(
+              //       Icons.add,
+              //       size: 30,
+              //       color: AppColors.iconGrey,
+              //     ),
+              //   ),
+              // ),
               GestureDetector(
                 onTap: () async {
                   final result = await showMenu<String>(
                     context: context,
                     position: const RelativeRect.fromLTRB(70, 90, 30, 100),
+                    color: Colors.white,
                     items: [
                       PopupMenuItem<String>(
+                        padding: EdgeInsets.zero,
                         height: 20,
                         onTap: () {
                           Future.delayed(Duration.zero, () {
@@ -218,28 +300,58 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                               context: context,
                               builder: (context) {
                                 return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                  backgroundColor: Colors.transparent,
+                                  insetPadding: EdgeInsets.zero,
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal:
+                                            16), // Add some margin for better UX
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: _createFollowups,
                                   ),
-                                  child: _createFollowups,
                                 );
                               },
                             );
                           });
                         },
                         value: 'followup',
-                        child: Center(
-                          child: Text(
-                            'Create Followups',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 0, vertical: 15),
+                          child: Row(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
+                                child: Icon(
+                                  Icons.add_call,
+                                  size: 20,
+                                  color: AppColors.fontColor,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(right: 13),
+                                child: Text(
+                                  'Create Followups',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.fontColor),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
+                      // const PopupMenuDivider(height: 0.1),
                       PopupMenuItem<String>(
+                        padding: EdgeInsets.zero,
                         height: 20,
                         onTap: () {
                           Future.delayed(Duration.zero, () {
@@ -247,25 +359,51 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                               context: context,
                               builder: (context) {
                                 return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: _createAppoinment,
-                                  // Appointment modal
-                                );
+                                    backgroundColor: Colors.transparent,
+                                    insetPadding: EdgeInsets
+                                        .zero, // Remove default padding
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal:
+                                              16), // Add some margin for better UX
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+
+                                      child: _createAppoinment,
+                                      // Appointment modal
+                                    ));
                               },
                             );
                           });
                         },
                         value: 'appointment',
-                        child: Center(
-                          child: Text(
-                            'Create Appointment',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 0, vertical: 15),
+                          child: Row(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
+                                child: Icon(
+                                  Icons.add_call,
+                                  size: 20,
+                                  color: AppColors.fontColor,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                'Create Appointment',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.fontColor),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -280,7 +418,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                   child: Icon(
                     Icons.add,
                     size: 30,
-                    color: AppColors.iconGrey,
+                    color: AppColors.fontColor,
                   ),
                 ),
               ),

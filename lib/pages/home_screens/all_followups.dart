@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
@@ -207,22 +208,60 @@ class _AddFollowupsState extends State<AddFollowups> {
           ),
           // Main content: for "All", show both sections in one scroll;
           // for "Upcoming" or "Overdue", show just that section.
+          // SliverToBoxAdapter(
+          //   child: _isLoading
+          //       ? const Center(child: CircularProgressIndicator())
+          //       : _upcommingButtonIndex == 0
+          //           ? Column(
+          //               children: [
+          //                 FollowupsUpcoming(
+          //                   upcomingFollowups: _filteredUpcomingTasks,
+          //                   isNested: true,
+          //                 ),
+          //                 OverdueFollowup(
+          //                   overdueeFollowups: _filteredOverdueTasks,
+          //                   isNested: true,
+          //                 ),
+          //               ],
+          //             )
+          //           : _upcommingButtonIndex == 1
+          //               ? FollowupsUpcoming(
+          //                   upcomingFollowups: _filteredUpcomingTasks,
+          //                   isNested: false,
+          //                 )
+          //               : OverdueFollowup(
+          //                   overdueeFollowups: _filteredOverdueTasks,
+          //                   isNested: false,
+          //                 ),
+          // ),
           SliverToBoxAdapter(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(
+                    child:
+                        CircularProgressIndicator(color: AppColors.colorsBlue))
                 : _upcommingButtonIndex == 0
-                    ? Column(
-                        children: [
-                          FollowupsUpcoming(
-                            upcomingFollowups: _filteredUpcomingTasks,
-                            isNested: true,
-                          ),
-                          OverdueFollowup(
-                            overdueeFollowups: _filteredOverdueTasks,
-                            isNested: true,
-                          ),
-                        ],
-                      )
+                    ? (_filteredUpcomingTasks.isEmpty &&
+                            _filteredOverdueTasks.isEmpty)
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20),
+                              child: Text("No Followups available"),
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              if (_filteredUpcomingTasks.isNotEmpty)
+                                FollowupsUpcoming(
+                                  upcomingFollowups: _filteredUpcomingTasks,
+                                  isNested: true,
+                                ),
+                              if (_filteredOverdueTasks.isNotEmpty)
+                                OverdueFollowup(
+                                  overdueeFollowups: _filteredOverdueTasks,
+                                  isNested: true,
+                                ),
+                            ],
+                          )
                     : _upcommingButtonIndex == 1
                         ? FollowupsUpcoming(
                             upcomingFollowups: _filteredUpcomingTasks,
@@ -233,6 +272,7 @@ class _AddFollowupsState extends State<AddFollowups> {
                             isNested: false,
                           ),
           ),
+
         ],
       ),
     );

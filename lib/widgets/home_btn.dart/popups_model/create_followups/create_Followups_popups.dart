@@ -335,7 +335,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                       ),
                       const Icon(
                         Icons.calendar_month_outlined,
-                        color: Colors.grey,
+                        color: AppColors.iconGrey,
                       ),
                     ],
                   ),
@@ -358,11 +358,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                         onPressed: () {
                           Navigator.pop(context); // Close modal on cancel
                         },
-                        child: Text('Cancel',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
+                        child: Text('Cancel', style: AppFont.buttons()),
                       ),
                     ),
                   ),
@@ -380,11 +376,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                         onPressed: () {
                           submitForm();
                         },
-                        child: Text('Submit',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
+                        child: Text('Submit', style: AppFont.buttons()),
                       ),
                     ),
                   ),
