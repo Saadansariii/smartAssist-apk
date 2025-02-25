@@ -114,7 +114,7 @@ class _FAppointmentState extends State<FAppointment> {
           vehicle: task['end_date'] ?? 'Discovery Sport',
           time: task['start_time'] ?? '',
           leadId: task['lead_id'] ?? '',
-          taskId: task['task_id'] ?? '',
+          eventId: task['event_id'] ?? '',
           isFavorite: task['favourite'] ?? false,
           isUpcoming: isUpcoming,
           onFavoriteToggled: fetchTasksData,
@@ -129,7 +129,7 @@ class TaskItem extends StatefulWidget {
   final String date;
   final String vehicle;
   final String leadId;
-  final String taskId;
+  final String eventId;
   final bool isFavorite;
   final bool isUpcoming;
   final String time;
@@ -141,7 +141,7 @@ class TaskItem extends StatefulWidget {
     required this.date,
     required this.vehicle,
     required this.leadId,
-    required this.taskId,
+    required this.eventId,
     required this.isFavorite,
     required this.isUpcoming,
     required this.onFavoriteToggled,
@@ -166,13 +166,13 @@ class _TaskItemState extends State<TaskItem> {
     try {
       final response = await http.put(
         Uri.parse(
-          'https://api.smartassistapp.in/api/favourites/mark-fav/task/${widget.taskId}',
+          'https://api.smartassistapp.in/api/favourites/mark-fav/event/${widget.eventId}',
         ),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'taskId': widget.taskId, 'favourite': !isFav}),
+        body: jsonEncode({'eventId': widget.eventId, 'favourite': !isFav}),
       );
 
       if (response.statusCode == 200) {
@@ -191,7 +191,7 @@ class _TaskItemState extends State<TaskItem> {
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: AppColors.containerBg,
           borderRadius: BorderRadius.circular(10),
           border: Border(
             left: BorderSide(

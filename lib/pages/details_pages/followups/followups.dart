@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
@@ -148,28 +150,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       final List<Map<String, dynamic>> tasks =
           await LeadsSrv.singleTasksById(leadId);
 
-      //   setState(() {
-      //     allTasks = tasks;
-
-      //     // Initialize lists to store event data
-      //     subjectList = [];
-      //     priorityList = [];
-      //     startTimeList = [];
-      //     endTimeList = [];
-      //     startDateList = [];
-
-      //     // Loop through all events and store their details
-      //     for (var task in tasks) {
-      //       subjectList.add(task['subject'] ?? 'N/A');
-      //       priorityList.add(task['priority'] ?? 'N/A');
-      //       startTimeList.add(_formatTime(task['due_time']));
-      //       endTimeList.add(_formatTime(task['flag']));
-      //       startDateList.add(task['updated'] ?? 'N/A');
-      //     }
-      //   });
-      // } catch (e) {
-      //   print('Error Fetching data: $e');
-      // }
       setState(() {
         allTasks = tasks;
         if (_childButtonIndex == 1) {
@@ -207,35 +187,19 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       title: title,
       subtitle: subtitle,
       taskId: widget.leadId,
-      containerBgColor: containerColors[title] ?? Colors.grey.shade200,
-      iconColor: iconColors[title] ?? Colors.black, // Pass custom icon color
+      containerBgColor: containerColors[title] ?? AppColors.backgroundLightGrey,
+      iconColor:
+          iconColors[title] ?? AppColors.iconGrey, // Pass custom icon color
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF2F2F2),
+      // backgroundColor: AppColors.backgroundLightGrey,
       appBar: AppBar(
-        backgroundColor: Color(0xffF2F2F2),
-        title: Text(
-          'Leads Details',
-          style: GoogleFonts.poppins(
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
-            color: Color.fromARGB(255, 134, 134, 134),
-          ),
-        ),
-        // actions: [
-        //   Align(
-        //     child: IconButton(
-        //         onPressed: () {},
-        //         icon: Icon(
-        //           Icons.add,
-        //           size: 30,
-        //         )),
-        //   )
-        // ],
+        backgroundColor: AppColors.backgroundLightGrey,
+        title: Text('Leads Details', style: AppFont.appbarfontgrey()),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -313,180 +277,235 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                 },
                 child: const Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: Icon(Icons.add, size: 30),
+                  child: Icon(
+                    Icons.add,
+                    size: 30,
+                    color: AppColors.iconGrey,
+                  ),
                 ),
               ),
             ],
           ),
         ],
-
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.grey),
+          icon: const Icon(Icons.arrow_back, color: AppColors.iconGrey),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         elevation: 0,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                // Main Container with Flexbox Layout
-                Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Left Side - Contact Details
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildContactRow(
-                              icon: Icons.phone,
-                              title: 'Phone Number',
-                              subtitle: mobile,
-                            ),
-                            _buildContactRow(
-                              icon: Icons.email,
-                              title: 'Email',
-                              subtitle: email,
-                            ),
-                            _buildContactRow(
-                              icon: Icons.local_post_office_outlined,
-                              title: 'Company',
-                              subtitle: status,
-                            ),
-                            _buildContactRow(
-                              icon: Icons.location_on,
-                              title: 'Address',
-                              subtitle: address,
-                            ),
-                          ],
+      body: Container(
+        decoration: BoxDecoration(
+          color: AppColors.backgroundLightGrey,
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  // Main Container with Flexbox Layout
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Left Side - Contact Details
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildContactRow(
+                                icon: Icons.phone,
+                                title: 'Phone Number',
+                                subtitle: mobile,
+                              ),
+                              _buildContactRow(
+                                icon: Icons.email,
+                                title: 'Email',
+                                subtitle: email,
+                              ),
+                              _buildContactRow(
+                                icon: Icons.local_post_office_outlined,
+                                title: 'Company',
+                                subtitle: status,
+                              ),
+                              _buildContactRow(
+                                icon: Icons.location_on,
+                                title: 'Address',
+                                subtitle: address,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
 
-                      // Right Side - Profile (Centered)
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 80, 78, 78),
-                                  border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 88, 87, 87)),
-                                  borderRadius: BorderRadius.circular(50)),
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
+                        // Right Side - Profile (Centered)
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(2),
                                 decoration: BoxDecoration(
-                                    color: Colors.grey,
+                                    color:
+                                        const Color.fromARGB(255, 80, 78, 78),
+                                    border: Border.all(
+                                        color: const Color.fromARGB(
+                                            255, 88, 87, 87)),
                                     borderRadius: BorderRadius.circular(50)),
-                                child: const Icon(
-                                  size: 60,
-                                  Icons.person,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              lead_owner,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
+                                child: Container(
                                   padding: const EdgeInsets.all(5),
                                   decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(10)),
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(50)),
                                   child: const Icon(
-                                    Icons.phone,
+                                    size: 60,
+                                    Icons.person,
                                     color: Colors.white,
                                   ),
                                 ),
-                                const SizedBox(width: 10),
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 233, 163, 84),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: const Icon(
-                                    Icons.message,
-                                    color: Colors.white,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                lead_owner,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: const Icon(
+                                      Icons.phone,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                )
-                              ],
-                            ),
-                          ],
+                                  const SizedBox(width: 10),
+                                  Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 233, 163, 84),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: const Icon(
+                                      Icons.message,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10), // Spacer
-                // History Section
-                // Text('hiii'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-                      child: Container(
-                        width: 150, // Set width of the container
-                        height: 30,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: const Color(0xFF767676).withOpacity(0.3),
-                              width: 0.6), // Border around the container
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Row(
-                          children: [
-                            // Upcoming Button
-                            Expanded(
-                              child: TextButton(
+                  const SizedBox(height: 10), // Spacer
+                  // History Section
+                  // Text('hiii'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+                        child: Container(
+                          width: 150, // Set width of the container
+                          height: 30,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: const Color(0xFF767676).withOpacity(0.3),
+                                width: 0.6), // Border around the container
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Row(
+                            children: [
+                              // Upcoming Button
+                              Expanded(
+                                child: TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _childButtonIndex = 0;
+                                        _updateDisplayData();
+                                        if (allEvents.isEmpty) {
+                                          fetchSingleEvent(widget.leadId);
+                                        }
+                                      });
+                                    },
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: _childButtonIndex == 0
+                                          ? const Color(0xFF51DF79).withOpacity(
+                                              0.29) // Green for Upcoming
+                                          : Colors.transparent,
+                                      foregroundColor: _childButtonIndex == 0
+                                          ? Colors.white
+                                          : Colors.black,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      side: BorderSide(
+                                        color: _childButtonIndex == 0
+                                            ? const Color.fromARGB(
+                                                255, 81, 223, 121)
+                                            : Colors.transparent,
+                                        width: 1, // Border width
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            30), // Optional: Rounded corners
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Events',
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xff000000)
+                                              .withOpacity(0.56)),
+                                    )),
+                              ),
+
+                              // Overdue Button
+                              Expanded(
+                                child: TextButton(
                                   onPressed: () {
                                     setState(() {
-                                      _childButtonIndex = 0;
+                                      _childButtonIndex = 1;
                                       _updateDisplayData();
-                                      if (allEvents.isEmpty) {
-                                        fetchSingleEvent(widget.leadId);
+                                      if (allTasks.isEmpty) {
+                                        fetchSingleTask(widget.leadId);
                                       }
                                     });
                                   },
                                   style: TextButton.styleFrom(
-                                    backgroundColor: _childButtonIndex == 0
-                                        ? const Color(0xFF51DF79).withOpacity(
-                                            0.29) // Green for Upcoming
+                                    backgroundColor: _childButtonIndex == 1
+                                        ? const Color.fromARGB(255, 159, 174,
+                                            239) // Red for Overdue
                                         : Colors.transparent,
-                                    foregroundColor: _childButtonIndex == 0
+                                    foregroundColor: _childButtonIndex == 1
                                         ? Colors.white
                                         : Colors.black,
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 5),
                                     side: BorderSide(
-                                      color: _childButtonIndex == 0
+                                      color: _childButtonIndex == 1
                                           ? const Color.fromARGB(
-                                              255, 81, 223, 121)
+                                                  255, 78, 109, 248)
+                                              .withOpacity(0.59)
                                           : Colors.transparent,
                                       width: 1, // Border width
                                     ),
@@ -495,145 +514,102 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                           30), // Optional: Rounded corners
                                     ),
                                   ),
-                                  child: Text(
-                                    'Events',
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400,
-                                        color: const Color(0xff000000)
-                                            .withOpacity(0.56)),
-                                  )),
-                            ),
-
-                            // Overdue Button
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _childButtonIndex = 1;
-                                    _updateDisplayData();
-                                    if (allTasks.isEmpty) {
-                                      fetchSingleTask(widget.leadId);
-                                    }
-                                  });
-                                },
-                                style: TextButton.styleFrom(
-                                  backgroundColor: _childButtonIndex == 1
-                                      ? const Color.fromARGB(
-                                          255, 159, 174, 239) // Red for Overdue
-                                      : Colors.transparent,
-                                  foregroundColor: _childButtonIndex == 1
-                                      ? Colors.white
-                                      : Colors.black,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  side: BorderSide(
-                                    color: _childButtonIndex == 1
-                                        ? const Color.fromARGB(
-                                                255, 78, 109, 248)
-                                            .withOpacity(0.59)
-                                        : Colors.transparent,
-                                    width: 1, // Border width
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        30), // Optional: Rounded corners
-                                  ),
+                                  child: Text('Tasks',
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xff000000)
+                                              .withOpacity(0.56))),
                                 ),
-                                child: Text('Tasks',
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400,
-                                        color: const Color(0xff000000)
-                                            .withOpacity(0.56))),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Container(
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     borderRadius: BorderRadius.circular(10),
-                //     boxShadow: [
-                //       BoxShadow(
-                //         color: Colors.grey.shade300,
-                //         blurRadius: 6,
-                //         offset: const Offset(0, 3),
-                //       ),
-                //     ],
-                //   ),
-                //   padding: const EdgeInsets.all(16.0),
-                //   child: isLoading
-                //       ? const Center(child: CircularProgressIndicator())
-                //       : Column(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             const SizedBox(height: 50),
-                //             if (_childButtonIndex == 0)
-                //               TimelineSevenWid(events: allEvents)
-                //             else
-                //               TimelineEightWid(events: allTasks),
-                //           ],
-                //         ),
-                // ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade300,
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
-                  padding: const EdgeInsets.all(16.0),
-                  child: isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const SizedBox(height: 0),
-                            if (_childButtonIndex == 0)
-                              allEvents.isNotEmpty
-                                  ? TimelineSevenWid(
-                                      events: allEvents) // Show data if exists
-                                  : const Center(
-                                      child: Text(
-                                        textAlign: TextAlign.start,
-                                        "No Events Found....",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ) // Show message if no data
-                            else
-                              allTasks.isNotEmpty
-                                  ? TimelineEightWid(
-                                      events: allTasks) // Show data if exists
-                                  : const Center(
-                                      child: Text(
-                                        textAlign: TextAlign.center,
-                                        "No Tasks Found...",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ), // Show message if no data
-                          ],
+
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white,
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     boxShadow: [
+                  //       BoxShadow(
+                  //         color: Colors.grey.shade300,
+                  //         blurRadius: 6,
+                  //         offset: const Offset(0, 3),
+                  //       ),
+                  //     ],
+                  //   ),
+                  //   padding: const EdgeInsets.all(16.0),
+                  //   child: isLoading
+                  //       ? const Center(child: CircularProgressIndicator())
+                  //       : Column(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: [
+                  //             const SizedBox(height: 50),
+                  //             if (_childButtonIndex == 0)
+                  //               TimelineSevenWid(events: allEvents)
+                  //             else
+                  //               TimelineEightWid(events: allTasks),
+                  //           ],
+                  //         ),
+                  // ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade300,
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
                         ),
-                )
-              ],
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(16.0),
+                    child: isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const SizedBox(height: 0),
+                              if (_childButtonIndex == 0)
+                                allEvents.isNotEmpty
+                                    ? TimelineSevenWid(
+                                        events:
+                                            allEvents) // Show data if exists
+                                    : const Center(
+                                        child: Text(
+                                          textAlign: TextAlign.start,
+                                          "No Events Found....",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ) // Show message if no data
+                              else
+                                allTasks.isNotEmpty
+                                    ? TimelineEightWid(
+                                        events: allTasks) // Show data if exists
+                                    : const Center(
+                                        child: Text(
+                                          textAlign: TextAlign.center,
+                                          "No Tasks Found...",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ), // Show message if no data
+                            ],
+                          ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

@@ -13,5 +13,8 @@ class AppColors {
   static const Color starBorderColor = Color.fromRGBO(239, 206, 29, 1);
   static const Color starColorsYellow = Color.fromRGBO(239, 206, 29, 1);
   static const Color containerPopBg = Color(0xffEFEFEF);
+  static const Color iconGrey = Color(0xff767676);
   static final Color hintTextColor = const Color(0xff626262).withOpacity(0.4);
+  static final Color backgroundLightGrey =
+      const Color(0xffD9D9D9).withOpacity(0.3);
 }

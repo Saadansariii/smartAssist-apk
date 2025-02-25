@@ -107,7 +107,6 @@ class _AllLeadsState extends State<AllLeads> {
       itemBuilder: (context, index) {
         var task = tasks[index];
         return TaskItem(
-          // name: "${task['fname'] ?? ''} ${task['lname'] ?? ''}".trim(),
           name: task['lead_name'] ?? 'no name',
           date: task['expected_date_purchase'] ?? 'No Date',
           vehicle: task['PMI'] ?? 'Unknown Vehicle',
@@ -157,96 +156,84 @@ class _TaskItemState extends State<TaskItem> {
     isFav = widget.isFavorite;
   }
 
+  Future<void> _toggleFavorite() async {
+    final token = await Storage.getToken();
+    try {
+      final response = await http.put(
+        Uri.parse(
+          'https://api.smartassistapp.in/api/favourites/mark-fav/lead/${widget.leadId}',
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'leadId': widget.leadId, 'favourite': !isFav}),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() => isFav = !isFav);
+        widget.onFavoriteToggled();
+      }
+    } catch (e) {
+      print('Error updating favorite status: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: AppColors.containerBg,
           borderRadius: BorderRadius.circular(10),
           border: const Border(
             left: BorderSide(
               width: 8.0,
-              color: Colors.green,
+              color: AppColors.sideGreen,
             ),
           ),
         ),
         child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              isFav ? Icons.star_rounded : Icons.star_border_rounded,
-              color: isFav
-                  ? AppColors.starColorsYellow
-                  : AppColors.starBorderColor,
-              size: 40,
-            ),
-            // Expanded(
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Text(
-            //         widget.name,
-            //         style: const TextStyle(
-            //           fontWeight: FontWeight.bold,
-            //           fontSize: 18,
-            //         ),
-            //       ),
-            //       const SizedBox(height: 8),
-            //       Row(
-            //         children: [
-            //           const Icon(Icons.calendar_today,
-            //               color: Colors.blue, size: 14),
-            //           const SizedBox(width: 8),
-            //           Text(
-            //             widget.date,
-            //             style:
-            //                 const TextStyle(fontSize: 12, color: Colors.grey),
-            //           ),
-            //         ],
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildUserDetails(),
-                const SizedBox(
-                    height: 4), // Spacing between user details and date-car
-                Row(
-                  children: [
-                    _date(),
-                    _buildVerticalDivider(20),
-                    _buildCarModel(),
-                  ],
-                ),
-              ],
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      isFav ? Icons.star_rounded : Icons.star_border_rounded,
+                      color: isFav
+                          ? AppColors.starColorsYellow
+                          : AppColors.starBorderColor,
+                      size: 40,
+                    ),
+                    onPressed: _toggleFavorite,
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildUserDetails(),
+                      const SizedBox(width: 8),
+                      Row(
+                        children: [
+                          _date(),
+                          const SizedBox(width: 8),
+                          _buildVerticalDivider(20),
+                          const SizedBox(width: 8),
+                          _buildCarModel(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             _buildNavigationButton(),
-            // GestureDetector(
-            //   onTap: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => SingleLeadsById(
-            //           leadId: widget.leadId,
-            //         ),
-            //       ),
-            //     );
-            //   },
-            //   child: Container(
-            //     padding: const EdgeInsets.all(5),
-            //     decoration: BoxDecoration(
-            //         color: Colors.grey[400],
-            //         borderRadius: BorderRadius.circular(30)),
-            //     child: const Icon(Icons.arrow_forward_ios_sharp,
-            //         size: 25, color: Colors.white),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -312,7 +299,8 @@ class _TaskItemState extends State<TaskItem> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => FollowupsDetails(leadId: widget.leadId)),
+              builder: (context) => SingleLeadsById(leadId: widget.leadId),
+            ),
           );
         } else {
           print("Invalid leadId");
