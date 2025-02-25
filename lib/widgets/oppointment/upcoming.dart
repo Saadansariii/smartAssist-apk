@@ -14,7 +14,8 @@ class OppUpcoming extends StatefulWidget {
   final bool isNested;
   const OppUpcoming({
     super.key,
-    required this.upcomingOpp, required this.isNested,
+    required this.upcomingOpp,
+    required this.isNested,
   });
 
   @override
@@ -46,7 +47,7 @@ class _OppUpcomingState extends State<OppUpcoming> {
     }
     return ListView.builder(
       shrinkWrap: true,
-       physics: widget.isNested
+      physics: widget.isNested
           ? const NeverScrollableScrollPhysics()
           : const AlwaysScrollableScrollPhysics(),
       itemCount: upcomingAppointments.length,
@@ -57,7 +58,8 @@ class _OppUpcomingState extends State<OppUpcoming> {
                 item.containsKey('lead_id') &&
                 item.containsKey('event_id'))
             ? OppUpcomingItem(
-                name: item['assigned_to'],
+                key: ValueKey(item['event_id']),
+                name: item['name'] ?? 'No Name',
                 date: item['start_date'],
                 vehicle: 'Discovery Sport',
                 time: item['start_time'],

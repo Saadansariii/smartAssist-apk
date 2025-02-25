@@ -10,7 +10,7 @@ Future<T> processResponse<T>(
 ) async {
   if (response.statusCode == 401) { 
     await TokenManager.clearAuthData();
-    Get.offAllNamed(RoutesName.login); 
+    Get.offAllNamed(RoutesName.splashScreen); 
     
     throw Exception('Unauthorized. Redirecting to login.');
   } else if (response.statusCode >= 200 && response.statusCode < 300) {

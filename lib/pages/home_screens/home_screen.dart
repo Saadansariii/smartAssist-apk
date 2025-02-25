@@ -47,75 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     fetchDashboardData();
-    // print(widget.leadId);
-    // isDashboardLoading = true;
+   
   }
 
-  // Future<void> fetchDashboardData() async {
-  //   print('hiiii');
-  //   setState(() {
-  //     isDashboardLoading = true;
-  //   });
-  //   final token = await Storage.getToken();
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json',
-  //       },
-  //     );
+ 
 
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-  //       final Map<String, dynamic> data = jsonResponse['data'];
-  //       print('Decoded Data: $data');
-  //       setState(() {
-  //         upcomingFollowups = data['upcomingFollowups'];
-  //         overdueFollowups = data['overdueFollowups'];
-  //         upcomingAppointments = data['upcomingAppointments'];
-  //         overdueAppointments = data['overdueAppointments'];
-  //         greeting =
-  //             (data.containsKey('greetings') && data['greetings'] is String)
-  //                 ? data['greetings']
-  //                 : 'Welcome!';
-  //         print(data['greetings']);
-  //         if (upcomingFollowups.isNotEmpty) {
-  //           leadId = upcomingFollowups[0]['lead_id'];
-  //         }
-  //       });
-  //     } else {
-  //       final Map<String, dynamic> errorData = json.decode(response.body);
-  //       final String errorMessage =
-  //           errorData['message'] ?? 'Failed to load dashboard data';
-  //       print("Failed to load data: $errorMessage");
-
-  //       // Check if the error indicates an unauthorized request.
-  //       if (response.statusCode == 401 ||
-  //           errorMessage.toLowerCase().contains("unauthorized")) {
-  //         // Clear authentication data and navigate to login.
-  //         await TokenManager.clearAuthData();
-  //         Get.offAll(() => LoginPage(
-  //               email: '',
-  //               onLoginSuccess: () {},
-  //             ));
-  //       } else {
-  //         // Otherwise, just display the error message.
-  //         showErrorMessage(context, message: errorMessage);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching data: $e");
-  //     showErrorMessage(context, message: e.toString());
-  //   } finally {
-  //     setState(() {
-  //       isDashboardLoading = false;
-  //     });
-  //   }
-  // }
-
-  Future<void> fetchDashboardData() async { 
-    
+  Future<void> fetchDashboardData() async {
     setState(() {
       isDashboardLoading = true;
     });
@@ -298,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              AllLeads(),
+                                                              const AllLeads(),
                                                         ),
                                                       );
                                                     },
@@ -363,6 +300,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         size: 20,
                                         // weight: 500,
                                       ),
+                                      // child: IconButton(
+                                      //     onPressed: () {},
+                                      //     icon:
+                                      //         const Icon(Icons.menu, size: 20)),
                                     ),
                                     suffixIcon: const Icon(
                                       FontAwesomeIcons.microphone,
@@ -376,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 3,
                       ),
                       isDashboardLoading
@@ -389,6 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               overdueFollowups: overdueFollowups,
                               upcomingAppointments: upcomingAppointments,
                               overdueAppointments: overdueAppointments,
+                              refreshDashboard : fetchDashboardData,
                             ),
                       const BottomBtnSecond(),
                     ],

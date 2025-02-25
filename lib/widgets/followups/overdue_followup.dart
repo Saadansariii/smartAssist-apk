@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -12,31 +12,30 @@ class OverdueFollowup extends StatefulWidget {
   final bool isNested;
   final List<dynamic> overdueeFollowups;
 
-  const OverdueFollowup({super.key, required this.overdueeFollowups, required this.isNested});
+  const OverdueFollowup(
+      {super.key, required this.overdueeFollowups, required this.isNested});
 
   @override
   State<OverdueFollowup> createState() => _OverdueFollowupState();
 }
 
 class _OverdueFollowupState extends State<OverdueFollowup> {
-  bool isLoading = false; 
+  bool isLoading = false;
   List<dynamic> overdueFollowups = [];
 
   @override
   void initState() {
     super.initState();
     print("widget.upcomingFollowups");
-    print(widget.overdueeFollowups); 
+    print(widget.overdueeFollowups);
   }
-
- 
 
   @override
   Widget build(BuildContext context) {
     if (widget.overdueeFollowups.isEmpty) {
       return const SizedBox(
         height: 240,
-        child:   Center(child: Text('No overdue followups available')),
+        child: Center(child: Text('No overdue followups available')),
       );
     }
     return isLoading
@@ -54,6 +53,7 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
                   item.containsKey('lead_id') &&
                   item.containsKey('task_id')) {
                 return overdueeFollowupsItem(
+                  key: ValueKey(item['task_id']), 
                   name: item['name'],
                   date: item['due_date'],
                   vehicle: 'Discovery Sport',
@@ -160,7 +160,6 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
       ),
     );
   }
- 
 
   Widget _buildOverdueCard() {
     return Container(
@@ -273,7 +272,6 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
     );
   }
 
- 
   Widget _buildVerticalDivider(double height) {
     return Container(
       height: height,

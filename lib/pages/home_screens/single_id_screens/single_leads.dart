@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 
@@ -30,7 +30,7 @@ class _SingleLeadsByIdState extends State<SingleLeadsById> {
   void initState() {
     super.initState();
     fetchLeadData(widget.leadId);
-    
+
     // print('this is lead id $widget.leadId');
     // print(widget.leadId);
   }

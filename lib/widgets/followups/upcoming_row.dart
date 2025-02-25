@@ -52,6 +52,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
                 item.containsKey('lead_id') &&
                 item.containsKey('task_id'))
             ? UpcomingFollowupItem(
+              key: ValueKey(item['task_id']),
                 name: item['name'],
                 date: item['due_date'],
                 vehicle: 'Discovery Sport',

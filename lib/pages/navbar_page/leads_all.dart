@@ -107,6 +107,7 @@ class _AllLeadsState extends State<AllLeads> {
       itemBuilder: (context, index) {
         var task = tasks[index];
         return TaskItem(
+          key: ValueKey(task['lead_id']),
           name: task['lead_name'] ?? 'no name',
           date: task['expected_date_purchase'] ?? 'No Date',
           vehicle: task['PMI'] ?? 'Unknown Vehicle',

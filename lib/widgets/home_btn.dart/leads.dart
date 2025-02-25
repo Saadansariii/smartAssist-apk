@@ -21,13 +21,13 @@ class Leads extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     // border: Border.all(color: Colors.black),
                     borderRadius: BorderRadius.all(Radius.circular(14)),
                   ),
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         // border: Border.all(color: Colors.yellow),
                         color: Colors.white,
                         borderRadius:

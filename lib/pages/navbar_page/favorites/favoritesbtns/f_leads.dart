@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class FLeads extends StatefulWidget {
@@ -75,9 +79,11 @@ class _FLeadsState extends State<FLeads> {
       itemBuilder: (context, index) {
         var task = tasks[index];
         return TaskItem(
-          name: task['name'] ?? 'No Name',
-          date: task['due_date'] ?? 'No Date',
-          vehicle: task['vehicle'] ?? 'Discovery Sport',
+          key: ValueKey(task['lead_id']),
+          name: task['lead_name'] ?? 'No Name',
+          date: task['expected_date_purchase'] ?? 'No Date',
+          vehicle: task['PMI'] ?? 'No Name',
+          brand: task['brand'] ?? '',
           leadId: task['lead_id'] ?? '',
           taskId: task['task_id'] ?? '',
           isFavorite: task['favourite'] ?? false,
@@ -95,6 +101,7 @@ class TaskItem extends StatefulWidget {
   final String vehicle;
   final String leadId;
   final String taskId;
+  final String brand;
   final bool isFavorite;
   final VoidCallback onFavoriteToggled;
 
@@ -107,6 +114,7 @@ class TaskItem extends StatefulWidget {
     required this.taskId,
     required this.isFavorite,
     required this.onFavoriteToggled,
+    required this.brand,
   });
 
   @override
@@ -127,13 +135,13 @@ class _TaskItemState extends State<TaskItem> {
     try {
       final response = await http.put(
         Uri.parse(
-          'https://api.smartassistapp.in/api/favourites/mark-fav/task/${widget.taskId}',
+          'https://api.smartassistapp.in/api/favourites/mark-fav/lead/${widget.leadId}',
         ),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'taskId': widget.taskId, 'favourite': !isFav}),
+        body: jsonEncode({'leadId': widget.leadId, 'favourite': !isFav}),
       );
 
       if (response.statusCode == 200) {
@@ -148,75 +156,137 @@ class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: AppColors.containerBg,
           borderRadius: BorderRadius.circular(10),
           border: const Border(
             left: BorderSide(
               width: 8.0,
-              color: Colors.green, // ✅ Always green for upcoming tasks
+              color: AppColors.sideGreen, // ✅ Always green for upcoming tasks
             ),
           ),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              icon: Icon(
-                isFav ? Icons.star_rounded : Icons.star_border_rounded,
-                color: isFav ? Colors.amber : Colors.grey,
-                size: 40,
-              ),
-              onPressed: _toggleFavorite,
-            ),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    widget.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                  IconButton(
+                    icon: Icon(
+                      isFav ? Icons.star_rounded : Icons.star_border_rounded,
+                      color: isFav
+                          ? AppColors.starColorsYellow
+                          : AppColors.starBorderColor,
+                      size: 40,
                     ),
+                    onPressed: _toggleFavorite,
                   ),
-                  const SizedBox(height: 8),
-                  Row(
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.calendar_today,
-                          color: Colors.blue, size: 14),
+                      _buildUserDetails(),
                       const SizedBox(width: 8),
-                      Text(
-                        widget.date,
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
+                      Row(
+                        children: [
+                          _date(),
+                          const SizedBox(width: 8),
+                          _buildVerticalDivider(20),
+                          const SizedBox(width: 8),
+                          _buildCarModel(),
+                        ],
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 16),
-            Text(
-              widget.vehicle,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-            IconButton(
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: () {
-                if (widget.leadId.isNotEmpty) {
-                  Navigator.pushNamed(
-                    context,
-                    '/followup-details',
-                    arguments: widget.leadId,
-                  );
-                }
-              },
-            ),
+            _buildNavigationButton(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildUserDetails() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.name,
+            style: GoogleFonts.poppins(
+                color: AppColors.fontColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 14)),
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+
+  Widget _date() {
+    String formattedDate = '';
+    try {
+      DateTime parseDate = DateTime.parse(widget.date);
+      formattedDate = DateFormat('dd/MM/yyyy').format(parseDate);
+    } catch (e) {
+      formattedDate = widget.date;
+    }
+    return Row(
+      children: [
+        const Icon(Icons.phone_in_talk, color: Colors.blue, size: 14),
+        const SizedBox(width: 5),
+        Text(formattedDate,
+            style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    );
+  }
+
+  Widget _buildVerticalDivider(double height) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      height: height,
+      width: 1,
+      decoration: const BoxDecoration(
+          border: Border(right: BorderSide(color: AppColors.fontColor))),
+    );
+  }
+
+  Widget _buildCarModel() {
+    return Text(
+      widget.vehicle,
+      textAlign: TextAlign.start,
+      style: GoogleFonts.poppins(fontSize: 10, color: AppColors.fontColor),
+      softWrap: true,
+      overflow: TextOverflow.visible,
+    );
+  }
+
+  Widget _buildNavigationButton() {
+    return GestureDetector(
+      onTap: () {
+        if (widget.leadId.isNotEmpty) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SingleLeadsById(leadId: widget.leadId),
+            ),
+          );
+        } else {
+          print("Invalid leadId");
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+            color: AppColors.arrowContainerColor,
+            borderRadius: BorderRadius.circular(30)),
+        child: const Icon(Icons.arrow_forward_ios_rounded,
+            size: 25, color: Colors.white),
       ),
     );
   }

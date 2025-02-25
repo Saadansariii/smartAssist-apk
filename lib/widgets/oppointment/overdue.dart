@@ -62,7 +62,8 @@ class _OppOverdueState extends State<OppOverdue> {
                       item.containsKey('lead_id') &&
                       item.containsKey('event_id'))
                   ? overdueeOppItem(
-                      name: item['assigned_to'],
+                      key: ValueKey(item['event_id']),
+                      name: item['name'] ?? 'No Name',
                       date: item['start_date'],
                       time: item['start_time'],
                       vehicle: 'Discovery Sport',

@@ -107,6 +107,7 @@ class _FUpcomingState extends State<FUpcoming> {
       itemBuilder: (context, index) {
         var task = tasks[index];
         return TaskItem(
+          key: ValueKey(task['task_id']),
           name: task['name'] ?? 'No Name',
           date: task['due_date'] ?? 'No Date',
           vehicle: task['vehicle'] ?? 'Discovery Sport',
@@ -182,7 +183,7 @@ class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -307,5 +308,4 @@ class _TaskItemState extends State<TaskItem> {
       ),
     );
   }
-
 }

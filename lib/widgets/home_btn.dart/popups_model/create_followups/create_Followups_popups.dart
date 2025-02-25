@@ -74,12 +74,12 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
   }
 
 // Store lead_id in SharedPreferences
-  Future<void> storeLeadId(String leadId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        'lead_id', leadId); // Save lead_id in SharedPreferences
-    print("Stored lead_id: $leadId"); // Debugging
-  }
+  // Future<void> storeLeadId(String leadId) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setString(
+  //       'lead_id', leadId); // Save lead_id in SharedPreferences
+  //   print("Stored lead_id: $leadId"); // Debugging
+  // }
 
   String? selectedLeads;
   String? selectedSubject;
@@ -395,12 +395,13 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? spId = prefs.getString('user_id');
-    String? leadId = prefs.getString('lead_id');
+    // String? leadId = prefs.getString('lead_id');
+    String? leadId = selectedLeads!;
 
     print('Retrieved sp_id: $spId');
     print('Retrieved lead_id: $leadId');
 
-    if (spId == null || leadId == null) {
+    if (spId == null || leadId.isEmpty) {
       showErrorMessage(context,
           message: 'User ID or Lead ID not found. Please log in again.');
       return;
@@ -426,7 +427,8 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
 
       // Close modal if submission is successful
       if (context.mounted) {
-        Navigator.pop(context); // Closes the modal
+        
+        Navigator.pop(context , true); // Closes the modal
       }
 
       ScaffoldMessenger.of(context).showSnackBar(

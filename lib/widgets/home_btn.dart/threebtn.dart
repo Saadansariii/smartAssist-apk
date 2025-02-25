@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/home_screens/all_appointment.dart';
 import 'package:smart_assist/pages/home_screens/all_followups.dart';
-import 'package:smart_assist/utils/storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
@@ -16,8 +14,6 @@ import 'package:smart_assist/widgets/oppointment/overdue.dart';
 import 'package:smart_assist/widgets/oppointment/upcoming.dart';
 import 'package:smart_assist/widgets/testdrive/overdue.dart';
 import 'package:smart_assist/widgets/testdrive/upcoming.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class Threebtn extends StatefulWidget {
   final String leadId;
@@ -25,13 +21,16 @@ class Threebtn extends StatefulWidget {
   final List<dynamic> overdueFollowups;
   final List<dynamic> upcomingAppointments;
   final List<dynamic> overdueAppointments;
+  final Future<void> Function() refreshDashboard;
+  // final VoidCallback refreshDashboard;
   const Threebtn(
       {super.key,
       required this.leadId,
       required this.upcomingFollowups,
       required this.overdueFollowups,
       required this.upcomingAppointments,
-      required this.overdueAppointments});
+      required this.overdueAppointments,
+      required this.refreshDashboard});
 
   @override
   State<Threebtn> createState() => _ThreebtnState();
@@ -91,6 +90,7 @@ class _ThreebtnState extends State<Threebtn> {
   int _upcomingBtnFollowups = 0;
   int _upcomingBtnAppointments = 0;
   int _upcomingBtnTestdrive = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -283,7 +283,7 @@ class _ThreebtnState extends State<Threebtn> {
                         onPressed: () {
                           setState(() {
                             _childButtonIndex = 1; // Set Overdue as active
-                            _childSelection[_activeButtonIndex] = 1; 
+                            _childSelection[_activeButtonIndex] = 1;
                           });
 
                           if (_activeButtonIndex == 0) {
@@ -341,8 +341,8 @@ class _ThreebtnState extends State<Threebtn> {
                             padding: EdgeInsets.zero,
                             height: 20,
                             onTap: () {
-                              Future.delayed(Duration.zero, () {
-                                showDialog(
+                              Future.delayed(Duration.zero, () async {
+                                final dialogResult = await showDialog<bool>(
                                   context: context,
                                   builder: (context) {
                                     return Dialog(
@@ -364,6 +364,9 @@ class _ThreebtnState extends State<Threebtn> {
                                     );
                                   },
                                 );
+                                if (dialogResult == true) {
+                                  await widget.refreshDashboard();
+                                }
                               });
                             },
                             value: 'followup',
@@ -489,35 +492,102 @@ class _ThreebtnState extends State<Threebtn> {
                         context: context,
                         position: const RelativeRect.fromLTRB(200, 220, 30, 0),
                         items: [
+                          // PopupMenuItem<String>(
+                          //   padding: EdgeInsets.zero,
+                          //   height: 20,
+                          //   onTap: () {
+                          //     Future.delayed(
+                          //       Duration.zero,
+                          //       () {
+                          //         showDialog(
+                          //           context: context,
+                          //           builder: (context) {
+                          //             return Dialog(
+                          //               backgroundColor: Colors.transparent,
+                          //               insetPadding: EdgeInsets
+                          //                   .zero, // Remove default padding
+                          //               child: Container(
+                          //                 width:
+                          //                     MediaQuery.of(context).size.width,
+                          //                 margin: const EdgeInsets.symmetric(
+                          //                     horizontal:
+                          //                         16), // Add some margin for better UX
+                          //                 decoration: BoxDecoration(
+                          //                   color: Colors.white,
+                          //                   borderRadius:
+                          //                       BorderRadius.circular(10),
+                          //                 ),
+
+                          //                 child: _createAppoinment,
+                          //                 // Appointment modal
+                          //               ),
+                          //             );
+                          //           },
+                          //         );
+
+                          //       },
+                          //     );
+                          //   },
+                          //   value: 'appointment',
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         horizontal: 0, vertical: 15),
+                          //     child: Row(
+                          //       children: [
+                          //         const Padding(
+                          //           padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
+                          //           child: Icon(
+                          //             Icons.add_call,
+                          //             size: 20,
+                          //             color: AppColors.fontColor,
+                          //           ),
+                          //         ),
+                          //         const SizedBox(
+                          //           width: 4,
+                          //         ),
+                          //         Text(
+                          //           'Create Appointment',
+                          //           style: GoogleFonts.poppins(
+                          //               fontSize: 12,
+                          //               fontWeight: FontWeight.w500,
+                          //               color: AppColors.fontColor),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           PopupMenuItem<String>(
                             padding: EdgeInsets.zero,
                             height: 20,
                             onTap: () {
-                              Future.delayed(Duration.zero, () {
-                                showDialog(
+                              Future.delayed(Duration.zero, () async {
+                                final dialogResult = await showDialog<bool>(
                                   context: context,
                                   builder: (context) {
                                     return Dialog(
-                                        backgroundColor: Colors.transparent,
-                                        insetPadding: EdgeInsets
-                                            .zero, // Remove default padding
-                                        child: Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal:
-                                                  16), // Add some margin for better UX
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-
-                                          child: _createAppoinment,
-                                          // Appointment modal
-                                        ));
+                                      backgroundColor: Colors.transparent,
+                                      insetPadding: EdgeInsets
+                                          .zero, // Remove default padding
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal:
+                                                16), // Add margin for better UX
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child:
+                                            _createAppoinment, // Appointment modal
+                                      ),
+                                    );
                                   },
                                 );
+                                if (dialogResult == true) {
+                                  await widget.refreshDashboard();
+                                }
                               });
                             },
                             value: 'appointment',
@@ -534,20 +604,20 @@ class _ThreebtnState extends State<Threebtn> {
                                       color: AppColors.fontColor,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 4,
-                                  ),
+                                  const SizedBox(width: 4),
                                   Text(
                                     'Create Appointment',
                                     style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.fontColor),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.fontColor,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
+
                           PopupMenuItem<String>(
                             padding: EdgeInsets.zero,
                             height: 20,

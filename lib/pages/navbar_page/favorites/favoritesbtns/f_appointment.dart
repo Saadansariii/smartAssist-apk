@@ -109,6 +109,7 @@ class _FAppointmentState extends State<FAppointment> {
       itemBuilder: (context, index) {
         var task = tasks[index];
         return TaskItem(
+          key: ValueKey(task['event_id']),
           name: task['name'] ?? 'No Name',
           date: task['start_date'] ?? 'No Date',
           vehicle: task['end_date'] ?? 'Discovery Sport',
@@ -187,7 +188,7 @@ class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(

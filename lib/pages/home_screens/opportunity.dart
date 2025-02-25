@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart'; 
+import 'dart:ffi';
+
+import 'package:flutter/material.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,7 +35,7 @@ class _OpportunityState extends State<Opportunity> {
         ],
       ),
       endDrawer: Drawer(
-        child:   ListView(
+        child: ListView(
           children: const [
             ListTile(
               title: Text('one'),
@@ -97,8 +99,12 @@ class _OpportunityState extends State<Opportunity> {
               ),
 
               Threebtn(
-                leadId: widget.leadId, upcomingFollowups: const [], overdueFollowups: const [], upcomingAppointments: const [], overdueAppointments: const [],
-                
+                leadId: widget.leadId,
+                upcomingFollowups: const [],
+                overdueFollowups: const [],
+                upcomingAppointments: const [],
+                overdueAppointments: const [],
+                refreshDashboard: () async {},
               ),
 
               const BottomBtnSecond(),

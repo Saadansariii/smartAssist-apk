@@ -28,61 +28,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     fetchDropdownData();
   }
 
-  // Future<void> fetchDropdownData() async {
-  //   const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     print("No token found. Please login.");
-  //     return;
-  //   }
-
-  //   try {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
-
-  //     final response = await http.get(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       final rows = data['rows'] as List;
-
-  //       print("Extracted Rows: $rows"); // Debug: Ensure rows are extracted
-
-  //       if (rows.isNotEmpty) {
-  //         // Extract the lead_id from the first row (or any row you need)
-  //         String leadId =
-  //             rows[0]['lead_id']; // Assuming you're taking the first lead_id
-  //         // storeLeadId(leadId); // Store lead_id in SharedPreferences
-  //       }
-
-  //       setState(() {
-  //         dropdownItems = rows.map<String>((row) {
-  //           String leadName = row['lead_name'] ??
-  //               "${row['fname'] ?? ''} ${row['lname'] ?? ''}".trim();
-  //           return leadName.isNotEmpty ? leadName : "Unknown"; // Default name
-  //         }).toList();
-
-  //         isLoading = false;
-  //       });
-
-  //       print(
-  //           "Dropdown Items: $dropdownItems"); // Debug: Ensure dropdown is populated
-  //     } else {
-  //       print("Failed with status code: ${response.statusCode}");
-  //       print("Response body: ${response.body}");
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching dropdown data: $e");
-  //   }
-  // }
-
   Future<void> fetchDropdownData() async {
     const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
 
@@ -111,9 +56,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
               "id": row['lead_id'] as String,
             };
           }).toList();
-
-          // Do NOT auto-select any value
-          // selectedEvent = dropdownItems.isNotEmpty ? dropdownItems.first["id"] : null;
         });
 
         isLoading = false;
@@ -129,14 +71,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     }
   }
 
-// Store lead_id in SharedPreferences
-  // Future<void> storeLeadId(String leadId) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString(
-  //       'lead_id', leadId); // Save lead_id in SharedPreferences
-  //   print("Stored lead_id: $leadId"); // Debugging
-  // }
-
   String? selectedLeads;
   String? selectedSubject;
   String? selectedStatus;
@@ -144,6 +78,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
 
   TextEditingController startdateController = TextEditingController();
   TextEditingController enddateController = TextEditingController();
+
   // TextEditingController descriptionController = TextEditingController();
 
   Future<void> _pickDate({required bool isStartDate}) async {
@@ -211,45 +146,9 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                 ),
               ),
 
-             const SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-
-              // Align(
-              //   alignment: Alignment.topLeft,
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
-              //     child: Text(
-              //       'Comments :',
-              //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              //     ),
-              //   ),
-              // ),
-              // Container(
-              //   width: double.infinity, // Full width
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //     color: const Color.fromARGB(255, 243, 238, 238),
-              //   ),
-              //   child: TextField(
-              //     controller: descriptionController,
-              //     decoration: InputDecoration(
-              //       hintText: "Add Comments",
-              //       hintStyle: GoogleFonts.poppins(
-              //         fontSize: 14,
-              //         fontWeight: FontWeight.w500,
-              //         color: Colors.grey,
-              //       ),
-              //       contentPadding: const EdgeInsets.only(left: 10),
-              //       border: InputBorder.none,
-              //     ),
-              //     style: GoogleFonts.poppins(
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.w500,
-              //       color: Colors.black,
-              //     ),
-              //   ),
-              // ),
 
               _buildDropdown(
                 label: 'Priority:',
@@ -322,22 +221,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                         ),
                         isExpanded: true,
                         underline: const SizedBox.shrink(),
-                        // items: dropdownItems.map((String value) {
-                        //   return DropdownMenuItem<String>(
-                        //     value: value,
-                        //     child: Padding(
-                        //       padding: const EdgeInsets.only(left: 10.0),
-                        //       child: Text(
-                        //         value,
-                        //         style: GoogleFonts.poppins(
-                        //           fontSize: 14,
-                        //           fontWeight: FontWeight.w500,
-                        //           color: Colors.black,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   );
-                        // }).toList(),
                         items: dropdownItems.map((item) {
                           return DropdownMenuItem<String>(
                             value: item["id"],
@@ -490,36 +373,98 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     );
   }
 
+  // Future<void> submitForm() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? spId = prefs.getString('user_id');
+
+  //   // Use the lead id from the dropdown selection
+  //   if (selectedLeads == null) {
+  //     showErrorMessage(context, message: 'Please select a lead.');
+  //     return;
+  //   }
+  //   String leadId = selectedLeads!;
+
+  //   // Convert the selected date-time into DateTime objects
+  //   DateTime startDateTime =
+  //       DateFormat('dd/MM/yyyy hh:mm a').parse(startdateController.text);
+  //   DateTime endDateTime =
+  //       DateFormat('dd/MM/yyyy hh:mm a').parse(enddateController.text);
+
+  //   // Extract date in 'yyyy-MM-dd' format
+  //   String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDateTime);
+  //   String formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateTime);
+
+  //   // Extract time in 'hh:mm a' format
+  //   String formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
+  //   String formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
+
+  //   print('Retrieved sp_id: $spId');
+  //   print('Retrieved lead_id: $leadId');
+  //   print('Selected lead id from dropdown: $selectedLeads');
+
+  //   if (spId == null || leadId.isEmpty) {
+  //     showErrorMessage(context,
+  //         message: 'User ID or Lead ID not found. Please log in again.');
+  //     return;
+  //   }
+
+  //   // Prepare the appointment data
+  //   final newTaskForLead = {
+  //     'start_date': startdateController.text,
+  //     'end_date': enddateController.text,
+  //     'priority': selectedPriority,
+  //     'start_time': formattedStartTime,
+  //     'end_time': formattedEndTime,
+  //     'subject': selectedSubject,
+  //     'sp_id': spId,
+  //   };
+
+  //   print('Lead Data: $newTaskForLead');
+
+  //   // Pass the selected leadId to the submitAppoinment function
+  //   bool success = await LeadsSrv.submitAppoinment(newTaskForLead, leadId);
+
+  //   if (success) {
+  //     print('Lead submitted successfully!');
+  //     if (context.mounted) {
+  //       Navigator.pop(context);
+  //     }
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Form Submit Successful.')),
+  //     );
+  //   } else {
+  //     print('Failed to submit lead.');
+  //   }
+  // }
+
   Future<void> submitForm() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? spId = prefs.getString('user_id');
-    String? leadId = prefs.getString('lead_id');
+    // Retrieve sp_id from SharedPreferences.
+    final prefs = await SharedPreferences.getInstance();
+    final spId = prefs.getString('user_id');
 
-    // Convert the selected date-time into DateTime objects
-    DateTime startDateTime =
+    // Use the lead id from the dropdown selection.
+    if (selectedLeads == null) {
+      showErrorMessage(context, message: 'Please select a lead.');
+      return;
+    }
+    final leadId = selectedLeads!;
+
+    // Parse and format the selected dates/times.
+    final startDateTime =
         DateFormat('dd/MM/yyyy hh:mm a').parse(startdateController.text);
-    DateTime endDateTime =
+    final endDateTime =
         DateFormat('dd/MM/yyyy hh:mm a').parse(enddateController.text);
+    final formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
+    final formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
 
-    // Extract date in 'yyyy-MM-dd' format
-    String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDateTime);
-    String formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateTime);
-
-    // Extract time in 'hh:mm a' format
-    String formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
-    String formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
-
-    print('Retrieved sp_id: $spId');
-    print('Retrieved lead_id: $leadId');
-
-    if (spId == null || leadId == null) {
+    if (spId == null || leadId.isEmpty) {
       showErrorMessage(context,
           message: 'User ID or Lead ID not found. Please log in again.');
       return;
     }
 
-    // Prepare the lead data
-    final newTaskForLead = {
+    // Prepare the appointment data.
+    final appointmentData = {
       'start_date': startdateController.text,
       'end_date': enddateController.text,
       'priority': selectedPriority,
@@ -529,24 +474,18 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
       'sp_id': spId,
     };
 
-    print('Lead Data: $newTaskForLead');
-
-    // Pass the leadId to the submitFollowups function
-    bool success = await LeadsSrv.submitAppoinment(newTaskForLead, leadId);
+    // Call the service to submit the appointment.
+    final success = await LeadsSrv.submitAppoinment(appointmentData, leadId);
 
     if (success) {
-      print('Lead submitted successfully!');
-
-      // Close modal if submission is successful
       if (context.mounted) {
-        Navigator.pop(context); // Closes the modal
+        Navigator.pop(context, true); // Close the modal on success.
       }
-
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Form Submit Successful.')),
+        const SnackBar(content: Text('Form Submit Successful.')),
       );
     } else {
-      print('Failed to submit lead.');
+      showErrorMessage(context, message: 'Failed to submit appointment.');
     }
   }
 }

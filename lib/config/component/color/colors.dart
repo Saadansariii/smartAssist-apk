@@ -17,4 +17,5 @@ class AppColors {
   static final Color hintTextColor = const Color(0xff626262).withOpacity(0.4);
   static final Color backgroundLightGrey =
       const Color(0xffD9D9D9).withOpacity(0.3);
+  // static const Color backgroundLightGrey = Color(0x4DD9D9D9);
 }
