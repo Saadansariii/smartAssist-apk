@@ -9,6 +9,7 @@ import 'package:smart_assist/utils/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart'; // Import Smooth Page Indicator
 
 class CreateFollowupsPopups extends StatefulWidget {
   const CreateFollowupsPopups({super.key});
@@ -18,9 +19,11 @@ class CreateFollowupsPopups extends StatefulWidget {
 }
 
 class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
-  // List<String> dropdownItems = [];
+  final PageController _pageController = PageController();
   List<Map<String, String>> dropdownItems = [];
   bool isLoading = false;
+  int _currentStep = 0;
+
   @override
   void initState() {
     super.initState();
@@ -29,7 +32,6 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
 
   Future<void> fetchDropdownData() async {
     const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
-
     final token = await Storage.getToken();
     if (token == null) {
       print("No token found. Please login.");
@@ -37,12 +39,8 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
     }
 
     try {
-      final response = await http.get(
-        Uri.parse(apiUrl),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await http
+          .get(Uri.parse(apiUrl), headers: {'Authorization': 'Bearer $token'});
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -55,9 +53,6 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
               "id": row['lead_id'] as String,
             };
           }).toList();
-
-          // Do NOT auto-select any value
-          // selectedEvent = dropdownItems.isNotEmpty ? dropdownItems.first["id"] : null;
         });
 
         isLoading = false;
@@ -72,14 +67,6 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
       });
     }
   }
-
-// Store lead_id in SharedPreferences
-  // Future<void> storeLeadId(String leadId) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString(
-  //       'lead_id', leadId); // Save lead_id in SharedPreferences
-  //   print("Stored lead_id: $leadId"); // Debugging
-  // }
 
   String? selectedLeads;
   String? selectedSubject;
@@ -98,9 +85,28 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
 
     if (pickedDate != null) {
       setState(() {
-        // Format the date as 'dd/MM/yyyy'
         dateController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
       });
+    }
+  }
+
+  void _nextStep() {
+    if (_currentStep == 0) {
+      if (selectedLeads == null ||
+          selectedSubject == null ||
+          selectedStatus == null ||
+          descriptionController.text.isEmpty) {
+        showErrorMessage(context,
+            message: 'Please fill all fields before proceeding.');
+        return;
+      }
+      _pageController.nextPage(
+          duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      setState(() {
+        _currentStep = 1;
+      });
+    } else {
+      submitForm();
     }
   }
 
@@ -123,261 +129,124 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
-                    'Create followups',
+                    'Create Followups',
                     style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.fontBlack,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.fontBlack),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+
+              // PageView for smooth transition
+              SizedBox(
+                height: 320, // Adjust height for both steps
+                child: PageView(
+                  controller: _pageController,
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Disable swipe
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTextField(
+                            label: 'Comments:',
+                            controller: descriptionController,
+                            hint: 'Enter Comments'),
+                        _buildDropdown(
+                            label: 'Leads Name:',
+                            value: selectedLeads,
+                            items: dropdownItems,
+                            onChanged: (val) =>
+                                setState(() => selectedLeads = val)),
+                        _buildDropdown(
+                            label: 'Subject:',
+                            value: selectedSubject,
+                            items: ['Call', 'Provide Quotation', 'Send Email'],
+                            onChanged: (val) =>
+                                setState(() => selectedSubject = val)),
+                        _buildDropdown(
+                            label: 'Status:',
+                            value: selectedStatus,
+                            items: ['Not Started', 'In Progress', 'Completed'],
+                            onChanged: (val) =>
+                                setState(() => selectedStatus = val)),
+                      ],
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5.0),
-                  child: Text(
-                    'Comments :',
-                    style: GoogleFonts.poppins(
-                        fontSize: 14, fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              Container(
-                height: 45,
-                width: double.infinity, // Full width
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: AppColors.containerPopBg,
-                ),
-                child: TextField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                    hintText: "Add Comments",
-                    hintStyle: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildDropdown(
+                            label: 'Priority:',
+                            value: selectedPriority,
+                            items: ['High', 'Normal', 'Low'],
+                            onChanged: (val) =>
+                                setState(() => selectedPriority = val)),
+                        _buildDatePicker(
+                            label: 'Followup Date:',
+                            controller: dateController,
+                            onTap: _pickDate),
+                      ],
                     ),
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    border: InputBorder.none,
-                  ),
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Text(
-                    'Leads Name :',
-                    style: GoogleFonts.poppins(
-                        fontSize: 14, fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              Container(
-                height: 45,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: AppColors.containerPopBg,
-                ),
-                child: isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                        color: AppColors.colorsBlue,
-                      ))
-                    : DropdownButton<String>(
-                        value: selectedLeads,
-                        hint: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            "Select",
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        icon: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.keyboard_arrow_down_sharp,
-                            size: 30,
-                          ),
-                        ),
-                        isExpanded: true,
-                        underline: const SizedBox.shrink(),
-                        items: dropdownItems.map((item) {
-                          return DropdownMenuItem<String>(
-                            value: item['id'],
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Text(item['name'] ?? '',
-                                  style: AppFont.dropDowmLabel()),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(
-                            () {
-                              selectedLeads = value;
-                            },
-                          );
-                        },
-                      ),
-              ),
-
-              const SizedBox(height: 10),
-
-              _buildDropdown(
-                label: 'Subject:',
-                hint: 'Select',
-                value: selectedSubject,
-                items: [
-                  'Call',
-                  'Provide Quotation',
-                  'Send Email',
-                  'Vehicle Selection',
-                  'Send SMS',
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    selectedSubject = value;
-                  });
-                  print("Selected Brand: $selectedSubject");
-                },
-              ),
-
-              _buildDropdown(
-                label: 'Status:',
-                hint: 'Select',
-                value: selectedStatus,
-                items: [
-                  'Not Started',
-                  'In Progress',
-                  'Completed',
-                  'Waiting on someone else',
-                  'Deferred',
-                  'SMS sent'
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    selectedStatus = value;
-                  });
-                  print("Selected Brand: $selectedStatus");
-                },
-              ),
-
-              _buildDropdown(
-                label: 'Priority:',
-                hint: 'Select',
-                value: selectedPriority,
-                items: ['High', 'Normal', 'Low'],
-                onChanged: (value) {
-                  setState(() {
-                    selectedPriority = value;
-                  });
-                  print("Selected Brand: $selectedPriority ");
-                },
-              ),
-              const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Followup Date',
-                  style: GoogleFonts.poppins(
-                      fontSize: 14, fontWeight: FontWeight.w500),
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              GestureDetector(
-                onTap: _pickDate,
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: AppColors.containerPopBg,
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween, // Ensures spacing
-                    children: [
-                      Expanded(
-                        child: Text(
-                          dateController.text.isEmpty
-                              ? "Select Date"
-                              : dateController.text,
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: dateController.text.isEmpty
-                                ? Colors.grey
-                                : Colors.black,
-                          ),
-                        ),
-                      ),
-                      const Icon(
-                        Icons.calendar_month_outlined,
-                        color: AppColors.iconGrey,
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
 
-              // buttons
-              const SizedBox(height: 30),
-              // Row with Buttons
+              const SizedBox(height: 5),
+
+              // Smooth Indicator
+              SmoothPageIndicator(
+                controller: _pageController,
+                count: 2,
+                effect: const WormEffect(
+                  activeDotColor: Colors.black,
+                  spacing: 4.0,
+                  radius: 10.0,
+                  dotWidth: 10.0,
+                  dotHeight: 10.0,
+                ),
+              ),
+
+              const SizedBox(height: 5),
+
+              // Buttons (Next or Submit)
               Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.black, // Cancel button color
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context); // Close modal on cancel
-                        },
-                        child: Text('Cancel', style: AppFont.buttons()),
-                      ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5))),
+                      onPressed: () {
+                        if (_currentStep == 0) {
+                          // If on the first step, close the modal
+                          Navigator.pop(context);
+                        } else {
+                          // If on the second step, go back to the first step
+                          _pageController.previousPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut);
+                          setState(() {
+                            _currentStep = 0;
+                          });
+                        }
+                      },
+                      child: Text(_currentStep == 0 ? "Cancel" : "Back",
+                          style: GoogleFonts.poppins(color: Colors.white)),
                     ),
                   ),
-                  const SizedBox(
-                    width: 30,
-                  ),
+                  const SizedBox(width: 10),
                   Expanded(
-                    child: Container(
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: AppColors.colorsBlue,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: TextButton(
-                        onPressed: () {
-                          submitForm();
-                        },
-                        child: Text('Submit', style: AppFont.buttons()),
-                      ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.colorsBlue,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5))),
+                      onPressed: _nextStep,
+                      child: Text(_currentStep == 0 ? "Next" : "Submit",
+                          style: GoogleFonts.poppins(color: Colors.white)),
                     ),
                   ),
                 ],
@@ -386,6 +255,170 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildDropdown({
+    required String label,
+    required String? value,
+    required List<dynamic> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Text(
+            label,
+            style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: AppColors.fontBlack),
+          ),
+        ),
+        Container(
+          height: 45,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: AppColors.containerPopBg,
+          ),
+          child: DropdownButton<String>(
+            value: value,
+            hint: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                "Select",
+                style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey),
+              ),
+            ),
+            icon: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.keyboard_arrow_down_sharp, size: 30),
+            ),
+            isExpanded: true,
+            underline: const SizedBox.shrink(),
+            items: items.map((item) {
+              return DropdownMenuItem<String>(
+                value: item is String ? item : item['id'].toString(),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    item is String ? item : item['name'].toString(),
+                    style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  ),
+                ),
+              );
+            }).toList(),
+            onChanged: onChanged,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    required String hint,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Text(
+            label,
+            style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: AppColors.fontBlack),
+          ),
+        ),
+        Container(
+          height: 45,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: AppColors.containerPopBg,
+          ),
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey),
+              contentPadding: const EdgeInsets.only(left: 10),
+              border: InputBorder.none,
+            ),
+            style: GoogleFonts.poppins(
+                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDatePicker({
+    required String label,
+    required TextEditingController controller,
+    required VoidCallback onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Text(
+            label,
+            style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: AppColors.fontBlack),
+          ),
+        ),
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            height: 45,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: AppColors.containerPopBg,
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    controller.text.isEmpty ? "Select Date" : controller.text,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color:
+                          controller.text.isEmpty ? Colors.grey : Colors.black,
+                    ),
+                  ),
+                ),
+                const Icon(
+                  Icons.calendar_month_outlined,
+                  color: AppColors.iconGrey,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -427,8 +460,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
 
       // Close modal if submission is successful
       if (context.mounted) {
-        
-        Navigator.pop(context , true); // Closes the modal
+        Navigator.pop(context, true); // Closes the modal
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -438,71 +470,4 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
       print('Failed to submit lead.');
     }
   }
-}
-
-// Reusable Dropdown Builder
-Widget _buildDropdown({
-  required String label,
-  required String hint,
-  required String? value,
-  required List<String> items,
-  required ValueChanged<String?> onChanged,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Text(
-        label,
-        style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500),
-      ),
-      const SizedBox(height: 10),
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: AppColors.containerPopBg,
-        ),
-        child: DropdownButton<String>(
-          value: value,
-          hint: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Text(
-              hint,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          icon: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.keyboard_arrow_down,
-              size: 30,
-            ),
-          ),
-          isExpanded: true,
-          underline: const SizedBox.shrink(),
-          items: items.map((String item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Text(
-                  item,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-          onChanged: onChanged,
-        ),
-      ),
-      const SizedBox(height: 10),
-    ],
-  );
 }
