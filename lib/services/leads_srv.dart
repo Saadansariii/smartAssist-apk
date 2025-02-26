@@ -56,8 +56,6 @@ class LeadsSrv {
     }
   }
 
-   
-
   static Future<Map<String, dynamic>?> submitLead(
       Map<String, dynamic> leadData) async {
     const String apiUrl =
@@ -102,7 +100,7 @@ class LeadsSrv {
       'Content-Type': 'application/json',
       'recordId': leadId,
     }}');
-    
+
     print('Request body: ${jsonEncode(followupsData)}');
 
     try {
@@ -183,8 +181,6 @@ class LeadsSrv {
     }
   }
 
-  
-
   static Future<Map<String, dynamic>> fetchLeadsById(String leadId) async {
     const String apiUrl = "https://api.smartassistapp.in/api/leads/";
 
@@ -264,7 +260,7 @@ class LeadsSrv {
       throw Exception('Error fetching data: $e');
     }
   }
- 
+
 // history data api
 
   static Future<List<Map<String, dynamic>>> singleEventById(
@@ -358,7 +354,7 @@ class LeadsSrv {
       throw Exception('Error fetching data: $e');
     }
   }
- 
+
 //
   static Future<Map<String, dynamic>> singleAppointmentById(
       String eventId) async {
@@ -421,6 +417,7 @@ class LeadsSrv {
       if (response.statusCode == 201) {
         print("Error: ${response.statusCode}");
         final Map<String, dynamic> data = json.decode(response.body);
+        print("Total Appointments Fetched: ${data['rows']?.length}");
         return data['rows'] ?? [];
       } else {
         print("Error: ${response.statusCode}");
@@ -433,13 +430,13 @@ class LeadsSrv {
     }
   }
 
-// fetch tasks
+// fetch tasks change the url calendar
 
   static Future<List<dynamic>> fetchtasks(DateTime selectedDate) async {
     final DateTime finalDate = selectedDate ?? DateTime.now();
     final String formattedDate = DateFormat('dd-MM-yyyy').format(finalDate);
     final String apiUrl =
-        'https://api.smartassistapp.in/api/calendar/tasks/all/asondate?date=$formattedDate'; 
+        'https://api.smartassistapp.in/api/calendar/tasks/all/asondate?date=$formattedDate';
 
     final token = await Storage.getToken();
 
@@ -500,8 +497,7 @@ class LeadsSrv {
     }
   }
 
-
-   static Future<Map<String, dynamic>> fetchDashboardData() async {
+  static Future<Map<String, dynamic>> fetchDashboardData() async {
     final token = await Storage.getToken();
     try {
       final response = await http.get(
@@ -555,7 +551,7 @@ class LeadsSrv {
   //     if (response.statusCode == 200) {
   //       final Map<String, dynamic> data = json.decode(response.body);
   //       return {
-          
+
   //         'upcomingFollowupsCount': data['upcomingFollowupsCount'] ?? 0,
   //         'overdueFollowupsCount': data['overdueFollowupsCount'] ?? 0,
   //         'upcomingAppointmentsCount': data['upcomingAppointmentsCount'] ?? 0,

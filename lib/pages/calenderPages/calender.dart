@@ -40,14 +40,15 @@ class _CalenderState extends State<Calender> {
   }
 
   Future<void> _fetchInitialData() async {
-    _fetchAppointments(_focusedDay);
-    _fetchCount(_focusedDay);
-    _fetchTasks(_focusedDay);
+    _fetchAppointments(_selectedDay ?? _focusedDay);
+    _fetchCount(_selectedDay ?? _focusedDay);
+    _fetchTasks(_selectedDay ?? _focusedDay);
   }
 
+   
+
   Future<void> _fetchAppointments(DateTime selectedDate) async {
-    final DateTime finalDate = selectedDate ?? DateTime.now();
-    final data = await LeadsSrv.fetchAppointments(finalDate);
+    final data = await LeadsSrv.fetchAppointments(selectedDate);
     setState(() {
       appointments = data;
     });
@@ -86,8 +87,6 @@ class _CalenderState extends State<Calender> {
     }
   }
 
- 
-
   void _handleDateSelection(DateTime selectedDay) {
     setState(() {
       _selectedDay = selectedDay;
@@ -95,7 +94,7 @@ class _CalenderState extends State<Calender> {
     });
 
     print(
-        'Fetching data for date: ${DateFormat('dd-MM-yyyy').format(selectedDay)}');
+        'Fetching data for date is tthe ajdfoadjfadjf: ${DateFormat('dd-MM-yyyy').format(selectedDay)}');
 
     _fetchAppointments(selectedDay);
     _fetchCount(selectedDay);
@@ -170,6 +169,8 @@ class _CalenderState extends State<Calender> {
                   _focusedDay = selectedDate;
                   _selectedDay = selectedDate;
                 });
+                _fetchAppointments(selectedDate);
+                _fetchTasks(selectedDate);
               },
             ),
             AppointmentWidget(
