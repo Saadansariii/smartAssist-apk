@@ -234,6 +234,7 @@ class _AddFollowupsState extends State<AddFollowups> {
           //                   isNested: false,
           //                 ),
           // ),
+          
           SliverToBoxAdapter(
             child: _isLoading
                 ? const Center(
@@ -265,11 +266,11 @@ class _AddFollowupsState extends State<AddFollowups> {
                     : _upcommingButtonIndex == 1
                         ? FollowupsUpcoming(
                             upcomingFollowups: _filteredUpcomingTasks,
-                            isNested: false,
+                            isNested: true,
                           )
                         : OverdueFollowup(
                             overdueeFollowups: _filteredOverdueTasks,
-                            isNested: false,
+                            isNested: true,
                           ),
           ),
 

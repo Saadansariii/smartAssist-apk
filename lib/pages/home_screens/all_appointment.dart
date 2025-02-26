@@ -269,11 +269,11 @@ class _AllAppointmentState extends State<AllAppointment> {
                     : _upcommingButtonIndex == 1
                         ? OppUpcoming(
                             upcomingOpp: _filteredUpcomingTasks,
-                            isNested: false,
+                            isNested: true,
                           )
                         : OppOverdue(
                             overdueeOpp: _filteredOverdueTasks,
-                            isNested: false,
+                            isNested: true,
                           ),
           ),
 
