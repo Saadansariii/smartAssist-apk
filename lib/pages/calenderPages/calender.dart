@@ -12,7 +12,8 @@ import 'package:intl/intl.dart';
 
 class Calender extends StatefulWidget {
   final String leadId;
-  const Calender({super.key, required this.leadId});
+  final String leadName;
+  const Calender({super.key, required this.leadId, required this.leadName});
 
   @override
   State<Calender> createState() => _CalenderState();
@@ -20,8 +21,8 @@ class Calender extends StatefulWidget {
 
 class _CalenderState extends State<Calender> {
   DateTime _focusedDay = DateTime.now();
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  bool _isMonthView = true;
+  CalendarFormat _calendarFormat = CalendarFormat.week;
+  bool _isMonthView = false;
   List<dynamic> appointments = [];
   List<dynamic> tasks = [];
   DateTime? _selectedDay;
@@ -29,17 +30,12 @@ class _CalenderState extends State<Calender> {
   int overdueFollowupsCount = 0;
   int overdueAppointmentsCount = 0;
   int upcomingAppointmentsCount = 0;
-  late Widget _createTask;
+  // bool _showSecondIcon = false;
 
   @override
   void initState() {
     super.initState();
-    _createTask = AddTaskPopup(
-      selectedDate: _selectedDay,
-      leadId: '',
-      leadName: widget.leadId,
-      selectedLeadId: '',
-    );
+
     _fetchInitialData();
   }
 
@@ -90,21 +86,16 @@ class _CalenderState extends State<Calender> {
     }
   }
 
-  void _handleDateSelection(DateTime selectedDay) {
-    String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDay);
+ 
 
+  void _handleDateSelection(DateTime selectedDay) {
     setState(() {
       _selectedDay = selectedDay;
       _focusedDay = selectedDay;
-      _createTask = AddTaskPopup(
-        selectedDate: selectedDay,
-        leadId: '',
-        leadName: '',
-        selectedLeadId: '',
-      );
     });
 
-    // print("Fetching data for date: $formattedDate");
+    print(
+        'Fetching data for date: ${DateFormat('dd-MM-yyyy').format(selectedDay)}');
 
     _fetchAppointments(selectedDay);
     _fetchCount(selectedDay);
@@ -132,14 +123,23 @@ class _CalenderState extends State<Calender> {
               });
             },
             icon: Icon(
-                _isMonthView ? Icons.calendar_month : FontAwesomeIcons.calendar,
-                color: Colors.white),
+              _isMonthView ? Icons.calendar_view_week : Icons.calendar_month,
+              color: Colors.white,
+            ),
           ),
           IconButton(
               onPressed: () {},
               icon: const Icon(Icons.search, color: Colors.white)),
           IconButton(
             onPressed: () {
+              // ✅ Always update `_createTask` with the latest selected date
+              Widget createTask = AddTaskPopup(
+                selectedDate: _selectedDay ?? _focusedDay, // ✅ Latest date used
+                leadId: widget.leadId,
+                leadName: widget.leadName,
+                selectedLeadId: '',
+              );
+
               showDialog(
                 context: context,
                 builder: (context) {
@@ -149,7 +149,7 @@ class _CalenderState extends State<Calender> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: _createTask,
+                    child: createTask, // ✅ Always latest date
                   );
                 },
               );
@@ -163,8 +163,14 @@ class _CalenderState extends State<Calender> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CalenderWidget(
-              calendarFormat: CalendarFormat.month,
-              onDateSelected: _handleDateSelection,
+              key: ValueKey(_calendarFormat),
+              calendarFormat: _calendarFormat,
+              onDateSelected: (selectedDate) {
+                setState(() {
+                  _focusedDay = selectedDate;
+                  _selectedDay = selectedDate;
+                });
+              },
             ),
             AppointmentWidget(
               appointments: appointments,

@@ -53,6 +53,17 @@ class AppFont {
     );
   }
 
+  static TextStyle calanderDayName({
+    double fontSize = 12,
+    Color color = Colors.black,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: fontSize,
+      color: color,
+      fontWeight: FontWeight.w500,
+    );
+  }
+
   static TextStyle buttons({
     double fontSize = 16,
     Color color = Colors.white,
@@ -69,7 +80,7 @@ class AppFont {
         fontSize: fontSize, color: color, fontWeight: FontWeight.w500);
   }
 
-   static TextStyle appbarfontgrey({
+  static TextStyle appbarfontgrey({
     double fontSize = 18,
     Color color = const Color(0xff767676),
   }) {

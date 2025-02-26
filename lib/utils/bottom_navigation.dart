@@ -119,7 +119,7 @@ class NavigationController extends GetxController {
     ),
     const Opportunity(leadId: ''),
     const Calender(
-      leadId: '',
+      leadId: '', leadName: '',
     )
   ];
 }
