@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/login/first_screen.dart';
 import 'package:smart_assist/pages/login/last_screen.dart';
@@ -349,6 +350,53 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     }
   }
 
+  // Future<void> _handleVerification() async {
+  //   final otpString = _controllers.map((controller) => controller.text).join();
+
+  //   if (otpString.length != OTPVerificationScreen._otpLength) {
+  //     showErrorMessage(context, message: 'Please enter all digits');
+  //     return;
+  //   }
+
+  //   if (int.tryParse(otpString) == null) {
+  //     showErrorMessage(context, message: 'Please enter valid digits');
+  //     return;
+  //   }
+
+  //   setState(() => _isLoading = true);
+
+  //   try {
+  //     final response = await LeadsSrv.verifyEmail({
+  //       "otp": int.parse(otpString),
+  //       "email": widget.email,
+  //     });
+
+  //     if (!mounted) return;
+
+  //     if (response['isSuccess'] == true) {
+  //       final responseData = response['data'];
+  //       showSuccessMessage(context, message: 'Email verified successfully');
+  //       _navigateToPasswordScreen();
+  //     } else {
+  //       showErrorMessage(
+  //         context,
+  //         message: response['message'] ?? 'Invalid OTP. Please try again.',
+  //       );
+  //     }
+  //   } catch (error) {
+  //     if (!mounted) return;
+  //     showErrorMessage(
+  //       context,
+  //       message: 'Verification failed. Please try again.',
+  //     );
+  //     debugPrint('OTP verification error: $error');
+  //   } finally {
+  //     if (mounted) {
+  //       setState(() => _isLoading = false);
+  //     }
+  //   }
+  // }
+
   Future<void> _handleVerification() async {
     final otpString = _controllers.map((controller) => controller.text).join();
 
@@ -365,7 +413,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final response = await LeadsSrv.verifyEmail({
+      final response = await LeadsSrv.verifyOtp({
         "otp": int.parse(otpString),
         "email": widget.email,
       });
@@ -373,13 +421,20 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       if (!mounted) return;
 
       if (response['isSuccess'] == true) {
-        showSuccessMessage(context, message: 'Email verified successfully');
+        // Extract the message from the nested data structure if available
+        final responseData = response['data'];
+        final successMessage =
+            responseData?['message'] ?? 'Email verified successfully';
+
+        showSuccessMessage(context, message: successMessage);
         _navigateToPasswordScreen();
       } else {
-        showErrorMessage(
-          context,
-          message: response['message'] ?? 'Invalid OTP. Please try again.',
-        );
+        // Get error message from the proper location in the response
+        final errorMessage = response['data']?['message'] ??
+            response['message'] ??
+            'Invalid OTP. Please try again.';
+
+        showErrorMessage(context, message: errorMessage);
       }
     } catch (error) {
       if (!mounted) return;
