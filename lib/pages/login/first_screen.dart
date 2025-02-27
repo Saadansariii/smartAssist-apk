@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/login/second_screen.dart';
 import 'package:smart_assist/services/email_srv.dart';
+import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/button.dart';
 import 'package:smart_assist/utils/paragraph_text.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
@@ -193,7 +194,7 @@ class _EmailSetupScreenState extends State<EmailSetupScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final response = await EmailService.verifyEmail({
+      final response = await LeadsSrv.verifyEmail({
         "email": _emailController.text.trim(),
       });
 

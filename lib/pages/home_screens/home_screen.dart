@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
-import 'package:smart_assist/pages/login/login_page.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
 import 'package:smart_assist/pages/navbar_page/leads_all.dart';
@@ -13,11 +9,8 @@ import 'package:smart_assist/pages/navbar_page/logout_page.dart';
 import 'package:smart_assist/pages/notification/notification.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
-import 'package:smart_assist/utils/storage.dart';
-import 'package:smart_assist/utils/token_manager.dart';
 import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   final String greeting;
@@ -36,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String? leadId;
   String greeting = '';
+  int notificationCount = 0;
   List<dynamic> upcomingFollowups = [];
   List<dynamic> overdueFollowups = [];
   List<dynamic> upcomingAppointments = [];
@@ -47,10 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     fetchDashboardData();
-   
   }
-
- 
 
   Future<void> fetchDashboardData() async {
     setState(() {
@@ -65,6 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
         overdueFollowups = data['overdueFollowups'];
         upcomingAppointments = data['upcomingAppointments'];
         overdueAppointments = data['overdueAppointments'];
+        notificationCount =
+            data.containsKey('notifications') && data['notifications'] is int
+                ? data['notifications']
+                : 0;
         greeting =
             (data.containsKey('greetings') && data['greetings'] is String)
                 ? data['greetings']
@@ -94,21 +89,50 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(
           ' $greeting',
           style: GoogleFonts.poppins(
-            fontSize: 12,
+            fontSize: 16,
             fontWeight: FontWeight.w400,
             color: Colors.white,
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const NotificationPage()));
-            },
-            icon: const Icon(Icons.notifications),
-            color: Colors.white,
+          Stack(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NotificationPage()));
+                },
+                icon: const Icon(Icons.notifications),
+                color: Colors.white,
+              ),
+              if (notificationCount > 0) // ✅ Only show badge if count > 0
+                Positioned(
+                  right: 12, // Adjust position (horizontal)
+                  top: 10, // Adjust position (vertical)
+                  child: Container(
+                    padding: const EdgeInsets.all(1),
+                    decoration: const BoxDecoration(
+                      color: Colors.red, // Badge color
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 5,
+                      minHeight: 5,
+                    ),
+                    child: Text(
+                      notificationCount.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 7,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       ),
@@ -330,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               overdueFollowups: overdueFollowups,
                               upcomingAppointments: upcomingAppointments,
                               overdueAppointments: overdueAppointments,
-                              refreshDashboard : fetchDashboardData,
+                              refreshDashboard: fetchDashboardData,
                             ),
                       const BottomBtnSecond(),
                     ],

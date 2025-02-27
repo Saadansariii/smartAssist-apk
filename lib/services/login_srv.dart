@@ -1,6 +1,6 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:smart_assist/utils/storage.dart';
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// import 'package:smart_assist/utils/storage.dart';
 
 // class LoginSrv {
 //   static Future<Map<String, dynamic>> onLogin(Map body) async {
@@ -56,55 +56,55 @@ import 'package:smart_assist/utils/storage.dart';
 //   }
 // }
 
-class LoginSrv {
-  static Future<Map<String, dynamic>> onLogin(Map body) async {
-    const url = 'https://api.smartassistapp.in/api/login';
-    final uri = Uri.parse(url);
+// class LoginSrv {
+  // static Future<Map<String, dynamic>> onLogin(Map body) async {
+  //   const url = 'https://api.smartassistapp.in/api/login';
+  //   final uri = Uri.parse(url);
 
-    try {
-      final response = await http.post(
-        uri,
-        body: jsonEncode(body),
-        headers: {'Content-Type': 'application/json'},
-      );
+  //   try {
+  //     final response = await http.post(
+  //       uri,
+  //       body: jsonEncode(body),
+  //       headers: {'Content-Type': 'application/json'},
+  //     );
 
-      print('API Status Code: ${response.statusCode}');
-      print('API Response Body: ${response.body}');
+  //     print('API Status Code: ${response.statusCode}');
+  //     print('API Response Body: ${response.body}');
 
-      final responseData = jsonDecode(response.body);
+  //     final responseData = jsonDecode(response.body);
 
-      // Check for success in both HTTP status and response body
-      if (response.statusCode == 200 &&
-          responseData['status'] == 200 &&
-          responseData.containsKey('data')) {
-        final data = responseData['data'];
-        final String token = data['token'];
-        final Map<String, dynamic>? user = data['user'];
+  //     // Check for success in both HTTP status and response body
+  //     if (response.statusCode == 200 &&
+  //         responseData['status'] == 200 &&
+  //         responseData.containsKey('data')) {
+  //       final data = responseData['data'];
+  //       final String token = data['token'];
+  //       final Map<String, dynamic>? user = data['user'];
 
-        // Save token for subsequent calls.
-        await Storage.saveToken(token);
+  //       // Save token for subsequent calls.
+  //       await Storage.saveToken(token);
 
-        if (user != null) {
-          return {'isSuccess': true, 'token': token, 'user': user};
-        } else {
-          return {
-            'isSuccess': false,
-            'message': 'User data missing in response'
-          };
-        }
-      } else {
-        // Return the backend error message if available.
-        return {
-          'isSuccess': false,
-          'message': responseData['message'] ?? 'Login failed'
-        };
-      }
-    } catch (error) {
-      print('Error: $error');
-      return {'isSuccess': false, 'error': error.toString()};
-    }
-  }
-}
+  //       if (user != null) {
+  //         return {'isSuccess': true, 'token': token, 'user': user};
+  //       } else {
+  //         return {
+  //           'isSuccess': false,
+  //           'message': 'User data missing in response'
+  //         };
+  //       }
+  //     } else {
+  //       // Return the backend error message if available.
+  //       return {
+  //         'isSuccess': false,
+  //         'message': responseData['message'] ?? 'Login failed'
+  //       };
+  //     }
+  //   } catch (error) {
+  //     print('Error: $error');
+  //     return {'isSuccess': false, 'error': error.toString()};
+  //   }
+  // }
+// }
 
 
 

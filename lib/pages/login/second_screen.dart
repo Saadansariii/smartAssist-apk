@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/login/first_screen.dart';
 import 'package:smart_assist/pages/login/last_screen.dart';
+import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/services/otp_srv.dart';
 import 'package:smart_assist/utils/button.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
@@ -364,7 +365,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final response = await OtpSrv.verifyEmail({
+      final response = await LeadsSrv.verifyEmail({
         "otp": int.parse(otpString),
         "email": widget.email,
       });

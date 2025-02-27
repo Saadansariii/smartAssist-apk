@@ -250,7 +250,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => FollowupsDetails(
-                                      leadId: notification['recordId'])));
+                                      leadId: notification['recordId'] ?? '')));
                           if (!isRead) {
                             markAsRead(notification['notification_id']);
                           }

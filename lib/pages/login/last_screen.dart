@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/login/login_page.dart';
-import 'package:smart_assist/services/set_pwd_srv.dart'; 
+import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/services/set_pwd_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
 
@@ -522,7 +523,7 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen>
       return;
     }
 
-    // Optional: Add further validation, like password length or matching passwords
+    // Validate password matching
     if (newPwd != confirmPwd) {
       showErrorMessage(context, message: 'Passwords do not match');
       return;
@@ -532,8 +533,8 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen>
 
     // Check if the token is available
     if (deviceToken == null) {
-      // ignore: avoid_print
       print('Failed to retrieve device token');
+      showErrorMessage(context, message: 'Failed to retrieve device token');
       return;
     }
 
@@ -546,18 +547,39 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen>
     };
 
     try {
-      final response = await SetPwdSrv.SetPwd(body);
-
-      // ignore: avoid_print
+      final response = await LeadsSrv.setPwd(body);
       print('API Response: $response');
 
       if (response['isSuccess'] == true) {
+        // Extract data from the nested structure
+        final responseData = response['data'];
+        final message =
+            responseData['message'] ?? 'Password created successfully';
+        final tokenData = responseData['data'];
+
+        if (tokenData != null && tokenData['token'] != null) {
+          final token = tokenData['token'];
+          // Store token if needed
+          // await FlutterSecureStorage().write(key: 'auth_token', value: token);
+
+          // Get user info if needed - check structure carefully
+          if (tokenData['updateUserPwd'] != null &&
+              tokenData['updateUserPwd'].length > 1 &&
+              tokenData['updateUserPwd'][1] != null &&
+              tokenData['updateUserPwd'][1].isNotEmpty) {
+            final userData = tokenData['updateUserPwd'][1][0];
+            // Use userData if needed
+            print('User name: ${userData['name']}');
+          }
+        }
+
+        // Show success message
         // ignore: use_build_context_synchronously
-        showSuccessMessage(context, message: 'Email Verified Successfully');
+        showSuccessMessage(context, message: message);
 
         // Navigate to LoginPage
+        // ignore: use_build_context_synchronously
         Navigator.push(
-          // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
             builder: (context) => LoginPage(
@@ -567,12 +589,86 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen>
           ),
         );
       } else {
+        // Get error message from API response if available
+        final errorMessage =
+            response['data']?['message'] ?? 'Failed to create password';
+
         // ignore: use_build_context_synchronously
-        showErrorMessage(context, message: 'Check the Email or OTP');
+        showErrorMessage(context, message: errorMessage);
       }
     } catch (error) {
+      print('Error during password creation: $error');
       // ignore: use_build_context_synchronously
-      showErrorMessage(context, message: 'Error during API call');
+      showErrorMessage(context,
+          message: 'Error during API call: ${error.toString()}');
     }
   }
+ 
+ 
+ 
+  // Future<void> _handleSubmit() async {
+
+
+  //   final newPwd = _passwordController.text.trim();
+  //   final confirmPwd = _confirmPasswordController.text.trim();
+
+  //   // Check if fields are empty
+  //   if (newPwd.isEmpty || confirmPwd.isEmpty) {
+  //     showErrorMessage(context, message: 'Please fill in all fields');
+  //     return;
+  //   }
+
+  //   // Optional: Add further validation, like password length or matching passwords
+  //   if (newPwd != confirmPwd) {
+  //     showErrorMessage(context, message: 'Passwords do not match');
+  //     return;
+  //   }
+
+  //   final deviceToken = await FirebaseMessaging.instance.getToken();
+
+  //   // Check if the token is available
+  //   if (deviceToken == null) {
+  //     // ignore: avoid_print
+  //     print('Failed to retrieve device token');
+  //     return;
+  //   }
+
+  //   // Prepare the body with email, new password, confirm password, and device token
+  //   final body = {
+  //     "email": widget.email,
+  //     "newPwd": newPwd,
+  //     "confirmPwd": confirmPwd,
+  //     "device_token": deviceToken,
+  //   };
+
+  //   try {
+  //     final response = await LeadsSrv.setPwd(body);
+
+  //     // ignore: avoid_print
+  //     print('API Response: $response');
+
+  //     if (response['isSuccess'] == true) {
+  //       // ignore: use_build_context_synchronously
+  //       showSuccessMessage(context, message: 'Email Verified Successfully');
+
+  //       // Navigate to LoginPage
+  //       Navigator.push(
+  //         // ignore: use_build_context_synchronously
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => LoginPage(
+  //             email: '',
+  //             onLoginSuccess: () {},
+  //           ),
+  //         ),
+  //       );
+  //     } else {
+  //       // ignore: use_build_context_synchronously
+  //       showErrorMessage(context, message: 'Check the Email or OTP');
+  //     }
+  //   } catch (error) {
+  //     // ignore: use_build_context_synchronously
+  //     showErrorMessage(context, message: 'Error during API call');
+  //   }
+  // }
 }

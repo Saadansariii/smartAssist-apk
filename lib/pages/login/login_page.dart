@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/login/first_screen.dart';
+import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/services/login_srv.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:smart_assist/services/notifacation_srv.dart';
@@ -325,7 +326,7 @@ class _LoginPageState extends State<LoginPage>
         throw Exception('Failed to retrieve device token.');
       }
 
-      final response = await LoginSrv.onLogin({
+      final response = await LeadsSrv.onLogin({
         "email": email,
         "password": pwd,
         "device_token": deviceToken,

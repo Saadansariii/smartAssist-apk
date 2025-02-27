@@ -95,7 +95,7 @@ class NotificationService {
         notification.hashCode,
         notification.title,
         notification.body,
-        NotificationDetails(
+        const NotificationDetails(
             android: AndroidNotificationDetails(
                 'high importance channel', 'High Importance Channel',
                 channelDescription:
