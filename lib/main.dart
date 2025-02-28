@@ -22,7 +22,7 @@ void main() async {
   await Hive.initFlutter(); // Initialize Hive after Firebase
   await NotificationService.instance.initialize(); // Initialize Notifications
 
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

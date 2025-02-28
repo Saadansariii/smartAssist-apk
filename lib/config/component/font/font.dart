@@ -5,7 +5,9 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
 
 class AppFont {
   static TextStyle dropDown({
@@ -44,7 +46,7 @@ class AppFont {
 
   static TextStyle popupTitle({
     double fontSize = 20,
-    Color color = Colors.black,
+    Color color = AppColors.colorsBlue,
   }) {
     return GoogleFonts.poppins(
       fontSize: fontSize,
@@ -86,5 +88,21 @@ class AppFont {
   }) {
     return GoogleFonts.poppins(
         fontSize: fontSize, color: color, fontWeight: FontWeight.w500);
+  }
+
+  static TextStyle searchFontTitle({
+    double fontSize = 12,
+    Color color = AppColors.fontBlack,
+  }) {
+    return GoogleFonts.poppins(
+        fontSize: fontSize, color: color, fontWeight: FontWeight.w500);
+  }
+
+  static TextStyle searchFontSubtitle({
+    double fontSize = 12,
+    Color color = const Color(0xff767676),
+  }) {
+    return GoogleFonts.poppins(
+        fontSize: fontSize, color: color, fontWeight: FontWeight.w400);
   }
 }

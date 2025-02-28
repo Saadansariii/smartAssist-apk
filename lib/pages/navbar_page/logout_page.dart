@@ -267,4 +267,5 @@ class LogoutPage extends StatelessWidget {
       ),
     );
   }
+  
 }
