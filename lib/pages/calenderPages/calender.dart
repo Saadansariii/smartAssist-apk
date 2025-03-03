@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/calenderPages/tasks/addTask.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/widgets/calender/appointment.dart';
@@ -43,8 +44,6 @@ class _CalenderState extends State<Calender> {
     _fetchCount(_selectedDay ?? _focusedDay);
     _fetchTasks(_selectedDay ?? _focusedDay);
   }
-
-   
 
   Future<void> _fetchAppointments(DateTime selectedDate) async {
     final data = await LeadsSrv.fetchAppointments(selectedDate);
@@ -106,10 +105,14 @@ class _CalenderState extends State<Calender> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         automaticallyImplyLeading: false,
+        // title: Text(
+        //   DateFormat('MMMM yyyy').format(_focusedDay),
+        //   style: GoogleFonts.poppins(
+        //       fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+        // ),
         title: Text(
-          DateFormat('MMMM yyyy').format(_focusedDay),
-          style: GoogleFonts.poppins(
-              fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+          'Calendar',
+          style: AppFont.appbarfontWhite(),
         ),
         actions: [
           IconButton(

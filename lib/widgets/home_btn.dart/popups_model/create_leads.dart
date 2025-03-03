@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
+import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
@@ -24,9 +26,17 @@ class _CreateLeadsState extends State<CreateLeads> {
   bool isLoading = false;
   int _currentStep = 0;
 
-  String? selectedLeads;
-  String? selectedSubject;
-  String? selectedPriority;
+  String _selectedBrand = '';
+  String _selectedType = '';
+  String _selectedEnquiryType = '';
+
+  // String  selectedLeads = '';
+  String selectedPurchaseType = 'New Vehicle';
+  String selectedType = 'Product';
+  String selectedSubType = 'Retail';
+  String selectedTire = 'New';
+  // String? selectedSubject;
+  // String? selectedPriority;
 
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
@@ -110,221 +120,391 @@ class _CreateLeadsState extends State<CreateLeads> {
   }
 
   void _nextStep() {
-    if (_currentStep == 0) {
-      // if (selectedLeads == null ||
-      //     selectedPriority == null ||
-      //     selectedSubject == null ||
-      //     startDateController.text.isEmpty) {
-      //   showErrorMessage(context,
-      //       message: 'Please Fill all fields before Proceeding.');
-      //   return;
-      // }
+    if (_currentStep < 2) {
       _pageController.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-      setState(() => _currentStep = 1);
+      setState(() => _currentStep++);
     } else {
-      submitForm();
+      _submitForm();
     }
+  }
+
+  void _submitForm() {
+    submitForm();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Add New lead', style: AppFont.popupTitle()),
-          ),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Add New lead', style: AppFont.popupTitleBlack()),
+            ),
 
-          SmoothPageIndicator(
-              controller: _pageController,
-              count: 2,
-              effect: const WormEffect(
-                activeDotColor: AppColors.fontBlack,
-                spacing: 4.0,
-                radius: 10.0,
-                dotWidth: 10.0,
-                dotHeight: 10.0,
-              )),
-          // const SizedBox(height: 5),
-          SizedBox(
-            height: 350,
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
+            // const SizedBox(height: 5),
+            SizedBox(
+              height: 350,
+              child: PageView(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildTextField(
+                          label: 'First Name',
+                          controller: firstNameController,
+                          hintText: 'first name',
+                          isRequired: true,
+                          onChanged: (value) {
+                            print("firstName : $value");
+                          }),
+                      _buildTextField(
+                          isRequired: true,
+                          label: 'Last Name',
+                          controller: lastNameController,
+                          hintText: 'Last name',
+                          onChanged: (value) {
+                            print("lastName : $value");
+                          }),
+                      _buildTextField(
+                          isRequired: true,
+                          label: 'Email',
+                          controller: emailController,
+                          hintText: 'Email',
+                          onChanged: (value) {
+                            print("email : $value");
+                          }),
+                      _buildTextField(
+                          isRequired: true,
+                          label: 'Mobile No',
+                          controller: mobileController,
+                          hintText: '+91',
+                          onChanged: (value) {
+                            print("mobile : $value");
+                          }),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildRadioGroup(
+                        label: 'Brand',
+                        options: ["Jaguar", "Land Rover"],
+                        groupValue: _selectedBrand,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedBrand = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 5),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text('Primary Model Intrest',
+                              style: AppFont.dropDowmLabel()),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      SizedBox(
+                        height: 45,
+                        child: TextField(
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                  5), // Keep border radius small
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                  5), // Match with enabledBorder
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            filled: true,
+                            fillColor: AppColors.containerBg,
+                            hintText: 'Type to talk',
+                            hintStyle: AppFont.dropDown(),
+                            prefixIcon: const Icon(
+                              FontAwesomeIcons.magnifyingGlass,
+                              color: AppColors.fontColor,
+                              size: 15,
+                            ),
+                            suffixIcon: const Icon(
+                              FontAwesomeIcons.microphone,
+                              color: AppColors.fontColor,
+                              size: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // const SizedBox(height: 2),
+                      _buildRadioGroup(
+                        label: 'Fuel Type',
+                        options: ['Petrol', 'Diesel'],
+                        groupValue: _selectedType,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedType = value;
+                          });
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _SelectedInput(
+                            label: "Purchase Type",
+                            options: [
+                              "New Vehicle"
+                            ], // Show selectedPurchaseType
+                          ),
+                          _SelectedInput(
+                            label: "Type",
+                            options: ["Product"], // Show selectedType
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _SelectedInput(
+                            label: "Sub Type",
+                            options: ["Retail"], // Show selectedSubType
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      // _buildButtons(
+                      //   label: 'Enquiry Type',
+                      //   options: ["KMI", "Generic"],
+                      //   groupValue: _selectedEnquiryType,
+                      //   onChanged: (value) {
+                      //     setState(() {
+                      //       _selectedEnquiryType = value;
+                      //     });
+                      //   },
+                      // ),
+                      _buildButtons(
+                        label: 'Enquiry Type',
+                        options: {
+                          "KMI": "KMI",
+                          "Generic": "(Generic) Purchase intent within 90 days",
+                        },
+                        groupValue: _selectedEnquiryType,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedEnquiryType = value;
+                          });
+                        },
+                      ),
+
+                      _buildDatePicker(
+                          label: 'Expected purchase date',
+                          controller: endDateController,
+                          onTap: () => _pickDate(isStartDate: false)),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(height: 5),
+
+            SmoothPageIndicator(
+                controller: _pageController,
+                count: 3,
+                effect: const WormEffect(
+                  activeDotColor: AppColors.fontBlack,
+                  spacing: 4.0,
+                  radius: 10.0,
+                  dotWidth: 10.0,
+                  dotHeight: 10.0,
+                )),
+            const SizedBox(height: 10),
+            Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTextField(
-                        label: 'First Name',
-                        controller: firstNameController,
-                        hintText: 'first name',
-                        isRequired: true,
-                        onChanged: (value) {
-                          print("firstName : $value");
-                        }),
-                    _buildTextField(
-                        isRequired: true,
-                        label: 'Last Name',
-                        controller: lastNameController,
-                        hintText: 'Last name',
-                        onChanged: (value) {
-                          print("lastName : $value");
-                        }),
-                    _buildTextField(
-                        isRequired: true,
-                        label: 'Email',
-                        controller: emailController,
-                        hintText: 'Email',
-                        onChanged: (value) {
-                          print("email : $value");
-                        }),
-                    _buildTextField(
-                        isRequired: true,
-                        label: 'Mobile No',
-                        controller: mobileController,
-                        hintText: '+91',
-                        onChanged: (value) {
-                          print("mobile : $value");
-                        }),
-                  ],
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
+                    onPressed: () {
+                      if (_currentStep == 0) {
+                        Navigator.pop(context);
+                      } else {
+                        _pageController.previousPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut);
+                        setState(() {
+                          _currentStep--;
+                        });
+                      }
+                    },
+                    child: Text(
+                      _currentStep == 0 ? "Cancel" : "Go Back",
+                      style: AppFont.buttons(),
+                    ),
+                  ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDatePicker(
-                        label: 'End Date',
-                        controller: endDateController,
-                        onTap: () => _pickDate(isStartDate: false)),
-                  ],
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.colorsBlue,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
+                    onPressed: _nextStep,
+                    child: Text(_currentStep == 2 ? "Create" : "Continue",
+                        style: AppFont.buttons()),
+                  ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 5),
-          // SmoothPageIndicator(
-          //     controller: _pageController,
-          //     count: 2,
-          //     effect: const WormEffect(
-          //       activeDotColor: Colors.black,
-          //       spacing: 4.0,
-          //       radius: 10.0,
-          //       dotWidth: 10.0,
-          //       dotHeight: 10.0,
-          //     )),
-          // const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5))),
-                  onPressed: () {
-                    if (_currentStep == 0) {
-                      // If on the first step, close the modal
-                      Navigator.pop(context);
-                    } else {
-                      // If on the second step, go back to the first step
-                      _pageController.previousPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut);
-                      setState(() {
-                        _currentStep = 0;
-                      });
-                    }
-                  },
-                  child: Text(_currentStep == 0 ? "Cancel" : "Back",
-                      style: GoogleFonts.poppins(color: Colors.white)),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.colorsBlue,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5))),
-                  onPressed: _nextStep,
-                  child: Text(_currentStep == 0 ? "Continue" : "Submit",
-                      style: GoogleFonts.poppins(color: Colors.white)),
-                ),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildDropdown({
+  /// ✅ Reusable Radio Button Widget (One Line)
+  Widget _buildRadioGroup({
+    required List<String> options,
+    required String groupValue,
     required String label,
-    required String? value,
-    required List<dynamic> items,
-    required ValueChanged<String?> onChanged,
+    required ValueChanged<String> onChanged,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          child: Text(
-            label,
-            style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.fontBlack),
+        const SizedBox(height: 5),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0.0, 5, 10, 0),
+            child: Text(label, style: AppFont.dropDowmLabel()),
           ),
         ),
-        Container(
-          height: 45,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: AppColors.containerPopBg,
-          ),
-          child: DropdownButton<String>(
-            value: value,
-            hint: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                "Select",
-                style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey),
-              ),
-            ),
-            icon: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.keyboard_arrow_down_sharp, size: 30),
-            ),
-            isExpanded: true,
-            underline: const SizedBox.shrink(),
-            items: items.map((item) {
-              return DropdownMenuItem<String>(
-                value: item is String ? item : item['id'].toString(),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    item is String ? item : item['name'].toString(),
-                    style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black),
+        const SizedBox(height: 5),
+        Wrap(
+          spacing: 70,
+          runSpacing: 10,
+          children: options.map((option) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: Radio(
+                    activeColor: AppColors.colorsBlue,
+                    value: option,
+                    groupValue: groupValue,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                    onChanged: (value) {
+                      if (value != null) {
+                        onChanged(value);
+                      }
+                    },
                   ),
                 ),
+                const SizedBox(
+                    width: 5), // ✅ Space between radio button and text
+                Text(
+                  option,
+                  style: AppFont.dropDowmLabel(),
+                ),
+              ],
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+
+  // Widget _SelectedInput({
+  //   required String label,
+  //   required List<String> options, // Accept predefined list
+  // }) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Align(
+  //         alignment: Alignment.centerLeft,
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
+  //           child: Text(label, style: AppFont.dropDowmLabel()),
+  //         ),
+  //       ),
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: options.map((option) {
+  //           return Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 5.0),
+  //             child: Container(
+  //                 padding:
+  //                     const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+  //                 decoration: const BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(3)),
+  //                   color: AppColors.containerBg,
+  //                 ),
+  //                 child: Text(option, style: AppFont.dropDown())),
+  //           );
+  //         }).toList(),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Widget _SelectedInput({
+    required String label,
+    required List<String> options,
+  }) {
+    return Expanded(
+      // ✅ Ensures equal space in a Row
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0),
+            child: Text(label, style: AppFont.dropDowmLabel()),
+          ),
+          const SizedBox(height: 2),
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 10,
+            runSpacing: 10,
+            children: options.map((option) {
+              return Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                constraints: const BoxConstraints(minWidth: 100),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColors.containerBg,
+                ),
+                child: Text(option, style: AppFont.dropDown()),
               );
             }).toList(),
-            onChanged: onChanged,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -338,11 +518,11 @@ class _CreateLeadsState extends State<CreateLeads> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5),
           child: RichText(
             text: TextSpan(
               style: GoogleFonts.poppins(
@@ -379,7 +559,7 @@ class _CreateLeadsState extends State<CreateLeads> {
               hintText: hintText,
               hintStyle: GoogleFonts.poppins(color: Colors.grey, fontSize: 12),
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               border: InputBorder.none,
             ),
             onChanged: onChanged,
@@ -397,6 +577,7 @@ class _CreateLeadsState extends State<CreateLeads> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 5),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5.0),
           child: Text(
@@ -407,27 +588,29 @@ class _CreateLeadsState extends State<CreateLeads> {
                 color: AppColors.fontBlack),
           ),
         ),
+        const SizedBox(height: 5),
         GestureDetector(
           onTap: onTap,
           child: Container(
             height: 45,
             width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: AppColors.containerPopBg,
-            ),
+                borderRadius: BorderRadius.circular(8),
+                // color: AppColors.containerPopBg,
+                border: Border.all(color: Colors.black)),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
-                    controller.text.isEmpty ? "Select Date" : controller.text,
+                    controller.text.isEmpty ? "DD / MM / YY" : controller.text,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color:
-                          controller.text.isEmpty ? Colors.grey : Colors.black,
+                      color: controller.text.isEmpty
+                          ? AppColors.fontColor
+                          : Colors.black,
                     ),
                   ),
                 ),
@@ -443,55 +626,183 @@ class _CreateLeadsState extends State<CreateLeads> {
     );
   }
 
+  // Widget _buildButtons({
+  //   required List<String> options,
+  //   required String groupValue,
+  //   required String label,
+  //   required ValueChanged<String> onChanged,
+  // }) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Align(
+  //         alignment: Alignment.centerLeft,
+  //         child: Padding(
+  //           padding: const EdgeInsets.fromLTRB(0.0, 5, 0, 5),
+  //           child: Text(label, style: AppFont.dropDowmLabel()),
+  //         ),
+  //       ),
+  //       const SizedBox(height: 5),
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         children: options.map((option) {
+  //           bool isSelected = groupValue == option; // ✅ Check if selected
+
+  //           return GestureDetector(
+  //             onTap: () {
+  //               onChanged(option);
+  //             },
+  //             child: Container(
+  //               padding:
+  //                   const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+  //               margin: const EdgeInsets.only(
+  //                   right: 10), // Adds spacing between buttons
+  //               decoration: BoxDecoration(
+  //                 border: Border.all(
+  //                   color: isSelected ? Colors.blue : Colors.black,
+  //                   width: 1,
+  //                 ),
+  //                 borderRadius: BorderRadius.circular(15),
+  //                 color: isSelected
+  //                     ? Colors.blue.withOpacity(0.2)
+  //                     : Colors.white, // ✅ Optional background change
+  //               ),
+  //               child: Text(
+  //                 option,
+  //                 style: TextStyle(
+  //                   color: isSelected ? Colors.blue : Colors.black,
+  //                   fontSize: 14,
+  //                   fontWeight: FontWeight.w400,
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         }).toList(),
+  //       ),
+  //       const SizedBox(height: 5),
+  //     ],
+  //   );
+  // }
+
+  Widget _buildButtons({
+    required Map<String, String>
+        options, // ✅ Use a Map for short display & actual value
+    required String groupValue,
+    required String label,
+    required ValueChanged<String> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0.0, 5, 0, 5),
+            child: Text(label, style: AppFont.dropDowmLabel()),
+          ),
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: options.keys.map((shortText) {
+            bool isSelected =
+                groupValue == options[shortText]; // ✅ Compare actual value
+
+            return GestureDetector(
+              onTap: () {
+                onChanged(
+                    options[shortText]!); // ✅ Pass actual value on selection
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                margin: const EdgeInsets.only(
+                    right: 10), // Adds spacing between buttons
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: isSelected ? Colors.blue : Colors.black,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(15),
+                  color:
+                      isSelected ? Colors.blue.withOpacity(0.2) : Colors.white,
+                ),
+                child: Text(
+                  shortText, // ✅ Only show short text
+                  style: TextStyle(
+                    color: isSelected ? Colors.blue : Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+
   Future<void> submitForm() async {
-    // Retrieve sp_id from SharedPreferences.
-    final prefs = await SharedPreferences.getInstance();
-    final spId = prefs.getString('user_id');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? spId = prefs.getString('user_id');
 
-    // Use the lead id from the dropdown selection.
-    if (selectedLeads == null) {
-      showErrorMessage(context, message: 'Please select a lead.');
-      return;
-    }
-    final leadId = selectedLeads!;
-
-    // Parse and format the selected dates/times.
-    final startDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(startDateController.text);
-    final endDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(endDateController.text);
-    final formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
-    final formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
-
-    if (spId == null || leadId.isEmpty) {
-      showErrorMessage(context,
-          message: 'User ID or Lead ID not found. Please log in again.');
+    if (spId == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('User ID not found. Please log in again.')),
+        );
+      }
       return;
     }
 
-    // Prepare the appointment data.
-    final appointmentData = {
-      'start_date': startDateController.text,
-      'end_date': endDateController.text,
-      'priority': selectedPriority,
-      'start_time': formattedStartTime,
-      'end_time': formattedEndTime,
-      'subject': selectedSubject,
+    final leadData = {
+      'fname': firstNameController.text,
+      'lname': lastNameController.text,
+      'email': emailController.text,
+      'mobile': mobileController.text,
+      'purchase_type': 'New Vehicle',
+      'brand': _selectedBrand,
+      'type': 'Product',
+      'sub_type': selectedSubType,
       'sp_id': spId,
+      'PMI': 'Range rover',
+      'expected_date_purchase': endDateController.text,
+      'fuel_type': _selectedType,
+      'enquiry_type': _selectedEnquiryType,
+      // 'lead_code': '12333',
+      'lead_source': 'dadf',
     };
 
-    // Call the service to submit the appointment.
-    final success = await LeadsSrv.submitAppoinment(appointmentData, leadId);
+    Map<String, dynamic>? response = await LeadsSrv.submitLead(leadData);
 
-    if (success) {
-      if (context.mounted) {
-        Navigator.pop(context, true); // Close the modal on success.
+    if (response != null) {
+      print(leadData);
+      if (response.containsKey('newLead')) {
+        print(leadData);
+        String leadId = response['newLead']['lead_id'];
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SingleLeadsById(leadId: leadId),
+            ),
+          );
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Form Submit Successful.')),
+        );
+      } else if (response.containsKey('error')) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(response['error']), backgroundColor: Colors.red),
+        );
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Form Submit Successful.')),
-      );
     } else {
-      showErrorMessage(context, message: 'Failed to submit appointment.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to submit lead. Please try again.')),
+      );
     }
   }
 }

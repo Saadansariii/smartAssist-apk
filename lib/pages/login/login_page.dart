@@ -12,6 +12,7 @@ import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
 import 'package:smart_assist/utils/token_manager.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   final String email;
@@ -68,103 +69,107 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // Main content - always visible
-            Center(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Image with animation applied
-                      Hero(
-                        tag: 'logo',
-                        child: SlideTransition(
-                          position: _slideAnimation,
-                          child: Image.asset(
-                            'assets/login_img.png',
-                            width: 220,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              // Main content - always visible
+              Center(
+                child: SingleChildScrollView(
+                  // keyboardDismissBehavior:
+                  //     ScrollViewKeyboardDismissBehavior.onDrag,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Image with animation applied
+                        Hero(
+                          tag: 'logo',
+                          child: SlideTransition(
+                              position: _slideAnimation,
+                              child: SvgPicture.asset(
+                                'assets/logo-black.svg', // ✅ Correct way to load SVG
+                                width: 120,
+                              )),
+                        ),
+                        const SizedBox(height: 20),
+                        const StyleText('Login to Smart Assist'),
+
+                        // Only show the form after animation starts
+                        AnimatedBuilder(
+                          animation: _controller,
+                          builder: (context, child) {
+                            return Opacity(
+                              opacity: _controller.value,
+                              child: child,
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 32),
+                              buildInputLabel('Email'),
+                              buildTextField(
+                                newEmailController,
+                                'Enter Email ID',
+                                false,
+                                keyboardType: TextInputType.emailAddress,
+                              ),
+                              const SizedBox(height: 25),
+                              buildInputLabel('Password'),
+                              buildTextField(
+                                  newPwdController, 'Enter Password', true),
+                              const SizedBox(height: 32),
+                              buildLoginButton(),
+                              const SizedBox(height: 20),
+                              buildRichText(
+                                "Forgot Password ? ",
+                                "Reset Password",
+                                () {
+                                  // TODO: Implement forgot password functionality
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              buildRichText(
+                                "First time logging in ? ",
+                                "Verify your e-mail",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const EmailSetupScreen(
+                                        text: '',
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      const StyleText('Login to Smart Assist'),
-
-                      // Only show the form after animation starts
-                      AnimatedBuilder(
-                        animation: _controller,
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: _controller.value,
-                            child: child,
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 32),
-                            buildInputLabel('Email'),
-                            buildTextField(
-                              newEmailController,
-                              'Enter Email ID',
-                              false,
-                              keyboardType: TextInputType.emailAddress,
-                            ),
-                            const SizedBox(height: 25),
-                            buildInputLabel('Password'),
-                            buildTextField(
-                                newPwdController, 'Enter Password', true),
-                            const SizedBox(height: 32),
-                            buildLoginButton(),
-                            const SizedBox(height: 20),
-                            buildRichText(
-                              "Forgot Password ? ",
-                              "Reset Password",
-                              () {
-                                // TODO: Implement forgot password functionality
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            buildRichText(
-                              "First time logging in ? ",
-                              "Verify your e-mail",
-                              () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const EmailSetupScreen(
-                                      text: '',
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            // Loading Overlay (if needed, can be triggered later during login)
-            // if (isLoading)
-            //   Container(
-            //     color: Colors.black.withOpacity(0.5),
-            //     child: const Center(
-            //       child: CircularProgressIndicator(
-            //         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            //       ),
-            //     ),
-            //   ),
-          ],
+              // Loading Overlay (if needed, can be triggered later during login)
+              // if (isLoading)
+              //   Container(
+              //     color: Colors.black.withOpacity(0.5),
+              //     child: const Center(
+              //       child: CircularProgressIndicator(
+              //         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              //       ),
+              //     ),
+              //   ),
+            ],
+          ),
         ),
       ),
     );
@@ -273,7 +278,7 @@ class _LoginPageState extends State<LoginPage>
           borderRadius: BorderRadius.circular(12),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide:const BorderSide(color: AppColors.colorsBlue, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.colorsBlue, width: 1.5),
           borderRadius: BorderRadius.circular(12),
         ),
       ),

@@ -59,16 +59,29 @@ class _CalenderWidgetState extends State<CalenderWidget> {
         calendarFormat: widget.calendarFormat,
         availableGestures: AvailableGestures.all,
 
-        headerStyle: const HeaderStyle(
+// hide the month
+        // headerStyle: const HeaderStyle(
+        //   formatButtonVisible: false,
+        //   titleCentered: false,
+        //   leftChevronVisible: false,
+        //   rightChevronVisible: false,
+        //   headerPadding: EdgeInsets.zero,
+        //   titleTextStyle: TextStyle(fontSize: 0, color: Colors.transparent),
+        // ),
+
+        headerStyle: HeaderStyle(
+          headerMargin: EdgeInsets.fromLTRB(0, 0, 0, 10),
           formatButtonVisible: false,
-          titleCentered: false,
+          titleCentered: true,
           leftChevronVisible: false,
           rightChevronVisible: false,
           headerPadding: EdgeInsets.zero,
-          titleTextStyle: TextStyle(fontSize: 0, color: Colors.transparent),
+          titleTextStyle: AppFont.popupTitleBlack(),
         ),
 
         calendarStyle: CalendarStyle(
+          holidayDecoration: BoxDecoration(color: AppColors.sideRed),
+          holidayTextStyle: TextStyle(color: AppColors.sideRed, fontSize: 20),
           isTodayHighlighted: true,
           selectedDecoration: const BoxDecoration(
             color: Colors.blue,

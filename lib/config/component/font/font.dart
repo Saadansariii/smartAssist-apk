@@ -55,6 +55,17 @@ class AppFont {
     );
   }
 
+   static TextStyle popupTitleBlack({
+    double fontSize = 20,
+    Color color = AppColors.fontBlack,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: fontSize,
+      color: color,
+      fontWeight: FontWeight.w600,
+    );
+  }
+
   static TextStyle calanderDayName({
     double fontSize = 12,
     Color color = Colors.black,
@@ -73,6 +84,8 @@ class AppFont {
     return GoogleFonts.poppins(
         fontSize: fontSize, color: color, fontWeight: FontWeight.w700);
   }
+
+  
 
   static TextStyle appbarfontWhite({
     double fontSize = 18,
