@@ -147,6 +147,10 @@ class _HomeScreenState extends State<HomeScreen> {
 // Your HomeScreen Code
   @override
   Widget build(BuildContext context) {
+// final height = MediaQuery.of(context).size.height * 1;  use it for dynamic height as per the mobile 
+//  height * .2 not use like that 100 & 200
+
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(

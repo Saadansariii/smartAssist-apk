@@ -93,31 +93,50 @@ class _CreateLeadsState extends State<CreateLeads> {
   //     });
   //   }
   // }
-
   Future<void> _pickDate({required bool isStartDate}) async {
     DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100));
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
     if (pickedDate != null) {
-      TimeOfDay? pickedTime =
-          await showTimePicker(context: context, initialTime: TimeOfDay.now());
-      if (pickedTime != null) {
-        DateTime combinedDateTime = DateTime(pickedDate.year, pickedDate.month,
-            pickedDate.day, pickedTime.hour, pickedTime.minute);
-        String formattedDateTime =
-            DateFormat('dd/MM/yyyy hh:mm a').format(combinedDateTime);
-        setState(() {
-          if (isStartDate) {
-            startDateController.text = formattedDateTime;
-          } else {
-            endDateController.text = formattedDateTime;
-          }
-        });
-      }
+      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+      setState(() {
+        if (isStartDate) {
+          startDateController.text = formattedDate;
+        } else {
+          endDateController.text = formattedDate;
+        }
+      });
     }
   }
+
+  // Future<void> _pickDate({required bool isStartDate}) async {
+  //   DateTime? pickedDate = await showDatePicker(
+  //       context: context,
+  //       initialDate: DateTime.now(),
+  //       firstDate: DateTime(2000),
+  //       lastDate: DateTime(2100));
+  //   if (pickedDate != null) {
+  //     TimeOfDay? pickedTime =
+  //         await showTimePicker(context: context, initialTime: TimeOfDay.now());
+  //     if (pickedTime != null) {
+  //       DateTime combinedDateTime = DateTime(pickedDate.year, pickedDate.month,
+  //           pickedDate.day, pickedTime.hour, pickedTime.minute);
+  //       String formattedDateTime =
+  //           DateFormat('dd/MM/yyyy hh:mm a').format(combinedDateTime);
+  //       setState(() {
+  //         if (isStartDate) {
+  //           startDateController.text = formattedDateTime;
+  //         } else {
+  //           endDateController.text = formattedDateTime;
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
 
   void _nextStep() {
     if (_currentStep < 2) {
@@ -135,6 +154,8 @@ class _CreateLeadsState extends State<CreateLeads> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height * 1;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: SingleChildScrollView(
@@ -149,7 +170,7 @@ class _CreateLeadsState extends State<CreateLeads> {
 
             // const SizedBox(height: 5),
             SizedBox(
-              height: 350,
+              height: height * .5,
               child: PageView(
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
@@ -240,15 +261,17 @@ class _CreateLeadsState extends State<CreateLeads> {
                               color: AppColors.fontColor,
                               size: 15,
                             ),
-                            suffixIcon: const Icon(
-                              FontAwesomeIcons.microphone,
-                              color: AppColors.fontColor,
-                              size: 15,
-                            ),
+                            // suffixIcon: const Icon(
+                            //   FontAwesomeIcons.microphone,
+                            //   color: AppColors.fontColor,
+                            //   size: 15,
+                            // ),
                           ),
+                          
                         ),
                       ),
                       // const SizedBox(height: 2),
+
                       _buildRadioGroup(
                         label: 'Fuel Type',
                         options: ['Petrol', 'Diesel'],
@@ -391,7 +414,7 @@ class _CreateLeadsState extends State<CreateLeads> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 5),
+        const SizedBox(height: 10),
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -481,11 +504,12 @@ class _CreateLeadsState extends State<CreateLeads> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 5),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0),
             child: Text(label, style: AppFont.dropDowmLabel()),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 3),
           Wrap(
             alignment: WrapAlignment.start,
             spacing: 10,
@@ -540,6 +564,9 @@ class _CreateLeadsState extends State<CreateLeads> {
               ],
             ),
           ),
+        ),
+        const SizedBox(
+          height: 5,
         ),
         Container(
           height: 45,

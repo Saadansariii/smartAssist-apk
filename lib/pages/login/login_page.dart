@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/login/first_screen.dart';
 import 'package:smart_assist/services/leads_srv.dart';
-import 'package:smart_assist/services/login_srv.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:smart_assist/services/notifacation_srv.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
@@ -93,9 +92,10 @@ class _LoginPageState extends State<LoginPage>
                           child: SlideTransition(
                               position: _slideAnimation,
                               child: SvgPicture.asset(
-                                'assets/logo-black.svg', // ✅ Correct way to load SVG
-                                width: 120,
-                              )),
+                                  'assets/logo-black.svg', // ✅ Correct way to load SVG
+                                  // width: 120,
+                                  width:
+                                      MediaQuery.of(context).size.width * .3)),
                         ),
                         const SizedBox(height: 20),
                         const StyleText('Login to Smart Assist'),
@@ -178,7 +178,13 @@ class _LoginPageState extends State<LoginPage>
   // Widget for Login Button
   Widget buildLoginButton() {
     return ElevatedButton(
-      onPressed: isLoading ? null : submitBtn,
+      // onPressed: isLoading ? null : submitBtn,
+      onPressed: isLoading
+          ? null
+          : () {
+              FocusScope.of(context).unfocus(); // Dismiss the keyboard
+              submitBtn(); // Call the login function
+            },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.colorsBlue,
         foregroundColor: Colors.white,
@@ -186,8 +192,8 @@ class _LoginPageState extends State<LoginPage>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        elevation: 4,
-        shadowColor: AppColors.colorsBlue.withOpacity(0.4),
+        // elevation: 4,
+        // shadowColor: AppColors.colorsBlue.withOpacity(0.4),
         padding: const EdgeInsets.symmetric(vertical: 12),
       ),
       child: isLoading
