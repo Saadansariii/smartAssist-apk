@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String greeting = '';
   int notificationCount = 0;
   int overdueFollowupsCount = 0;
-   int overdueAppointmentsCount = 0;
+  int overdueAppointmentsCount = 0;
   List<dynamic> upcomingFollowups = [];
   List<dynamic> overdueFollowups = [];
   List<dynamic> upcomingAppointments = [];
@@ -75,8 +75,15 @@ class _HomeScreenState extends State<HomeScreen> {
         overdueFollowups = data['overdueFollowups'];
         upcomingAppointments = data['upcomingAppointments'];
         overdueAppointments = data['overdueAppointments'];
-        overdueFollowupsCount = data.containsKey('overdueFollowupsCount') && data['overdueFollowupsCount'] is int ? data['overdueFollowupsCount'] : 0;
-        overdueAppointmentsCount = data.containsKey('overdueAppointmentsCount') && data['overdueAppointmentsCount'] is int ? data['overdueAppointmentsCount'] : 0;
+        overdueFollowupsCount = data.containsKey('overdueFollowupsCount') &&
+                data['overdueFollowupsCount'] is int
+            ? data['overdueFollowupsCount']
+            : 0;
+        overdueAppointmentsCount =
+            data.containsKey('overdueAppointmentsCount') &&
+                    data['overdueAppointmentsCount'] is int
+                ? data['overdueAppointmentsCount']
+                : 0;
         notificationCount =
             data.containsKey('notifications') && data['notifications'] is int
                 ? data['notifications']
@@ -151,9 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
 // Your HomeScreen Code
   @override
   Widget build(BuildContext context) {
-// final height = MediaQuery.of(context).size.height * 1;  use it for dynamic height as per the mobile 
+// final height = MediaQuery.of(context).size.height * 1;  use it for dynamic height as per the mobile
 //  height * .2 not use like that 100 & 200
-
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -187,9 +193,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (notificationCount > 0)
                   Positioned(
                     right: 12,
-                    top: 10,
+                    top: 5,
                     child: Container(
-                      padding: const EdgeInsets.all(1),
+                      padding: const EdgeInsets.all(2),
                       decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
@@ -202,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         notificationCount.toString(),
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 7,
+                          fontSize: 10,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
@@ -352,8 +358,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               upcomingAppointments: upcomingAppointments,
                               overdueAppointments: overdueAppointments,
                               refreshDashboard: fetchDashboardData,
-                              overdueFollowupsCount : overdueFollowupsCount,
-                              overdueAppointmentsCount : overdueAppointmentsCount,
+                              overdueFollowupsCount: overdueFollowupsCount,
+                              overdueAppointmentsCount:
+                                  overdueAppointmentsCount,
                             ),
                             const BottomBtnSecond(),
                           ],
@@ -399,11 +406,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 title: Text(
                                   result['lead_name'] ?? 'No Name',
-                                  style: AppFont.searchFontTitle(),
+                                  style: AppFont.searchFontTitle(context),
                                 ),
                                 subtitle: Text(
                                   result['email'] ?? 'No Email',
-                                  style: AppFont.searchFontSubtitle(),
+                                  style: AppFont.searchFontSubtitle(context),
                                 ),
                                 leading: const Icon(Icons.person),
                               );

@@ -102,7 +102,8 @@ class _CreateAppointmentState extends State<CreateAppointment> {
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Create Appoinment', style: AppFont.popupTitle()),
+                child: Text('Create Appoinment',
+                    style: AppFont.popupTitle(context)),
               ),
 
               const SizedBox(
@@ -110,6 +111,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
               ),
 
               _buildDropdown(
+                context,
                 label: 'Priority:',
                 hint: 'Select',
                 value: selectedPriority,
@@ -123,6 +125,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
               ),
 
               _buildDropdown(
+                context,
                 label: 'Subject:',
                 hint: 'Select',
                 value: selectedSubject,
@@ -145,7 +148,8 @@ class _CreateAppointmentState extends State<CreateAppointment> {
               const SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Start Date', style: AppFont.dropDowmLabel()),
+                child:
+                    Text('Start Date', style: AppFont.dropDowmLabel(context)),
               ),
               const SizedBox(height: 10),
 
@@ -186,7 +190,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
               const SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('End Date', style: AppFont.dropDowmLabel()),
+                child: Text('End Date', style: AppFont.dropDowmLabel(context)),
               ),
               const SizedBox(height: 10),
 
@@ -241,7 +245,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
                         onPressed: () {
                           Navigator.pop(context); // Close modal on cancel
                         },
-                        child: Text('Cancel', style: AppFont.buttons()),
+                        child: Text('Cancel', style: AppFont.buttons(context)),
                       ),
                     ),
                   ),
@@ -259,7 +263,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
                           },
                           child: Text(
                             'Submit',
-                            style: AppFont.buttons(),
+                            style: AppFont.buttons(context),
                           )),
                     ),
                   ),
@@ -334,7 +338,8 @@ class _CreateAppointmentState extends State<CreateAppointment> {
 }
 
 // Reusable Dropdown Builder
-Widget _buildDropdown({
+Widget _buildDropdown(
+  BuildContext context, {
   required String label,
   required String hint,
   required String? value,
@@ -346,7 +351,7 @@ Widget _buildDropdown({
     children: [
       Text(
         label,
-        style: AppFont.dropDowmLabel(),
+        style: AppFont.dropDowmLabel(context),
       ),
       const SizedBox(height: 10),
       Container(
@@ -358,7 +363,7 @@ Widget _buildDropdown({
           value: value,
           hint: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: Text(hint, style: AppFont.dropDown()),
+            child: Text(hint, style: AppFont.dropDown(context)),
           ),
           icon: const Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -375,7 +380,7 @@ Widget _buildDropdown({
               value: item,
               child: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: Text(item, style: AppFont.dropDowmLabel()),
+                child: Text(item, style: AppFont.dropDowmLabel(context)),
               ),
             );
           }).toList(),

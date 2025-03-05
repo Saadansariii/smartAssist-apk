@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/pages/details_pages/followups/followups.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:smart_assist/utils/bottom_navigation.dart';
@@ -19,6 +17,7 @@ class NotificationPage extends StatefulWidget {
   @override
   State<NotificationPage> createState() => _NotificationPageState();
 }
+
 
 class _NotificationPageState extends State<NotificationPage> {
   int _selectedButtonIndex = 0;
@@ -50,9 +49,9 @@ class _NotificationPageState extends State<NotificationPage> {
     String url = 'https://api.smartassistapp.in/api/users/notifications/all';
 
     if (category != null && category != 'All') {
-      String encodedCategory =
-          Uri.encodeComponent(category); // Properly encode spaces
-      url += '?category=$encodedCategory';
+      String formattedCategory =
+          category.replaceAll(' ', ''); // ✅ Remove spaces completely
+      url += '?category=$formattedCategory';
     }
 
     try {
@@ -207,7 +206,7 @@ class _NotificationPageState extends State<NotificationPage> {
       ),
       body: Column(
         children: [
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Wrap(
             spacing: 5,
             runSpacing: 5,
@@ -283,7 +282,7 @@ class _NotificationPageState extends State<NotificationPage> {
                         ),
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 0.1,
                       color: Colors.black,
                       indent: 10,

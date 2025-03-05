@@ -18,6 +18,19 @@ class TimelineEightWid extends StatelessWidget {
     }
   }
 
+  String formatTime(String createdAt) {
+    try {
+      // ✅ Convert ISO date string into DateTime object
+      DateTime dateTime = DateTime.parse(createdAt);
+
+      // ✅ Format to 12-hour time (hh:mm AM/PM)
+      return DateFormat('hh:mm a').format(dateTime);
+    } catch (e) {
+      print("Error formatting time: $e");
+      return 'Invalid Time';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Reverse the events list to show from bottom to top
@@ -29,8 +42,8 @@ class TimelineEightWid extends StatelessWidget {
         String dueDate = _formatDate(event['due_date'] ?? 'N/A');
         String subject = event['subject'] ?? 'No Subject';
         String priority = event['priority'] ?? 'N/A';
-        String startDate = event['start_date'] ?? 'N/A';
-        String endDate = event['due_date'] ?? 'N/A';
+        String createdTime = event['created_at'] ?? 'N/A';
+        // String endDate = event['due_date'] ?? 'N/A';
 
         return TimelineTile(
           alignment: TimelineAlign.manual,
@@ -63,7 +76,7 @@ class TimelineEightWid extends StatelessWidget {
             ),
             padding: const EdgeInsets.all(10.0),
             child: Text(
-              dueDate,
+              formatTime(createdTime),
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
@@ -82,12 +95,12 @@ class TimelineEightWid extends StatelessWidget {
                     color: const Color(0xffE7F2FF),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.fromLTRB(10.0, 10, 0, 0),
                   child: RichText(
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Start Time: ',
+                          text: 'Due Date: ',
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
@@ -102,11 +115,12 @@ class TimelineEightWid extends StatelessWidget {
                             color: Colors.black,
                           ),
                         ),
+                        
                         TextSpan(
                           text: 'Subject: ',
                           style: GoogleFonts.poppins(
                             fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w400,
                             color: Colors.grey,
                           ),
                         ),
@@ -122,34 +136,34 @@ class TimelineEightWid extends StatelessWidget {
                           text: 'Priority: ',
                           style: GoogleFonts.poppins(
                             fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w400,
                             color: Colors.grey,
                           ),
                         ),
                         TextSpan(
-                          text: '$startDate\n',
+                          text: '$priority\n',
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
                         ),
-                        TextSpan(
-                          text: 'Start Date: ',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '$startDate\n',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
+                        // TextSpan(
+                        //   text: 'Due Date: ',
+                        //   style: GoogleFonts.poppins(
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.w500,
+                        //     color: Colors.grey,
+                        //   ),
+                        // ),
+                        // TextSpan(
+                        //   text: '$startDate\n',
+                        //   style: GoogleFonts.poppins(
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.w500,
+                        //     color: Colors.black,
+                        //   ),
+                        // ),
                         // TextSpan(
                         //   text: 'End Date: ',
                         //   style: GoogleFonts.poppins(
@@ -170,7 +184,7 @@ class TimelineEightWid extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                // const SizedBox(height: 10),
               ],
             ),
           ),

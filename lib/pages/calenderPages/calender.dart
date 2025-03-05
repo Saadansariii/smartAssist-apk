@@ -112,7 +112,7 @@ class _CalenderState extends State<Calender> {
         // ),
         title: Text(
           'Calendar',
-          style: AppFont.appbarfontWhite(),
+          style: AppFont.appbarfontWhite(context),
         ),
         actions: [
           IconButton(

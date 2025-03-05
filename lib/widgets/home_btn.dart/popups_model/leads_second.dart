@@ -416,7 +416,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
           padding: const EdgeInsets.only(left: 10.0),
           child: Text(
             label,
-            style: AppFont.dropDowmLabel(),
+            style: AppFont.dropDowmLabel(context),
           ),
         ),
         const SizedBox(height: 10),
@@ -434,7 +434,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(hint, style: AppFont.dropDown()),
+                    Text(hint, style: AppFont.dropDown(context)),
                     const Padding(
                       padding: EdgeInsets.only(right: 10.0),
                       child: Icon(
@@ -456,7 +456,7 @@ class _LeadsSecondState extends State<LeadsSecond> {
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Row(
                       children: [
-                        Text(item, style: AppFont.dropDowmLabel()),
+                        Text(item, style: AppFont.dropDowmLabel(context)),
                       ],
                     ),
                   ),

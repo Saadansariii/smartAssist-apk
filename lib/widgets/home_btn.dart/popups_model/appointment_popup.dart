@@ -287,7 +287,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5))),
                   onPressed: _nextStep,
-                  child: Text(_currentStep == 0 ? "Next" : "Submit",
+                  child: Text(_currentStep == 0 ? "Continue" : "Submit",
                       style: GoogleFonts.poppins(color: Colors.white)),
                 ),
               ),
@@ -297,22 +297,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
       ),
     );
   }
-
-  // Widget _buildDropdown(
-  //     {required String label,
-  //     required String? value,
-  //     required List<String> items,
-  //     required ValueChanged<String?> onChanged}) {
-  //   return DropdownButton<String>(
-  //     value: value,
-  //     hint: Text("Select $label"),
-  //     isExpanded: true,
-  //     items: items
-  //         .map((item) => DropdownMenuItem(value: item, child: Text(item)))
-  //         .toList(),
-  //     onChanged: onChanged,
-  //   );
-  // }
 
   Widget _buildDropdown({
     required String label,

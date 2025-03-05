@@ -124,7 +124,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Add Task / Event',
-                  style: AppFont.popupTitle(),
+                  style: AppFont.popupTitle(context),
                 ),
               ),
               const SizedBox(height: 20),
@@ -133,7 +133,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
               Align(
                 alignment: Alignment.centerLeft,
                 child:
-                    Text('Select event / task', style: AppFont.dropDowmLabel()),
+                    Text('Select event / task', style: AppFont.dropDowmLabel(context)),
               ),
               const SizedBox(height: 5),
               Container(
@@ -146,7 +146,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                   value: selectedEvent,
                   hint: Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Text("Select", style: AppFont.dropDown()),
+                    child: Text("Select", style: AppFont.dropDown(context)),
                   ),
                   icon: const Padding(
                     padding: EdgeInsets.only(right: 15.0),
@@ -164,7 +164,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                       value: value,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10.0),
-                        child: Text(value, style: AppFont.dropDowmLabel()),
+                        child: Text(value, style: AppFont.dropDowmLabel(context)),
                       ),
                     );
                   }).toList(),
@@ -185,7 +185,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
                     'Leads Name :',
-                    style: AppFont.dropDowmLabel(),
+                    style: AppFont.dropDowmLabel(context),
                   ),
                 ),
               ),
@@ -257,7 +257,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text('Cancel', style: AppFont.buttons()),
+                        child: Text('Cancel', style: AppFont.buttons(context)),
                       ),
                     ),
                   ),
@@ -325,7 +325,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                             );
                           });
                         },
-                        child: Text('Next', style: AppFont.buttons()),
+                        child: Text('Next', style: AppFont.buttons(context)),
                       ),
                     ),
                   ),

@@ -170,7 +170,7 @@ class _LeadsLastState extends State<LeadsLast> {
                                     hint: Padding(
                                       padding: const EdgeInsets.only(left: 10),
                                       child: Text("Select",
-                                          style: AppFont.dropDown()),
+                                          style: AppFont.dropDown(context)),
                                     ),
                                     icon: const Icon(Icons.keyboard_arrow_down),
                                     isExpanded: true,
@@ -181,7 +181,8 @@ class _LeadsLastState extends State<LeadsLast> {
                                         child: Padding(
                                           padding: EdgeInsets.only(left: 10.0),
                                           child: Text("New",
-                                              style: AppFont.dropDowmLabel()),
+                                              style: AppFont.dropDowmLabel(
+                                                  context)),
                                         ),
                                       ),
                                       DropdownMenuItem<String>(
@@ -189,7 +190,8 @@ class _LeadsLastState extends State<LeadsLast> {
                                         child: Padding(
                                           padding: EdgeInsets.only(left: 10.0),
                                           child: Text("Followup",
-                                              style: AppFont.dropDowmLabel()),
+                                              style: AppFont.dropDowmLabel(
+                                                  context)),
                                         ),
                                       ),
                                       // DropdownMenuItem<String>(
@@ -211,7 +213,8 @@ class _LeadsLastState extends State<LeadsLast> {
                                                 EdgeInsets.only(left: 10.0),
                                             child: Text("Lost",
                                                 style:
-                                                    AppFont.dropDowmLabel())),
+                                                    AppFont.dropDowmLabel(
+                                                    context))),
                                       ),
                                     ],
                                     onChanged: (value) {
@@ -232,7 +235,7 @@ class _LeadsLastState extends State<LeadsLast> {
                               vertical: 5.0, horizontal: 10),
                           child: Text(
                             'Description :',
-                            style: AppFont.dropDowmLabel(),
+                            style: AppFont.dropDowmLabel(context),
                           ),
                         ),
                         Padding(
@@ -247,12 +250,12 @@ class _LeadsLastState extends State<LeadsLast> {
                                 controller: descriptionController,
                                 decoration: InputDecoration(
                                   hintText: "Description",
-                                  hintStyle: AppFont.dropDown(),
+                                  hintStyle: AppFont.dropDown(context),
                                   contentPadding:
                                       const EdgeInsets.only(left: 10),
                                   border: InputBorder.none,
                                 ),
-                                style: AppFont.dropDown()),
+                                style: AppFont.dropDown(context)),
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -262,7 +265,7 @@ class _LeadsLastState extends State<LeadsLast> {
                               vertical: 5.0, horizontal: 10),
                           child: Text(
                             'Lead code :',
-                            style: AppFont.dropDowmLabel(),
+                            style: AppFont.dropDowmLabel(context),
                           ),
                         ),
                         Padding(
@@ -277,11 +280,11 @@ class _LeadsLastState extends State<LeadsLast> {
                               controller: phoneController,
                               decoration: InputDecoration(
                                 hintText: "Lead Code",
-                                hintStyle: AppFont.dropDown(),
+                                hintStyle: AppFont.dropDown(context),
                                 contentPadding: const EdgeInsets.only(left: 10),
                                 border: InputBorder.none,
                               ),
-                              style: AppFont.dropDowmLabel(),
+                              style: AppFont.dropDowmLabel(context),
                             ),
                           ),
                         ),
@@ -290,7 +293,7 @@ class _LeadsLastState extends State<LeadsLast> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 5.0, horizontal: 10),
                           child: Text('Expected Date Purchased:',
-                              style: AppFont.dropDowmLabel()),
+                              style: AppFont.dropDowmLabel(context)),
                         ),
                         GestureDetector(
                           onTap: _pickDate,

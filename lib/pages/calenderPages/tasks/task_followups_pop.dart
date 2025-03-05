@@ -93,7 +93,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
-                  child: Text('Create Followups', style: AppFont.popupTitle()),
+                  child: Text('Create Followups', style: AppFont.popupTitle(context)),
                 ),
               ),
               const SizedBox(
@@ -106,7 +106,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                       const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5),
                   child: Text(
                     'Comments :',
-                    style: AppFont.dropDowmLabel(),
+                    style: AppFont.dropDowmLabel(context),
                   ),
                 ),
               ),
@@ -120,16 +120,16 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                     controller: descriptionController,
                     decoration: InputDecoration(
                       hintText: "Add Comments",
-                      hintStyle: AppFont.dropDown(),
+                      hintStyle: AppFont.dropDown(context),
                       contentPadding: const EdgeInsets.only(left: 10),
                       border: InputBorder.none,
                     ),
-                    style: AppFont.dropDowmLabel()),
+                    style: AppFont.dropDowmLabel(context)),
               ),
 
               const SizedBox(height: 10),
 
-              _buildDropdown(
+              _buildDropdown(context,
                 label: 'Subject:',
                 hint: 'Select',
                 value: selectedSubject,
@@ -148,7 +148,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                 },
               ),
 
-              _buildDropdown(
+              _buildDropdown(context,
                 label: 'Status:',
                 hint: 'Select',
                 value: selectedStatus,
@@ -168,7 +168,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                 },
               ),
 
-              _buildDropdown(
+              _buildDropdown(context,
                 label: 'Priority:',
                 hint: 'Select',
                 value: selectedPriority,
@@ -243,7 +243,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
                         onPressed: () {
                           submitForm();
                         },
-                        child: Text('Submit', style: AppFont.buttons()),
+                        child: Text('Submit', style: AppFont.buttons(context)),
                       ),
                     ),
                   ),
@@ -308,7 +308,7 @@ class _TaskFollowupsPopState extends State<TaskFollowupsPop> {
 }
 
 // Reusable Dropdown Builder
-Widget _buildDropdown({
+Widget _buildDropdown( BuildContext context, {
   required String label,
   required String hint,
   required String? value,
@@ -322,7 +322,7 @@ Widget _buildDropdown({
         padding: const EdgeInsets.only(left: 5.0),
         child: Text(
           label,
-          style: AppFont.dropDowmLabel(),
+          style: AppFont.dropDowmLabel(context),
         ),
       ),
       const SizedBox(height: 10),
@@ -335,7 +335,7 @@ Widget _buildDropdown({
           value: value,
           hint: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: Text(hint, style: AppFont.dropDown()),
+            child: Text(hint, style: AppFont.dropDown(context)),
           ),
           icon: const Padding(
             padding: EdgeInsets.only(right: 10.0),
@@ -348,7 +348,7 @@ Widget _buildDropdown({
               value: item,
               child: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: Text(item, style: AppFont.dropDowmLabel()),
+                child: Text(item, style: AppFont.dropDowmLabel(context)),
               ),
             );
           }).toList(),

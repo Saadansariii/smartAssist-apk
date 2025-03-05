@@ -4,8 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/services/leads_srv.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
 import 'package:smart_assist/widgets/leads_details_popup/create_appointment.dart';
 import 'package:smart_assist/widgets/leads_details_popup/create_followups.dart';
 import 'package:smart_assist/widgets/timeline/timeline_eight_wid.dart';
@@ -85,7 +83,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
           priorityList.add(item['priority'] ?? 'N/A');
           startTimeList.add(_formatTime(item['start_time']));
           endTimeList.add(_formatTime(item['end_time']));
-          startDateList.add(item['start_date'] ?? 'N/A');
+          startDateList.add(item['due_date'] ?? 'N/A');
         } else {
           // Task data
           subjectList.add(item['subject'] ?? 'N/A');
@@ -108,28 +106,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       final List<Map<String, dynamic>> events =
           await LeadsSrv.singleEventById(leadId);
 
-      //   setState(() {
-      //     allEvents = events;
-
-      //     // Initialize lists to store event data
-      //     subjectList = [];
-      //     priorityList = [];
-      //     startTimeList = [];
-      //     endTimeList = [];
-      //     startDateList = [];
-
-      //     // Loop through all events and store their details
-      //     for (var event in events) {
-      //       subjectList.add(event['subject'] ?? 'N/A');
-      //       priorityList.add(event['priority'] ?? 'N/A');
-      //       startTimeList.add(_formatTime(event['start_time']));
-      //       endTimeList.add(_formatTime(event['end_time']));
-      //       startDateList.add(event['start_date'] ?? 'N/A');
-      //     }
-      //   });
-      // } catch (e) {
-      //   print('Error Fetching data: $e');
-      // }
       setState(() {
         allEvents = events;
         if (_childButtonIndex == 0) {
@@ -199,91 +175,11 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       // backgroundColor: AppColors.backgroundLightGrey,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundLightGrey,
-        title: Text('Leads Details', style: AppFont.appbarfontgrey()),
+        title: Text('Leads Details', style: AppFont.appbarfontgrey(context)),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // GestureDetector(
-              //   onTap: () async {
-              //     final result = await showMenu<String>(
-              //       context: context,
-              //       position: const RelativeRect.fromLTRB(70, 90, 30, 100),
-              //       items: [
-              //         PopupMenuItem<String>(
-              //           height: 20,
-              //           onTap: () {
-              //             Future.delayed(Duration.zero, () {
-              //               showDialog(
-              //                 context: context,
-              //                 builder: (context) {
-              //                   return Dialog(
-              //                     shape: RoundedRectangleBorder(
-              //                       borderRadius: BorderRadius.circular(10),
-              //                     ),
-              //                     child: _createFollowups,
-              //                   );
-              //                 },
-              //               );
-              //             });
-              //           },
-              //           value: 'followup',
-              //           child: Center(
-              //             child: Text(
-              //               'Create Followups',
-              //               textAlign: TextAlign.center,
-              //               style: GoogleFonts.poppins(
-              //                 fontSize: 12,
-              //                 fontWeight: FontWeight.w400,
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //         PopupMenuItem<String>(
-              //           height: 20,
-              //           onTap: () {
-              //             Future.delayed(Duration.zero, () {
-              //               showDialog(
-              //                 context: context,
-              //                 builder: (context) {
-              //                   return Dialog(
-              //                     shape: RoundedRectangleBorder(
-              //                       borderRadius: BorderRadius.circular(10),
-              //                     ),
-              //                     child: _createAppoinment,
-              //                     // Appointment modal
-              //                   );
-              //                 },
-              //               );
-              //             });
-              //           },
-              //           value: 'appointment',
-              //           child: Center(
-              //             child: Text(
-              //               'Create Appointment',
-              //               textAlign: TextAlign.center,
-              //               style: GoogleFonts.poppins(
-              //                 fontSize: 12,
-              //                 fontWeight: FontWeight.w400,
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       ],
-              //     );
-              //     if (result != null) {
-              //       print('Selected: $result');
-              //     }
-              //   },
-              //   child: const Padding(
-              //     padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-              //     child: Icon(
-              //       Icons.add,
-              //       size: 30,
-              //       color: AppColors.iconGrey,
-              //     ),
-              //   ),
-              // ),
               GestureDetector(
                 onTap: () async {
                   final result = await showMenu<String>(
@@ -434,6 +330,8 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
         elevation: 0,
       ),
       body: Container(
+        width: double.infinity, // ✅ Ensures full width
+        height: double.infinity,
         decoration: BoxDecoration(
           color: AppColors.backgroundLightGrey,
         ),

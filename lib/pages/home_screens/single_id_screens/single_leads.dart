@@ -199,7 +199,7 @@ class _SingleLeadsByIdState extends State<SingleLeadsById> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lead', style: AppFont.appbarfontgrey()),
+        title: Text('Lead', style: AppFont.appbarfontgrey(context)),
         foregroundColor: AppColors.iconGrey,
         leading: IconButton(
           onPressed: () => Navigator.push(context,

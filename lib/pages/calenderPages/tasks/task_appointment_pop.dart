@@ -84,7 +84,7 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child:
-                      Text('Create Appointment', style: AppFont.popupTitle()),
+                      Text('Create Appointment', style: AppFont.popupTitle(context)),
                 ),
               ),
               const SizedBox(height: 10),
@@ -123,7 +123,7 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                // End Date (Editable)
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('End Date', style: AppFont.dropDowmLabel()),
+                child: Text('End Date', style: AppFont.dropDowmLabel(context)),
               ),
               const SizedBox(height: 10),
               GestureDetector(
@@ -220,7 +220,7 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                         onPressed: () {
                           submitForm();
                         },
-                        child: Text('Submit', style: AppFont.buttons()),
+                        child: Text('Submit', style: AppFont.buttons(context)),
                       ),
                     ),
                   ),
@@ -380,7 +380,7 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(label, style: AppFont.dropDowmLabel()),
+        Text(label, style: AppFont.dropDowmLabel(context)),
         const SizedBox(height: 10),
         Container(
           decoration: BoxDecoration(
@@ -391,7 +391,7 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
             value: value,
             hint: Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: Text(hint, style: AppFont.dropDown()),
+              child: Text(hint, style: AppFont.dropDown(context)),
             ),
             icon: const Padding(
               padding: EdgeInsets.only(right: 10.0),
@@ -407,7 +407,7 @@ class _TaskAppointmentPopState extends State<TaskAppointmentPop> {
                 value: item,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10.0),
-                  child: Text(item, style: AppFont.dropDowmLabel()),
+                  child: Text(item, style: AppFont.dropDowmLabel(context)),
                 ),
               );
             }).toList(),

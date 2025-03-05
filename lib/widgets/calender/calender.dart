@@ -52,8 +52,8 @@ class _CalenderWidgetState extends State<CalenderWidget> {
         },
 
         daysOfWeekStyle: DaysOfWeekStyle(
-          weekdayStyle: AppFont.calanderDayName(),
-          weekendStyle: AppFont.calanderDayName(),
+          weekdayStyle: AppFont.calanderDayName(context),
+          weekendStyle: AppFont.calanderDayName(context),
         ),
 
         calendarFormat: widget.calendarFormat,
@@ -76,7 +76,7 @@ class _CalenderWidgetState extends State<CalenderWidget> {
           leftChevronVisible: false,
           rightChevronVisible: false,
           headerPadding: EdgeInsets.zero,
-          titleTextStyle: AppFont.popupTitleBlack(),
+          titleTextStyle: AppFont.popupTitleBlack(context),
         ),
 
         calendarStyle: CalendarStyle(

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.dart';
-import 'package:smart_assist/utils/storage.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
-import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CreateLeads extends StatefulWidget {
@@ -165,7 +163,8 @@ class _CreateLeadsState extends State<CreateLeads> {
           children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: Text('Add New lead', style: AppFont.popupTitleBlack()),
+              child:
+                  Text('Add New lead', style: AppFont.popupTitleBlack(context)),
             ),
 
             // const SizedBox(height: 5),
@@ -215,9 +214,12 @@ class _CreateLeadsState extends State<CreateLeads> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildRadioGroup(
+                      _buildButtons(
                         label: 'Brand',
-                        options: ["Jaguar", "Land Rover"],
+                        options: {
+                          "Jaguar": "Jaguar",
+                          "Land Rover": "Land Rover"
+                        },
                         groupValue: _selectedBrand,
                         onChanged: (value) {
                           setState(() {
@@ -231,7 +233,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5.0),
                           child: Text('Primary Model Intrest',
-                              style: AppFont.dropDowmLabel()),
+                              style: AppFont.dropDowmLabel(context)),
                         ),
                       ),
                       const SizedBox(height: 5),
@@ -255,7 +257,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                             filled: true,
                             fillColor: AppColors.containerBg,
                             hintText: 'Type to talk',
-                            hintStyle: AppFont.dropDown(),
+                            hintStyle: AppFont.dropDown(context),
                             prefixIcon: const Icon(
                               FontAwesomeIcons.magnifyingGlass,
                               color: AppColors.fontColor,
@@ -267,14 +269,13 @@ class _CreateLeadsState extends State<CreateLeads> {
                             //   size: 15,
                             // ),
                           ),
-                          
                         ),
                       ),
                       // const SizedBox(height: 2),
 
-                      _buildRadioGroup(
+                      _buildButtons(
                         label: 'Fuel Type',
-                        options: ['Petrol', 'Diesel'],
+                        options: {'Petrol': 'Petrol', 'Diesel': 'Diesel'},
                         groupValue: _selectedType,
                         onChanged: (value) {
                           setState(() {
@@ -379,7 +380,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                     },
                     child: Text(
                       _currentStep == 0 ? "Cancel" : "Go Back",
-                      style: AppFont.buttons(),
+                      style: AppFont.buttons(context),
                     ),
                   ),
                 ),
@@ -393,7 +394,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                     ),
                     onPressed: _nextStep,
                     child: Text(_currentStep == 2 ? "Create" : "Continue",
-                        style: AppFont.buttons()),
+                        style: AppFont.buttons(context)),
                   ),
                 ),
               ],
@@ -419,7 +420,7 @@ class _CreateLeadsState extends State<CreateLeads> {
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0.0, 5, 10, 0),
-            child: Text(label, style: AppFont.dropDowmLabel()),
+            child: Text(label, style: AppFont.dropDowmLabel(context)),
           ),
         ),
         const SizedBox(height: 5),
@@ -450,7 +451,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                     width: 5), // ✅ Space between radio button and text
                 Text(
                   option,
-                  style: AppFont.dropDowmLabel(),
+                  style: AppFont.dropDowmLabel(context),
                 ),
               ],
             );
@@ -507,7 +508,7 @@ class _CreateLeadsState extends State<CreateLeads> {
           const SizedBox(height: 5),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0),
-            child: Text(label, style: AppFont.dropDowmLabel()),
+            child: Text(label, style: AppFont.dropDowmLabel(context)),
           ),
           const SizedBox(height: 3),
           Wrap(
@@ -518,12 +519,12 @@ class _CreateLeadsState extends State<CreateLeads> {
               return Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                constraints: const BoxConstraints(minWidth: 100),
+                constraints: const BoxConstraints(minWidth: 50),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: AppColors.containerBg,
                 ),
-                child: Text(option, style: AppFont.dropDown()),
+                child: Text(option, style: AppFont.dropDown(context)),
               );
             }).toList(),
           ),
@@ -546,7 +547,7 @@ class _CreateLeadsState extends State<CreateLeads> {
           height: 10,
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5),
+          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 5),
           child: RichText(
             text: TextSpan(
               style: GoogleFonts.poppins(
@@ -624,7 +625,7 @@ class _CreateLeadsState extends State<CreateLeads> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 // color: AppColors.containerPopBg,
-                border: Border.all(color: Colors.black)),
+                border: Border.all(color: Colors.black, width: 0.5)),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -643,7 +644,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                 ),
                 const Icon(
                   Icons.calendar_month_outlined,
-                  color: AppColors.iconGrey,
+                  color: AppColors.fontBlack,
                 ),
               ],
             ),
@@ -725,7 +726,7 @@ class _CreateLeadsState extends State<CreateLeads> {
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0.0, 5, 0, 5),
-            child: Text(label, style: AppFont.dropDowmLabel()),
+            child: Text(label, style: AppFont.dropDowmLabel(context)),
           ),
         ),
         const SizedBox(height: 5),
@@ -742,13 +743,13 @@ class _CreateLeadsState extends State<CreateLeads> {
               },
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                 margin: const EdgeInsets.only(
                     right: 10), // Adds spacing between buttons
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: isSelected ? Colors.blue : Colors.black,
-                    width: 1,
+                    width: .5,
                   ),
                   borderRadius: BorderRadius.circular(15),
                   color:
@@ -778,7 +779,8 @@ class _CreateLeadsState extends State<CreateLeads> {
     if (spId == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('User ID not found. Please log in again.')),
+          const SnackBar(
+              content: Text('User ID not found. Please log in again.')),
         );
       }
       return;
@@ -818,7 +820,7 @@ class _CreateLeadsState extends State<CreateLeads> {
           );
         }
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Form Submit Successful.')),
+          const SnackBar(content: Text('Form Submit Successful.')),
         );
       } else if (response.containsKey('error')) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -828,7 +830,8 @@ class _CreateLeadsState extends State<CreateLeads> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to submit lead. Please try again.')),
+        const SnackBar(
+            content: Text('Failed to submit lead. Please try again.')),
       );
     }
   }

@@ -84,7 +84,7 @@ class _FavoritePageState extends State<FavoritePage> {
             color: Colors.white,
           ),
         ),
-        title: Text('Favorites', style: AppFont.appbarfontWhite()),
+        title: Text('Favorites', style: AppFont.appbarfontWhite(context)),
         backgroundColor: Colors.blue,
         automaticallyImplyLeading: false,
       ),

@@ -184,7 +184,7 @@ class LogoutPage extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        title: Text('Logout', style: AppFont.appbarfontWhite()),
+        title: Text('Logout', style: AppFont.appbarfontWhite(context)),
         backgroundColor: AppColors.colorsBlue,
         automaticallyImplyLeading: false,
       ),

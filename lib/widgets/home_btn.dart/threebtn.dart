@@ -335,8 +335,6 @@ class _ThreebtnState extends State<Threebtn> {
                               ),
                             ),
                             const SizedBox(width: 5),
-
-                            // ✅ Show the correct count dynamically from API response
                             if ((_activeButtonIndex == 0 &&
                                     (widget.overdueFollowupsCount > 0 ||
                                         widget.overdueFollowupsCount > 0)) ||
@@ -346,31 +344,19 @@ class _ThreebtnState extends State<Threebtn> {
                                 (_activeButtonIndex == 2 &&
                                     (widget.overdueAppointmentsCount > 0 ||
                                         widget.overdueAppointmentsCount > 0)))
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  (_activeButtonIndex == 0)
-                                      ? (widget.overdueFollowupsCount +
-                                              widget.overdueFollowupsCount)
-                                          .toString()
-                                      : (_activeButtonIndex == 1)
-                                          ? (widget.overdueAppointmentsCount +
-                                                  widget
-                                                      .overdueAppointmentsCount)
-                                              .toString()
-                                          : (widget.overdueAppointments +
-                                                  widget.overdueAppointments)
-                                              .toString(),
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
+                              Text(
+                                (_activeButtonIndex == 0)
+                                    ? (widget.overdueFollowupsCount).toString()
+                                    : (_activeButtonIndex == 1)
+                                        ? (widget.overdueAppointmentsCount)
+                                            .toString()
+                                        : (widget.overdueAppointments)
+                                            .toString(),
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w400,
+                                  color:
+                                      const Color(0xff000000).withOpacity(0.56),
                                 ),
                               ),
                           ],
@@ -534,7 +520,7 @@ class _ThreebtnState extends State<Threebtn> {
                                         //   email: '',
                                         //   selectedEvent: '',
                                         // ),
-                                        child: CreateLeads(),
+                                        child: const CreateLeads(),
                                       ),
                                     );
                                   },
@@ -751,7 +737,7 @@ class _ThreebtnState extends State<Threebtn> {
                                         //   email: '',
                                         //   selectedEvent: '',
                                         // ),
-                                        child: CreateLeads(),
+                                        child: const CreateLeads(),
                                       ),
                                     );
                                   },

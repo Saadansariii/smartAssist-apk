@@ -95,7 +95,7 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   child: Text(
                     'Comments :',
-                    style: AppFont.dropDowmLabel(),
+                    style: AppFont.dropDowmLabel(context),
                   ),
                 ),
               ),
@@ -108,11 +108,11 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                     controller: descriptionController,
                     decoration: InputDecoration(
                       hintText: "Add Comments",
-                      hintStyle: AppFont.dropDown(),
+                      hintStyle: AppFont.dropDown(context),
                       contentPadding: const EdgeInsets.only(left: 10),
                       border: InputBorder.none,
                     ),
-                    style: AppFont.dropDowmLabel()),
+                    style: AppFont.dropDowmLabel(context)),
               ),
               // Align(
               //   alignment: Alignment.topLeft,
@@ -176,7 +176,7 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
 
               const SizedBox(height: 10),
 
-              _buildDropdown(
+              _buildDropdown(context,
                 label: 'Subject:',
                 hint: 'Select',
                 value: selectedSubject,
@@ -195,7 +195,7 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                 },
               ),
 
-              _buildDropdown(
+              _buildDropdown(context,
                 label: 'Status:',
                 hint: 'Select',
                 value: selectedStatus,
@@ -215,7 +215,7 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                 },
               ),
 
-              _buildDropdown(
+              _buildDropdown(context,
                 label: 'Priority:',
                 hint: 'Select',
                 value: selectedPriority,
@@ -232,7 +232,7 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Followup Date',
-                    style: AppFont.dropDowmLabel(),
+                    style: AppFont.dropDowmLabel(context),
                   )),
               const SizedBox(height: 10),
 
@@ -287,7 +287,7 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                         onPressed: () {
                           Navigator.pop(context); // Close modal on cancel
                         },
-                        child: Text('Cancel', style: AppFont.buttons()),
+                        child: Text('Cancel', style: AppFont.buttons(context)),
                       ),
                     ),
                   ),
@@ -303,7 +303,7 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
                         onPressed: () {
                           submitForm();
                         },
-                        child: Text('Submit', style: AppFont.buttons()),
+                        child: Text('Submit', style: AppFont.buttons(context)),
                       ),
                     ),
                   ),
@@ -366,19 +366,21 @@ class LeadsCreateFollowupState extends State<LeadsCreateFollowup> {
 }
 
 // Reusable Dropdown Builder
-Widget _buildDropdown({
+Widget _buildDropdown(
+  BuildContext context, {
   required String label,
   required String hint,
   required String? value,
   required List<String> items,
   required ValueChanged<String?> onChanged,
 }) {
+   
   return Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Text(
         label,
-        style: AppFont.dropDowmLabel(),
+        style: AppFont.dropDowmLabel(context),
       ),
       const SizedBox(height: 10),
       Container(
@@ -390,7 +392,7 @@ Widget _buildDropdown({
           value: value,
           hint: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: Text(hint, style: AppFont.dropDown()),
+            child: Text(hint, style: AppFont.dropDown(context)),
           ),
           icon: const Padding(
             padding: EdgeInsets.all(8.0),
@@ -407,7 +409,7 @@ Widget _buildDropdown({
               value: item,
               child: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: Text(item, style: AppFont.dropDowmLabel()),
+                child: Text(item, style: AppFont.dropDowmLabel(context)),
               ),
             );
           }).toList(),
