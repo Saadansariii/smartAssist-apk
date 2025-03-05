@@ -36,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String? leadId;
   String greeting = '';
   int notificationCount = 0;
+  int overdueFollowupsCount = 0;
+   int overdueAppointmentsCount = 0;
   List<dynamic> upcomingFollowups = [];
   List<dynamic> overdueFollowups = [];
   List<dynamic> upcomingAppointments = [];
@@ -73,6 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
         overdueFollowups = data['overdueFollowups'];
         upcomingAppointments = data['upcomingAppointments'];
         overdueAppointments = data['overdueAppointments'];
+        overdueFollowupsCount = data.containsKey('overdueFollowupsCount') && data['overdueFollowupsCount'] is int ? data['overdueFollowupsCount'] : 0;
+        overdueAppointmentsCount = data.containsKey('overdueAppointmentsCount') && data['overdueAppointmentsCount'] is int ? data['overdueAppointmentsCount'] : 0;
         notificationCount =
             data.containsKey('notifications') && data['notifications'] is int
                 ? data['notifications']
@@ -81,9 +85,9 @@ class _HomeScreenState extends State<HomeScreen> {
             (data.containsKey('greetings') && data['greetings'] is String)
                 ? data['greetings']
                 : 'Welcome!';
-        if (upcomingFollowups.isNotEmpty) {
-          leadId = upcomingFollowups[0]['lead_id'];
-        }
+        // if (upcomingFollowups.isNotEmpty) {
+        //   leadId = upcomingFollowups[0]['lead_id'];
+        // }
       });
     } catch (e) {
       showErrorMessage(context, message: e.toString());
@@ -348,6 +352,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               upcomingAppointments: upcomingAppointments,
                               overdueAppointments: overdueAppointments,
                               refreshDashboard: fetchDashboardData,
+                              overdueFollowupsCount : overdueFollowupsCount,
+                              overdueAppointmentsCount : overdueAppointmentsCount,
                             ),
                             const BottomBtnSecond(),
                           ],

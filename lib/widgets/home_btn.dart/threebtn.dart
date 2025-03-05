@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/home_screens/all_appointment.dart';
@@ -18,6 +16,8 @@ import 'package:smart_assist/widgets/testdrive/upcoming.dart';
 
 class Threebtn extends StatefulWidget {
   final String leadId;
+  final int overdueFollowupsCount;
+  final int overdueAppointmentsCount;
   final List<dynamic> upcomingFollowups;
   final List<dynamic> overdueFollowups;
   final List<dynamic> upcomingAppointments;
@@ -31,7 +31,9 @@ class Threebtn extends StatefulWidget {
       required this.overdueFollowups,
       required this.upcomingAppointments,
       required this.overdueAppointments,
-      required this.refreshDashboard});
+      required this.refreshDashboard,
+      required this.overdueFollowupsCount,
+      required this.overdueAppointmentsCount});
 
   @override
   State<Threebtn> createState() => _ThreebtnState();
@@ -283,10 +285,11 @@ class _ThreebtnState extends State<Threebtn> {
                       child: TextButton(
                         onPressed: () {
                           setState(() {
-                            _childButtonIndex = 1; // Set Overdue as active
+                            _childButtonIndex = 1; // Mark this button as active
                             _childSelection[_activeButtonIndex] = 1;
                           });
 
+                          // Call the respective API function
                           if (_activeButtonIndex == 0) {
                             followUps(1);
                           } else if (_activeButtonIndex == 1) {
@@ -297,7 +300,8 @@ class _ThreebtnState extends State<Threebtn> {
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: _childButtonIndex == 1
-                              ? const Color(0xFFFFF5F4) // Red for Overdue
+                              ? const Color(
+                                  0xFFFFF5F4) // Red highlight when active
                               : Colors.transparent,
                           foregroundColor: _childButtonIndex == 1
                               ? Colors.white
@@ -305,24 +309,119 @@ class _ThreebtnState extends State<Threebtn> {
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           side: BorderSide(
                             color: _childButtonIndex == 1
-                                ? Color.fromRGBO(236, 81, 81, 1)
+                                ? const Color.fromRGBO(236, 81, 81, 1)
                                     .withOpacity(0.59)
                                 : Colors.transparent,
-                            width: 1, // Border width
+                            width: 1,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                30), // Optional: Rounded corners
+                            borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        child: Text('Overdue',
-                            style: GoogleFonts.poppins(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _activeButtonIndex == 0
+                                  ? 'Overdue'
+                                  : _activeButtonIndex == 1
+                                      ? 'Overdue'
+                                      : 'Overdue',
+                              style: GoogleFonts.poppins(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w400,
                                 color:
-                                    const Color(0xff000000).withOpacity(0.56))),
+                                    const Color(0xff000000).withOpacity(0.56),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+
+                            // ✅ Show the correct count dynamically from API response
+                            if ((_activeButtonIndex == 0 &&
+                                    (widget.overdueFollowupsCount > 0 ||
+                                        widget.overdueFollowupsCount > 0)) ||
+                                (_activeButtonIndex == 1 &&
+                                    (widget.overdueAppointmentsCount > 0 ||
+                                        widget.overdueAppointmentsCount > 0)) ||
+                                (_activeButtonIndex == 2 &&
+                                    (widget.overdueAppointmentsCount > 0 ||
+                                        widget.overdueAppointmentsCount > 0)))
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  (_activeButtonIndex == 0)
+                                      ? (widget.overdueFollowupsCount +
+                                              widget.overdueFollowupsCount)
+                                          .toString()
+                                      : (_activeButtonIndex == 1)
+                                          ? (widget.overdueAppointmentsCount +
+                                                  widget
+                                                      .overdueAppointmentsCount)
+                                              .toString()
+                                          : (widget.overdueAppointments +
+                                                  widget.overdueAppointments)
+                                              .toString(),
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
+
+                    // Expanded(
+                    //   child: TextButton(
+                    //     onPressed: () {
+                    //       setState(() {
+                    //         _childButtonIndex = 1; // Set Overdue as active
+                    //         _childSelection[_activeButtonIndex] = 1;
+                    //       });
+
+                    //       if (_activeButtonIndex == 0) {
+                    //         followUps(1);
+                    //       } else if (_activeButtonIndex == 1) {
+                    //         oppointment(1);
+                    //       } else if (_activeButtonIndex == 2) {
+                    //         testDrive(1);
+                    //       }
+                    //     },
+                    //     style: TextButton.styleFrom(
+                    //       backgroundColor: _childButtonIndex == 1
+                    //           ? const Color(0xFFFFF5F4) // Red for Overdue
+                    //           : Colors.transparent,
+                    //       foregroundColor: _childButtonIndex == 1
+                    //           ? Colors.white
+                    //           : Colors.black,
+                    //       padding: const EdgeInsets.symmetric(vertical: 5),
+                    //       side: BorderSide(
+                    //         color: _childButtonIndex == 1
+                    //             ? Color.fromRGBO(236, 81, 81, 1)
+                    //                 .withOpacity(0.59)
+                    //             : Colors.transparent,
+                    //         width: 1, // Border width
+                    //       ),
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(
+                    //             30), // Optional: Rounded corners
+                    //       ),
+                    //     ),
+                    //     child: Text('Overdue',
+                    //         style: GoogleFonts.poppins(
+                    //             fontSize: 10,
+                    //             fontWeight: FontWeight.w400,
+                    //             color:
+                    //                 const Color(0xff000000).withOpacity(0.56))),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -642,16 +741,17 @@ class _ThreebtnState extends State<Threebtn> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
-                                        child: const LeadFirstStep(
-                                          firstName: '',
-                                          lastName: '',
-                                          selectedPurchaseType: '',
-                                          selectedSubType: '',
-                                          selectedFuelType: '',
-                                          selectedBrand: '',
-                                          email: '',
-                                          selectedEvent: '',
-                                        ),
+                                        // child: const LeadFirstStep(
+                                        //   firstName: '',
+                                        //   lastName: '',
+                                        //   selectedPurchaseType: '',
+                                        //   selectedSubType: '',
+                                        //   selectedFuelType: '',
+                                        //   selectedBrand: '',
+                                        //   email: '',
+                                        //   selectedEvent: '',
+                                        // ),
+                                        child: CreateLeads(),
                                       ),
                                     );
                                   },

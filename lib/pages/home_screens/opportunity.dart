@@ -103,6 +103,8 @@ class _OpportunityState extends State<Opportunity> {
                 upcomingAppointments: const [],
                 overdueAppointments: const [],
                 refreshDashboard: () async {},
+                overdueFollowupsCount: 0,
+                overdueAppointmentsCount: 0,
               ),
 
               const BottomBtnSecond(),
