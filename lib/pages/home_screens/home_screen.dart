@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
+import 'package:smart_assist/pages/home_screens/gloabal_search_page/global_search.dart';
 import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
@@ -304,43 +305,87 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ));
                                   },
                                 ),
+                                // Expanded(
+                                //   child: SizedBox(
+                                //     height: 35,
+                                //     child: TextField(
+                                //       controller: _searchController,
+                                //       textAlignVertical:
+                                //           TextAlignVertical.center,
+                                //       decoration: InputDecoration(
+                                //         enabledBorder: OutlineInputBorder(
+                                //           borderRadius:
+                                //               BorderRadius.circular(30),
+                                //           borderSide: BorderSide.none,
+                                //         ),
+                                //         contentPadding:
+                                //             const EdgeInsets.fromLTRB(
+                                //                 10, 0, 0, 0),
+                                //         filled: true,
+                                //         fillColor: AppColors.searchBar,
+                                //         hintText: 'Search',
+                                //         hintStyle: GoogleFonts.poppins(
+                                //           fontSize: 12,
+                                //           fontWeight: FontWeight.w300,
+                                //         ),
+                                //         suffixIcon: const Icon(
+                                //           FontAwesomeIcons.magnifyingGlass,
+                                //           color: AppColors.fontColor,
+                                //           size: 15,
+                                //         ),
+                                //         border: OutlineInputBorder(
+                                //           borderRadius:
+                                //               BorderRadius.circular(30),
+                                //           borderSide: BorderSide.none,
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
                                 Expanded(
                                   child: SizedBox(
                                     height: 35,
-                                    child: TextField(
-                                      controller: _searchController,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      decoration: InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                        contentPadding:
-                                            const EdgeInsets.fromLTRB(
-                                                10, 0, 0, 0),
-                                        filled: true,
-                                        fillColor: AppColors.searchBar,
-                                        hintText: 'Search',
-                                        hintStyle: GoogleFonts.poppins(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                        suffixIcon: const Icon(
-                                          FontAwesomeIcons.magnifyingGlass,
-                                          color: AppColors.fontColor,
-                                          size: 15,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          borderSide: BorderSide.none,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Get.to(() => const GlobalSearch());
+                                      },
+                                      child: AbsorbPointer(
+                                        child: TextField(
+                                          textAlignVertical:
+                                              TextAlignVertical.center,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            contentPadding:
+                                                const EdgeInsets.fromLTRB(
+                                                    10, 0, 0, 0),
+                                            filled: true,
+                                            fillColor: AppColors.searchBar,
+                                            hintText: 'Search',
+                                            hintStyle: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                            suffixIcon: const Icon(
+                                              FontAwesomeIcons.magnifyingGlass,
+                                              color: AppColors.fontColor,
+                                              size: 15,
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
+
                                 IconButton(
                                   icon: const Icon(FontAwesomeIcons.microphone,
                                       size: 18, color: AppColors.fontColor),
@@ -370,55 +415,55 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             /// ✅ Search Results Overlay (Doesn't push content down)
-            if (_isLoadingSearch || _searchResults.isNotEmpty)
-              Positioned(
-                top: 50, // Position it below the search bar
-                left: 20,
-                right: 20,
-                child: Material(
-                  elevation: 5,
-                  borderRadius: BorderRadius.circular(5),
-                  child: Container(
-                    height: 300,
-                    // padding: const EdgeInsets.symmetric(horizontal: 0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color: Colors.grey.withOpacity(0.2),
-                      //     spreadRadius: 1,
-                      //     blurRadius: 5,
-                      //   ),
-                      // ],
-                    ),
-                    child: _isLoadingSearch
-                        ? const Center(child: CircularProgressIndicator())
-                        : ListView.builder(
-                            itemCount: _searchResults.length,
-                            itemBuilder: (context, index) {
-                              final result = _searchResults[index];
-                              return ListTile(
-                                onTap: () {
-                                  // Navigate to the new screen with the lead_id
-                                  Get.to(() => SingleLeadsById(
-                                      leadId: result['lead_id']));
-                                },
-                                title: Text(
-                                  result['lead_name'] ?? 'No Name',
-                                  style: AppFont.searchFontTitle(context),
-                                ),
-                                subtitle: Text(
-                                  result['email'] ?? 'No Email',
-                                  style: AppFont.searchFontSubtitle(context),
-                                ),
-                                leading: const Icon(Icons.person),
-                              );
-                            },
-                          ),
-                  ),
-                ),
-              ),
+            // if (_isLoadingSearch || _searchResults.isNotEmpty)
+            //   Positioned(
+            //     top: 50, // Position it below the search bar
+            //     left: 20,
+            //     right: 20,
+            //     child: Material(
+            //       elevation: 5,
+            //       borderRadius: BorderRadius.circular(5),
+            //       child: Container(
+            //         height: 300,
+            //         // padding: const EdgeInsets.symmetric(horizontal: 0),
+            //         decoration: BoxDecoration(
+            //           color: Colors.white,
+            //           borderRadius: BorderRadius.circular(5),
+            //           // boxShadow: [
+            //           //   BoxShadow(
+            //           //     color: Colors.grey.withOpacity(0.2),
+            //           //     spreadRadius: 1,
+            //           //     blurRadius: 5,
+            //           //   ),
+            //           // ],
+            //         ),
+            //         child: _isLoadingSearch
+            //             ? const Center(child: CircularProgressIndicator())
+            //             : ListView.builder(
+            //                 itemCount: _searchResults.length,
+            //                 itemBuilder: (context, index) {
+            //                   final result = _searchResults[index];
+            //                   return ListTile(
+            //                     onTap: () {
+            //                       // Navigate to the new screen with the lead_id
+            //                       Get.to(() => SingleLeadsById(
+            //                           leadId: result['lead_id']));
+            //                     },
+            //                     title: Text(
+            //                       result['lead_name'] ?? 'No Name',
+            //                       style: AppFont.searchFontTitle(context),
+            //                     ),
+            //                     subtitle: Text(
+            //                       result['email'] ?? 'No Email',
+            //                       style: AppFont.searchFontSubtitle(context),
+            //                     ),
+            //                     leading: const Icon(Icons.person),
+            //                   );
+            //                 },
+            //               ),
+            //       ),
+            //     ),
+            //   ),
           ],
         ),
       ),
