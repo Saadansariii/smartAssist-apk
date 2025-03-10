@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_second.dart';
+import 'package:smart_assist/widgets/home_btn.dart/threeBtn_second_leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 import 'package:google_fonts/google_fonts.dart';
 

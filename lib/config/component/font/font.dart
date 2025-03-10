@@ -269,4 +269,17 @@ class AppFont {
       fontWeight: FontWeight.w400,
     );
   }
+
+  static TextStyle threeBtn(
+    BuildContext context, {
+    double fontSize = 11,
+    Color color = const Color(0xff767676),
+    FontWeight fontWeight = FontWeight.w400,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: fontWeight,
+    );
+  }
 }

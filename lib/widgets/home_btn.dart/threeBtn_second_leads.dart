@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/home_screens/all_followups.dart';
 import 'package:smart_assist/widgets/home_btn.dart/leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/order.dart';
@@ -46,11 +49,11 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(0xFFE1EFFF),
+              color: AppColors.searchBar,
               borderRadius: BorderRadius.circular(5),
             ),
             child: SizedBox(
-              height: 40,
+              height: 32,
               width: double.infinity,
               child: Row(
                 children: [
@@ -70,10 +73,11 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
                         backgroundColor: _leadButton == 0
                             ? const Color(0xFF1380FE)
                             : Colors.transparent,
-                        foregroundColor:
-                            _leadButton == 0 ? Colors.white : Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        textStyle: const TextStyle(fontSize: 14),
+                        foregroundColor: _leadButton == 0
+                            ? Colors.white
+                            : AppColors.fontColor,
+                        // padding: const EdgeInsets.symmetric(vertical: 10),
+                        textStyle: AppFont.threeBtn(context),
                       ),
                       child: const Text('Leads', textAlign: TextAlign.center),
                     ),
@@ -95,10 +99,11 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
                         backgroundColor: _leadButton == 1
                             ? const Color(0xFF1380FE)
                             : Colors.transparent,
-                        foregroundColor:
-                            _leadButton == 1 ? Colors.white : Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        textStyle: const TextStyle(fontSize: 14),
+                        foregroundColor: _leadButton == 1
+                            ? Colors.white
+                            : AppColors.fontColor,
+                        // padding: const EdgeInsets.symmetric(vertical: 10),
+                        textStyle: AppFont.threeBtn(context),
                       ),
                       child:
                           const Text('Test Drive', textAlign: TextAlign.center),
@@ -115,17 +120,17 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
                         });
                       },
                       style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        backgroundColor: _leadButton == 2
-                            ? const Color(0xFF1380FE)
-                            : Colors.transparent,
-                        foregroundColor:
-                            _leadButton == 2 ? Colors.white : Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        textStyle: const TextStyle(fontSize: 14),
-                      ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          backgroundColor: _leadButton == 2
+                              ? const Color(0xFF1380FE)
+                              : Colors.transparent,
+                          foregroundColor: _leadButton == 2
+                              ? Colors.white
+                              : AppColors.fontColor,
+                          // padding: const EdgeInsets.symmetric(vertical: 10),
+                          textStyle: AppFont.threeBtn(context)),
                       child: const Text('Orders', textAlign: TextAlign.center),
                     ),
                   ),

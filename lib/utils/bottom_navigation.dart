@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_assist/main.dart';
 import 'package:smart_assist/pages/calenderPages/calender.dart';
 import 'package:smart_assist/pages/home_screens/home_screen.dart';
 import 'package:smart_assist/pages/home_screens/opportunity.dart';
@@ -81,7 +82,7 @@ Widget _buildNavItem({
         controller.selectedIndex.value = index;
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -100,7 +101,7 @@ Widget _buildNavItem({
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: isSelected ? Colors.blue : Colors.black54,
+                color: isSelected ? Colors.black54 : Colors.black54,
               ),
             ),
           ],
@@ -119,7 +120,8 @@ class NavigationController extends GetxController {
     ),
     const Opportunity(leadId: ''),
     const Calender(
-      leadId: '', leadName: '',
+      leadId: '',
+      leadName: '',
     )
   ];
 }

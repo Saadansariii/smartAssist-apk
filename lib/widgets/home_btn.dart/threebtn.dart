@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/home_screens/all_appointment.dart';
 import 'package:smart_assist/pages/home_screens/all_followups.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -132,17 +133,11 @@ class _ThreebtnState extends State<Threebtn> {
                             ? Colors.white
                             : AppColors.fontColor,
                         // padding: const EdgeInsets.symmetric(vertical: 0),
-                        textStyle: const TextStyle(fontSize: 10),
+                        textStyle: AppFont.threeBtn(context),
                       ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Center(
-                          child: Text(
-                            'FollowUps',
-                            style: GoogleFonts.poppins(
-                                fontSize: 11, fontWeight: FontWeight.w300),
-                          ),
-                        ),
+                      child: const Text(
+                        'FollowUps',
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -167,15 +162,11 @@ class _ThreebtnState extends State<Threebtn> {
                         foregroundColor: _activeButtonIndex == 1
                             ? Colors.white
                             : AppColors.fontColor,
+                        textStyle: AppFont.threeBtn(context),
                       ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Center(
-                          child: Text('Appointments',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                  fontSize: 11, fontWeight: FontWeight.w300)),
-                        ),
+                      child: const Text(
+                        'Appointments',
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -200,15 +191,11 @@ class _ThreebtnState extends State<Threebtn> {
                             ? Colors.white
                             : AppColors.fontColor,
                         // padding: const EdgeInsets.symmetric(vertical: 10),
-                        textStyle: const TextStyle(fontSize: 11),
+                        textStyle: AppFont.threeBtn(context),
                       ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Center(
-                          child: Text('Test Drive',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 11, fontWeight: FontWeight.w400)),
-                        ),
+                      child: const Text(
+                        'Test Drive',
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -344,14 +331,27 @@ class _ThreebtnState extends State<Threebtn> {
                                 (_activeButtonIndex == 2 &&
                                     (widget.overdueAppointmentsCount > 0 ||
                                         widget.overdueAppointmentsCount > 0)))
+                              // Text(
+                              //   (_activeButtonIndex == 0)
+                              //       ? ((widget.overdueFollowupsCount)).toString()
+                              //       : (_activeButtonIndex == 1)
+                              //           ? (widget.overdueAppointmentsCount)
+                              //               .toString()
+                              //           : (widget.overdueAppointments)
+                              //               .toString(),
+                              //   style: GoogleFonts.poppins(
+                              //     fontSize: 10,
+                              //     fontWeight: FontWeight.w400,
+                              //     color:
+                              //         const Color(0xff000000).withOpacity(0.56),
+                              //   ),
+                              // ),
                               Text(
                                 (_activeButtonIndex == 0)
-                                    ? (widget.overdueFollowupsCount).toString()
+                                    ? '(${widget.overdueFollowupsCount})'
                                     : (_activeButtonIndex == 1)
-                                        ? (widget.overdueAppointmentsCount)
-                                            .toString()
-                                        : (widget.overdueAppointments)
-                                            .toString(),
+                                        ? '(${widget.overdueAppointmentsCount})'
+                                        : '(${widget.overdueAppointments})',
                                 style: GoogleFonts.poppins(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w400,
