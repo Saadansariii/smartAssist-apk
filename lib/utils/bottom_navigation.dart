@@ -7,6 +7,9 @@ import 'package:smart_assist/pages/home_screens/opportunity.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_leads.dart';
 
 class BottomNavigation extends StatelessWidget {
   BottomNavigation({super.key});
@@ -15,70 +18,30 @@ class BottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final Widget _createFollowups = const CreateFollowupsPopups();
+
     return Scaffold(
       body: Stack(
         children: [
           // 🛠️ Main Page Content (Screens)
           Obx(() => controller.screens[controller.selectedIndex.value]),
 
-          // 🛠️ Popup Menu (Shown when FAB is expanded)
-          Obx(() {
-            return controller.isFabExpanded.value
-                ? Positioned(
-                    bottom: 100, // Ensures it is above the navigation bar
-                    left: MediaQuery.of(context).size.width / 2 - 60,
-                    child: _buildPopupMenu(controller),
-                  )
-                : const SizedBox.shrink();
-          }),
+          // 🛠️ Overlay & Popup Menu
+          // 🛠️ Overlay & Popup Menu
+          Obx(() => controller.isFabExpanded.value
+              ? _buildPopupMenu(controller, context)
+              : const SizedBox.shrink()),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton:
           Obx(() => _buildFloatingActionButton(controller, context)),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 10,
-            )
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0),
-            child: Obx(
-              () => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildNavItem(
-                    icon: Icons.people_alt_outlined,
-                    label: 'Leads',
-                    index: 0,
-                    controller: controller,
-                  ),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width *
-                          .01), // Space for the FAB
-                  _buildNavItem(
-                    icon: FontAwesomeIcons.calendarDays,
-                    label: 'Calendar',
-                    index: 2,
-                    controller: controller,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+      bottomNavigationBar: _buildBottomNavigationBar(controller),
     );
   }
 }
 
+// ✅ Floating Action Button (FAB)
 Widget _buildFloatingActionButton(
     NavigationController controller, BuildContext context) {
   return GestureDetector(
@@ -96,13 +59,6 @@ Widget _buildFloatingActionButton(
             border: Border.all(color: Colors.white, width: 2),
             color: AppColors.colorsBlue,
             shape: BoxShape.circle,
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: Colors.blue.withOpacity(0.3),
-            //     blurRadius: 10,
-            //     spreadRadius: 3,
-            //   )
-            // ],
           ),
           child: Center(
             child: AnimatedRotation(
@@ -121,59 +77,42 @@ Widget _buildFloatingActionButton(
   );
 }
 
-// Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
-//   return Obx(() {
-//     if (!controller.isFabExpanded.value)
-//       return SizedBox.shrink(); // ✅ Hide when collapsed
+// ✅ Popup Menu Item Animation
+Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
+  return Stack(
+    children: [
+      Positioned.fill(
+        child: GestureDetector(
+          onTap: () {
+            print("Appointment option tapped");
+            controller.isFabExpanded.value = false;
+            _showAppointmentPopup(context);
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            color: Colors.black.withOpacity(0.7),
+          ),
+        ),
+      ),
 
-//     return Stack(
-//       children: [
-//         // 🛠️ Dark Overlay when expanded
-//         Positioned.fill(
-//           child: GestureDetector(
-//             onTap: () {
-//               controller.isFabExpanded.value = false; // ✅ Close on tap outside
-//             },
-//             child: AnimatedContainer(
-//               duration: Duration(milliseconds: 300),
-//               color: Colors.black.withOpacity(0.5), // ✅ Smooth fade-in effect
-//             ),
-//           ),
-//         ),
-
-//         // 🛠️ Animated Popup Items (Slide from Right)
-//         Positioned(
-//           bottom: 90, // Adjust height as needed
-//           right: MediaQuery.of(context).size.width / 2 - 50, // Center-right
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.end,
-//             children: [
-//               _buildPopupItem(controller, Icons.message, "Lead", 50),
-//               _buildPopupItem(controller, Icons.event, "Followup", 40),
-//               _buildPopupItem(controller, Icons.message, "Appointment", 30),
-//               _buildPopupItem(controller, Icons.event, "Test Drive", 20),
-//             ],
-//           ),
-//         ),
-//       ],
-//     );
-//   });
-// }
-
-
-
-Widget _buildPopupMenu(NavigationController controller) {
-  return Positioned(
-    bottom: 20,
-    child: Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        _buildPopupItem(controller, Icons.message, "Lead", -45, -1),
-        _buildPopupItem(controller, Icons.event, "Followup", 45, -1),
-        _buildPopupItem(controller, Icons.message, "Appointment", -80, 80),
-        _buildPopupItem(controller, Icons.event, "Test Drive", 85, 80),
-      ],
-    ),
+      // 🔹 Animated Popup Items (Slide from Bottom)
+      Positioned(
+        bottom: 90, // Adjust as needed
+        left: MediaQuery.of(context).size.width / 2 - 50, // Center items
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            _buildPopupItem(
+                controller, Icons.people_alt_rounded, "Lead", -45, -10),
+            _buildPopupItem(controller, Icons.call, "Followup", 45, -10),
+            _buildPopupItem(controller, Icons.calendar_month_outlined,
+                "Appointment", -85, 70),
+            _buildPopupItem(
+                controller, Icons.directions_car, "Test Drive", 85, 70),
+          ],
+        ),
+      ),
+    ],
   );
 }
 
@@ -182,40 +121,68 @@ Widget _buildPopupItem(NavigationController controller, IconData icon,
   return TweenAnimationBuilder(
     tween: Tween<double>(begin: 0, end: controller.isFabExpanded.value ? 1 : 0),
     duration: const Duration(milliseconds: 300),
+    curve: Curves.easeOutBack, // Smooth animation
     builder: (context, double value, child) {
       return Transform.translate(
-        offset: Offset(dx * value, dy * value),
-        child: Column(
-          children: [
-            Material(
-              borderRadius: BorderRadius.circular(30),
-              // elevation: 5,
-              color: Colors.transparent,
-              child: InkWell(
+        offset: Offset(dx * value, dy * value), // Moves outward
+        child: Opacity(
+          opacity: value.clamp(0.0, 1.0),
+          child: Column(
+            children: [
+              GestureDetector(
                 onTap: () {
-                  print("$label clicked");
+                  controller.isFabExpanded.value = false; // ✅ Close menu
+
+                  // ✅ Show the custom popup when "Lead" is clicked
+                  if (label == "Lead") {
+                    _showLeadPopup(context);
+                  } else {
+                    print("$label clicked");
+                  }
+
+                  if (label == "Followup") {
+                    _showFollowupPopup(context);
+                  } else {
+                    print("$label clicked");
+                  }
+
+                  // if (label == "Appointment") {
+                  //   _showAppointmentPopup(context);
+                  // } else {
+                  //   print("$label Appointment clickked");
+                  // }
+
+                  if (label == "Appointment") {
+                    print("Appointment clicked!"); // Debugging print
+                    _showAppointmentPopup(context);
+                  } else {
+                    print("$label clicked");
+                  }
+
+                  if (label == "TestDrive") {
+                    _showTestDrivePopup(context);
+                  } else {
+                    print("$label clicked");
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        blurRadius: 8,
-                        spreadRadius: 5,
-                      )
-                    ],
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.grey.withOpacity(0.3),
+                    //     blurRadius: 8,
+                    //     spreadRadius: 5,
+                    //   )
+                    // ],
                   ),
                   child: Icon(icon, color: Colors.blue, size: 24),
                 ),
               ),
-            ),
-            const SizedBox(height: 5),
-            Opacity(
-              opacity: value,
-              child: Text(
+              const SizedBox(height: 5),
+              Text(
                 label,
                 style: GoogleFonts.poppins(
                   fontSize: 14,
@@ -223,14 +190,144 @@ Widget _buildPopupItem(NavigationController controller, IconData icon,
                   color: Colors.white,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     },
   );
 }
 
+// ✅ Function to Show `CreateFollowupsPopups` on "Lead"
+void _showLeadPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.symmetric(
+              horizontal: 16), // Add some margin for better UX
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const CreateLeads(),
+        ),
+      );
+    },
+  );
+}
+
+// ✅ Function to Show `CreateFollowupsPopups` on "Lead"
+void _showFollowupPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.symmetric(
+              horizontal: 16), // Add some margin for better UX
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const CreateFollowupsPopups(),
+        ),
+      );
+    },
+  );
+}
+
+void _showAppointmentPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero, // Remove default padding
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.symmetric(
+              horizontal: 16), // Add margin for better UX
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const AppointmentPopup(), // Appointment modal
+        ),
+      );
+    },
+  );
+}
+
+void _showTestDrivePopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.symmetric(
+              horizontal: 16), // Add some margin for better UX
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const CreateFollowupsPopups(),
+        ),
+      );
+    },
+  );
+}
+
+// ✅ Bottom Navigation Bar
+Widget _buildBottomNavigationBar(NavigationController controller) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          spreadRadius: 1,
+          blurRadius: 10,
+        )
+      ],
+    ),
+    child: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 0),
+        child: Obx(
+          () => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(
+                  icon: Icons.people_alt_rounded,
+                  label: 'Leads',
+                  index: 0,
+                  controller: controller),
+              SizedBox(width: 10), // Space for the FAB
+              _buildNavItem(
+                  icon: FontAwesomeIcons.calendarDays,
+                  label: 'Calendar',
+                  index: 2,
+                  controller: controller),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+// ✅ Bottom Navigation Bar Item
 Widget _buildNavItem({
   required IconData icon,
   required String label,
@@ -277,19 +374,14 @@ Widget _buildNavItem({
   );
 }
 
+// ✅ Navigation Controller
 class NavigationController extends GetxController {
   final RxInt selectedIndex = 0.obs;
   final RxBool isFabExpanded = false.obs;
   final screens = [
-    const HomeScreen(
-      greeting: '',
-      leadId: '',
-    ),
+    const HomeScreen(greeting: '', leadId: ''),
     const Opportunity(leadId: ''),
-    const Calender(
-      leadId: '',
-      leadName: '',
-    )
+    const Calender(leadId: '', leadName: ''),
   ];
 }
 
