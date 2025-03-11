@@ -121,16 +121,57 @@ Widget _buildFloatingActionButton(
   );
 }
 
+// Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
+//   return Obx(() {
+//     if (!controller.isFabExpanded.value)
+//       return SizedBox.shrink(); // ✅ Hide when collapsed
+
+//     return Stack(
+//       children: [
+//         // 🛠️ Dark Overlay when expanded
+//         Positioned.fill(
+//           child: GestureDetector(
+//             onTap: () {
+//               controller.isFabExpanded.value = false; // ✅ Close on tap outside
+//             },
+//             child: AnimatedContainer(
+//               duration: Duration(milliseconds: 300),
+//               color: Colors.black.withOpacity(0.5), // ✅ Smooth fade-in effect
+//             ),
+//           ),
+//         ),
+
+//         // 🛠️ Animated Popup Items (Slide from Right)
+//         Positioned(
+//           bottom: 90, // Adjust height as needed
+//           right: MediaQuery.of(context).size.width / 2 - 50, // Center-right
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.end,
+//             children: [
+//               _buildPopupItem(controller, Icons.message, "Lead", 50),
+//               _buildPopupItem(controller, Icons.event, "Followup", 40),
+//               _buildPopupItem(controller, Icons.message, "Appointment", 30),
+//               _buildPopupItem(controller, Icons.event, "Test Drive", 20),
+//             ],
+//           ),
+//         ),
+//       ],
+//     );
+//   });
+// }
+
+
+
 Widget _buildPopupMenu(NavigationController controller) {
-  return Container(
-    decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+  return Positioned(
+    bottom: 20,
     child: Stack(
       alignment: Alignment.bottomCenter,
       children: [
-        _buildPopupItem(controller, Icons.message, "Lead", -35, 60),
-        _buildPopupItem(controller, Icons.event, "Followup", 35, 60),
-        _buildPopupItem(controller, Icons.message, "Appointment", -80, 110),
-        _buildPopupItem(controller, Icons.event, "Test Drive", 85, 100),
+        _buildPopupItem(controller, Icons.message, "Lead", -45, -1),
+        _buildPopupItem(controller, Icons.event, "Followup", 45, -1),
+        _buildPopupItem(controller, Icons.message, "Appointment", -80, 80),
+        _buildPopupItem(controller, Icons.event, "Test Drive", 85, 80),
       ],
     ),
   );

@@ -198,6 +198,18 @@ class AppFont {
     );
   }
 
+  static TextStyle popupTitleWhite(
+    BuildContext context, {
+    double fontSize = 20,
+    Color color = AppColors.white,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: FontWeight.w600,
+    );
+  }
+
   static TextStyle calanderDayName(
     BuildContext context, {
     double fontSize = 12,

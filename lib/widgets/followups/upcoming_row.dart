@@ -319,6 +319,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/pages/details_pages/followups/followups.dart';
 
@@ -408,17 +409,11 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
             color: AppColors.starColorsYellow,
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(left: 20),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.star_rounded, color: Colors.white, size: 28),
-                SizedBox(width: 10),
-                Text(
-                  "Favorite",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                const Icon(Icons.star_rounded, color: Colors.white, size: 35),
+                const SizedBox(width: 10),
+                Text("Prime", style: AppFont.popupTitleWhite(context)),
               ],
             ),
           ),
