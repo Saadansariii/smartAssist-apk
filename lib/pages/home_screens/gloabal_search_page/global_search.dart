@@ -210,7 +210,9 @@ class _GlobalSearchState extends State<GlobalSearch> {
           //     ),
           //   ),
           // ),
+          
           child: TextField(
+            autofocus: true,
             controller: _searchController,
             textAlignVertical: TextAlignVertical.center,
             decoration: InputDecoration(
@@ -258,6 +260,8 @@ class _GlobalSearchState extends State<GlobalSearch> {
                           style: AppFont.dropDowmLabel(context))),
                 )
               : ListView.builder(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   itemCount: _searchResults.length,
                   itemBuilder: (context, index) {
                     final result = _searchResults[index];
