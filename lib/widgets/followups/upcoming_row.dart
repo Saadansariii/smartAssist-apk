@@ -406,14 +406,18 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
           direction:
               DismissDirection.horizontal, // Enable both left & right swipe
           background: Container(
-            color: AppColors.starColorsYellow,
+            color: AppColors.white,
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(left: 20),
             child: Row(
               children: [
-                const Icon(Icons.star_rounded, color: Colors.white, size: 35),
+                const Icon(Icons.star_rounded, color: Colors.yellow, size: 35),
                 const SizedBox(width: 10),
-                Text("Prime", style: AppFont.popupTitleWhite(context)),
+                Text("Prime",
+                    style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        color: Colors.yellow,
+                        fontWeight: FontWeight.w600)),
               ],
             ),
           ),

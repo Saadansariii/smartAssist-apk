@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_leads.dart';
+import 'package:smart_assist/widgets/leads_details_popup/create_appointment.dart';
 
 class BottomNavigation extends StatelessWidget {
   BottomNavigation({super.key});
@@ -78,15 +79,120 @@ Widget _buildFloatingActionButton(
 }
 
 // ✅ Popup Menu Item Animation
+// Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
+//   return Stack(
+//     children: [
+//       Positioned.fill(
+//         child: GestureDetector(
+//           onTap: () {
+//             controller.isFabExpanded.value = false;
+//           },
+//           child: AnimatedContainer(
+//             duration: const Duration(milliseconds: 300),
+//             color: Colors.black.withOpacity(0.7),
+//           ),
+//         ),
+//       ),
+
+//       // 🔹 Animated Popup Items (Slide from Bottom)
+//       Positioned(
+//         bottom: 90, // Adjust as needed
+//         left: MediaQuery.of(context).size.width / 2 - 50, // Center items
+//         child: Stack(
+//           alignment: Alignment.bottomCenter,
+//           children: [
+//             _buildPopupItem(controller, Icons.calendar_month_outlined,
+//                 "Appointment", -85, 70),
+//             _buildPopupItem(
+//                 controller, Icons.people_alt_rounded, "Lead", -45, -10),
+//             _buildPopupItem(controller, Icons.call, "Followup", 45, -10),
+//             _buildPopupItem(
+//                 controller, Icons.directions_car, "Test Drive", 85, 70),
+//           ],
+//         ),
+//       ),
+//     ],
+//   );
+// }
+
+// Widget _buildPopupItem(NavigationController controller, IconData icon,
+//     String label, double dx, double dy) {
+//   return TweenAnimationBuilder(
+//     tween: Tween<double>(begin: 0, end: controller.isFabExpanded.value ? 1 : 0),
+//     duration: const Duration(milliseconds: 300),
+//     curve: Curves.easeOutBack, // Smooth animation
+//     builder: (context, double value, child) {
+//       return Transform.translate(
+//         offset: Offset(dx * value, dy * value), // Moves outward
+//         child: Opacity(
+//           opacity: value.clamp(0.1, 1.0),
+//           child: Column(
+//             children: [
+//               GestureDetector(
+//                 onTap: () {
+//                   controller.isFabExpanded.value = false; // ✅ Close menu
+
+//                   // ✅ Show the custom popup when "Lead" is clicked
+//                   if (label == "Lead") {
+//                     _showLeadPopup(context);
+//                   } else {
+//                     print("$label clicked");
+//                   }
+
+//                   if (label == "Test Drive") {
+//                     _showTestDrivePopup(context);
+//                   } else {
+//                     print("$label clicked");
+//                   }
+
+//                   if (label == "Appointment") {
+//                     _showAppointmentPopup(context);
+//                   } else {
+//                     print("$label Appointment clickked");
+//                   }
+
+//                   if (label == "Appointment") {
+//                     controller.isFabExpanded.value = false;
+//                     print("Appointment clicked!"); // Debugging print
+//                     _showAppointmentPopup(context);
+//                   } else {
+//                     print("$label clicked");
+//                   }
+//                 },
+//                 child: Container(
+//                   padding: const EdgeInsets.all(12),
+//                   decoration: BoxDecoration(
+//                     color: Colors.white,
+//                     borderRadius: BorderRadius.circular(30),
+//                   ),
+//                   child: Icon(icon, color: Colors.blue, size: 24),
+//                 ),
+//               ),
+//               const SizedBox(height: 5),
+//               Text(
+//                 label,
+//                 style: GoogleFonts.poppins(
+//                   fontSize: 14,
+//                   fontWeight: FontWeight.w500,
+//                   color: Colors.white,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       );
+//     },
+//   );
+// }
+
 Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
   return Stack(
     children: [
+      // Background overlay
       Positioned.fill(
         child: GestureDetector(
           onTap: () {
-            print("Appointment option tapped");
             controller.isFabExpanded.value = false;
-            _showAppointmentPopup(context);
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
@@ -95,20 +201,46 @@ Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
         ),
       ),
 
-      // 🔹 Animated Popup Items (Slide from Bottom)
+      // Popup Items
       Positioned(
-        bottom: 90, // Adjust as needed
-        left: MediaQuery.of(context).size.width / 2 - 50, // Center items
+        bottom: 90,
+        left: MediaQuery.of(context).size.width / 2 -
+            150, // Expanded to fit all items
+        // Make container larger to encompass all items including those with negative positions
+        width: 300, // Large enough to contain all items with their offsets
+        height: 300, // Large enough to contain all items with their offsets
         child: Stack(
-          alignment: Alignment.bottomCenter,
+          // Changed to center so offsets work properly from the middle
+          alignment: Alignment.center,
+          clipBehavior:
+              Clip.none, // Important! Allow children to render outside bounds
           children: [
-            _buildPopupItem(
-                controller, Icons.people_alt_rounded, "Lead", -45, -10),
-            _buildPopupItem(controller, Icons.call, "Followup", 45, -10),
             _buildPopupItem(controller, Icons.calendar_month_outlined,
-                "Appointment", -85, 70),
+                "Appointment", -130, 120, onTap: () {
+              print("Appointment clicked!");
+              controller.isFabExpanded.value = false;
+              _showAppointmentPopup(context);
+            }),
             _buildPopupItem(
-                controller, Icons.directions_car, "Test Drive", 85, 70),
+                controller, Icons.people_alt_rounded, "Lead", -65, 40,
+                onTap: () {
+              print("Lead clicked");
+              controller.isFabExpanded.value = false;
+              _showLeadPopup(context);
+            }),
+            _buildPopupItem(controller, Icons.call, "Followup", 5, 40,
+                onTap: () {
+              print("Followup clicked");
+              controller.isFabExpanded.value = false;
+              _showFollowupPopup(context);
+            }),
+            _buildPopupItem(
+                controller, Icons.directions_car, "Test Drive", 30, 120,
+                onTap: () {
+              print("Test Drive clicked");
+              controller.isFabExpanded.value = false;
+              // _showTestDrivePopup(context);
+            }),
           ],
         ),
       ),
@@ -117,66 +249,31 @@ Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
 }
 
 Widget _buildPopupItem(NavigationController controller, IconData icon,
-    String label, double dx, double dy) {
+    String label, double dx, double dy,
+    {required Function() onTap}) {
   return TweenAnimationBuilder(
     tween: Tween<double>(begin: 0, end: controller.isFabExpanded.value ? 1 : 0),
     duration: const Duration(milliseconds: 300),
-    curve: Curves.easeOutBack, // Smooth animation
+    curve: Curves.easeOutBack,
     builder: (context, double value, child) {
-      return Transform.translate(
-        offset: Offset(dx * value, dy * value), // Moves outward
+      return Positioned(
+        // Position from center of the Stack
+        left: 150 + (dx * value), // Center point (300/2) + offset
+        top: 150 + (dy * value), // Center point (300/2) + offset
         child: Opacity(
-          opacity: value.clamp(0.0, 1.0),
+          opacity: value.clamp(0.1, 1.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               GestureDetector(
-                onTap: () {
-                  controller.isFabExpanded.value = false; // ✅ Close menu
-
-                  // ✅ Show the custom popup when "Lead" is clicked
-                  if (label == "Lead") {
-                    _showLeadPopup(context);
-                  } else {
-                    print("$label clicked");
-                  }
-
-                  if (label == "Followup") {
-                    _showFollowupPopup(context);
-                  } else {
-                    print("$label clicked");
-                  }
-
-                  // if (label == "Appointment") {
-                  //   _showAppointmentPopup(context);
-                  // } else {
-                  //   print("$label Appointment clickked");
-                  // }
-
-                  if (label == "Appointment") {
-                    print("Appointment clicked!"); // Debugging print
-                    _showAppointmentPopup(context);
-                  } else {
-                    print("$label clicked");
-                  }
-
-                  if (label == "TestDrive") {
-                    _showTestDrivePopup(context);
-                  } else {
-                    print("$label clicked");
-                  }
-                },
+                onTap: onTap,
+                behavior:
+                    HitTestBehavior.opaque, // Important for better hit testing
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: Colors.grey.withOpacity(0.3),
-                    //     blurRadius: 8,
-                    //     spreadRadius: 5,
-                    //   )
-                    // ],
                   ),
                   child: Icon(icon, color: Colors.blue, size: 24),
                 ),
@@ -266,27 +363,27 @@ void _showAppointmentPopup(BuildContext context) {
   );
 }
 
-void _showTestDrivePopup(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 16), // Add some margin for better UX
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const CreateFollowupsPopups(),
-        ),
-      );
-    },
-  );
-}
+// void _showTestDrivePopup(BuildContext context) {
+//   showDialog(
+//     context: context,
+//     builder: (context) {
+//       return Dialog(
+//         backgroundColor: Colors.transparent,
+//         insetPadding: EdgeInsets.zero,
+//         child: Container(
+//           width: MediaQuery.of(context).size.width,
+//           margin: const EdgeInsets.symmetric(
+//               horizontal: 16), // Add some margin for better UX
+//           decoration: BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.circular(10),
+//           ),
+//           child: const CreateAppointment(),
+//         ),
+//       );
+//     },
+//   );
+// }
 
 // ✅ Bottom Navigation Bar
 Widget _buildBottomNavigationBar(NavigationController controller) {

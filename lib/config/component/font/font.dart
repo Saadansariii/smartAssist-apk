@@ -201,7 +201,7 @@ class AppFont {
   static TextStyle popupTitleWhite(
     BuildContext context, {
     double fontSize = 20,
-    Color color = AppColors.white,
+    Color color = Colors.white,
   }) {
     return GoogleFonts.poppins(
       fontSize: scaleFont(context, fontSize),
