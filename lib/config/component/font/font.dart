@@ -162,6 +162,19 @@ class AppFont {
     );
   }
 
+
+  static TextStyle smallText(
+    BuildContext context, {
+    double fontSize = 12,
+    Color color = Colors.black,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
   static TextStyle bold(
     BuildContext context, {
     double fontSize = 14,

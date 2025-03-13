@@ -255,7 +255,7 @@ class _overdueeOppItemState extends State<overdueeOppItem> {
     String formattedDate = '';
     try {
       DateTime parseDate = DateTime.parse(widget.date);
-      formattedDate = DateFormat('dd/MM/yyyy').format(parseDate);
+      formattedDate = DateFormat('dd MMM').format(parseDate);
     } catch (e) {
       formattedDate = widget.date;
     }

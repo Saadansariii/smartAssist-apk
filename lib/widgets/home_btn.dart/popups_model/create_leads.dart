@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,13 +26,20 @@ class _CreateLeadsState extends State<CreateLeads> {
   int _currentStep = 0;
 
   String _selectedBrand = '';
-  // int _rangeAmount = 0;
-  RangeValues _rangeAmount = RangeValues(20000000, 40000000);
   String _selectedType = '';
+  String _selectedFuel = '';
+  String _selectedPurchaseType = '';
   String _selectedEnquiryType = '';
 
+  // Define constants
+  final double _minValue = 4000000; // 40 lakhs
+  final double _maxValue = 20000000; // 200 lakhs (2 crore)
+
+  // Initialize range values within min-max bounds
+  late RangeValues _rangeAmount;
+
   // String  selectedLeads = '';
-  String selectedPurchaseType = 'New Vehicle';
+  // String selectedPurchaseType = 'New Vehicle';
   String selectedType = 'Product';
   String selectedSubType = 'Retail';
   String selectedTire = 'New';
@@ -48,51 +56,10 @@ class _CreateLeadsState extends State<CreateLeads> {
   @override
   void initState() {
     super.initState();
+    _rangeAmount = RangeValues(_minValue, _maxValue);
     // fetchDropdownData();
   }
 
-  // Future<void> fetchDropdownData() async {
-  //   const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     print("No token found. Please login.");
-  //     return;
-  //   }
-
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       final rows = data['rows'] as List;
-
-  //       setState(() {
-  //         dropdownItems = rows.map((row) {
-  //           return {
-  //             "name": row['lead_name'] as String,
-  //             "id": row['lead_id'] as String,
-  //           };
-  //         }).toList();
-  //       });
-
-  //       isLoading = false;
-  //     } else {
-  //       print("Failed with status code: ${response.statusCode}");
-  //       throw Exception('Failed to fetch data');
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching dropdown data: $e");
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
   Future<void> _pickDate({required bool isStartDate}) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -159,7 +126,7 @@ class _CreateLeadsState extends State<CreateLeads> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -168,10 +135,114 @@ class _CreateLeadsState extends State<CreateLeads> {
               child:
                   Text('Add New lead', style: AppFont.popupTitleBlack(context)),
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            Column(
+              children: [
+                // Step indicators with line
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      // Step 1 indicator column
+                      Column(
+                        children: [
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: _currentStep == 0
+                                  ? AppColors.colorsBlue
+                                  : Colors.grey.shade300,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '1',
+                                style: TextStyle(
+                                  color: _currentStep == 0
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Contact Details',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _currentStep == 0
+                                  ? AppColors.colorsBlue
+                                  : Colors.grey,
+                              fontWeight: _currentStep == 0
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
 
-            // const SizedBox(height: 5),
+                      // Connector line
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              bottom: 17), // Move line up to align with circles
+                          height: 2,
+                          color: _currentStep == 1
+                              ? AppColors.colorsBlue
+                              : Colors.grey.shade300,
+                        ),
+                      ),
+
+                      // Step 2 indicator column
+                      Column(
+                        children: [
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: _currentStep == 1
+                                  ? AppColors.colorsBlue
+                                  : Colors.grey.shade300,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '2',
+                                style: TextStyle(
+                                  color: _currentStep == 1
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Vehicle Details',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _currentStep == 1
+                                  ? AppColors.colorsBlue
+                                  : Colors.grey,
+                              fontWeight: _currentStep == 1
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
             SizedBox(
-              height: height * .6,
+              height: height * .57,
               child: PageView(
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
@@ -236,29 +307,20 @@ class _CreateLeadsState extends State<CreateLeads> {
                           onChanged: (value) {
                             print("mobile : $value");
                           }),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       _buildButtons(
                         label: 'Lead Source',
                         options: {"Email": "Email", "Online Add": "Online Add"},
-                        groupValue: _selectedBrand,
+                        groupValue: _selectedType,
                         onChanged: (value) {
                           setState(() {
-                            _selectedBrand = value;
+                            _selectedType = value;
                           });
                         },
                       ),
-                      
-                      _amountRange(
-                        values: _rangeAmount, // ✅ Pass correct type
-                        min: 20000000,
-                        max: 400000000,
-                        divisions: ((400000000 - 20000000) / 20000000).round(),
-                        onChanged: (value) {
-                          setState(() {
-                            _rangeAmount =
-                                value; // ✅ Update the state with the correct type
-                          });
-                        },
-                      ),
+                      _buildAmountRange(),
                     ],
                   ),
                   Column(
@@ -286,38 +348,38 @@ class _CreateLeadsState extends State<CreateLeads> {
                             "Petrol": "Petrol",
                             "Diesel": "Diesel",
                           },
-                          groupValue: _selectedType,
+                          groupValue: _selectedFuel,
                           label: 'Fuel Type',
                           onChanged: (value) {
                             setState(() {
-                              _selectedType = value;
+                              _selectedFuel = value;
                             });
                           }),
                       const SizedBox(height: 10),
-                      _buildButtonType(
+                      _buildPurchaseType(
                           options: {
                             "New": "New",
                             "Old": "Old",
                           },
-                          groupValue: _selectedType,
+                          groupValue: _selectedPurchaseType,
                           label: 'Purchase Type',
                           onChanged: (value) {
                             setState(() {
-                              _selectedType = value;
+                              _selectedPurchaseType = value;
                             });
                           }),
                       const SizedBox(height: 10),
-                      _buildButtonType(
+                      _buildEnquiryType(
                           options: {
                             "KMI": "KMI",
                             "Generic":
                                 "(Generic) Purchase intent within 90 days",
                           },
-                          groupValue: _selectedType,
+                          groupValue: _selectedEnquiryType,
                           label: 'Enquiry Type',
                           onChanged: (value) {
                             setState(() {
-                              _selectedType = value;
+                              _selectedEnquiryType = value;
                             });
                           }),
                       const SizedBox(height: 5),
@@ -349,7 +411,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                                 horizontal: 10, vertical: 10),
                             filled: true,
                             fillColor: AppColors.containerBg,
-                            hintText: 'Type to talk',
+                            hintText: 'Select Lead',
                             hintStyle: AppFont.dropDown(context),
                             prefixIcon: const Icon(
                               FontAwesomeIcons.magnifyingGlass,
@@ -441,19 +503,18 @@ class _CreateLeadsState extends State<CreateLeads> {
                 ],
               ),
             ),
-            const SizedBox(height: 5),
-
-            SmoothPageIndicator(
-                controller: _pageController,
-                count: 2,
-                effect: const WormEffect(
-                  activeDotColor: AppColors.fontBlack,
-                  spacing: 4.0,
-                  radius: 10.0,
-                  dotWidth: 10.0,
-                  dotHeight: 10.0,
-                )),
-            const SizedBox(height: 10),
+            // const SizedBox(height: 5),
+            // SmoothPageIndicator(
+            //     controller: _pageController,
+            //     count: 2,
+            //     effect: const WormEffect(
+            //       activeDotColor: AppColors.fontBlack,
+            //       spacing: 4.0,
+            //       radius: 10.0,
+            //       dotWidth: 10.0,
+            //       dotHeight: 10.0,
+            //     )),
+            // const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
@@ -499,63 +560,6 @@ class _CreateLeadsState extends State<CreateLeads> {
           ],
         ),
       ),
-    );
-  }
-
-  /// ✅ Reusable Radio Button Widget (One Line)
-  Widget _buildRadioGroup({
-    required List<String> options,
-    required String groupValue,
-    required String label,
-    required ValueChanged<String> onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 10),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 5, 10, 0),
-            child: Text(label, style: AppFont.dropDowmLabel(context)),
-          ),
-        ),
-        const SizedBox(height: 5),
-        Wrap(
-          spacing: 70,
-          runSpacing: 10,
-          children: options.map((option) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: Radio(
-                    activeColor: AppColors.colorsBlue,
-                    value: option,
-                    groupValue: groupValue,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                    onChanged: (value) {
-                      if (value != null) {
-                        onChanged(value);
-                      }
-                    },
-                  ),
-                ),
-                const SizedBox(
-                    width: 5), // ✅ Space between radio button and text
-                Text(
-                  option,
-                  style: AppFont.dropDowmLabel(context),
-                ),
-              ],
-            );
-          }).toList(),
-        ),
-        const SizedBox(height: 5),
-      ],
     );
   }
 
@@ -641,7 +645,7 @@ class _CreateLeadsState extends State<CreateLeads> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 5),
@@ -670,9 +674,8 @@ class _CreateLeadsState extends State<CreateLeads> {
           height: 45,
           width: double.infinity,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: AppColors.containerPopBg,
-          ),
+              borderRadius: BorderRadius.circular(5),
+              color: const Color.fromARGB(255, 248, 247, 247)),
           child: TextField(
             controller: controller, // Assign the controller
             style: GoogleFonts.poppins(
@@ -809,205 +812,6 @@ class _CreateLeadsState extends State<CreateLeads> {
   //   );
   // }
 
-  Widget _buildButtonType({
-    required Map<String, String> options,
-    required String groupValue,
-    required String label,
-    required ValueChanged<String> onChanged,
-  }) {
-    List<String> optionKeys = options.keys.toList();
-
-    return Container(
-      decoration: const BoxDecoration(
-          color: AppColors.containerPopBg,
-          borderRadius: BorderRadius.all(Radius.circular(5))),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment
-                  .center, // ✅ Aligns label and buttons properly
-              children: [
-                // 🔹 Brand Label (Left Side, Vertically Centered)
-                SizedBox(
-                  // width: 80, // ✅ Fixed width to align properly
-                  child: Align(
-                    alignment:
-                        Alignment.centerRight, // ✅ Ensures proper alignment
-                    child: Text(
-                      label,
-                      style: AppFont.dropDowmLabel(context),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-
-                // 🔹 Right Side: Brand Options in Two Rows
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align buttons left
-                    children: [
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.end, // ✅ Align left
-                        children: [
-                          _buildOptionButton(
-                              optionKeys[0], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                          _buildOptionButton(
-                              optionKeys[1], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                        ],
-                      ),
-                      // const SizedBox(height: 4), // ✅ Space between rows
-                      // Row(
-                      //   mainAxisAlignment:
-                      //       MainAxisAlignment.end, // ✅ Align left
-                      //   children: [
-                      //     const SizedBox(width: 5),
-                      //     _buildOptionButton(
-                      //         optionKeys[3], options, groupValue, onChanged),
-                      //   ],
-                      // ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _amountRange({
-    required RangeValues values,
-    required double min,
-    required double max,
-    required int divisions,
-    required Function(RangeValues) onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Display Selected Values
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
-            "Amount Range: ${values.start.toInt()} - ${values.end.toInt()}",
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-        ),
-        const SizedBox(height: 10),
-
-        // Range Slider
-        SliderTheme(
-          data: SliderTheme.of(context).copyWith(
-            activeTrackColor: Colors.blue,
-            inactiveTrackColor: Colors.grey.withOpacity(0.3),
-            thumbColor: Colors.blue,
-            overlayColor: Colors.blue.withOpacity(0.2),
-            showValueIndicator: ShowValueIndicator.always,
-          ),
-          child: RangeSlider(
-            values: values,
-            min: min,
-            max: max,
-            divisions: divisions,
-            labels: RangeLabels(
-              values.start.toInt().toString(),
-              values.end.toInt().toString(),
-            ),
-            onChanged: onChanged,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildButtonFuel({
-    required Map<String, String> options,
-    required String groupValue,
-    required String label,
-    required ValueChanged<String> onChanged,
-  }) {
-    List<String> optionKeys = options.keys.toList();
-
-    return Container(
-      decoration: const BoxDecoration(
-          color: AppColors.containerPopBg,
-          borderRadius: BorderRadius.all(Radius.circular(5))),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment
-                  .center, // ✅ Aligns label and buttons properly
-              children: [
-                // 🔹 Brand Label (Left Side, Vertically Centered)
-                SizedBox(
-                  // width: 80, // ✅ Fixed width to align properly
-                  child: Align(
-                    alignment:
-                        Alignment.centerRight, // ✅ Ensures proper alignment
-                    child: Text(
-                      label,
-                      style: AppFont.dropDowmLabel(context),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-
-                // 🔹 Right Side: Brand Options in Two Rows
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align buttons left
-                    children: [
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.end, // ✅ Align left
-                        children: [
-                          _buildOptionButton(
-                              optionKeys[0], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                          _buildOptionButton(
-                              optionKeys[1], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                          _buildOptionButton(
-                              optionKeys[2], options, groupValue, onChanged),
-                        ],
-                      ),
-                      // const SizedBox(height: 4), // ✅ Space between rows
-                      // Row(
-                      //   mainAxisAlignment:
-                      //       MainAxisAlignment.end, // ✅ Align left
-                      //   children: [
-                      //     const SizedBox(width: 5),
-                      //     _buildOptionButton(
-                      //         optionKeys[3], options, groupValue, onChanged),
-                      //   ],
-                      // ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildButtonsFloat({
     required Map<String, String> options,
     required String groupValue,
@@ -1018,7 +822,7 @@ class _CreateLeadsState extends State<CreateLeads> {
 
     return Container(
       decoration: const BoxDecoration(
-          color: AppColors.containerPopBg,
+          color: Color.fromARGB(255, 248, 247, 247),
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -1031,7 +835,6 @@ class _CreateLeadsState extends State<CreateLeads> {
               children: [
                 // 🔹 Brand Label (Left Side, Vertically Centered)
                 SizedBox(
-                  // width: 80,
                   child: Align(
                     alignment:
                         Alignment.centerRight, // ✅ Ensures proper alignment
@@ -1085,6 +888,145 @@ class _CreateLeadsState extends State<CreateLeads> {
     );
   }
 
+  Widget _buildAmountRange() {
+    // Convert to lakhs for display
+    final double startLakh = _rangeAmount.start / 100000;
+    final double endLakh = _rangeAmount.end / 100000;
+
+    // Format with one decimal place
+    final startText = startLakh.toStringAsFixed(1);
+    final endText = endLakh.toStringAsFixed(1);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 5),
+
+        Text(
+          "Budget",
+          style: AppFont.dropDowmLabel(context),
+        ),
+
+        const SizedBox(height: 5),
+
+        // 🔹 Show Selected Range as Text
+        Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: Text(
+            "₹$startText lakh - ₹$endText lakh",
+            style: AppFont.smallText(context),
+          ),
+        ),
+
+        // const SizedBox(height: 5),
+
+        // 🔹 Range Slider
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: AppColors.colorsBlue,
+            inactiveTrackColor: Colors.grey.withOpacity(0.3),
+            thumbColor: AppColors.colorsBlue,
+            overlayColor: Colors.blue.withOpacity(0.2),
+            showValueIndicator: ShowValueIndicator.always,
+          ),
+          child: RangeSlider(
+            values: _rangeAmount,
+            min: _minValue,
+            max: _maxValue,
+            divisions: 180, // (200-40) increments of 1 lakh each
+            labels: RangeLabels(
+              "₹${startText}L",
+              "₹${endText}L",
+            ),
+            onChanged: (RangeValues values) {
+              // Round to nearest lakh
+              final double newStart = (values.start / 100000).round() * 100000;
+              final double newEnd = (values.end / 100000).round() * 100000;
+
+              // Ensure values are within bounds
+              final clampedStart = newStart.clamp(_minValue, _maxValue);
+              final clampedEnd = newEnd.clamp(_minValue, _maxValue);
+
+              setState(() {
+                _rangeAmount = RangeValues(clampedStart, clampedEnd);
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildButtonFuel({
+    required Map<String, String> options,
+    required String groupValue,
+    required String label,
+    required ValueChanged<String> onChanged,
+  }) {
+    List<String> optionKeys = options.keys.toList();
+
+    return Container(
+      height: MediaQuery.of(context).size.height * .06,
+      decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 248, 247, 247),
+          borderRadius: BorderRadius.all(Radius.circular(5))),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment
+                  .center, // ✅ Aligns label and buttons properly
+              children: [
+                // 🔹 Brand Label (Left Side, Vertically Centered)
+                SizedBox(
+                  // width: 80, // ✅ Fixed width to align properly
+                  child: Align(
+                    alignment:
+                        Alignment.centerRight, // ✅ Ensures proper alignment
+                    child: Text(
+                      label,
+                      style: AppFont.dropDowmLabel(context),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 10),
+
+                // 🔹 Right Side: Brand Options in Two Rows
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start, // Align buttons left
+                    children: [
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.end, // ✅ Align left
+                        children: [
+                          _buildOptionFuel(
+                              optionKeys[0], options, groupValue, onChanged),
+                          const SizedBox(width: 5),
+                          _buildOptionFuel(
+                              optionKeys[1], options, groupValue, onChanged),
+                          const SizedBox(width: 5),
+                          _buildOptionFuel(
+                              optionKeys[2], options, groupValue, onChanged),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 // ✅ Button Builder Function
   Widget _buildOptionButton(String shortText, Map<String, String> options,
       String groupValue, ValueChanged<String> onChanged) {
@@ -1111,7 +1053,248 @@ class _CreateLeadsState extends State<CreateLeads> {
             style: TextStyle(
               color: isSelected ? AppColors.colorsBlue : Colors.black,
               fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEnquiryType({
+    required Map<String, String> options,
+    required String groupValue,
+    required String label,
+    required ValueChanged<String> onChanged,
+  }) {
+    List<String> optionKeys = options.keys.toList();
+
+    return Container(
+      height: MediaQuery.of(context).size.height * .06,
+      decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 248, 247, 247),
+          borderRadius: BorderRadius.all(Radius.circular(5))),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment
+                  .center, // ✅ Aligns label and buttons properly
+              children: [
+                // 🔹 Brand Label (Left Side, Vertically Centered)
+                SizedBox(
+                  // width: 80, // ✅ Fixed width to align properly
+                  child: Align(
+                    alignment:
+                        Alignment.centerRight, // ✅ Ensures proper alignment
+                    child: Text(
+                      label,
+                      style: AppFont.dropDowmLabel(context),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 10),
+
+                // 🔹 Right Side: Brand Options in Two Rows
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start, // Align buttons left
+                    children: [
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.end, // ✅ Align left
+                        children: [
+                          _buildOptionButtonEnquiry(
+                              optionKeys[0], options, groupValue, onChanged),
+                          const SizedBox(width: 5),
+                          _buildOptionButtonEnquiry(
+                              optionKeys[1], options, groupValue, onChanged),
+                          const SizedBox(width: 5),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPurchaseType({
+    required Map<String, String> options,
+    required String groupValue,
+    required String label,
+    required ValueChanged<String> onChanged,
+  }) {
+    List<String> optionKeys = options.keys.toList();
+
+    return Container(
+      height: MediaQuery.of(context).size.height * .06,
+      decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 248, 247, 247),
+          borderRadius: BorderRadius.all(Radius.circular(5))),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment
+                  .center, // ✅ Aligns label and buttons properly
+              children: [
+                // 🔹 Brand Label (Left Side, Vertically Centered)
+                SizedBox(
+                  // width: 80, // ✅ Fixed width to align properly
+                  child: Align(
+                    alignment:
+                        Alignment.centerRight, // ✅ Ensures proper alignment
+                    child: Text(
+                      label,
+                      style: AppFont.dropDowmLabel(context),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 10),
+
+                // 🔹 Right Side: Brand Options in Two Rows
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start, // Align buttons left
+                    children: [
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.end, // ✅ Align left
+                        children: [
+                          _buildOptionButtonPurchase(
+                              optionKeys[0], options, groupValue, onChanged),
+                          const SizedBox(width: 5),
+                          _buildOptionButtonPurchase(
+                              optionKeys[1], options, groupValue, onChanged),
+                          const SizedBox(width: 5),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionFuel(String shortText, Map<String, String> options,
+      String groupValue, ValueChanged<String> onChanged) {
+    bool isSelected = groupValue == options[shortText];
+
+    return GestureDetector(
+      onTap: () {
+        onChanged(options[shortText]!);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSelected ? AppColors.colorsBlue : Colors.grey,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(15),
+          color:
+              isSelected ? AppColors.colorsBlue.withOpacity(0.2) : Colors.white,
+        ),
+        child: Center(
+          child: Text(
+            shortText,
+            style: TextStyle(
+              color: isSelected ? AppColors.colorsBlue : Colors.black,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionButtonEnquiry(
+      String shortText,
+      Map<String, String> options,
+      String groupValue,
+      ValueChanged<String> onChanged) {
+    bool isSelected = groupValue == options[shortText];
+
+    return GestureDetector(
+      onTap: () {
+        onChanged(options[shortText]!);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSelected ? AppColors.colorsBlue : Colors.grey,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(15),
+          color:
+              isSelected ? AppColors.colorsBlue.withOpacity(0.2) : Colors.white,
+        ),
+        child: Center(
+          child: Text(
+            shortText,
+            style: TextStyle(
+              color: isSelected ? AppColors.colorsBlue : Colors.black,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionButtonPurchase(
+      String shortText,
+      Map<String, String> options,
+      String groupValue,
+      ValueChanged<String> onChanged) {
+    bool isSelected = groupValue == options[shortText];
+
+    return GestureDetector(
+      onTap: () {
+        onChanged(options[shortText]!);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSelected ? AppColors.colorsBlue : Colors.grey,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(15),
+          color:
+              isSelected ? AppColors.colorsBlue.withOpacity(0.2) : Colors.white,
+        ),
+        child: Center(
+          child: Text(
+            shortText,
+            style: TextStyle(
+              color: isSelected ? AppColors.colorsBlue : Colors.black,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ),
@@ -1140,13 +1323,11 @@ class _CreateLeadsState extends State<CreateLeads> {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: options.keys.map((shortText) {
-            bool isSelected =
-                groupValue == options[shortText]; // ✅ Compare actual value
+            bool isSelected = groupValue == options[shortText];
 
             return GestureDetector(
               onTap: () {
-                onChanged(
-                    options[shortText]!); // ✅ Pass actual value on selection
+                onChanged(options[shortText]!);
               },
               child: Container(
                 padding:
@@ -1167,7 +1348,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                   shortText, // ✅ Only show short text
                   style: TextStyle(
                     color: isSelected ? AppColors.colorsBlue : Colors.black,
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -1199,14 +1380,14 @@ class _CreateLeadsState extends State<CreateLeads> {
       'lname': lastNameController.text,
       'email': emailController.text,
       'mobile': mobileController.text,
-      'purchase_type': 'New Vehicle',
+      'purchase_type': _selectedPurchaseType,
       'brand': _selectedBrand,
-      'type': 'Product',
+      'type': _selectedType,
       'sub_type': selectedSubType,
       'sp_id': spId,
       'PMI': 'Range rover',
       'expected_date_purchase': endDateController.text,
-      'fuel_type': _selectedType,
+      'fuel_type': _selectedFuel,
       'enquiry_type': _selectedEnquiryType,
       // 'lead_code': '12333',
       'lead_source': 'dadf',

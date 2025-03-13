@@ -53,7 +53,7 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
                   item.containsKey('lead_id') &&
                   item.containsKey('task_id')) {
                 return overdueeFollowupsItem(
-                  key: ValueKey(item['task_id']), 
+                  key: ValueKey(item['task_id']),
                   name: item['name'],
                   date: item['due_date'],
                   vehicle: 'Discovery Sport',
@@ -258,7 +258,7 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
     String formattedDate = '';
     try {
       DateTime parseDate = DateTime.parse(widget.date);
-      formattedDate = DateFormat('dd/MM/yyyy').format(parseDate);
+      formattedDate = DateFormat('dd MMM').format(parseDate);
     } catch (e) {
       formattedDate = widget.date;
     }

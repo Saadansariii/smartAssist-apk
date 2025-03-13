@@ -580,7 +580,7 @@ class UpcomingFollowupItem extends StatelessWidget {
     String formattedDate = '';
     try {
       DateTime parseDate = DateTime.parse(date);
-      formattedDate = DateFormat('dd/MM/yyyy').format(parseDate);
+      formattedDate = DateFormat('dd MMM').format(parseDate);
     } catch (e) {
       formattedDate = date;
     }
