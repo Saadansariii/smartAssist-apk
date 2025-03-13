@@ -26,7 +26,7 @@ class _CreateLeadsState extends State<CreateLeads> {
   int _currentStep = 0;
 
   String _selectedBrand = '';
-  String _selectedType = '';
+  String _selectedType = 'Product';
   String _selectedFuel = '';
   String _selectedPurchaseType = '';
   String _selectedEnquiryType = '';
@@ -107,11 +107,14 @@ class _CreateLeadsState extends State<CreateLeads> {
 
   void _nextStep() {
     if (_currentStep < 1) {
+      // ✅ Adjusted for two pages
       _pageController.nextPage(
-          duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
       setState(() => _currentStep++);
     } else {
-      _submitForm();
+      _submitForm(); // ✅ Calls the submit function when on the last step
     }
   }
 
@@ -192,7 +195,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                               bottom: 17), // Move line up to align with circles
                           height: 2,
                           color: _currentStep == 1
-                              ? AppColors.colorsBlue
+                              ? Colors.grey.shade300 
                               : Colors.grey.shade300,
                         ),
                       ),
@@ -326,6 +329,9 @@ class _CreateLeadsState extends State<CreateLeads> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
                       _buildButtonsFloat(
                           options: {
                             "Jaguar": "Jaguar",
@@ -344,7 +350,7 @@ class _CreateLeadsState extends State<CreateLeads> {
 
                       _buildButtonFuel(
                           options: {
-                            "EV": "EV",
+                            // "EV": "EV",
                             "Petrol": "Petrol",
                             "Diesel": "Diesel",
                           },
@@ -358,7 +364,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                       const SizedBox(height: 10),
                       _buildPurchaseType(
                           options: {
-                            "New": "New",
+                            "New": "New Vehicle",
                             "Old": "Old",
                           },
                           groupValue: _selectedPurchaseType,
@@ -515,6 +521,8 @@ class _CreateLeadsState extends State<CreateLeads> {
             //       dotHeight: 10.0,
             //     )),
             // const SizedBox(height: 10),
+
+            // ✅ Updated Button Row
             Row(
               children: [
                 Expanded(
@@ -522,18 +530,18 @@ class _CreateLeadsState extends State<CreateLeads> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
                     onPressed: () {
                       if (_currentStep == 0) {
-                        Navigator.pop(context);
+                        Navigator.pop(context); // ✅ Closes if on first page
                       } else {
                         _pageController.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut);
-                        setState(() {
-                          _currentStep--;
-                        });
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                        setState(() => _currentStep--);
                       }
                     },
                     child: Text(
@@ -548,15 +556,63 @@ class _CreateLeadsState extends State<CreateLeads> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.colorsBlue,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
                     onPressed: _nextStep,
-                    child: Text(_currentStep == 1 ? "Create" : "Continue",
-                        style: AppFont.buttons(context)),
+                    child: Text(
+                      _currentStep == 1
+                          ? "Create"
+                          : "Continue", // ✅ Corrected step check
+                      style: AppFont.buttons(context),
+                    ),
                   ),
                 ),
               ],
             ),
+
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: ElevatedButton(
+            //         style: ElevatedButton.styleFrom(
+            //           backgroundColor: Colors.grey,
+            //           shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(5)),
+            //         ),
+            //         onPressed: () {
+            //           if (_currentStep == 0) {
+            //             Navigator.pop(context);
+            //           } else {
+            //             _pageController.previousPage(
+            //                 duration: const Duration(milliseconds: 300),
+            //                 curve: Curves.easeInOut);
+            //             setState(() {
+            //               _currentStep--;
+            //             });
+            //           }
+            //         },
+            //         child: Text(
+            //           _currentStep == 0 ? "Cancel" : "Go Back",
+            //           style: AppFont.buttons(context),
+            //         ),
+            //       ),
+            //     ),
+            //     const SizedBox(width: 10),
+            //     Expanded(
+            //       child: ElevatedButton(
+            //         style: ElevatedButton.styleFrom(
+            //           backgroundColor: AppColors.colorsBlue,
+            //           shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(5)),
+            //         ),
+            //         onPressed: _nextStep,
+            //         child: Text(_currentStep == 1 ? "Create" : "Continue",
+            //             style: AppFont.buttons(context)),
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),
@@ -754,7 +810,7 @@ class _CreateLeadsState extends State<CreateLeads> {
     );
   }
 
-  // Widget _buildButtons({
+// Widget _buildButtons({
   //   required List<String> options,
   //   required String groupValue,
   //   required String label,
@@ -1011,9 +1067,9 @@ class _CreateLeadsState extends State<CreateLeads> {
                           const SizedBox(width: 5),
                           _buildOptionFuel(
                               optionKeys[1], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                          _buildOptionFuel(
-                              optionKeys[2], options, groupValue, onChanged),
+                          // const SizedBox(width: 5),
+                          // _buildOptionFuel(
+                          //     optionKeys[2], options, groupValue, onChanged),
                         ],
                       ),
                     ],
@@ -1362,66 +1418,150 @@ class _CreateLeadsState extends State<CreateLeads> {
   }
 
   Future<void> submitForm() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? spId = prefs.getString('user_id');
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? spId = prefs.getString('user_id');
 
-    if (spId == null) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('User ID not found. Please log in again.')),
-        );
-      }
-      return;
-    }
-
-    final leadData = {
-      'fname': firstNameController.text,
-      'lname': lastNameController.text,
-      'email': emailController.text,
-      'mobile': mobileController.text,
-      'purchase_type': _selectedPurchaseType,
-      'brand': _selectedBrand,
-      'type': _selectedType,
-      'sub_type': selectedSubType,
-      'sp_id': spId,
-      'PMI': 'Range rover',
-      'expected_date_purchase': endDateController.text,
-      'fuel_type': _selectedFuel,
-      'enquiry_type': _selectedEnquiryType,
-      // 'lead_code': '12333',
-      'lead_source': 'dadf',
-    };
-
-    Map<String, dynamic>? response = await LeadsSrv.submitLead(leadData);
-
-    if (response != null) {
-      print(leadData);
-      if (response.containsKey('newLead')) {
-        print(leadData);
-        String leadId = response['newLead']['lead_id'];
+      if (spId == null) {
         if (context.mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SingleLeadsById(leadId: leadId),
-            ),
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('User ID not found. Please log in again.')),
           );
         }
+        print("Error: User ID not found."); // ✅ Print error in console
+        return;
+      }
+
+      final leadData = {
+        'fname': firstNameController.text,
+        'lname': lastNameController.text,
+        'email': emailController.text,
+        'mobile': mobileController.text,
+        'purchase_type': _selectedPurchaseType,
+        'brand': _selectedBrand,
+        'type': 'Product',
+        'sub_type': selectedSubType,
+        'sp_id': spId,
+        'PMI': 'Range rover',
+        'expected_date_purchase': endDateController.text,
+        'fuel_type': _selectedFuel,
+        'enquiry_type': _selectedEnquiryType,
+        'lead_source': _selectedType,
+      };
+
+      print(
+          "Submitting lead data: $leadData"); // ✅ Print lead data before submission
+
+      Map<String, dynamic>? response = await LeadsSrv.submitLead(leadData);
+
+      if (response != null) {
+        print("Response received: $response"); // ✅ Print full response
+
+        if (response.containsKey('newLead')) {
+          String leadId = response['newLead']['lead_id'];
+          print(
+              "Lead Created Successfully: Lead ID - $leadId"); // ✅ Log success
+
+          if (context.mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SingleLeadsById(leadId: leadId),
+              ),
+            );
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Form Submit Successful.')),
+          );
+        } else if (response.containsKey('error')) {
+          String errorMsg = response['error'];
+          print("API Error: $errorMsg"); // ✅ Log API error
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMsg), backgroundColor: Colors.red),
+          );
+        }
+      } else {
+        print("Error: API response is null"); // ✅ Log null response
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Form Submit Successful.')),
-        );
-      } else if (response.containsKey('error')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(response['error']), backgroundColor: Colors.red),
+          const SnackBar(
+              content: Text('Failed to submit lead. Please try again.')),
         );
       }
-    } else {
+    } catch (e, stackTrace) {
+      print("Exception Occurred: $e"); // ✅ Log any unexpected exceptions
+      print("Stack Trace: $stackTrace"); // ✅ Print stack trace for debugging
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Failed to submit lead. Please try again.')),
+            content: Text('An unexpected error occurred. Please try again.')),
       );
     }
   }
+
+  // Future<void> submitForm() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? spId = prefs.getString('user_id');
+
+  //   if (spId == null) {
+  //     if (context.mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //             content: Text('User ID not found. Please log in again.')),
+  //       );
+  //     }
+  //     return;
+  //   }
+
+  //   final leadData = {
+  //     'fname': firstNameController.text,
+  //     'lname': lastNameController.text,
+  //     'email': emailController.text,
+  //     'mobile': mobileController.text,
+  //     'purchase_type': _selectedPurchaseType,
+  //     'brand': _selectedBrand,
+  //     'type': _selectedType,
+  //     'sub_type': selectedSubType,
+  //     'sp_id': spId,
+  //     'PMI': 'Range rover',
+  //     'expected_date_purchase': endDateController.text,
+  //     'fuel_type': _selectedFuel,
+  //     'enquiry_type': _selectedEnquiryType,
+  //     // 'lead_code': '12333',
+  //     'lead_source': 'dadf',
+  //   };
+
+  //   Map<String, dynamic>? response = await LeadsSrv.submitLead(leadData);
+
+  //   if (response != null) {
+  //     print(leadData);
+  //     if (response.containsKey('newLead')) {
+  //       print(leadData);
+  //       String leadId = response['newLead']['lead_id'];
+  //       if (context.mounted) {
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => SingleLeadsById(leadId: leadId),
+  //           ),
+  //         );
+  //       }
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Form Submit Successful.')),
+  //       );
+  //     } else if (response.containsKey('error')) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //             content: Text(response['error']), backgroundColor: Colors.red),
+  //       );
+
+  //     }
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //           content: Text('Failed to submit lead. Please try again.')),
+  //     );
+  //   }
+  // }
 }
