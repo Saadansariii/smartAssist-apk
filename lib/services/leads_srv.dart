@@ -200,7 +200,7 @@ import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/utils/token_manager.dart';
 
 class LeadsSrv {
-  final String baseUrl = 'https://api.smartassistapp.in/api/admin';
+  static const String baseUrl = 'https://api.smartassistapp.in/api/';
 
   // ApiService(this.baseUrl);
 
@@ -579,7 +579,7 @@ class LeadsSrv {
       print('API Response Status: ${response.statusCode}');
       print('API Response Body: ${response.body}');
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return true; // Task created successfully
       } else {
         // Handle unexpected error responses
@@ -914,7 +914,7 @@ class LeadsSrv {
     final token = await Storage.getToken();
     try {
       final response = await http.get(
-        Uri.parse('https://api.smartassistapp.in/api/users/dashboard'),
+        Uri.parse('${baseUrl}users/dashboard'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

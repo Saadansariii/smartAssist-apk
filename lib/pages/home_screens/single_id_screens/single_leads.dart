@@ -3,8 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/services/leads_srv.dart';
-import 'package:smart_assist/utils/bottom_navigation.dart';
-import 'package:timeline_tile/timeline_tile.dart';
+import 'package:smart_assist/utils/bottom_navigation.dart'; 
 
 class SingleLeadsById extends StatefulWidget {
   final String leadId;

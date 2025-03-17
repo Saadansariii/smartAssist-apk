@@ -39,10 +39,10 @@ class TimelineEightWid extends StatelessWidget {
     return Column(
       children: List.generate(reversedEvents.length, (index) {
         final event = reversedEvents[index];
-        String dueDate = _formatDate(event['due_date'] ?? 'N/A');
-        String subject = event['subject'] ?? 'No Subject';
-        String priority = event['priority'] ?? 'N/A';
-        String createdTime = event['created_at'] ?? 'N/A';
+        String dueDate = _formatDate(event['data']['due_date'] ?? 'N/A');
+        String subject = event['data']['subject'] ?? 'No Subject';
+        String priority = event['data']['priority'] ?? 'N/A';
+        String createdTime = event['data']['created_at'] ?? 'N/A';
         // String endDate = event['due_date'] ?? 'N/A';
 
         return TimelineTile(

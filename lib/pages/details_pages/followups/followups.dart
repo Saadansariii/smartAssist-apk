@@ -54,12 +54,12 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     try {
       final leadData = await LeadsSrv.singleFollowupsById(leadId);
       setState(() {
-        mobile = leadData['mobile'] ?? 'N/A';
-        email = leadData['email'] ?? 'N/A';
-        status = leadData['status'] ?? 'N/A';
-        company = leadData['brand'] ?? 'N/A';
-        address = leadData['address'] ?? 'N/A';
-        lead_owner = leadData['lead_name'] ?? 'N/A';
+        mobile = leadData['data']['mobile'] ?? 'N/A';
+        email = leadData['data']['email'] ?? 'N/A';
+        status = leadData['data']['status'] ?? 'N/A';
+        company = leadData['data']['brand'] ?? 'N/A';
+        address = leadData['data']['address'] ?? 'N/A';
+        lead_owner = leadData['data']['lead_name'] ?? 'N/A';
       });
     } catch (e) {
       print('Error fetching data: $e');
@@ -79,16 +79,16 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       for (var item in dataSource) {
         if (_childButtonIndex == 0) {
           // Event data
-          subjectList.add(item['subject'] ?? 'N/A');
-          priorityList.add(item['priority'] ?? 'N/A');
-          startTimeList.add(_formatTime(item['start_time']));
-          endTimeList.add(_formatTime(item['end_time']));
-          startDateList.add(item['due_date'] ?? 'N/A');
+          subjectList.add(item['data']['subject'] ?? 'N/A');
+          priorityList.add(item['data']['priority'] ?? 'N/A');
+          startTimeList.add(_formatTime(item['data']['start_time']));
+          endTimeList.add(_formatTime(item['data']['end_time']));
+          startDateList.add(item['data']['due_date'] ?? 'N/A');
         } else {
           // Task data
-          subjectList.add(item['subject'] ?? 'N/A');
-          priorityList.add(item['priority'] ?? 'N/A');
-          startTimeList.add(_formatTime(item['due_time']));
+          subjectList.add(item['data']['subject'] ?? 'N/A');
+          priorityList.add(item['data']['priority'] ?? 'N/A');
+          startTimeList.add(_formatTime(item['data']['due_time']));
           // endTimeList.add(_formatTime(item['flag']));
           // startDateList.add(item['updated'] ?? 'N/A');
         }
@@ -708,12 +708,12 @@ class _ContactRowState extends State<ContactRow> {
     try {
       final leadData = await LeadsSrv.singleFollowupsById(taskId);
       setState(() {
-        phoneNumber = leadData['mobile'] ?? 'N/A';
-        email = leadData['lead_email'] ?? 'N/A';
-        status = leadData['status'] ?? 'N/A';
-        company = leadData['brand'] ?? 'N/A';
-        address = leadData['address'] ?? 'N/A';
-        lead_owner = leadData['lead_owner'] ?? 'N/A';
+        phoneNumber = leadData['data']['mobile'] ?? 'N/A';
+        email = leadData['data']['lead_email'] ?? 'N/A';
+        status = leadData['data']['status'] ?? 'N/A';
+        company = leadData['data']['brand'] ?? 'N/A';
+        address = leadData['data']['address'] ?? 'N/A';
+        lead_owner = leadData['data']['lead_owner'] ?? 'N/A';
       });
     } catch (e) {
       print('Error fetching data: $e');

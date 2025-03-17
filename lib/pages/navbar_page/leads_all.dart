@@ -42,7 +42,7 @@ class _AllLeadsState extends State<AllLeads> {
         final data = json.decode(response.body);
         print('this is the leadall $data');
         setState(() {
-          upcomingTasks = data['rows'] ?? [];
+          upcomingTasks = data['data']['rows'] ?? [];
           isLoading = false;
         });
       } else {

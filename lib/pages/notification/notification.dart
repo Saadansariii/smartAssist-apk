@@ -18,7 +18,6 @@ class NotificationPage extends StatefulWidget {
   State<NotificationPage> createState() => _NotificationPageState();
 }
 
-
 class _NotificationPageState extends State<NotificationPage> {
   int _selectedButtonIndex = 0;
   List<dynamic> notifications = [];
@@ -69,11 +68,13 @@ class _NotificationPageState extends State<NotificationPage> {
         final Map<String, dynamic> data = json.decode(response.body);
 
         List<dynamic> allNotifications = [];
-        if (data['unread'] != null && data['unread']['rows'] != null) {
-          allNotifications.addAll(data['unread']['rows']);
+        if (data['data']['unread'] != null &&
+            data['data']['unread']['rows'] != null) {
+          allNotifications.addAll(data['data']['unread']['rows']);
         }
-        if (data['read'] != null && data['read']['rows'] != null) {
-          allNotifications.addAll(data['read']['rows']);
+        if (data['data']['read'] != null &&
+            data['data']['read']['rows'] != null) {
+          allNotifications.addAll(data['data']['read']['rows']);
         }
         print(data);
         setState(() {
@@ -123,11 +124,11 @@ class _NotificationPageState extends State<NotificationPage> {
         setState(() {
           // Update the notification status in the UI
           notifications = notifications.map((notification) {
-            if (notification['notification_id'] == notificationId) {
-              notification['read'] = true;
+            if (notification['data']['notification_id'] == notificationId) {
+              notification['data']['read'] = true;
             }
-            if (notification['recordId'] == notificationId) {
-              notification['read'] = true;
+            if (notification['data']['recordId'] == notificationId) {
+              notification['data']['read'] = true;
             }
             return notification;
           }).toList();

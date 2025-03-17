@@ -4,9 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
-import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/home_screens/gloabal_search_page/global_search.dart';
-import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
 import 'package:smart_assist/pages/navbar_page/leads_all.dart';
@@ -161,7 +159,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 // final height = MediaQuery.of(context).size.height * 1;  use it for dynamic height as per the mobile
 //  height * .2 not use like that 100 & 200
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -172,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text(
             ' $greeting',
             style: GoogleFonts.poppins(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w400,
               color: Colors.white,
             ),
@@ -193,12 +190,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 if (notificationCount > 0)
                   Positioned(
-                    right: 12,
+                    right: 11,
                     top: 5,
                     child: Container(
-                      padding: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(1),
                       decoration: const BoxDecoration(
-                        color: Colors.red,
+                        color: AppColors.sideRed,
                         shape: BoxShape.circle,
                       ),
                       constraints: const BoxConstraints(
@@ -209,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         notificationCount.toString(),
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 10,
+                          fontSize: 8,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
@@ -305,6 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ));
                                   },
                                 ),
+
                                 // Expanded(
                                 //   child: SizedBox(
                                 //     height: 35,

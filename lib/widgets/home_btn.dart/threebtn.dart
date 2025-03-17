@@ -331,21 +331,7 @@ class _ThreebtnState extends State<Threebtn> {
                                 (_activeButtonIndex == 2 &&
                                     (widget.overdueAppointmentsCount > 0 ||
                                         widget.overdueAppointmentsCount > 0)))
-                              // Text(
-                              //   (_activeButtonIndex == 0)
-                              //       ? ((widget.overdueFollowupsCount)).toString()
-                              //       : (_activeButtonIndex == 1)
-                              //           ? (widget.overdueAppointmentsCount)
-                              //               .toString()
-                              //           : (widget.overdueAppointments)
-                              //               .toString(),
-                              //   style: GoogleFonts.poppins(
-                              //     fontSize: 10,
-                              //     fontWeight: FontWeight.w400,
-                              //     color:
-                              //         const Color(0xff000000).withOpacity(0.56),
-                              //   ),
-                              // ),
+                            
                               Text(
                                 (_activeButtonIndex == 0)
                                     ? '(${widget.overdueFollowupsCount})'
@@ -354,6 +340,7 @@ class _ThreebtnState extends State<Threebtn> {
                                         : '(${widget.overdueAppointments})',
                                 style: GoogleFonts.poppins(
                                   fontSize: 10,
+                                  
                                   fontWeight: FontWeight.w400,
                                   color:
                                       const Color(0xff000000).withOpacity(0.56),

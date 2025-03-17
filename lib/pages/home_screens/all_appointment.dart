@@ -4,9 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
-import 'package:smart_assist/widgets/leads_details_popup/create_appointment.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart'; 
 import 'package:smart_assist/widgets/oppointment/overdue.dart';
 import 'package:smart_assist/widgets/oppointment/upcoming.dart';
 
@@ -53,9 +51,10 @@ class _AllAppointmentState extends State<AllAppointment> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
-          _originalAllTasks = data['allEvents']?['rows'] ?? [];
-          _originalUpcomingTasks = data['upcomingEvents']?['rows'] ?? [];
-          _originalOverdueTasks = data['overdueEvents']?['rows'] ?? [];
+          _originalAllTasks = data['data']['allEvents']?['rows'] ?? [];
+          _originalUpcomingTasks =
+              data['data']['upcomingEvents']?['rows'] ?? [];
+          _originalOverdueTasks = data['data']['overdueEvents']?['rows'] ?? [];
           _filteredAllTasks = List.from(_originalAllTasks);
           _filteredUpcomingTasks = List.from(_originalUpcomingTasks);
           _filteredOverdueTasks = List.from(_originalOverdueTasks);

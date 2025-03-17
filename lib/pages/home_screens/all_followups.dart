@@ -50,9 +50,9 @@ class _AddFollowupsState extends State<AddFollowups> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
-          _originalAllTasks = data['allTasks']?['rows'] ?? [];
-          _originalUpcomingTasks = data['upcomingTasks']?['rows'] ?? [];
-          _originalOverdueTasks = data['overdueTasks']?['rows'] ?? [];
+          _originalAllTasks = data['data']['allTasks']?['rows'] ?? [];
+          _originalUpcomingTasks = data['data']['upcomingTasks']?['rows'] ?? [];
+          _originalOverdueTasks = data['data']['overdueTasks']?['rows'] ?? [];
           _filteredAllTasks = List.from(_originalAllTasks);
           _filteredUpcomingTasks = List.from(_originalUpcomingTasks);
           _filteredOverdueTasks = List.from(_originalOverdueTasks);
@@ -234,7 +234,7 @@ class _AddFollowupsState extends State<AddFollowups> {
           //                   isNested: false,
           //                 ),
           // ),
-          
+
           SliverToBoxAdapter(
             child: _isLoading
                 ? const Center(
@@ -273,7 +273,6 @@ class _AddFollowupsState extends State<AddFollowups> {
                             isNested: true,
                           ),
           ),
-
         ],
       ),
     );

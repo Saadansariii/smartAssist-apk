@@ -10,7 +10,6 @@ import 'package:smart_assist/utils/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class AppointmentPopup extends StatefulWidget {
   const AppointmentPopup({super.key});
@@ -69,10 +68,10 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
           'Content-Type': 'application/json',
         },
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
-          _searchResults = data['suggestions'] ?? [];
+          _searchResults = data['data']['suggestions'] ?? [];
         });
       }
     } catch (e) {
@@ -95,75 +94,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
       }
     });
   }
-
-  // Future<void> fetchDropdownData() async {
-  //   const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
-  //   final token = await Storage.getToken();
-  //   if (token == null) return;
-
-  //   try {
-  //     final response = await http
-  //         .get(Uri.parse(apiUrl), headers: {'Authorization': 'Bearer $token'});
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       final rows = data['rows'] as List;
-  //       setState(() {
-  //         dropdownItems = rows
-  //             .map((row) => {"name": row['lead_name'], "id": row['lead_id']})
-  //             .toList();
-  //         isLoading = false;
-  //       });
-  //     } else {
-  //       throw Exception('Failed to fetch data');
-  //     }
-  //   } catch (e) {
-  //     setState(() => isLoading = false);
-  //     print("Error fetching dropdown data: $e");
-  //   }
-  // }
-
-  // Future<void> fetchDropdownData() async {
-  //   const String apiUrl = "https://api.smartassistapp.in/api/leads/all";
-
-  //   final token = await Storage.getToken();
-  //   if (token == null) {
-  //     print("No token found. Please login.");
-  //     return;
-  //   }
-
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       final rows = data['rows'] as List;
-
-  //       setState(() {
-  //         dropdownItems = rows.map((row) {
-  //           return {
-  //             "name": row['lead_name'] as String,
-  //             "id": row['lead_id'] as String,
-  //           };
-  //         }).toList();
-  //       });
-
-  //       isLoading = false;
-  //     } else {
-  //       print("Failed with status code: ${response.statusCode}");
-  //       throw Exception('Failed to fetch data');
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching dropdown data: $e");
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
 
   Future<void> _pickDate({required bool isStartDate}) async {
     DateTime? pickedDate = await showDatePicker(

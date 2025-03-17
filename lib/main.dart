@@ -36,15 +36,7 @@ class MyApp extends StatelessWidget {
 
       // home: BottomNavigation(),
       theme: ThemeData(
-        buttonTheme: const ButtonThemeData(),
-        textTheme: const TextTheme(
-            // titleLarge: TextStyle(
-            //   fontSize: 29,
-            //   fontWeight: FontWeight.bold,
-            // ),
-            // titleSmall: TextStyle(fontWeight: FontWeight.w400, fontSize: 10),
-            // titleMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)
-            ),
+        // buttonTheme: const ButtonThemeData(),
         scaffoldBackgroundColor: const Color(0xFFFFFFFF),
         appBarTheme: const AppBarTheme(backgroundColor: Color(0xFFFFFFFF)),
       ),

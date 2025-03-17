@@ -70,7 +70,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
-          _searchResults = data['suggestions'] ?? [];
+          _searchResults = data['data']['suggestions'] ?? [];
         });
       }
     } catch (e) {
@@ -511,7 +511,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
               },
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: isSelected ? Colors.blue : Colors.black,
