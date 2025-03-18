@@ -494,7 +494,7 @@ class LeadsSrv {
       if (response.statusCode == 201) {
         return responseData;
       } else {
-        return {"error": responseData['error'] ?? "Failed."};
+        return {"error": responseData['message'] ?? "Failed."};
       }
     } catch (e) {
       return {"error": "An error occurred: $e"};
@@ -614,7 +614,7 @@ class LeadsSrv {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
           'leadId':
-              leadId, // This header is not needed unless the API requires it
+              leadId, 
         },
       );
 
@@ -626,7 +626,8 @@ class LeadsSrv {
         final data = json.decode(response.body);
         return data; // Return the response data
       } else {
-        throw Exception('Failed to load data: ${response.statusCode}');
+        throw Exception(
+            'Failed to load data: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       print('Error fetching data: $e');

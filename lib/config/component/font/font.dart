@@ -307,4 +307,17 @@ class AppFont {
       fontWeight: fontWeight,
     );
   }
+
+    static TextStyle validationtxt(
+    BuildContext context, {
+    double fontSize = 10,
+    Color color = Colors.redAccent,
+    FontWeight fontWeight = FontWeight.w400,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: fontWeight,
+    );
+  }
 }

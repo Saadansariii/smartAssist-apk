@@ -10,7 +10,6 @@ import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.d
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CreateLeads extends StatefulWidget {
   const CreateLeads({super.key});
@@ -22,7 +21,7 @@ class CreateLeads extends StatefulWidget {
 class _CreateLeadsState extends State<CreateLeads> {
   final PageController _pageController = PageController();
   List<Map<String, String>> dropdownItems = [];
-  final _formKey = GlobalKey<FormState>(); 
+  // final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   int _currentStep = 0;
 
@@ -30,7 +29,7 @@ class _CreateLeadsState extends State<CreateLeads> {
   Map<String, String> _errors = {};
 
   String _selectedBrand = '';
-  String _selectedType = 'Product';
+  String _selectedType = '';
   String _selectedFuel = '';
   String _selectedPurchaseType = '';
   String _selectedEnquiryType = '';
@@ -44,9 +43,9 @@ class _CreateLeadsState extends State<CreateLeads> {
 
   // String  selectedLeads = '';
   // String selectedPurchaseType = 'New Vehicle';
-  String selectedType = 'Product';
+  // String selectedType = 'Product';
   String selectedSubType = 'Retail';
-  String selectedTire = 'New';
+  // String selectedTire = 'New';
   // String? selectedSubject;
   // String? selectedPriority;
 
@@ -56,6 +55,7 @@ class _CreateLeadsState extends State<CreateLeads> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
+  TextEditingController modelInterestController = TextEditingController();
 
   @override
   void initState() {
@@ -77,6 +77,7 @@ class _CreateLeadsState extends State<CreateLeads> {
       setState(() {
         if (isStartDate) {
           startDateController.text = formattedDate;
+          _errors.remove('startDate');
         } else {
           endDateController.text = formattedDate;
         }
@@ -84,15 +85,144 @@ class _CreateLeadsState extends State<CreateLeads> {
     }
   }
 
+  // Validate page 1 fields
+  bool _validatePage1() {
+    bool isValid = true;
+    setState(() {
+      _errors = {}; // Clear previous errors
+
+      // Validate first name
+      if (firstNameController.text.trim().isEmpty) {
+        _errors['firstName'] = 'First name is required';
+        isValid = false;
+      }
+
+      // Validate last name
+      if (lastNameController.text.trim().isEmpty) {
+        _errors['lastName'] = 'Last name is required';
+        isValid = false;
+      }
+
+      // Validate email
+      if (emailController.text.trim().isEmpty) {
+        _errors['email'] = 'Email is required';
+        isValid = false;
+      } else if (!_isValidEmail(emailController.text.trim())) {
+        _errors['email'] = 'Please enter a valid email';
+        isValid = false;
+      }
+
+      // Validate mobile
+      if (mobileController.text.trim().isEmpty) {
+        _errors['mobile'] = 'Mobile number is required';
+        isValid = false;
+      } else if (!_isValidMobile(mobileController.text.trim())) {
+        _errors['mobile'] = 'Please enter a valid 10-digit mobile number';
+        isValid = false;
+      }
+
+      // Validate lead source
+      // if (_selectedType.isEmpty) {
+      //   _errors['leadSource'] = 'Please select a lead source';
+      //   isValid = false;
+      // }
+    });
+
+    return isValid;
+  }
+
+  // Validate page 2 fields
+  bool _validatePage2() {
+    bool isValid = true;
+    setState(() {
+      _errors = {}; // Clear previous errors
+
+      // Validate brand
+      if (_selectedBrand.isEmpty) {
+        _errors['brand'] = 'Please select a brand';
+        isValid = false;
+      }
+
+      // Validate fuel type
+      if (_selectedFuel.isEmpty) {
+        _errors['fuel'] = 'Please select a fuel type';
+        isValid = false;
+      }
+
+      // Validate purchase type
+      if (_selectedPurchaseType.isEmpty) {
+        _errors['purchaseType'] = 'Please select a purchase type';
+        isValid = false;
+      }
+
+      // Validate enquiry type
+      if (_selectedEnquiryType.isEmpty) {
+        _errors['enquiryType'] = 'Please select an enquiry type';
+        isValid = false;
+      }
+
+      // Validate primary model interest
+      // if (modelInterestController.text.trim().isEmpty) {
+      //   _errors['model'] = 'Primary model interest is required';
+      //   isValid = false;
+      // }
+
+      // Validate expected purchase date
+      if (endDateController.text.trim().isEmpty) {
+        _errors['purchaseDate'] = 'Expected purchase date is required';
+        isValid = false;
+      }
+    });
+
+    return isValid;
+  }
+
+  // Email validation
+  bool _isValidEmail(String email) {
+    final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegExp.hasMatch(email);
+  }
+
+  // Mobile validation
+  bool _isValidMobile(String mobile) {
+    // Remove any non-digit characters
+    String digitsOnly = mobile.replaceAll(RegExp(r'\D'), '');
+
+    // Check if it's 10 digits (standard Indian mobile number)
+    return digitsOnly.length == 10;
+  }
+
   void _nextStep() {
-    if (_currentStep < 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-      setState(() => _currentStep++);
+    if (_currentStep == 0) {
+      // Validate first page before proceeding
+      if (_validatePage1()) {
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        setState(() => _currentStep++);
+      } else {
+        // Show a snackbar with validation errors
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please correct the errors before continuing'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } else {
-      _submitForm(); // ✅ Calls the submit function when on the last step
+      // Validate second page before submitting
+      if (_validatePage2()) {
+        _submitForm();
+      } else {
+        print('select the fiels first');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please complete all required fields'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -223,7 +353,7 @@ class _CreateLeadsState extends State<CreateLeads> {
               ],
             ),
             SizedBox(
-              height: height * .57,
+              height: height * .65,
               child: PageView(
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
@@ -239,7 +369,13 @@ class _CreateLeadsState extends State<CreateLeads> {
                                 controller: firstNameController,
                                 hintText: 'first name',
                                 isRequired: true,
+                                errorText: _errors['firstName'],
                                 onChanged: (value) {
+                                  if (_errors.containsKey('firstName')) {
+                                    setState(() {
+                                      _errors.remove('firstName');
+                                    });
+                                  }
                                   print("firstName : $value");
                                 }),
                           ),
@@ -248,9 +384,15 @@ class _CreateLeadsState extends State<CreateLeads> {
                             child: _buildTextField(
                                 isRequired: true,
                                 label: 'Last Name',
+                                errorText: _errors['lastName'],
                                 controller: lastNameController,
                                 hintText: 'Last name',
                                 onChanged: (value) {
+                                  if (_errors.containsKey('lastName')) {
+                                    setState(() {
+                                      _errors.remove('lastName');
+                                    });
+                                  }
                                   print("lastName : $value");
                                 }),
                           )
@@ -261,15 +403,27 @@ class _CreateLeadsState extends State<CreateLeads> {
                           label: 'Email',
                           controller: emailController,
                           hintText: 'Email',
+                          errorText: _errors['email'],
                           onChanged: (value) {
+                            if (_errors.containsKey('email')) {
+                              setState(() {
+                                _errors.remove('email');
+                              });
+                            }
                             print("email : $value");
                           }),
                       _buildTextField(
                           isRequired: true,
                           label: 'Mobile No',
                           controller: mobileController,
+                          errorText: _errors['mobile'],
                           hintText: '+91',
                           onChanged: (value) {
+                            if (_errors.containsKey('mobile')) {
+                              setState(() {
+                                _errors.remove('mobile');
+                              });
+                            }
                             print("mobile : $value");
                           }),
                       const SizedBox(
@@ -279,9 +433,13 @@ class _CreateLeadsState extends State<CreateLeads> {
                         label: 'Lead Source',
                         options: {"Email": "Email", "Online Add": "Online Add"},
                         groupValue: _selectedType,
+                        errorText: _errors['leadSource'],
                         onChanged: (value) {
                           setState(() {
                             _selectedType = value;
+                            if (_errors.containsKey('leadSource')) {
+                              _errors.remove('leadSource');
+                            }
                           });
                         },
                       ),
@@ -298,19 +456,21 @@ class _CreateLeadsState extends State<CreateLeads> {
                           options: {
                             "Jaguar": "Jaguar",
                             "Land Rover": "Land Rover",
-                            // "Range Rover": "Range Rover",
-                            // "Discovery": "Discovery"
                           },
                           groupValue: _selectedBrand,
                           label: 'Brand',
+                          errorText: _errors['brand'],
                           onChanged: (value) {
                             setState(() {
                               _selectedBrand = value;
+                              if (_errors.containsKey('brand')) {
+                                _errors.remove('brand');
+                              }
                             });
                           }),
                       const SizedBox(height: 10),
 
-                      _buildButtonFuel(
+                      _buildButtonsFloat(
                           options: {
                             // "EV": "EV",
                             "Petrol": "Petrol",
@@ -318,26 +478,34 @@ class _CreateLeadsState extends State<CreateLeads> {
                           },
                           groupValue: _selectedFuel,
                           label: 'Fuel Type',
+                          errorText: _errors['fuel'],
                           onChanged: (value) {
                             setState(() {
+                              if (_errors.containsKey('fuel')) {
+                                _errors.remove('fuel');
+                              }
                               _selectedFuel = value;
                             });
                           }),
                       const SizedBox(height: 10),
-                      _buildPurchaseType(
+                      _buildButtonsFloat(
                           options: {
                             "New": "New Vehicle",
-                            "Old": "Old",
+                            "Pre-Owned": "Used Vehicle",
                           },
                           groupValue: _selectedPurchaseType,
                           label: 'Purchase Type',
+                          errorText: _errors['purchaseType'],
                           onChanged: (value) {
                             setState(() {
                               _selectedPurchaseType = value;
+                              if (_errors.containsKey('purchaseType')) {
+                                _errors.remove('purchaseType');
+                              }
                             });
                           }),
                       const SizedBox(height: 10),
-                      _buildEnquiryType(
+                      _buildButtonsFloat(
                           options: {
                             "KMI": "KMI",
                             "Generic":
@@ -345,9 +513,13 @@ class _CreateLeadsState extends State<CreateLeads> {
                           },
                           groupValue: _selectedEnquiryType,
                           label: 'Enquiry Type',
+                          errorText: _errors['enquiryType'],
                           onChanged: (value) {
                             setState(() {
                               _selectedEnquiryType = value;
+                              if (_errors.containsKey('enquiryType')) {
+                                _errors.remove('enquiryType');
+                              }
                             });
                           }),
                       const SizedBox(height: 5),
@@ -398,6 +570,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                       _buildDatePicker(
                           label: 'Expected purchase date',
                           controller: endDateController,
+                          errorText: _errors['purchaseDate'],
                           onTap: () => _pickDate(isStartDate: false)),
                     ],
                   ),
@@ -418,7 +591,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                     ),
                     onPressed: () {
                       if (_currentStep == 0) {
-                        Navigator.pop(context); // ✅ Closes if on first page
+                        Navigator.pop(context); // Close if on first page
                       } else {
                         _pageController.previousPage(
                           duration: const Duration(milliseconds: 300),
@@ -444,9 +617,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                     ),
                     onPressed: _nextStep,
                     child: Text(
-                      _currentStep == 1
-                          ? "Create"
-                          : "Continue", // ✅ Corrected step check
+                      _currentStep == 1 ? "Create" : "Continue",
                       style: AppFont.buttons(context),
                     ),
                   ),
@@ -465,6 +636,7 @@ class _CreateLeadsState extends State<CreateLeads> {
     required String label,
     required ValueChanged<String> onChanged,
     bool isRequired = false,
+    String? errorText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -496,28 +668,39 @@ class _CreateLeadsState extends State<CreateLeads> {
           height: 5,
         ),
         Container(
-          height: 45,
           width: double.infinity,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: const Color.fromARGB(255, 248, 247, 247)),
-          child: TextField(
-            controller: controller, // Assign the controller
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: GoogleFonts.poppins(color: Colors.grey, fontSize: 12),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              border: InputBorder.none,
-            ),
-            onChanged: onChanged,
+            borderRadius: BorderRadius.circular(5),
+            color: const Color.fromARGB(255, 248, 247, 247),
+            border: errorText != null
+                ? Border.all(color: Colors.red, width: 1.0)
+                : null,
           ),
-        )
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: TextField(
+              controller: controller,
+              style: AppFont.dropDowmLabel(context),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle:
+                    GoogleFonts.poppins(color: Colors.grey, fontSize: 12),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                border: InputBorder.none,
+              ),
+              onChanged: onChanged,
+            ),
+          ),
+        ),
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 5, top: 0),
+            child: Text(
+              errorText,
+              style: AppFont.validationtxt(context),
+            ),
+          ),
       ],
     );
   }
@@ -526,6 +709,7 @@ class _CreateLeadsState extends State<CreateLeads> {
     required String label,
     required TextEditingController controller,
     required VoidCallback onTap,
+    String? errorText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -550,7 +734,9 @@ class _CreateLeadsState extends State<CreateLeads> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 // color: AppColors.containerPopBg,
-                border: Border.all(color: Colors.black, width: 0.5)),
+                border: errorText != null
+                    ? Border.all(color: Colors.red)
+                    : Border.all(color: Colors.black, width: 0.5)),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -584,76 +770,146 @@ class _CreateLeadsState extends State<CreateLeads> {
     required String groupValue,
     required String label,
     required ValueChanged<String> onChanged,
+    String? errorText,
   }) {
     List<String> optionKeys = options.keys.toList();
 
-    return Container(
-      decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 248, 247, 247),
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment
-                  .center, // ✅ Aligns label and buttons properly
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 248, 247, 247),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            border: errorText != null
+                ? Border.all(color: Colors.red, width: 1.0)
+                : null,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 🔹 Brand Label (Left Side, Vertically Centered)
-                SizedBox(
-                  child: Align(
-                    alignment:
-                        Alignment.centerRight, // ✅ Ensures proper alignment
-                    child: Text(
-                      label,
-                      style: AppFont.dropDowmLabel(context),
-                      textAlign: TextAlign.left,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      child: RichText(
+                        text: TextSpan(
+                          style: AppFont.dropDowmLabel(context),
+                          children: [
+                            TextSpan(text: label),
+                            const TextSpan(
+                              text: " *",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
                     ),
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-
-                // 🔹 Right Side: Brand Options in Two Rows
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align buttons left
-                    children: [
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.end, // ✅ Align left
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildOptionButton(
-                              optionKeys[0], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                          _buildOptionButton(
-                              optionKeys[1], options, groupValue, onChanged),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              _buildOptionButton(optionKeys[0], options,
+                                  groupValue, onChanged),
+                              const SizedBox(width: 5),
+                              _buildOptionButton(optionKeys[1], options,
+                                  groupValue, onChanged),
+                            ],
+                          ),
                         ],
                       ),
-                      // const SizedBox(height: 4), // ✅ Space between rows
-                      // Row(
-                      //   mainAxisAlignment:
-                      //       MainAxisAlignment.end, // ✅ Align left
-                      //   children: [
-                      //     _buildOptionButton(
-                      //         optionKeys[2], options, groupValue, onChanged),
-                      //     const SizedBox(width: 5),
-                      //     _buildOptionButton(
-                      //         optionKeys[3], options, groupValue, onChanged),
-                      //   ],
-                      // ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 5, top: 0),
+            child: Text(
+              errorText,
+              style: GoogleFonts.poppins(color: Colors.redAccent, fontSize: 12),
+            ),
+          ),
+      ],
     );
   }
+  // Widget _buildButtonsFloat({
+  //   required Map<String, String> options,
+  //   required String groupValue,
+  //   required String label,
+  //   required ValueChanged<String> onChanged,
+  //   String? errorText,
+  // }) {
+  //   List<String> optionKeys = options.keys.toList();
+
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //         color: const Color.fromARGB(255, 248, 247, 247),
+  //         borderRadius: const BorderRadius.all(Radius.circular(5)),
+  //         border: errorText != null
+  //             ? Border.all(color: Colors.red, width: 1.0)
+  //             : null),
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(8.0),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Row(
+  //             crossAxisAlignment: CrossAxisAlignment
+  //                 .center, // ✅ Aligns label and buttons properly
+  //             children: [
+  //               // 🔹 Brand Label (Left Side, Vertically Centered)
+  //               SizedBox(
+  //                 child: Align(
+  //                   alignment:
+  //                       Alignment.centerRight, // ✅ Ensures proper alignment
+  //                   child: Text(
+  //                     label,
+  //                     style: AppFont.dropDowmLabel(context),
+  //                     textAlign: TextAlign.left,
+  //                   ),
+  //                 ),
+  //               ),
+
+  //               const SizedBox(width: 10),
+
+  //               // 🔹 Right Side: Brand Options in Two Rows
+  //               Expanded(
+  //                 child: Column(
+  //                   crossAxisAlignment:
+  //                       CrossAxisAlignment.start, // Align buttons left
+  //                   children: [
+  //                     Row(
+  //                       mainAxisAlignment:
+  //                           MainAxisAlignment.end, // ✅ Align left
+  //                       children: [
+  //                         _buildOptionButton(
+  //                             optionKeys[0], options, groupValue, onChanged),
+  //                         const SizedBox(width: 5),
+  //                         _buildOptionButton(
+  //                             optionKeys[1], options, groupValue, onChanged),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildAmountRange() {
     // Convert to lakhs for display
@@ -724,75 +980,83 @@ class _CreateLeadsState extends State<CreateLeads> {
     );
   }
 
-  Widget _buildButtonFuel({
-    required Map<String, String> options,
-    required String groupValue,
-    required String label,
-    required ValueChanged<String> onChanged,
-  }) {
-    List<String> optionKeys = options.keys.toList();
+  // Widget _buildButtonFuel({
+  //   required Map<String, String> options,
+  //   required String groupValue,
+  //   required String label,
+  //   required ValueChanged<String> onChanged,
+  //   String? errorText,
+  // }) {
+  //   List<String> optionKeys = options.keys.toList();
 
-    return Container(
-      height: MediaQuery.of(context).size.height * .06,
-      decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 248, 247, 247),
-          borderRadius: BorderRadius.all(Radius.circular(5))),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment
-                  .center, // ✅ Aligns label and buttons properly
-              children: [
-                // 🔹 Brand Label (Left Side, Vertically Centered)
-                SizedBox(
-                  // width: 80, // ✅ Fixed width to align properly
-                  child: Align(
-                    alignment:
-                        Alignment.centerRight, // ✅ Ensures proper alignment
-                    child: Text(
-                      label,
-                      style: AppFont.dropDowmLabel(context),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ),
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Container(
+  //         height: MediaQuery.of(context).size.height * .06,
+  //         decoration: BoxDecoration(
+  //             color: const Color.fromARGB(255, 248, 247, 247),
+  //             borderRadius: const BorderRadius.all(
+  //               Radius.circular(5),
+  //             ),
+  //             border: errorText != null
+  //                 ? Border.all(color: Colors.red, width: 1.0)
+  //                 : null),
+  //         child: Padding(
+  //           padding: const EdgeInsets.all(8.0),
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Row(
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 children: [
+  //                   SizedBox(
+  //                     child: Align(
+  //                       alignment:
+  //                           Alignment.centerRight, // ✅ Ensures proper alignment
+  //                       child: Text(
+  //                         label,
+  //                         style: AppFont.dropDowmLabel(context),
+  //                         textAlign: TextAlign.left,
+  //                       ),
+  //                     ),
+  //                   ),
 
-                const SizedBox(width: 10),
+  //                   const SizedBox(width: 10),
 
-                // 🔹 Right Side: Brand Options in Two Rows
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align buttons left
-                    children: [
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.end, // ✅ Align left
-                        children: [
-                          _buildOptionFuel(
-                              optionKeys[0], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                          _buildOptionFuel(
-                              optionKeys[1], options, groupValue, onChanged),
-                          // const SizedBox(width: 5),
-                          // _buildOptionFuel(
-                          //     optionKeys[2], options, groupValue, onChanged),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  //                   // 🔹 Right Side: Brand Options in Two Rows
+  //                   Expanded(
+  //                     child: Column(
+  //                       crossAxisAlignment:
+  //                           CrossAxisAlignment.start, // Align buttons left
+  //                       children: [
+  //                         Row(
+  //                           mainAxisAlignment:
+  //                               MainAxisAlignment.end, // ✅ Align left
+  //                           children: [
+  //                             _buildOptionFuel(optionKeys[0], options,
+  //                                 groupValue, onChanged),
+  //                             const SizedBox(width: 5),
+  //                             _buildOptionFuel(optionKeys[1], options,
+  //                                 groupValue, onChanged),
+  //                             // const SizedBox(width: 5),
+  //                             // _buildOptionFuel(
+  //                             //     optionKeys[2], options, groupValue, onChanged),
+  //                           ],
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
 // ✅ Button Builder Function
   Widget _buildOptionButton(String shortText, Map<String, String> options,
@@ -828,252 +1092,253 @@ class _CreateLeadsState extends State<CreateLeads> {
     );
   }
 
-  Widget _buildEnquiryType({
-    required Map<String, String> options,
-    required String groupValue,
-    required String label,
-    required ValueChanged<String> onChanged,
-  }) {
-    List<String> optionKeys = options.keys.toList();
+  // Widget _buildEnquiryType({
+  //   required Map<String, String> options,
+  //   required String groupValue,
+  //   required String label,
+  //   required ValueChanged<String> onChanged,
+  //   String? errorText,
+  // }) {
+  //   List<String> optionKeys = options.keys.toList();
 
-    return Container(
-      height: MediaQuery.of(context).size.height * .06,
-      decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 248, 247, 247),
-          borderRadius: BorderRadius.all(Radius.circular(5))),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment
-                  .center, // ✅ Aligns label and buttons properly
-              children: [
-                // 🔹 Brand Label (Left Side, Vertically Centered)
-                SizedBox(
-                  // width: 80, // ✅ Fixed width to align properly
-                  child: Align(
-                    alignment:
-                        Alignment.centerRight, // ✅ Ensures proper alignment
-                    child: Text(
-                      label,
-                      style: AppFont.dropDowmLabel(context),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ),
+  //   return Container(
+  //     height: MediaQuery.of(context).size.height * .06,
+  //     decoration: BoxDecoration(
+  //       color: const Color.fromARGB(255, 248, 247, 247),
+  //       borderRadius: BorderRadius.all(Radius.circular(5)),
+  //       border: errorText != null
+  //           ? Border.all(color: Colors.red, width: 1.0)
+  //           : null,
+  //     ),
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(8.0),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Row(
+  //             crossAxisAlignment: CrossAxisAlignment
+  //                 .center, // ✅ Aligns label and buttons properly
+  //             children: [
+  //               // 🔹 Brand Label (Left Side, Vertically Centered)
+  //               SizedBox(
+  //                 // width: 80, // ✅ Fixed width to align properly
+  //                 child: Align(
+  //                   alignment:
+  //                       Alignment.centerRight, // ✅ Ensures proper alignment
+  //                   child: Text(
+  //                     label,
+  //                     style: AppFont.dropDowmLabel(context),
+  //                     textAlign: TextAlign.left,
+  //                   ),
+  //                 ),
+  //               ),
 
-                const SizedBox(width: 10),
+  //               const SizedBox(width: 10),
 
-                // 🔹 Right Side: Brand Options in Two Rows
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align buttons left
-                    children: [
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.end, // ✅ Align left
-                        children: [
-                          _buildOptionButtonEnquiry(
-                              optionKeys[0], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                          _buildOptionButtonEnquiry(
-                              optionKeys[1], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  //               // 🔹 Right Side: Brand Options in Two Rows
+  //               Expanded(
+  //                 child: Column(
+  //                   crossAxisAlignment:
+  //                       CrossAxisAlignment.start, // Align buttons left
+  //                   children: [
+  //                     Row(
+  //                       mainAxisAlignment:
+  //                           MainAxisAlignment.end, // ✅ Align left
+  //                       children: [
+  //                         _buildOptionButtonEnquiry(
+  //                             optionKeys[0], options, groupValue, onChanged),
+  //                         const SizedBox(width: 5),
+  //                         _buildOptionButtonEnquiry(
+  //                             optionKeys[1], options, groupValue, onChanged),
+  //                         const SizedBox(width: 5),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildPurchaseType({
-    required Map<String, String> options,
-    required String groupValue,
-    required String label,
-    required ValueChanged<String> onChanged,
-  }) {
-    List<String> optionKeys = options.keys.toList();
+  // Widget _buildPurchaseType({
+  //   required Map<String, String> options,
+  //   required String groupValue,
+  //   required String label,
+  //   required ValueChanged<String> onChanged,
+  //   String? errorText,
+  // }) {
+  //   List<String> optionKeys = options.keys.toList();
 
-    return Container(
-      height: MediaQuery.of(context).size.height * .06,
-      decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 248, 247, 247),
-          borderRadius: BorderRadius.all(Radius.circular(5))),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment
-                  .center, // ✅ Aligns label and buttons properly
-              children: [
-                // 🔹 Brand Label (Left Side, Vertically Centered)
-                SizedBox(
-                  // width: 80, // ✅ Fixed width to align properly
-                  child: Align(
-                    alignment:
-                        Alignment.centerRight, // ✅ Ensures proper alignment
-                    child: Text(
-                      label,
-                      style: AppFont.dropDowmLabel(context),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ),
+  //   return Container(
+  //     height: MediaQuery.of(context).size.height * .06,
+  //     decoration: BoxDecoration(
+  //         color: const Color.fromARGB(255, 248, 247, 247),
+  //         borderRadius: const BorderRadius.all(Radius.circular(5)),
+  //         border: errorText != null
+  //             ? Border.all(color: Colors.red, width: 1.0)
+  //             : null),
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(8.0),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Row(
+  //             crossAxisAlignment: CrossAxisAlignment.center,
+  //             children: [
+  //               SizedBox(
+  //                 child: Align(
+  //                   alignment: Alignment.centerRight,
+  //                   child: Text(
+  //                     label,
+  //                     style: AppFont.dropDowmLabel(context),
+  //                     textAlign: TextAlign.left,
+  //                   ),
+  //                 ),
+  //               ),
+  //               const SizedBox(width: 10),
+  //               Expanded(
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.end,
+  //                       children: [
+  //                         _buildOptionButtonPurchase(
+  //                             optionKeys[0], options, groupValue, onChanged),
+  //                         const SizedBox(width: 5),
+  //                         _buildOptionButtonPurchase(
+  //                             optionKeys[1], options, groupValue, onChanged),
+  //                         const SizedBox(width: 5),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-                const SizedBox(width: 10),
+  // Widget _buildOptionFuel(String shortText, Map<String, String> options,
+  //     String groupValue, ValueChanged<String> onChanged) {
+  //   bool isSelected = groupValue == options[shortText];
 
-                // 🔹 Right Side: Brand Options in Two Rows
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align buttons left
-                    children: [
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.end, // ✅ Align left
-                        children: [
-                          _buildOptionButtonPurchase(
-                              optionKeys[0], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                          _buildOptionButtonPurchase(
-                              optionKeys[1], options, groupValue, onChanged),
-                          const SizedBox(width: 5),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  //   return GestureDetector(
+  //     onTap: () {
+  //       onChanged(options[shortText]!);
+  //     },
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+  //       decoration: BoxDecoration(
+  //         border: Border.all(
+  //           color: isSelected ? AppColors.colorsBlue : Colors.grey,
+  //           width: 1.0,
+  //         ),
+  //         borderRadius: BorderRadius.circular(15),
+  //         color:
+  //             isSelected ? AppColors.colorsBlue.withOpacity(0.2) : Colors.white,
+  //       ),
+  //       child: Center(
+  //         child: Text(
+  //           shortText,
+  //           style: TextStyle(
+  //             color: isSelected ? AppColors.colorsBlue : Colors.black,
+  //             fontSize: 12,
+  //             fontWeight: FontWeight.w400,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildOptionFuel(String shortText, Map<String, String> options,
-      String groupValue, ValueChanged<String> onChanged) {
-    bool isSelected = groupValue == options[shortText];
+  // Widget _buildOptionButtonEnquiry(
+  //     String shortText,
+  //     Map<String, String> options,
+  //     String groupValue,
+  //     ValueChanged<String> onChanged) {
+  //   bool isSelected = groupValue == options[shortText];
 
-    return GestureDetector(
-      onTap: () {
-        onChanged(options[shortText]!);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? AppColors.colorsBlue : Colors.grey,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(15),
-          color:
-              isSelected ? AppColors.colorsBlue.withOpacity(0.2) : Colors.white,
-        ),
-        child: Center(
-          child: Text(
-            shortText,
-            style: TextStyle(
-              color: isSelected ? AppColors.colorsBlue : Colors.black,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  //   return GestureDetector(
+  //     onTap: () {
+  //       onChanged(options[shortText]!);
+  //     },
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+  //       decoration: BoxDecoration(
+  //         border: Border.all(
+  //           color: isSelected ? AppColors.colorsBlue : Colors.grey,
+  //           width: 1.0,
+  //         ),
+  //         borderRadius: BorderRadius.circular(15),
+  //         color:
+  //             isSelected ? AppColors.colorsBlue.withOpacity(0.2) : Colors.white,
+  //       ),
+  //       child: Center(
+  //         child: Text(
+  //           shortText,
+  //           style: TextStyle(
+  //             color: isSelected ? AppColors.colorsBlue : Colors.black,
+  //             fontSize: 12,
+  //             fontWeight: FontWeight.w400,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildOptionButtonEnquiry(
-      String shortText,
-      Map<String, String> options,
-      String groupValue,
-      ValueChanged<String> onChanged) {
-    bool isSelected = groupValue == options[shortText];
+  // Widget _buildOptionButtonPurchase(
+  //     String shortText,
+  //     Map<String, String> options,
+  //     String groupValue,
+  //     ValueChanged<String> onChanged) {
+  //   bool isSelected = groupValue == options[shortText];
 
-    return GestureDetector(
-      onTap: () {
-        onChanged(options[shortText]!);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? AppColors.colorsBlue : Colors.grey,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(15),
-          color:
-              isSelected ? AppColors.colorsBlue.withOpacity(0.2) : Colors.white,
-        ),
-        child: Center(
-          child: Text(
-            shortText,
-            style: TextStyle(
-              color: isSelected ? AppColors.colorsBlue : Colors.black,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOptionButtonPurchase(
-      String shortText,
-      Map<String, String> options,
-      String groupValue,
-      ValueChanged<String> onChanged) {
-    bool isSelected = groupValue == options[shortText];
-
-    return GestureDetector(
-      onTap: () {
-        onChanged(options[shortText]!);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? AppColors.colorsBlue : Colors.grey,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(15),
-          color:
-              isSelected ? AppColors.colorsBlue.withOpacity(0.2) : Colors.white,
-        ),
-        child: Center(
-          child: Text(
-            shortText,
-            style: TextStyle(
-              color: isSelected ? AppColors.colorsBlue : Colors.black,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  //   return GestureDetector(
+  //     onTap: () {
+  //       onChanged(options[shortText]!);
+  //     },
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+  //       decoration: BoxDecoration(
+  //         border: Border.all(
+  //           color: isSelected ? AppColors.colorsBlue : Colors.grey,
+  //           width: 1.0,
+  //         ),
+  //         borderRadius: BorderRadius.circular(15),
+  //         color:
+  //             isSelected ? AppColors.colorsBlue.withOpacity(0.2) : Colors.white,
+  //       ),
+  //       child: Center(
+  //         child: Text(
+  //           shortText,
+  //           style: TextStyle(
+  //             color: isSelected ? AppColors.colorsBlue : Colors.black,
+  //             fontSize: 12,
+  //             fontWeight: FontWeight.w400,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildButtons({
     required Map<String, String>
         options, // ✅ Use a Map for short display & actual value
     required String groupValue,
     required String label,
+    String? errorText,
     required ValueChanged<String> onChanged,
   }) {
     return Column(
@@ -1099,8 +1364,7 @@ class _CreateLeadsState extends State<CreateLeads> {
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                margin: const EdgeInsets.only(
-                    right: 10), // Adds spacing between buttons
+                margin: const EdgeInsets.only(right: 10),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: isSelected ? AppColors.colorsBlue : Colors.black,
@@ -1169,10 +1433,8 @@ class _CreateLeadsState extends State<CreateLeads> {
       if (response != null) {
         print("Response received: $response"); // ✅ Print full response
 
-        if (response.containsKey('newLead')) {
-          String leadId = response['newLead']['lead_id'];
-          print(
-              "Lead Created Successfully: Lead ID - $leadId"); // ✅ Log success
+        if (response.containsKey('data')) {
+          String leadId = response['data']['lead_id'];
 
           if (context.mounted) {
             Navigator.push(
