@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/pages/home_screens/all_followups.dart';
+import 'package:smart_assist/pages/Leads/All_field/all_followups.dart';
 import 'package:smart_assist/widgets/home_btn.dart/leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/order.dart';
 import 'package:smart_assist/widgets/home_btn.dart/test_drive.dart';

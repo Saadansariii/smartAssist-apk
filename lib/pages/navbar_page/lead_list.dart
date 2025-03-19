@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class LeadsList extends StatefulWidget {
@@ -35,7 +37,7 @@ class LeadsListState extends State<LeadsList> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          upcomingTasks = data['rows'] ?? [];
+          upcomingTasks = data['data']['rows'] ?? [];
           isLoading = false;
         });
       } else {
@@ -192,48 +194,145 @@ class _TaskItemState extends State<TaskItem> {
             children: [
               Icon(
                 isFav ? Icons.star_rounded : Icons.star_border_rounded,
-                color: isFav ? Colors.amber : Colors.grey,
+                color: isFav
+                    ? AppColors.starColorsYellow
+                    : AppColors.starBorderColor,
                 size: 40,
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_today,
-                            color: Colors.blue, size: 14),
-                        const SizedBox(width: 8),
-                        Text(
-                          widget.date,
-                          style:
-                              const TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              const SizedBox(width: 8),
+              // Expanded(
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Text(
+              //         widget.name,
+              //         style: const TextStyle(
+              //           fontWeight: FontWeight.bold,
+              //           fontSize: 18,
+              //         ),
+              //       ),
+              //       const SizedBox(height: 8),
+              //       Row(
+              //         children: [
+              //           const Icon(Icons.calendar_today,
+              //               color: Colors.blue, size: 14),
+              //           const SizedBox(width: 8),
+              //           Text(
+              //             widget.date,
+              //             style:
+              //                 const TextStyle(fontSize: 12, color: Colors.grey),
+              //           ),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildUserDetails(),
+                  const SizedBox(width: 8),
+                  Row(
+                    children: [
+                      _date(),
+                      const SizedBox(width: 8),
+                      _buildVerticalDivider(20),
+                      const SizedBox(width: 8),
+                      _buildCarModel(),
+                    ],
+                  ),
+                ],
               ),
-              Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.grey[400],
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: const Icon(Icons.arrow_forward_ios_sharp,
-                    size: 25, color: Colors.white),
-              ),
+              _buildNavigationButton()
+              // Container(
+              //   padding: const EdgeInsets.all(5),
+              //   decoration: BoxDecoration(
+              //     color: Colors.grey[400],
+              //     borderRadius: BorderRadius.circular(30),
+              //   ),
+              //   child: const Icon(Icons.arrow_forward_ios_sharp,
+              //       size: 25, color: Colors.white),
+              // ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildUserDetails() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.name,
+            style: GoogleFonts.poppins(
+                color: AppColors.fontColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 14)),
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+
+  Widget _date() {
+    String formattedDate = '';
+    try {
+      DateTime parseDate = DateTime.parse(widget.date);
+      formattedDate = DateFormat('dd/MM/yyyy').format(parseDate);
+    } catch (e) {
+      formattedDate = widget.date;
+    }
+    return Row(
+      children: [
+        const Icon(Icons.phone_in_talk, color: Colors.blue, size: 14),
+        const SizedBox(width: 5),
+        Text(formattedDate,
+            style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    );
+  }
+
+  Widget _buildVerticalDivider(double height) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      height: height,
+      width: 1,
+      decoration: const BoxDecoration(
+          border: Border(right: BorderSide(color: AppColors.fontColor))),
+    );
+  }
+
+  Widget _buildCarModel() {
+    return Text(
+      widget.vehicle,
+      textAlign: TextAlign.start,
+      style: GoogleFonts.poppins(fontSize: 10, color: AppColors.fontColor),
+      softWrap: true,
+      overflow: TextOverflow.visible,
+    );
+  }
+
+  Widget _buildNavigationButton() {
+    return GestureDetector(
+      // onTap: () {
+      //   if (widget.leadId.isNotEmpty) {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => SingleLeadsById(leadId: widget.leadId),
+      //       ),
+      //     );
+      //   } else {
+      //     print("Invalid leadId");
+      //   }
+      // },
+      child: Container(
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+            color: AppColors.arrowContainerColor,
+            borderRadius: BorderRadius.circular(30)),
+        child: const Icon(Icons.arrow_forward_ios_rounded,
+            size: 25, color: Colors.white),
       ),
     );
   }

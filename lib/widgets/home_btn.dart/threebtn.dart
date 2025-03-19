@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/pages/home_screens/all_appointment.dart';
-import 'package:smart_assist/pages/home_screens/all_followups.dart';
+import 'package:smart_assist/pages/Leads/All_field/all_appointment.dart';
+import 'package:smart_assist/pages/Leads/All_field/all_followups.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/pages/Leads/All_field/all_testdrive.dart'; 
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_leads.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_first.dart';
 import 'package:smart_assist/widgets/oppointment/overdue.dart';
 import 'package:smart_assist/widgets/oppointment/upcoming.dart';
 import 'package:smart_assist/widgets/testdrive/overdue.dart';
@@ -19,10 +19,13 @@ class Threebtn extends StatefulWidget {
   final String leadId;
   final int overdueFollowupsCount;
   final int overdueAppointmentsCount;
+  final int overdueTestDrivesCount;
   final List<dynamic> upcomingFollowups;
   final List<dynamic> overdueFollowups;
   final List<dynamic> upcomingAppointments;
   final List<dynamic> overdueAppointments;
+  final List<dynamic> upcomingTestDrives;
+  final List<dynamic> overdueTestDrives;
   final Future<void> Function() refreshDashboard;
   // final VoidCallback refreshDashboard;
   const Threebtn(
@@ -34,7 +37,10 @@ class Threebtn extends StatefulWidget {
       required this.overdueAppointments,
       required this.refreshDashboard,
       required this.overdueFollowupsCount,
-      required this.overdueAppointmentsCount});
+      required this.overdueAppointmentsCount,
+      required this.overdueTestDrivesCount,
+      required this.upcomingTestDrives,
+      required this.overdueTestDrives});
 
   @override
   State<Threebtn> createState() => _ThreebtnState();
@@ -331,16 +337,14 @@ class _ThreebtnState extends State<Threebtn> {
                                 (_activeButtonIndex == 2 &&
                                     (widget.overdueAppointmentsCount > 0 ||
                                         widget.overdueAppointmentsCount > 0)))
-                            
                               Text(
                                 (_activeButtonIndex == 0)
-                                    ? '(${widget.overdueFollowupsCount})'
+                                    ? '(${widget.overdueTestDrivesCount})'
                                     : (_activeButtonIndex == 1)
-                                        ? '(${widget.overdueAppointmentsCount})'
-                                        : '(${widget.overdueAppointments})',
+                                        ? '(${widget.overdueTestDrivesCount})'
+                                        : '(${widget.overdueTestDrivesCount})',
                                 style: GoogleFonts.poppins(
                                   fontSize: 10,
-                                  
                                   fontWeight: FontWeight.w400,
                                   color:
                                       const Color(0xff000000).withOpacity(0.56),
@@ -777,7 +781,6 @@ class _ThreebtnState extends State<Threebtn> {
 
         // show data
         currentWidget ?? const SizedBox(height: 10),
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -806,6 +809,18 @@ class _ThreebtnState extends State<Threebtn> {
                     MaterialPageRoute(
                       builder: (context) =>
                           const AllAppointment(), // Navigate to newFollowups() if selected 1
+                    ),
+                  );
+                } else if (_activeButtonIndex == 2) {
+                  setState(() {
+                    _activeButtonIndex = 2;
+                  });
+                  testDrive(_upcomingBtnTestdrive);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const AllTestdrive(), // Navigate to newFollowups() if selected 1
                     ),
                   );
                 }
@@ -849,9 +864,15 @@ class _ThreebtnState extends State<Threebtn> {
     setState(() {
       _upcomingBtnTestdrive = index;
       if (index == 0) {
-        currentWidget = const TestUpcoming(); // Upcoming Test Drive
+        currentWidget = TestUpcoming(
+          upcomingTestDrive: widget.upcomingTestDrives,
+          isNested: false,  
+        ); // Upcoming Test Drive
       } else if (index == 1) {
-        currentWidget = const TestOverdue(); // Overdue Test Drive
+        currentWidget = TestOverdue(
+          overdueTestDrive: widget.overdueTestDrives,
+          isNested: false,
+        ); // Overdue Test Drive
       }
     });
   }

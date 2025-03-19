@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
-import 'package:smart_assist/pages/calenderPages/calender.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
-import 'package:smart_assist/pages/home_screens/opportunity.dart';
+import 'package:smart_assist/pages/Calendar/calender.dart';
+import 'package:smart_assist/pages/Leads/home_screen.dart';
+import 'package:smart_assist/pages/Leads/opportunity.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
@@ -107,26 +107,26 @@ Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
               Clip.none, // Important! Allow children to render outside bounds
           children: [
             _buildPopupItem(controller, Icons.calendar_month_outlined,
-                "Appointment", -130, 120, onTap: () {
+                "Appointment", -5, -32, onTap: () {
               print("Appointment clicked!");
               controller.isFabExpanded.value = false;
               _showAppointmentPopup(context);
             }),
             _buildPopupItem(
-                controller, Icons.people_alt_rounded, "Lead", -65, 40,
+                controller, Icons.people_alt_rounded, "Lead", 70, -93,
                 onTap: () {
               print("Lead clicked");
               controller.isFabExpanded.value = false;
               _showLeadPopup(context);
             }),
-            _buildPopupItem(controller, Icons.call, "Followup", 5, 40,
+            _buildPopupItem(controller, Icons.call, "Followup", 30, 35,
                 onTap: () {
               print("Followup clicked");
               controller.isFabExpanded.value = false;
               _showFollowupPopup(context);
             }),
             _buildPopupItem(
-                controller, Icons.directions_car, "Test Drive", 30, 120,
+                controller, Icons.directions_car, "Test Drive", 20, 100,
                 onTap: () {
               print("Test Drive clicked");
               controller.isFabExpanded.value = false;
@@ -136,7 +136,6 @@ Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
         ),
       ),
     ],
-    
   );
 }
 
@@ -154,13 +153,22 @@ Widget _buildPopupItem(NavigationController controller, IconData icon,
         top: 150 + (dy * value), // Center point (300/2) + offset
         child: Opacity(
           opacity: value.clamp(0.1, 1.0),
-          child: Column(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 5),
               GestureDetector(
                 onTap: onTap,
                 behavior:
-                    HitTestBehavior.opaque, // Important for better hit testing   
+                    HitTestBehavior.opaque, // Important for better hit testing
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -168,15 +176,6 @@ Widget _buildPopupItem(NavigationController controller, IconData icon,
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Icon(icon, color: Colors.blue, size: 24),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                label,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
                 ),
               ),
             ],

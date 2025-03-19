@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
-import 'package:smart_assist/pages/login/second_screen.dart';
+import 'package:smart_assist/pages/login_steps/second_screen.dart';
 import 'package:smart_assist/services/email_srv.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/button.dart';

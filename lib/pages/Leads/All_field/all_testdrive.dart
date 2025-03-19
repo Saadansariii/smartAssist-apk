@@ -4,18 +4,20 @@ import 'package:http/http.dart' as http;
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart'; 
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
 import 'package:smart_assist/widgets/oppointment/overdue.dart';
 import 'package:smart_assist/widgets/oppointment/upcoming.dart';
+import 'package:smart_assist/widgets/testdrive/overdue.dart';
+import 'package:smart_assist/widgets/testdrive/upcoming.dart';
 
-class AllAppointment extends StatefulWidget {
-  const AllAppointment({super.key});
+class AllTestdrive extends StatefulWidget {
+  const AllTestdrive({super.key});
 
   @override
-  State<AllAppointment> createState() => _AllAppointmentState();
+  State<AllTestdrive> createState() => _AllTestdriveState();
 }
 
-class _AllAppointmentState extends State<AllAppointment> {
+class _AllTestdriveState extends State<AllTestdrive> {
   final Widget _createAppoinment = const AppointmentPopup();
   List<dynamic> _originalAllTasks = [];
   List<dynamic> _originalUpcomingTasks = [];
@@ -38,13 +40,15 @@ class _AllAppointmentState extends State<AllAppointment> {
     try {
       final token = await Storage.getToken();
       const String apiUrl =
-          "https://api.smartassistapp.in/api/events/all-events";
+          // "https://api.smartassistapp.in/api/events/all-events";
+          "https://api.smartassistapp.in/api/events/all-events?subject=Test%20Drive";
 
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
+          'Subject': 'Test Drive'
         },
       );
 
@@ -106,7 +110,7 @@ class _AllAppointmentState extends State<AllAppointment> {
         ),
         backgroundColor: Colors.blue,
         title: const Text(
-          'All Appointment',
+          'All Test Drive',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
@@ -205,37 +209,6 @@ class _AllAppointmentState extends State<AllAppointment> {
               ],
             ),
           ),
-          // Main content: for "All", show both sections in one scroll;
-          // for "Upcoming" or "Overdue", show just that section.
-          // SliverToBoxAdapter(
-          //   child: _isLoading
-          //       ? const Center(
-          //           child: CircularProgressIndicator(
-          //           color: AppColors.colorsBlue,
-          //         ))
-          //       : _upcommingButtonIndex == 0
-          //           ? Column(
-          //               children: [
-          //                 OppUpcoming(
-          //                   upcomingOpp: _filteredUpcomingTasks,
-          //                   isNested: true,
-          //                 ),
-          //                 OppOverdue(
-          //                   overdueeOpp: _filteredOverdueTasks,
-          //                   isNested: true,
-          //                 ),
-          //               ],
-          //             )
-          //           : _upcommingButtonIndex == 1
-          //               ? OppUpcoming(
-          //                   upcomingOpp: _filteredUpcomingTasks,
-          //                   isNested: false,
-          //                 )
-          //               : OppOverdue(
-          //                   overdueeOpp: _filteredOverdueTasks,
-          //                   isNested: false,
-          //                 ),
-          // ),
 
           SliverToBoxAdapter(
             child: _isLoading
@@ -254,58 +227,27 @@ class _AllAppointmentState extends State<AllAppointment> {
                         : Column(
                             children: [
                               if (_filteredUpcomingTasks.isNotEmpty)
-                                OppUpcoming(
-                                  upcomingOpp: _filteredUpcomingTasks,
+                                TestUpcoming(
+                                  upcomingTestDrive: _filteredUpcomingTasks,
                                   isNested: true,
                                 ),
                               if (_filteredOverdueTasks.isNotEmpty)
-                                OppOverdue(
-                                  overdueeOpp: _filteredOverdueTasks,
+                                TestOverdue(
+                                  overdueTestDrive: _filteredOverdueTasks,
                                   isNested: true,
                                 ),
                             ],
                           )
                     : _upcommingButtonIndex == 1
-                        ? OppUpcoming(
-                            upcomingOpp: _filteredUpcomingTasks,
+                        ? TestUpcoming(
+                            upcomingTestDrive: _filteredUpcomingTasks,
                             isNested: true,
                           )
-                        : OppOverdue(
-                            overdueeOpp: _filteredOverdueTasks,
+                        : TestOverdue(
+                            overdueTestDrive: _filteredOverdueTasks,
                             isNested: true,
                           ),
           ),
-
-          // SliverToBoxAdapter(
-          //   child: _isLoading
-          //       ? const Center(
-          //           child:
-          //               CircularProgressIndicator(color: AppColors.colorsBlue))
-          //       : _upcommingButtonIndex == 0
-          //           ? Column(
-          //               children: [
-          //                 if (_filteredUpcomingTasks.isNotEmpty)
-          //                   OppUpcoming(
-          //                     upcomingOpp: _filteredUpcomingTasks,
-          //                     isNested: true,
-          //                   ),
-          //                 if (_filteredOverdueTasks.isNotEmpty)
-          //                   OppOverdue(
-          //                     overdueeOpp: _filteredOverdueTasks,
-          //                     isNested: true,
-          //                   ),
-          //               ],
-          //             )
-          //           : _upcommingButtonIndex == 1
-          //               ? OppUpcoming(
-          //                   upcomingOpp: _filteredUpcomingTasks,
-          //                   isNested: false,
-          //                 )
-          //               : OppOverdue(
-          //                   overdueeOpp: _filteredOverdueTasks,
-          //                   isNested: false,
-          //                 ),
-          // ),
         ],
       ),
     );

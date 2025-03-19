@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/pages/home_screens/single_id_screens/single_leads.dart';
+import 'package:smart_assist/pages/Leads/single_id_screens/single_leads.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_third.dart';

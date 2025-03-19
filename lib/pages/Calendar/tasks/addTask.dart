@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/pages/calenderPages/tasks/task_appointment_pop.dart';
-import 'package:smart_assist/pages/calenderPages/tasks/task_followups_pop.dart';
+import 'package:smart_assist/pages/Calendar/tasks/task_appointment_pop.dart';
+import 'package:smart_assist/pages/Calendar/tasks/task_followups_pop.dart';
 import 'package:smart_assist/pages/navbar_page/lead_list.dart';
 import 'package:smart_assist/utils/storage.dart';
 
@@ -79,7 +79,7 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final rows = data['rows'] as List;
+        final rows = data['data']['rows'] as List;
 
         print("Extracted Rows: $rows"); // Debug: Ensure rows are extracted
 
@@ -91,8 +91,9 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
 
         setState(() {
           dropdownItems = rows.map<String>((row) {
-            String leadName = row['lead_name'] ??
-                "${row['fname'] ?? ''} ${row['lname'] ?? ''}".trim();
+            String leadName = row[data]['lead_name'] ??
+                "${row['data']['fname'] ?? ''} ${row['data']['lname'] ?? ''}"
+                    .trim();
             return leadName.isNotEmpty ? leadName : "Unknown"; // Default name
           }).toList();
 
@@ -132,8 +133,8 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
               // Dropdown 1 (Event Type)
               Align(
                 alignment: Alignment.centerLeft,
-                child:
-                    Text('Select event / task', style: AppFont.dropDowmLabel(context)),
+                child: Text('Select event / task',
+                    style: AppFont.dropDowmLabel(context)),
               ),
               const SizedBox(height: 5),
               Container(
@@ -164,7 +165,8 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
                       value: value,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10.0),
-                        child: Text(value, style: AppFont.dropDowmLabel(context)),
+                        child:
+                            Text(value, style: AppFont.dropDowmLabel(context)),
                       ),
                     );
                   }).toList(),

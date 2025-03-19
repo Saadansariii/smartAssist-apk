@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/pages/calenderPages/tasks/addTask.dart';
+import 'package:smart_assist/pages/Calendar/tasks/addTask.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/widgets/calender/appointment.dart';
 import 'package:smart_assist/widgets/calender/calender.dart';

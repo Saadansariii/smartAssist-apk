@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
-import 'package:smart_assist/pages/login/first_screen.dart';
+import 'package:smart_assist/pages/login_steps/first_screen.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:smart_assist/services/notifacation_srv.dart';

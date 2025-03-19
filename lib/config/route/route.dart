@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_assist/config/route/route_name.dart';
-import 'package:smart_assist/pages/login/login_page.dart';
-import 'package:smart_assist/pages/login/splash_screen.dart';
+import 'package:smart_assist/pages/login_steps/login_page.dart';
+import 'package:smart_assist/pages/login_steps/splash_screen.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 
 class Routes {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_assist/pages/details_pages/followups/followups.dart';
+import 'package:smart_assist/pages/Leads/single_details_pages/followups/followups.dart';
 
 class OverdueOpp extends StatelessWidget {
   const OverdueOpp({super.key});

@@ -2,7 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
-import 'package:smart_assist/pages/login/login_page.dart';
+import 'package:smart_assist/pages/login_steps/login_page.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/services/set_pwd_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';

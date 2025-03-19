@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/pages/home_screens/home_screen.dart';
+import 'package:smart_assist/pages/Leads/home_screen.dart';
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_appointment.dart';
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_leads.dart';
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_opportunity.dart';

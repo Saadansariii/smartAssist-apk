@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_assist/pages/login/login_page.dart';
+import 'package:smart_assist/pages/login_steps/login_page.dart';
 import 'package:get/get.dart'; // Make sure to import get
 
 class ErrorScreen extends StatelessWidget {

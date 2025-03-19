@@ -132,7 +132,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/pages/login/login_page.dart';
+import 'package:smart_assist/pages/login_steps/login_page.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart'; 
 import 'package:smart_assist/utils/token_manager.dart'; 
 import 'package:get/get.dart';

@@ -19,9 +19,12 @@ class CreateFollowupsPopups extends StatefulWidget {
 }
 
 class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
+  Map<String, String> _errors = {};
+
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  TextEditingController modelInterestController = TextEditingController();
 
   List<dynamic> _searchResults = [];
   bool _isLoadingSearch = false;
@@ -107,21 +110,34 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
     if (pickedDate != null) {
       setState(() {
         dateController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+        _errors.remove('');
       });
+    }
+  }
+
+  bool _validation() {
+    bool isValid = true;
+
+    setState(() {
+      _errors = {};
+
+      if (dateController.text.trim().isEmpty) {
+        _errors['date'] = 'Date is required';
+        isValid = false;
+      }
+    });
+
+    return isValid;
+  }
+
+  void _submit() {
+    if (_validation()) {
+      submitForm();
     }
   }
 
   /// Submit form
   Future<void> submitForm() async {
-    if (selectedLeads == null ||
-        _selectedSubject.isEmpty ||
-        selectedStatus == '' ||
-        dateController.text.isEmpty ||
-        descriptionController.text.isEmpty) {
-      showErrorMessage(context, message: 'All fields are required.');
-      return;
-    }
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? spId = prefs.getString('user_id');
 
@@ -172,6 +188,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
             _buildDatePicker(
                 label: 'Select date:',
                 controller: dateController,
+                errorText: _errors['date'],
                 onTap: _pickDate),
             const SizedBox(height: 10),
             _buildSearchField(),
@@ -222,7 +239,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                         backgroundColor: AppColors.colorsBlue,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
-                    onPressed: submitForm,
+                    onPressed: _submit,
                     child: Text("Submit", style: AppFont.buttons(context)),
                   ),
                 ),
@@ -233,43 +250,6 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
       ),
     );
   }
-
-  // Widget _selectedInput({
-  //   required String label,
-  //   required List<String> options,
-  // }) {
-  //   return Expanded(
-  //     // ✅ Ensures equal space in a Row
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         const SizedBox(height: 5),
-  //         Padding(
-  //           padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0),
-  //           child: Text(label, style: AppFont.dropDowmLabel()),
-  //         ),
-  //         const SizedBox(height: 3),
-  //         Wrap(
-  //           alignment: WrapAlignment.start,
-  //           spacing: 10,
-  //           runSpacing: 10,
-  //           children: options.map((option) {
-  //             return Container(
-  //               padding:
-  //                   const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-  //               constraints: const BoxConstraints(minWidth: 100),
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.circular(5),
-  //                 color: AppColors.containerBg,
-  //               ),
-  //               child: Text(option, style: AppFont.dropDown()),
-  //             );
-  //           }).toList(),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _selectedInput({
     required String label,
@@ -312,6 +292,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
     required String label,
     required TextEditingController controller,
     required VoidCallback onTap,
+    String? errorText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,7 +317,9 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 // color: AppColors.containerPopBg,
-                border: Border.all(color: Colors.black, width: .5)),
+                border: errorText != null
+                    ? Border.all(color: Colors.redAccent)
+                    : Border.all(color: Colors.black, width: .5)),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

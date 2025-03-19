@@ -105,6 +105,7 @@ class _OpportunityState extends State<Opportunity> {
                 refreshDashboard: () async {},
                 overdueFollowupsCount: 0,
                 overdueAppointmentsCount: 0,
+                overdueTestDrivesCount: 0, upcomingTestDrives: [], overdueTestDrives: [],
               ),
 
               const BottomBtnSecond(),

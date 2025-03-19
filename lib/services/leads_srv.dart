@@ -193,7 +193,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:smart_assist/pages/login/login_page.dart';
+import 'package:smart_assist/pages/login_steps/login_page.dart';
 import 'package:smart_assist/pages/test_drive_pages/verify_otp.dart';
 import 'package:smart_assist/services/helper.dart';
 import 'package:smart_assist/utils/storage.dart';
@@ -579,7 +579,7 @@ class LeadsSrv {
       print('API Response Status: ${response.statusCode}');
       print('API Response Body: ${response.body}');
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return true; // Task created successfully
       } else {
         // Handle unexpected error responses
@@ -613,8 +613,7 @@ class LeadsSrv {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
-          'leadId':
-              leadId, 
+          'leadId': leadId,
         },
       );
 
@@ -828,11 +827,11 @@ class LeadsSrv {
         },
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         print("Error: ${response.statusCode}");
         final Map<String, dynamic> data = json.decode(response.body);
-        print("Total Appointments Fetched: ${data['rows']?.length}");
-        return data['rows'] ?? [];
+        print("Total Appointments Fetched: ${data['data']['rows']?.length}");
+        return data['data']['rows'] ?? [];
       } else {
         print("Error: ${response.statusCode}");
         return [];
@@ -862,10 +861,10 @@ class LeadsSrv {
         },
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         print("Error: ${response.statusCode}");
         final Map<String, dynamic> data = json.decode(response.body);
-        return data['rows'] ?? [];
+        return data['data']['rows'] ?? [];
       } else {
         print("Error: ${response.statusCode}");
         return [];
@@ -896,10 +895,12 @@ class LeadsSrv {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         return {
-          'upcomingFollowupsCount': data['upcomingFollowupsCount'] ?? 0,
-          'overdueFollowupsCount': data['overdueFollowupsCount'] ?? 0,
-          'upcomingAppointmentsCount': data['upcomingAppointmentsCount'] ?? 0,
-          'overdueAppointmentsCount': data['overdueAppointmentsCount'] ?? 0,
+          'upcomingFollowupsCount': data['data']['upcomingFollowupsCount'] ?? 0,
+          'overdueFollowupsCount': data['data']['overdueFollowupsCount'] ?? 0,
+          'upcomingAppointmentsCount':
+              data['data']['upcomingAppointmentsCount'] ?? 0,
+          'overdueAppointmentsCount':
+              data['data']['overdueAppointmentsCount'] ?? 0,
         };
       } else {
         print('API Error: ${response.statusCode}');
