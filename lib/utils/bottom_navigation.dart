@@ -279,7 +279,7 @@ Widget _buildBottomNavigationBar(NavigationController controller) {
                   label: 'Leads',
                   index: 0,
                   controller: controller),
-              SizedBox(width: 10), // Space for the FAB
+              // SizedBox(width: 10), // Space for the FAB
               _buildNavItem(
                   icon: FontAwesomeIcons.calendarDays,
                   label: 'Calendar',

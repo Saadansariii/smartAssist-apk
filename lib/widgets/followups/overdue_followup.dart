@@ -3,7 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
-import 'package:smart_assist/pages/Leads/single_details_pages/followups/followups.dart';
+import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followup.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:smart_assist/utils/storage.dart';
