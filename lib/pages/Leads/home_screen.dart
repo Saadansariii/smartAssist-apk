@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,8 +12,12 @@ import 'package:smart_assist/pages/navbar_page/leads_all.dart';
 import 'package:smart_assist/pages/navbar_page/logout_page.dart';
 import 'package:smart_assist/pages/notification/notification.dart';
 import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/storage.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
+import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threeBtn_second_leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 import 'package:http/http.dart' as http;
@@ -50,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> _searchResults = [];
   bool _isLoadingSearch = false;
+  final NavigationController controller = Get.put(NavigationController());
   String _query = '';
 
   @override
@@ -166,11 +172,243 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 // Your HomeScreen Code
+//   @override
+//   Widget build(BuildContext context) {
+// // final height = MediaQuery.of(context).size.height * 1;  use it for dynamic height as per the mobile
+// //  height * .2 not use like that 100 & 200
+//     return GestureDetector(
+//       onTap: () => FocusScope.of(context).unfocus(),
+//       child: Scaffold(
+//         backgroundColor: Colors.white,
+//         appBar: AppBar(
+//           automaticallyImplyLeading: false,
+//           backgroundColor: const Color(0xFF1380FE),
+//           title: Text(
+//             ' $greeting',
+//             style: GoogleFonts.poppins(
+//               fontSize: 14,
+//               fontWeight: FontWeight.w400,
+//               color: Colors.white,
+//             ),
+//           ),
+//           actions: [
+//             Stack(
+//               children: [
+//                 IconButton(
+//                   onPressed: () {
+//                     Navigator.push(
+//                       context,
+//                       MaterialPageRoute(
+//                           builder: (context) => const NotificationPage()),
+//                     );
+//                   },
+//                   icon: const Icon(Icons.notifications),
+//                   color: Colors.white,
+//                 ),
+//                 if (notificationCount > 0)
+//                   Positioned(
+//                     right: 11,
+//                     top: 5,
+//                     child: Container(
+//                       padding: const EdgeInsets.all(1),
+//                       decoration: const BoxDecoration(
+//                         color: AppColors.sideRed,
+//                         shape: BoxShape.circle,
+//                       ),
+//                       constraints: const BoxConstraints(
+//                         minWidth: 5,
+//                         minHeight: 5,
+//                       ),
+//                       child: Text(
+//                         notificationCount.toString(),
+//                         style: const TextStyle(
+//                           color: Colors.white,
+//                           fontSize: 8,
+//                           fontWeight: FontWeight.bold,
+//                         ),
+//                         textAlign: TextAlign.center,
+//                       ),
+//                     ),
+//                   ),
+//               ],
+//             )
+//           ],
+//         ),
+//         body: Stack(
+//           children: [
+//             // 🛠️ Overlay & Popup Menu
+//             Obx(() => controller.isFabExpanded.value
+//                 ? _buildPopupMenu(controller, context)
+//                 : const SizedBox.shrink()),
+//                     floatingActionButton:
+//             Obx(() => _buildFloatingActionButton(controller, context)),
+//             /// ✅ Main content behind the search box
+//             SafeArea(
+//               child: RefreshIndicator(
+//                 onRefresh: fetchDashboardData,
+//                 child: isDashboardLoading
+//                     ? const Center(child: CircularProgressIndicator())
+//                     : SingleChildScrollView(
+//                         keyboardDismissBehavior:
+//                             ScrollViewKeyboardDismissBehavior.onDrag,
+//                         child: Column(
+//                           children: [
+//                             const SizedBox(height: 5),
+
+//                             /// ✅ Row with Menu, Search Bar, and Microphone
+//                             Row(
+//                               children: [
+//                                 IconButton(
+//                                   icon: const Icon(Icons.menu,
+//                                       color: AppColors.fontColor),
+//                                   onPressed: () {
+//                                     Get.bottomSheet(Container(
+//                                       padding: const EdgeInsets.all(16),
+//                                       height: 320,
+//                                       decoration: const BoxDecoration(
+//                                         color: Colors.white,
+//                                         borderRadius: BorderRadius.vertical(
+//                                             top: Radius.circular(30)),
+//                                       ),
+//                                       child: Column(
+//                                         children: [
+//                                           ListTile(
+//                                             leading: const Icon(Icons.search,
+//                                                 size: 28),
+//                                             title: Text('Leads',
+//                                                 style: GoogleFonts.poppins(
+//                                                     fontSize: 18)),
+//                                             onTap: () =>
+//                                                 Get.to(() => const AllLeads()),
+//                                           ),
+//                                           ListTile(
+//                                             leading: const Icon(
+//                                                 Icons.star_border_outlined,
+//                                                 size: 28),
+//                                             title: Text('Favorites',
+//                                                 style: GoogleFonts.poppins(
+//                                                     fontSize: 18)),
+//                                             onTap: () => Get.to(() =>
+//                                                 const FavoritePage(leadId: '')),
+//                                           ),
+//                                           ListTile(
+//                                             leading: const Icon(
+//                                                 Icons.person_outline,
+//                                                 size: 28),
+//                                             title: Text('Profile',
+//                                                 style: GoogleFonts.poppins(
+//                                                     fontSize: 18)),
+//                                             onTap: () => Get.back(),
+//                                           ),
+//                                           ListTile(
+//                                             leading: const Icon(
+//                                                 Icons.settings_outlined,
+//                                                 size: 28),
+//                                             title: Text('App Settings',
+//                                                 style: GoogleFonts.poppins(
+//                                                     fontSize: 18)),
+//                                             onTap: () => Get.to(
+//                                                 () => const AppSetting()),
+//                                           ),
+//                                           ListTile(
+//                                             leading: const Icon(
+//                                                 Icons.logout_outlined,
+//                                                 size: 28),
+//                                             title: Text('Logout',
+//                                                 style: GoogleFonts.poppins(
+//                                                     fontSize: 18)),
+//                                             onTap: () => Get.to(
+//                                                 () => const LogoutPage()),
+//                                           ),
+//                                         ],
+//                                       ),
+//                                     ));
+//                                   },
+//                                 ),
+
+//                                 Expanded(
+//                                   child: SizedBox(
+//                                     height: 35,
+//                                     child: GestureDetector(
+//                                       onTap: () {
+//                                         Get.to(() => const GlobalSearch());
+//                                       },
+//                                       child: AbsorbPointer(
+//                                         child: TextField(
+//                                           textAlignVertical:
+//                                               TextAlignVertical.center,
+//                                           decoration: InputDecoration(
+//                                             enabledBorder: OutlineInputBorder(
+//                                               borderRadius:
+//                                                   BorderRadius.circular(30),
+//                                               borderSide: BorderSide.none,
+//                                             ),
+//                                             contentPadding:
+//                                                 const EdgeInsets.fromLTRB(
+//                                                     10, 0, 0, 0),
+//                                             filled: true,
+//                                             fillColor: AppColors.searchBar,
+//                                             hintText: 'Search',
+//                                             hintStyle: GoogleFonts.poppins(
+//                                               fontSize: 12,
+//                                               fontWeight: FontWeight.w300,
+//                                             ),
+//                                             suffixIcon: const Icon(
+//                                               FontAwesomeIcons.magnifyingGlass,
+//                                               color: AppColors.fontColor,
+//                                               size: 15,
+//                                             ),
+//                                             border: OutlineInputBorder(
+//                                               borderRadius:
+//                                                   BorderRadius.circular(30),
+//                                               borderSide: BorderSide.none,
+//                                             ),
+//                                           ),
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+
+//                                 IconButton(
+//                                   icon: const Icon(FontAwesomeIcons.microphone,
+//                                       size: 18, color: AppColors.fontColor),
+//                                   onPressed: () {},
+//                                 ),
+//                               ],
+//                             ),
+
+//                             /// ✅ Other UI Components (Follow-ups, Buttons, etc.)
+//                             const SizedBox(height: 3),
+//                             Threebtn(
+//                               leadId: leadId ?? 'empty',
+//                               upcomingFollowups: upcomingFollowups,
+//                               overdueFollowups: overdueFollowups,
+//                               upcomingAppointments: upcomingAppointments,
+//                               overdueAppointments: overdueAppointments,
+//                               upcomingTestDrives: upcomingTestDrives,
+//                               overdueTestDrives: overdueTestDrives,
+//                               refreshDashboard: fetchDashboardData,
+//                               overdueFollowupsCount: overdueFollowupsCount,
+//                               overdueAppointmentsCount:
+//                                   overdueAppointmentsCount,
+//                               overdueTestDrivesCount: overdueTestDrivesCount,
+//                             ),
+//                             const BottomBtnSecond(),
+//                           ],
+//                         ),
+//                       ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
   @override
   Widget build(BuildContext context) {
-// final height = MediaQuery.of(context).size.height * 1;  use it for dynamic height as per the mobile
-//  height * .2 not use like that 100 & 200
     return GestureDetector(
+      excludeFromSemantics: true,
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -183,7 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontSize: 14,
               fontWeight: FontWeight.w400,
               color: Colors.white,
-            ),
+            ), 
           ),
           actions: [
             Stack(
@@ -230,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Stack(
           children: [
-            /// ✅ Main content behind the search box
+            // ✅ Main Content
             SafeArea(
               child: RefreshIndicator(
                 onRefresh: fetchDashboardData,
@@ -243,7 +481,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             const SizedBox(height: 5),
 
-                            /// ✅ Row with Menu, Search Bar, and Microphone
+                            /// ✅ Search Bar, Menu, and Microphone
                             Row(
                               children: [
                                 IconButton(
@@ -279,78 +517,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                             onTap: () => Get.to(() =>
                                                 const FavoritePage(leadId: '')),
                                           ),
-                                          ListTile(
-                                            leading: const Icon(
-                                                Icons.person_outline,
-                                                size: 28),
-                                            title: Text('Profile',
-                                                style: GoogleFonts.poppins(
-                                                    fontSize: 18)),
-                                            onTap: () => Get.back(),
-                                          ),
-                                          ListTile(
-                                            leading: const Icon(
-                                                Icons.settings_outlined,
-                                                size: 28),
-                                            title: Text('App Settings',
-                                                style: GoogleFonts.poppins(
-                                                    fontSize: 18)),
-                                            onTap: () => Get.to(
-                                                () => const AppSetting()),
-                                          ),
-                                          ListTile(
-                                            leading: const Icon(
-                                                Icons.logout_outlined,
-                                                size: 28),
-                                            title: Text('Logout',
-                                                style: GoogleFonts.poppins(
-                                                    fontSize: 18)),
-                                            onTap: () => Get.to(
-                                                () => const LogoutPage()),
-                                          ),
                                         ],
                                       ),
                                     ));
                                   },
                                 ),
-
-                                // Expanded(
-                                //   child: SizedBox(
-                                //     height: 35,
-                                //     child: TextField(
-                                //       controller: _searchController,
-                                //       textAlignVertical:
-                                //           TextAlignVertical.center,
-                                //       decoration: InputDecoration(
-                                //         enabledBorder: OutlineInputBorder(
-                                //           borderRadius:
-                                //               BorderRadius.circular(30),
-                                //           borderSide: BorderSide.none,
-                                //         ),
-                                //         contentPadding:
-                                //             const EdgeInsets.fromLTRB(
-                                //                 10, 0, 0, 0),
-                                //         filled: true,
-                                //         fillColor: AppColors.searchBar,
-                                //         hintText: 'Search',
-                                //         hintStyle: GoogleFonts.poppins(
-                                //           fontSize: 12,
-                                //           fontWeight: FontWeight.w300,
-                                //         ),
-                                //         suffixIcon: const Icon(
-                                //           FontAwesomeIcons.magnifyingGlass,
-                                //           color: AppColors.fontColor,
-                                //           size: 15,
-                                //         ),
-                                //         border: OutlineInputBorder(
-                                //           borderRadius:
-                                //               BorderRadius.circular(30),
-                                //           borderSide: BorderSide.none,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
                                 Expanded(
                                   child: SizedBox(
                                     height: 35,
@@ -394,16 +565,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-
-                                IconButton(
-                                  icon: const Icon(FontAwesomeIcons.microphone,
-                                      size: 18, color: AppColors.fontColor),
-                                  onPressed: () {},
-                                ),
                               ],
                             ),
 
-                            /// ✅ Other UI Components (Follow-ups, Buttons, etc.)
                             const SizedBox(height: 3),
                             Threebtn(
                               leadId: leadId ?? 'empty',
@@ -412,7 +576,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               upcomingAppointments: upcomingAppointments,
                               overdueAppointments: overdueAppointments,
                               upcomingTestDrives: upcomingTestDrives,
-                              overdueTestDrives : overdueTestDrives,
+                              overdueTestDrives: overdueTestDrives,
                               refreshDashboard: fetchDashboardData,
                               overdueFollowupsCount: overdueFollowupsCount,
                               overdueAppointmentsCount:
@@ -425,9 +589,232 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
               ),
             ),
+
+            // ✅ Popup Menu
+            Obx(() => controller.isFabExpanded.value
+                ? _buildPopupMenu(controller, context)
+                : const SizedBox.shrink()),
           ],
         ),
+
+        // ✅ Floating Action Button (FAB)
+        floatingActionButton: _buildFloatingActionButton(controller, context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }
+}
+
+// ✅ Floating Action Button (FAB)
+Widget _buildFloatingActionButton(
+    NavigationController controller, BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      HapticFeedback.lightImpact();
+      controller.isFabExpanded.toggle();
+    },
+    child: Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * .15,
+          height: MediaQuery.of(context).size.height * .08,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white, width: 2),
+            color: AppColors.colorsBlue,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: AnimatedRotation(
+              turns: controller.isFabExpanded.value ? 0.250 : 0.0,
+              duration: const Duration(milliseconds: 300),
+              child: Icon(
+                controller.isFabExpanded.value ? Icons.close : Icons.add,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
+  return Stack(
+    children: [
+      // Background overlay
+      Positioned.fill(
+        child: GestureDetector(
+          onTap: () {
+            controller.isFabExpanded.value = false;
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            color: Colors.black.withOpacity(0.7),
+          ),
+        ),
+      ),
+
+      // Popup Items
+      Positioned(
+        bottom: 90,
+        left: MediaQuery.of(context).size.width / 2 -
+            150, // Expanded to fit all items
+        // Make container larger to encompass all items including those with negative positions
+        width: 300, // Large enough to contain all items with their offsets
+        height: 300, // Large enough to contain all items with their offsets
+        child: Stack(
+          // Changed to center so offsets work properly from the middle
+          alignment: Alignment.center,
+          clipBehavior:
+              Clip.none, // Important! Allow children to render outside bounds
+          children: [
+            _buildPopupItem(controller, Icons.calendar_month_outlined,
+                "Appointment", -5, -32, onTap: () {
+              print("Appointment clicked!");
+              controller.isFabExpanded.value = false;
+              _showAppointmentPopup(context);
+            }),
+            _buildPopupItem(
+                controller, Icons.people_alt_rounded, "Lead", 70, -93,
+                onTap: () {
+              print("Lead clicked");
+              controller.isFabExpanded.value = false;
+              _showLeadPopup(context);
+            }),
+            _buildPopupItem(controller, Icons.call, "Followup", 30, 35,
+                onTap: () {
+              print("Followup clicked");
+              controller.isFabExpanded.value = false;
+              _showFollowupPopup(context);
+            }),
+            _buildPopupItem(
+                controller, Icons.directions_car, "Test Drive", 20, 100,
+                onTap: () {
+              print("Test Drive clicked");
+              controller.isFabExpanded.value = false;
+              // _showTestDrivePopup(context);
+            }),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildPopupItem(NavigationController controller, IconData icon,
+    String label, double dx, double dy,
+    {required Function() onTap}) {
+  return TweenAnimationBuilder(
+    tween: Tween<double>(begin: 0, end: controller.isFabExpanded.value ? 1 : 0),
+    duration: const Duration(milliseconds: 300),
+    curve: Curves.easeOutBack,
+    builder: (context, double value, child) {
+      return Positioned(
+        // Position from center of the Stack
+        left: 150 + (dx * value), // Center point (300/2) + offset
+        top: 150 + (dy * value), // Center point (300/2) + offset
+        child: Opacity(
+          opacity: value.clamp(0.1, 1.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 5),
+              GestureDetector(
+                onTap: onTap,
+                behavior:
+                    HitTestBehavior.opaque, // Important for better hit testing
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Icon(icon, color: Colors.blue, size: 24),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+// ✅ Function to Show `CreateFollowupsPopups` on "Lead"
+void _showLeadPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.symmetric(
+              horizontal: 16), // Add some margin for better UX
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const CreateLeads(),
+        ),
+      );
+    },
+  );
+}
+
+// ✅ Function to Show `CreateFollowupsPopups` on "Lead"
+void _showFollowupPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.symmetric(
+              horizontal: 16), // Add some margin for better UX
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const CreateFollowupsPopups(),
+        ),
+      );
+    },
+  );
+}
+
+void _showAppointmentPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero, // Remove default padding
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.symmetric(
+              horizontal: 16), // Add margin for better UX
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const AppointmentPopup(), // Appointment modal
+        ),
+      );
+    },
+  );
 }
