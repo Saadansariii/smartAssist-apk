@@ -38,7 +38,7 @@ class _FLeadsState extends State<FLeads> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          upcomingTasks = data['rows'] ?? []; // Store only upcoming tasks
+          upcomingTasks = data['data']['rows'] ?? []; // Store only upcoming tasks
           isLoading = false;
         });
       } else {

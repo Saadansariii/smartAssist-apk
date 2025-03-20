@@ -6,7 +6,7 @@ import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/followups/overdue_followup.dart';
 import 'package:smart_assist/widgets/followups/upcoming_row.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
+import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/create_Followups_popups.dart';
 
 class AddFollowups extends StatefulWidget {
   const AddFollowups({super.key});

@@ -15,9 +15,10 @@ import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/storage.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_followups/create_Followups_popups.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/create_leads.dart';
+import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/appointment_popup.dart';
+import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/create_Followups_popups.dart';
+import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/create_leads.dart';
+import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/create_testDrive.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threeBtn_second_leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/threebtn.dart';
 import 'package:http/http.dart' as http;
@@ -171,242 +172,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-// Your HomeScreen Code
-//   @override
-//   Widget build(BuildContext context) {
-// // final height = MediaQuery.of(context).size.height * 1;  use it for dynamic height as per the mobile
-// //  height * .2 not use like that 100 & 200
-//     return GestureDetector(
-//       onTap: () => FocusScope.of(context).unfocus(),
-//       child: Scaffold(
-//         backgroundColor: Colors.white,
-//         appBar: AppBar(
-//           automaticallyImplyLeading: false,
-//           backgroundColor: const Color(0xFF1380FE),
-//           title: Text(
-//             ' $greeting',
-//             style: GoogleFonts.poppins(
-//               fontSize: 14,
-//               fontWeight: FontWeight.w400,
-//               color: Colors.white,
-//             ),
-//           ),
-//           actions: [
-//             Stack(
-//               children: [
-//                 IconButton(
-//                   onPressed: () {
-//                     Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                           builder: (context) => const NotificationPage()),
-//                     );
-//                   },
-//                   icon: const Icon(Icons.notifications),
-//                   color: Colors.white,
-//                 ),
-//                 if (notificationCount > 0)
-//                   Positioned(
-//                     right: 11,
-//                     top: 5,
-//                     child: Container(
-//                       padding: const EdgeInsets.all(1),
-//                       decoration: const BoxDecoration(
-//                         color: AppColors.sideRed,
-//                         shape: BoxShape.circle,
-//                       ),
-//                       constraints: const BoxConstraints(
-//                         minWidth: 5,
-//                         minHeight: 5,
-//                       ),
-//                       child: Text(
-//                         notificationCount.toString(),
-//                         style: const TextStyle(
-//                           color: Colors.white,
-//                           fontSize: 8,
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                         textAlign: TextAlign.center,
-//                       ),
-//                     ),
-//                   ),
-//               ],
-//             )
-//           ],
-//         ),
-//         body: Stack(
-//           children: [
-//             // 🛠️ Overlay & Popup Menu
-//             Obx(() => controller.isFabExpanded.value
-//                 ? _buildPopupMenu(controller, context)
-//                 : const SizedBox.shrink()),
-//                     floatingActionButton:
-//             Obx(() => _buildFloatingActionButton(controller, context)),
-//             /// ✅ Main content behind the search box
-//             SafeArea(
-//               child: RefreshIndicator(
-//                 onRefresh: fetchDashboardData,
-//                 child: isDashboardLoading
-//                     ? const Center(child: CircularProgressIndicator())
-//                     : SingleChildScrollView(
-//                         keyboardDismissBehavior:
-//                             ScrollViewKeyboardDismissBehavior.onDrag,
-//                         child: Column(
-//                           children: [
-//                             const SizedBox(height: 5),
-
-//                             /// ✅ Row with Menu, Search Bar, and Microphone
-//                             Row(
-//                               children: [
-//                                 IconButton(
-//                                   icon: const Icon(Icons.menu,
-//                                       color: AppColors.fontColor),
-//                                   onPressed: () {
-//                                     Get.bottomSheet(Container(
-//                                       padding: const EdgeInsets.all(16),
-//                                       height: 320,
-//                                       decoration: const BoxDecoration(
-//                                         color: Colors.white,
-//                                         borderRadius: BorderRadius.vertical(
-//                                             top: Radius.circular(30)),
-//                                       ),
-//                                       child: Column(
-//                                         children: [
-//                                           ListTile(
-//                                             leading: const Icon(Icons.search,
-//                                                 size: 28),
-//                                             title: Text('Leads',
-//                                                 style: GoogleFonts.poppins(
-//                                                     fontSize: 18)),
-//                                             onTap: () =>
-//                                                 Get.to(() => const AllLeads()),
-//                                           ),
-//                                           ListTile(
-//                                             leading: const Icon(
-//                                                 Icons.star_border_outlined,
-//                                                 size: 28),
-//                                             title: Text('Favorites',
-//                                                 style: GoogleFonts.poppins(
-//                                                     fontSize: 18)),
-//                                             onTap: () => Get.to(() =>
-//                                                 const FavoritePage(leadId: '')),
-//                                           ),
-//                                           ListTile(
-//                                             leading: const Icon(
-//                                                 Icons.person_outline,
-//                                                 size: 28),
-//                                             title: Text('Profile',
-//                                                 style: GoogleFonts.poppins(
-//                                                     fontSize: 18)),
-//                                             onTap: () => Get.back(),
-//                                           ),
-//                                           ListTile(
-//                                             leading: const Icon(
-//                                                 Icons.settings_outlined,
-//                                                 size: 28),
-//                                             title: Text('App Settings',
-//                                                 style: GoogleFonts.poppins(
-//                                                     fontSize: 18)),
-//                                             onTap: () => Get.to(
-//                                                 () => const AppSetting()),
-//                                           ),
-//                                           ListTile(
-//                                             leading: const Icon(
-//                                                 Icons.logout_outlined,
-//                                                 size: 28),
-//                                             title: Text('Logout',
-//                                                 style: GoogleFonts.poppins(
-//                                                     fontSize: 18)),
-//                                             onTap: () => Get.to(
-//                                                 () => const LogoutPage()),
-//                                           ),
-//                                         ],
-//                                       ),
-//                                     ));
-//                                   },
-//                                 ),
-
-//                                 Expanded(
-//                                   child: SizedBox(
-//                                     height: 35,
-//                                     child: GestureDetector(
-//                                       onTap: () {
-//                                         Get.to(() => const GlobalSearch());
-//                                       },
-//                                       child: AbsorbPointer(
-//                                         child: TextField(
-//                                           textAlignVertical:
-//                                               TextAlignVertical.center,
-//                                           decoration: InputDecoration(
-//                                             enabledBorder: OutlineInputBorder(
-//                                               borderRadius:
-//                                                   BorderRadius.circular(30),
-//                                               borderSide: BorderSide.none,
-//                                             ),
-//                                             contentPadding:
-//                                                 const EdgeInsets.fromLTRB(
-//                                                     10, 0, 0, 0),
-//                                             filled: true,
-//                                             fillColor: AppColors.searchBar,
-//                                             hintText: 'Search',
-//                                             hintStyle: GoogleFonts.poppins(
-//                                               fontSize: 12,
-//                                               fontWeight: FontWeight.w300,
-//                                             ),
-//                                             suffixIcon: const Icon(
-//                                               FontAwesomeIcons.magnifyingGlass,
-//                                               color: AppColors.fontColor,
-//                                               size: 15,
-//                                             ),
-//                                             border: OutlineInputBorder(
-//                                               borderRadius:
-//                                                   BorderRadius.circular(30),
-//                                               borderSide: BorderSide.none,
-//                                             ),
-//                                           ),
-//                                         ),
-//                                       ),
-//                                     ),
-//                                   ),
-//                                 ),
-
-//                                 IconButton(
-//                                   icon: const Icon(FontAwesomeIcons.microphone,
-//                                       size: 18, color: AppColors.fontColor),
-//                                   onPressed: () {},
-//                                 ),
-//                               ],
-//                             ),
-
-//                             /// ✅ Other UI Components (Follow-ups, Buttons, etc.)
-//                             const SizedBox(height: 3),
-//                             Threebtn(
-//                               leadId: leadId ?? 'empty',
-//                               upcomingFollowups: upcomingFollowups,
-//                               overdueFollowups: overdueFollowups,
-//                               upcomingAppointments: upcomingAppointments,
-//                               overdueAppointments: overdueAppointments,
-//                               upcomingTestDrives: upcomingTestDrives,
-//                               overdueTestDrives: overdueTestDrives,
-//                               refreshDashboard: fetchDashboardData,
-//                               overdueFollowupsCount: overdueFollowupsCount,
-//                               overdueAppointmentsCount:
-//                                   overdueAppointmentsCount,
-//                               overdueTestDrivesCount: overdueTestDrivesCount,
-//                             ),
-//                             const BottomBtnSecond(),
-//                           ],
-//                         ),
-//                       ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
   @override
   Widget build(BuildContext context) {
+// final height = MediaQuery.of(context).size.height * 1;  use it for dynamic height as per the mobile
+//  height * .2 not use like that 100 & 200
     return GestureDetector(
       excludeFromSemantics: true,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -421,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontSize: 14,
               fontWeight: FontWeight.w400,
               color: Colors.white,
-            ), 
+            ),
           ),
           actions: [
             Stack(
@@ -468,7 +237,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Stack(
           children: [
-            // ✅ Main Content
             SafeArea(
               child: RefreshIndicator(
                 onRefresh: fetchDashboardData,
@@ -481,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             const SizedBox(height: 5),
 
-                            /// ✅ Search Bar, Menu, and Microphone
+                            /// ✅ Row with Menu, Search Bar, and Microphone
                             Row(
                               children: [
                                 IconButton(
@@ -516,6 +284,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     fontSize: 18)),
                                             onTap: () => Get.to(() =>
                                                 const FavoritePage(leadId: '')),
+                                          ),
+                                          ListTile(
+                                            leading: const Icon(
+                                                Icons.person_outline,
+                                                size: 28),
+                                            title: Text('Profile',
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 18)),
+                                            onTap: () => Get.back(),
+                                          ),
+                                          ListTile(
+                                            leading: const Icon(
+                                                Icons.settings_outlined,
+                                                size: 28),
+                                            title: Text('App Settings',
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 18)),
+                                            onTap: () => Get.to(
+                                                () => const AppSetting()),
+                                          ),
+                                          ListTile(
+                                            leading: const Icon(
+                                                Icons.logout_outlined,
+                                                size: 28),
+                                            title: Text('Logout',
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 18)),
+                                            onTap: () => Get.to(
+                                                () => const LogoutPage()),
                                           ),
                                         ],
                                       ),
@@ -565,9 +362,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
+                                IconButton(
+                                  icon: const Icon(FontAwesomeIcons.microphone,
+                                      size: 18, color: AppColors.fontColor),
+                                  onPressed: () {},
+                                ),
                               ],
                             ),
 
+                            /// ✅ Other UI Components (Follow-ups, Buttons, etc.)
                             const SizedBox(height: 3),
                             Threebtn(
                               leadId: leadId ?? 'empty',
@@ -589,20 +392,217 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
               ),
             ),
-
             // ✅ Popup Menu
             Obx(() => controller.isFabExpanded.value
                 ? _buildPopupMenu(controller, context)
                 : const SizedBox.shrink()),
           ],
         ),
-
         // ✅ Floating Action Button (FAB)
         floatingActionButton: _buildFloatingActionButton(controller, context),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return GestureDetector(
+  //     excludeFromSemantics: true,
+  //     onTap: () => FocusScope.of(context).unfocus(),
+  //     child: Scaffold(
+  //       backgroundColor: Colors.white,
+  //       appBar: AppBar(
+  //         automaticallyImplyLeading: false,
+  //         backgroundColor: const Color(0xFF1380FE),
+  //         title: Text(
+  //           ' $greeting',
+  //           style: GoogleFonts.poppins(
+  //             fontSize: 14,
+  //             fontWeight: FontWeight.w400,
+  //             color: Colors.white,
+  //           ),
+  //         ),
+  //         actions: [
+  //           Stack(
+  //             children: [
+  //               IconButton(
+  //                 onPressed: () {
+  //                   Navigator.push(
+  //                     context,
+  //                     MaterialPageRoute(
+  //                         builder: (context) => const NotificationPage()),
+  //                   );
+  //                 },
+  //                 icon: const Icon(Icons.notifications),
+  //                 color: Colors.white,
+  //               ),
+  //               if (notificationCount > 0)
+  //                 Positioned(
+  //                   right: 11,
+  //                   top: 5,
+  //                   child: Container(
+  //                     padding: const EdgeInsets.all(1),
+  //                     decoration: const BoxDecoration(
+  //                       color: AppColors.sideRed,
+  //                       shape: BoxShape.circle,
+  //                     ),
+  //                     constraints: const BoxConstraints(
+  //                       minWidth: 5,
+  //                       minHeight: 5,
+  //                     ),
+  //                     child: Text(
+  //                       notificationCount.toString(),
+  //                       style: const TextStyle(
+  //                         color: Colors.white,
+  //                         fontSize: 8,
+  //                         fontWeight: FontWeight.bold,
+  //                       ),
+  //                       textAlign: TextAlign.center,
+  //                     ),
+  //                   ),
+  //                 ),
+  //             ],
+  //           )
+  //         ],
+  //       ),
+  //       body: Stack(
+  //         children: [
+  //           // ✅ Main Content
+  //           SafeArea(
+  //             child: RefreshIndicator(
+  //               onRefresh: fetchDashboardData,
+  //               child: isDashboardLoading
+  //                   ? const Center(child: CircularProgressIndicator())
+  //                   : SingleChildScrollView(
+  //                       keyboardDismissBehavior:
+  //                           ScrollViewKeyboardDismissBehavior.onDrag,
+  //                       child: Column(
+  //                         children: [
+  //                           const SizedBox(height: 5),
+
+  //                           /// ✅ Search Bar, Menu, and Microphone
+  //                           Row(
+  //                             children: [
+  //                               IconButton(
+  //                                 icon: const Icon(Icons.menu,
+  //                                     color: AppColors.fontColor),
+  //                                 onPressed: () {
+  //                                   Get.bottomSheet(Container(
+  //                                     padding: const EdgeInsets.all(16),
+  //                                     height: 320,
+  //                                     decoration: const BoxDecoration(
+  //                                       color: Colors.white,
+  //                                       borderRadius: BorderRadius.vertical(
+  //                                           top: Radius.circular(30)),
+  //                                     ),
+  //                                     child: Column(
+  //                                       children: [
+  //                                         ListTile(
+  //                                           leading: const Icon(Icons.search,
+  //                                               size: 28),
+  //                                           title: Text('Leads',
+  //                                               style: GoogleFonts.poppins(
+  //                                                   fontSize: 18)),
+  //                                           onTap: () =>
+  //                                               Get.to(() => const AllLeads()),
+  //                                         ),
+  //                                         ListTile(
+  //                                           leading: const Icon(
+  //                                               Icons.star_border_outlined,
+  //                                               size: 28),
+  //                                           title: Text('Favorites',
+  //                                               style: GoogleFonts.poppins(
+  //                                                   fontSize: 18)),
+  //                                           onTap: () => Get.to(() =>
+  //                                               const FavoritePage(leadId: '')),
+  //                                         ),
+  //                                       ],
+  //                                     ),
+  //                                   ));
+  //                                 },
+  //                               ),
+  //                               Expanded(
+  //                                 child: SizedBox(
+  //                                   height: 35,
+  //                                   child: GestureDetector(
+  //                                     onTap: () {
+  //                                       Get.to(() => const GlobalSearch());
+  //                                     },
+  //                                     child: AbsorbPointer(
+  //                                       child: TextField(
+  //                                         textAlignVertical:
+  //                                             TextAlignVertical.center,
+  //                                         decoration: InputDecoration(
+  //                                           enabledBorder: OutlineInputBorder(
+  //                                             borderRadius:
+  //                                                 BorderRadius.circular(30),
+  //                                             borderSide: BorderSide.none,
+  //                                           ),
+  //                                           contentPadding:
+  //                                               const EdgeInsets.fromLTRB(
+  //                                                   10, 0, 0, 0),
+  //                                           filled: true,
+  //                                           fillColor: AppColors.searchBar,
+  //                                           hintText: 'Search',
+  //                                           hintStyle: GoogleFonts.poppins(
+  //                                             fontSize: 12,
+  //                                             fontWeight: FontWeight.w300,
+  //                                           ),
+  //                                           suffixIcon: const Icon(
+  //                                             FontAwesomeIcons.magnifyingGlass,
+  //                                             color: AppColors.fontColor,
+  //                                             size: 15,
+  //                                           ),
+  //                                           border: OutlineInputBorder(
+  //                                             borderRadius:
+  //                                                 BorderRadius.circular(30),
+  //                                             borderSide: BorderSide.none,
+  //                                           ),
+  //                                         ),
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+
+  //                           const SizedBox(height: 3),
+  //                           Threebtn(
+  //                             leadId: leadId ?? 'empty',
+  //                             upcomingFollowups: upcomingFollowups,
+  //                             overdueFollowups: overdueFollowups,
+  //                             upcomingAppointments: upcomingAppointments,
+  //                             overdueAppointments: overdueAppointments,
+  //                             upcomingTestDrives: upcomingTestDrives,
+  //                             overdueTestDrives: overdueTestDrives,
+  //                             refreshDashboard: fetchDashboardData,
+  //                             overdueFollowupsCount: overdueFollowupsCount,
+  //                             overdueAppointmentsCount:
+  //                                 overdueAppointmentsCount,
+  //                             overdueTestDrivesCount: overdueTestDrivesCount,
+  //                           ),
+  //                           const BottomBtnSecond(),
+  //                         ],
+  //                       ),
+  //                     ),
+  //             ),
+  //           ),
+
+  //           // ✅ Popup Menu
+  //           Obx(() => controller.isFabExpanded.value
+  //               ? _buildPopupMenu(controller, context)
+  //               : const SizedBox.shrink()),
+  //         ],
+  //       ),
+
+  //       // ✅ Floating Action Button (FAB)
+  //       floatingActionButton: _buildFloatingActionButton(controller, context),
+  //       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+  //     ),
+  //   );
+  // }
 }
 
 // ✅ Floating Action Button (FAB)
@@ -695,7 +695,7 @@ Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
                 onTap: () {
               print("Test Drive clicked");
               controller.isFabExpanded.value = false;
-              // _showTestDrivePopup(context);
+              _showTestdrivePopup(context);
             }),
           ],
         ),
@@ -813,6 +813,28 @@ void _showAppointmentPopup(BuildContext context) {
             borderRadius: BorderRadius.circular(10),
           ),
           child: const AppointmentPopup(), // Appointment modal
+        ),
+      );
+    },
+  );
+}
+
+void _showTestdrivePopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero, // Remove default padding
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.symmetric(
+              horizontal: 16), // Add margin for better UX
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const CreateTestdrive(), // Appointment modal
         ),
       );
     },

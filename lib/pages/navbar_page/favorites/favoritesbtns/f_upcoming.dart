@@ -41,8 +41,8 @@ class _FUpcomingState extends State<FUpcoming> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          upcomingTasks = data['upcomingTasks']['rows'] ?? [];
-          overdueTasks = data['overdueTasks']['rows'] ?? [];
+          upcomingTasks = data['data']['upcomingTasks']['rows'] ?? [];
+          overdueTasks = data['data']['overdueTasks']['rows'] ?? [];
           isLoading = false;
         });
       } else {
@@ -93,10 +93,10 @@ class _FUpcomingState extends State<FUpcoming> {
   }
 
   Widget _buildTasksList(List<dynamic> tasks, {required bool isUpcoming}) {
-    if (tasks.isEmpty) {
-      return Center(
-        child:
-            Text('No ${isUpcoming ? "upcoming" : "overdue"} tasks available'),
+    // Check if both lists are empty and show "No data found"
+    if (upcomingTasks.isEmpty && overdueTasks.isEmpty) {
+      return const Center(
+        child: Text('No data found'),
       );
     }
 

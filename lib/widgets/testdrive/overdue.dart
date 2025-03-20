@@ -193,7 +193,7 @@ class upcomingTestDrivesItem extends StatelessWidget {
         color: AppColors.containerBg,
         borderRadius: BorderRadius.circular(10),
         border: const Border(
-          left: BorderSide(width: 8.0, color: AppColors.sideGreen),
+          left: BorderSide(width: 8.0, color: AppColors.sideRed),
         ),
       ),
       child: Row(

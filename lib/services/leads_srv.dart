@@ -594,6 +594,38 @@ class LeadsSrv {
     }
   }
 
+  static Future<bool> submitTestDrive(
+      Map<String, dynamic> testdriveData, String leadId) async {
+    final token = await Storage.getToken();
+
+    try {
+      final response = await http.post(
+          Uri.parse(
+              'https://api.smartassistapp.in/api/admin/records/$leadId/events/create-test-drive'),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+            'recordId': leadId,
+          },
+          body: jsonEncode(testdriveData));
+
+      print('API Response Status: ${response.statusCode}');
+      print('API Response Body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        return true; // Task created successfully
+      } else {
+        // Handle unexpected error responses
+        print('Error: ${response.statusCode}');
+        print('Error details: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return false;
+    }
+  }
+
   static Future<Map<String, dynamic>> fetchLeadsById(String leadId) async {
     const String apiUrl = "https://api.smartassistapp.in/api/leads/";
 
@@ -659,8 +691,9 @@ class LeadsSrv {
       );
 
       // Debug: Print the response status code and body
-      // print('Response status code: ${response.statusCode}');
-      // print('Response body: ${response.body}');
+      print('this is upper api');
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -706,12 +739,14 @@ class LeadsSrv {
         final Map<String, dynamic> data = json.decode(response.body);
 
         // Handle the nested structure with allEvents.rows
-        if (data.containsKey('allEvents') &&
-            data['allEvents'] is Map<String, dynamic> &&
-            data['allEvents'].containsKey('rows')) {
-          return List<Map<String, dynamic>>.from(data['allEvents']['rows']);
+        if (data.containsKey('data') &&
+            data['data'].containsKey('allEvents') &&
+            data['data']['allEvents'].containsKey('rows')) {
+          // Extract the rows containing the task data
+          return List<Map<String, dynamic>>.from(
+              data['data']['allEvents']['rows']);
         } else {
-          return []; // Return empty list if no events found
+          return []; // Return empty list if no tasks found
         }
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
@@ -721,6 +756,52 @@ class LeadsSrv {
       throw Exception('Error fetching data: $e');
     }
   }
+
+  // static Future<List<Map<String, dynamic>>> singleTasksById(
+  //     String leadId) async {
+  //   const String apiUrl =
+  //       "https://api.smartassistapp.in/api/admin/leads/tasks/all/";
+
+  //   final token = await Storage.getToken();
+  //   if (token == null) {
+  //     print("No token found. Please login.");
+  //     throw Exception("No token found. Please login.");
+  //   }
+
+  //   try {
+  //     print('Fetching data for Lead ID: $leadId');
+  //     print('API URL: ${apiUrl + leadId}');
+
+  //     final response = await http.get(
+  //       Uri.parse('$apiUrl$leadId'),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
+
+  //     print('Response status code: ${response.statusCode}');
+  //     print('Response body: ${response.body}');
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data = json.decode(response.body);
+
+  //       // Handle the nested structure with allEvents.rows
+  //       if (data.containsKey('allTasks') &&
+  //           data['allTasks'] is Map<String, dynamic> &&
+  //           data['allTasks'].containsKey('rows')) {
+  //         return List<Map<String, dynamic>>.from(data['allTasks']['rows']);
+  //       } else {
+  //         return []; // Return empty list if no events found
+  //       }
+  //     } else {
+  //       throw Exception('Failed to load data: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching data: $e');
+  //     throw Exception('Error fetching data: $e');
+  //   }
+  // }
 
   static Future<List<Map<String, dynamic>>> singleTasksById(
       String leadId) async {
@@ -751,13 +832,15 @@ class LeadsSrv {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
 
-        // Handle the nested structure with allEvents.rows
-        if (data.containsKey('allTasks') &&
-            data['allTasks'] is Map<String, dynamic> &&
-            data['allTasks'].containsKey('rows')) {
-          return List<Map<String, dynamic>>.from(data['allTasks']['rows']);
+        // Ensure the data structure contains 'allTasks' and 'rows'
+        if (data.containsKey('data') &&
+            data['data'].containsKey('allTasks') &&
+            data['data']['allTasks'].containsKey('rows')) {
+          // Extract the rows containing the task data
+          return List<Map<String, dynamic>>.from(
+              data['data']['allTasks']['rows']);
         } else {
-          return []; // Return empty list if no events found
+          return []; // Return empty list if no tasks found
         }
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');

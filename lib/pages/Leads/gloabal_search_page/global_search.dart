@@ -160,7 +160,7 @@ class _GlobalSearchState extends State<GlobalSearch> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
-          _searchResults = data['suggestions'] ?? [];
+          _searchResults = data['data']['suggestions'] ?? [];
         });
       } else {
         showErrorMessage(context, message: 'Failed to fetch results');
@@ -210,7 +210,7 @@ class _GlobalSearchState extends State<GlobalSearch> {
           //     ),
           //   ),
           // ),
-          
+
           child: TextField(
             autofocus: true,
             controller: _searchController,

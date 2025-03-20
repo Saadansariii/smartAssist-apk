@@ -11,23 +11,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 
-class AppointmentPopup extends StatefulWidget {
-  const AppointmentPopup({super.key});
+class CreateTestdrive extends StatefulWidget {
+  const CreateTestdrive({super.key});
 
   @override
-  State<AppointmentPopup> createState() => _AppointmentPopupState();
+  State<CreateTestdrive> createState() => _CreateTestdriveState();
 }
 
-class _AppointmentPopupState extends State<AppointmentPopup> {
+class _CreateTestdriveState extends State<CreateTestdrive> {
   // final PageController _pageController = PageController();
   List<Map<String, String>> dropdownItems = [];
   bool isLoading = false;
-  int _currentStep = 0;
 
   bool _isLoadingSearch = false;
   String _query = '';
   String? selectedLeads;
-  String _selectedSubject = '';
   String? selectedLeadsName;
   String? selectedPriority;
 
@@ -68,7 +66,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
           'Content-Type': 'application/json',
         },
       );
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
           _searchResults = data['data']['suggestions'] ?? [];
@@ -120,54 +118,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     }
   }
 
-  // void _nextStep() {
-  //   if (_currentStep == 0) {
-  //     if (selectedLeads == null ||
-  //         selectedPriority == null ||
-  //         _selectedSubject == null ||
-  //         startDateController.text.isEmpty) {
-  //       showErrorMessage(context,
-  //           message: 'Please Fill all fields before Proceeding.');
-  //       return;
-  //     }
-  //     // _pageController.nextPage(
-  //     //     duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  //     setState(() => _currentStep = 1);
-  //   } else {
-  //     submitForm();
-  //   }
-  // }
-
-  // Future<void> submitForm() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final spId = prefs.getString('user_id');
-  //   final leadId = selectedLeads;
-
-  //   if (spId == null || leadId == null) {
-  //     showErrorMessage(context,
-  //         message: 'User ID or Lead ID not found. Please log in again.');
-  //     return;
-  //   }
-
-  //   final appointmentData = {
-  //     'start_date': startDateController.text,
-  //     'end_date': endDateController.text,
-  //     'priority': selectedPriority,
-  //     'subject': selectedSubject,
-  //     'sp_id': spId,
-  //   };
-
-  //   final success = await LeadsSrv.submitAppoinment(appointmentData, leadId);
-
-  //   if (success && context.mounted) {
-  //     Navigator.pop(context, true);
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text('Form Submit Successful.')));
-  //   } else {
-  //     showErrorMessage(context, message: 'Failed to submit appointment.');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -177,7 +127,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Text('Create Appointment',
+            child: Text('Create TestDrive',
                 style: GoogleFonts.poppins(
                     fontSize: 20, fontWeight: FontWeight.w600)),
           ),
@@ -207,44 +157,9 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                   ),
                 ],
               ),
-              // _buildDatePicker(
-              //     label: 'Start Date',
-              //     controller: startDateController,
-              //     onTap: () => _pickDate(isStartDate: true)),
-              // _buildDatePicker(
-              //     label: 'End Date',
-              //     controller: endDateController,
-              //     onTap: () => _pickDate(isStartDate: false)),
               const SizedBox(height: 10),
-              _buildButtons(
-                options: {
-                  "Meeting": "Meeting",
-                  "Test Drive": "Test Drive",
-                  "Showroom appointment": "Showroom appointment",
-                },
-                groupValue: _selectedSubject,
-                label: 'Action:',
-                onChanged: (value) {
-                  setState(() {
-                    _selectedSubject = value;
-                  });
-                },
-              )
             ],
           ),
-          const SizedBox(height: 10),
-          // SmoothPageIndicator(
-          //     controller: _pageController,
-          //     count: 2,
-          //     effect: const WormEffect(
-          //       activeDotColor: Colors.black,
-          //       spacing: 4.0,
-          //       radius: 10.0,
-          //       dotWidth: 10.0,
-          //       dotHeight: 10.0,
-          //     )),
-          // const SizedBox(height: 10),
-
           Row(
             children: [
               Expanded(
@@ -269,44 +184,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
               ),
             ],
           ),
-          // Row(
-          //   children: [
-          //     Expanded(
-          //       child: ElevatedButton(
-          //         style: ElevatedButton.styleFrom(
-          //             backgroundColor: Colors.black,
-          //             shape: RoundedRectangleBorder(
-          //                 borderRadius: BorderRadius.circular(5))),
-          //         onPressed: () {
-          //           if (_currentStep == 0) {
-          //             // If on the first step, close the modal
-          //             Navigator.pop(context);
-          //           } else {
-          //             // If on the second step, go back to the first step
-
-          //             setState(() {
-          //               _currentStep = 0;
-          //             });
-          //           }
-          //         },
-          //         child: Text(_currentStep == 0 ? "Cancel" : "Back",
-          //             style: GoogleFonts.poppins(color: Colors.white)),
-          //       ),
-          //     ),
-          //     const SizedBox(width: 10),
-          //     Expanded(
-          //       child: ElevatedButton(
-          //         style: ElevatedButton.styleFrom(
-          //             backgroundColor: AppColors.colorsBlue,
-          //             shape: RoundedRectangleBorder(
-          //                 borderRadius: BorderRadius.circular(5))),
-          //         onPressed: _nextStep,
-          //         child: Text(_currentStep == 0 ? "Continue" : "Submit",
-          //             style: GoogleFonts.poppins(color: Colors.white)),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );
@@ -380,145 +257,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
       ],
     );
   }
-
-  Widget _buildButtons({
-    required Map<String, String> options, // ✅ Short display & actual value
-    required String groupValue,
-    required String label,
-    required ValueChanged<String> onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 5, 0, 5),
-            child: Text(label, style: AppFont.dropDowmLabel(context)),
-          ),
-        ),
-        const SizedBox(height: 5),
-
-        // ✅ Wrap ensures buttons move to next line when needed
-        Wrap(
-          spacing: 10, // Space between buttons
-          runSpacing: 10, // Space between lines
-          children: options.keys.map((shortText) {
-            bool isSelected =
-                groupValue == options[shortText]; // ✅ Compare actual value
-
-            return GestureDetector(
-              onTap: () {
-                onChanged(
-                    options[shortText]!); // ✅ Pass actual value on selection
-              },
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: isSelected ? Colors.blue : Colors.black,
-                    width: .5,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                  color:
-                      isSelected ? Colors.blue.withOpacity(0.2) : Colors.white,
-                ),
-                child: Text(
-                  shortText, // ✅ Only show short text
-                  style: TextStyle(
-                    color: isSelected ? Colors.blue : Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-
-        const SizedBox(height: 5),
-      ],
-    );
-  }
-
-  // Widget _buildDropdown({
-  //   required String label,
-  //   required String? value,
-  //   required List<dynamic> items,
-  //   required ValueChanged<String?> onChanged,
-  // }) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Padding(
-  //         padding: const EdgeInsets.symmetric(vertical: 5.0),
-  //         child: Text(
-  //           label,
-  //           style: GoogleFonts.poppins(
-  //               fontSize: 14,
-  //               fontWeight: FontWeight.w500,
-  //               color: AppColors.fontBlack),
-  //         ),
-  //       ),
-  //       Container(
-  //         height: 45,
-  //         width: double.infinity,
-  //         decoration: BoxDecoration(
-  //           borderRadius: BorderRadius.circular(5),
-  //           color: AppColors.containerPopBg,
-  //         ),
-  //         child: DropdownButton<String>(
-  //           value: value,
-  //           hint: Padding(
-  //             padding: const EdgeInsets.only(left: 10),
-  //             child: Text(
-  //               "Select",
-  //               style: GoogleFonts.poppins(
-  //                   fontSize: 14,
-  //                   fontWeight: FontWeight.w500,
-  //                   color: Colors.grey),
-  //             ),
-  //           ),
-  //           icon: const Padding(
-  //             padding: EdgeInsets.all(8.0),
-  //             child: Icon(Icons.keyboard_arrow_down_sharp, size: 30),
-  //           ),
-  //           isExpanded: true,
-  //           underline: const SizedBox.shrink(),
-  //           items: items.map((item) {
-  //             return DropdownMenuItem<String>(
-  //               value: item is String ? item : item['id'].toString(),
-  //               child: Padding(
-  //                 padding: const EdgeInsets.only(left: 10.0),
-  //                 child: Text(
-  //                   item is String ? item : item['name'].toString(),
-  //                   style: GoogleFonts.poppins(
-  //                       fontSize: 14,
-  //                       fontWeight: FontWeight.w500,
-  //                       color: Colors.black),
-  //                 ),
-  //               ),
-  //             );
-  //           }).toList(),
-  //           onChanged: onChanged,
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget _buildDatePicker(
-  //     {required String label,
-  //     required TextEditingController controller,
-  //     required VoidCallback onTap}) {
-  //   return GestureDetector(
-  //       onTap: onTap,
-  //       child: TextField(
-  //           controller: controller,
-  //           readOnly: true,
-  //           decoration: InputDecoration(labelText: label)));
-  // }
 
   Widget _buildDatePicker({
     required String label,
@@ -601,18 +339,16 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     }
 
     // Prepare the appointment data.
-    final appointmentData = {
+    final testdriveData = {
       'start_date': startDateController.text,
       'end_date': endDateController.text,
-      'priority': selectedPriority,
       'start_time': formattedStartTime,
       'end_time': formattedEndTime,
-      'subject': _selectedSubject,
       'sp_id': spId,
     };
 
     // Call the service to submit the appointment.
-    final success = await LeadsSrv.submitAppoinment(appointmentData, leadId);
+    final success = await LeadsSrv.submitTestDrive(testdriveData, leadId);
 
     if (success) {
       if (context.mounted) {

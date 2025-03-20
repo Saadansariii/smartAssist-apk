@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/utils/storage.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/appointment_popup.dart';
+import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/appointment_popup.dart';
 import 'package:smart_assist/widgets/oppointment/overdue.dart';
 import 'package:smart_assist/widgets/oppointment/upcoming.dart';
 import 'package:smart_assist/widgets/testdrive/overdue.dart';

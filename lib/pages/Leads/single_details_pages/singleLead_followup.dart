@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -54,19 +56,44 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     try {
       final leadData = await LeadsSrv.singleFollowupsById(leadId);
       setState(() {
-        mobile = leadData['data']['mobile'] ?? 'N/A';
-        email = leadData['data']['email'] ?? 'N/A';
-        status = leadData['data']['status'] ?? 'N/A';
-        company = leadData['data']['brand'] ?? 'N/A';
-        address = leadData['data']['address'] ?? 'N/A';
-        lead_owner = leadData['data']['lead_name'] ?? 'N/A';
+        mobile = leadData['data']['lead']['mobile'] ?? 'N/A';
+        email = leadData['data']['lead']['email'] ?? 'N/A';
+        status = leadData['data']['lead']['status'] ?? 'N/A';
+        company = leadData['data']['lead']['brand'] ?? 'N/A';
+        address = leadData['data']['lead']['address'] ?? 'N/A';
+        lead_owner = leadData['data']['lead']['lead_name'] ?? 'N/A';
       });
     } catch (e) {
       print('Error fetching data: $e');
     }
   }
 
-  void _updateDisplayData() {
+  // void _eventAll() {
+  //   setState(() {
+  //     subjectList = [];
+  //     priorityList = [];
+  //     startTimeList = [];
+  //     endTimeList = [];
+  //     startDateList = [];
+
+  //     final dataSource = allEvents;
+
+  //     for (var item in dataSource) {
+  //       // Event data
+  //       subjectList.add(item['data']['allEvents']['rows']['subject'] ?? 'N/A');
+  //       priorityList
+  //           .add(item['data']['allEvents']['rows']['priority'] ?? 'N/A');
+  //       startTimeList
+  //           .add(_formatTime(item['data']['allEvents']['rows']['start_time']));
+  //       endTimeList
+  //           .add(_formatTime(item['data']['allEvents']['rows']['end_time']));
+  //       startDateList
+  //           .add(item['data']['allEvents']['rows']['due_date'] ?? 'N/A');
+  //     }
+  //   });
+  // }
+
+  void _eventAll() {
     setState(() {
       subjectList = [];
       priorityList = [];
@@ -74,24 +101,40 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       endTimeList = [];
       startDateList = [];
 
-      final dataSource = _childButtonIndex == 0 ? allEvents : allTasks;
+      final dataSource = allEvents;
 
+      // Iterate through the rows of events
       for (var item in dataSource) {
-        if (_childButtonIndex == 0) {
-          // Event data
-          subjectList.add(item['data']['subject'] ?? 'N/A');
-          priorityList.add(item['data']['priority'] ?? 'N/A');
-          startTimeList.add(_formatTime(item['data']['start_time']));
-          endTimeList.add(_formatTime(item['data']['end_time']));
-          startDateList.add(item['data']['due_date'] ?? 'N/A');
-        } else {
-          // Task data
-          subjectList.add(item['data']['subject'] ?? 'N/A');
-          priorityList.add(item['data']['priority'] ?? 'N/A');
-          startTimeList.add(_formatTime(item['data']['due_time']));
-          // endTimeList.add(_formatTime(item['flag']));
-          // startDateList.add(item['updated'] ?? 'N/A');
-        }
+        // Event data - access the fields directly from the item, not 'data'
+        subjectList.add(item['subject'] ?? 'N/A');
+        priorityList.add(item['priority'] ?? 'N/A');
+        startTimeList.add(_formatTime(item[
+            'start_time'])); // Assuming _formatTime is a method you defined
+        endTimeList.add(_formatTime(item['end_time']));
+        startDateList.add(item['start_date'] ?? 'N/A');
+      }
+    });
+  }
+
+  void _taskAll() {
+    setState(() {
+      subjectList = [];
+      priorityList = [];
+      startTimeList = [];
+      endTimeList = [];
+      startDateList = [];
+
+      // Choose the data source based on the button index
+      final dataSource = allTasks;
+
+      // Iterate through the dataSource (either allEvents or allTasks)
+      for (var item in dataSource) {
+        // Event data
+        subjectList.add(item['subject'] ?? 'N/A');
+        priorityList.add(item['priority'] ?? 'N/A');
+        startTimeList.add(_formatTime(item['start_time']));
+        endTimeList.add(_formatTime(item['end_time']));
+        startDateList.add(item['due_date'] ?? 'N/A');
       }
     });
   }
@@ -108,9 +151,9 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
 
       setState(() {
         allEvents = events;
-        if (_childButtonIndex == 0) {
-          _updateDisplayData();
-        }
+        // if (_childButtonIndex == 0) {
+        _eventAll();
+        // }
       });
     } catch (e) {
       print('Error Fetching events: $e');
@@ -119,18 +162,38 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     }
   }
 
+  // Future<void> fetchSingleTask(String leadId) async {
+  //   setState(() => isLoading = true);
+  //   try {
+  //     // Fetch API response
+  //     final List<Map<String, dynamic>> tasks =
+  //         await LeadsSrv.singleTasksById(leadId);
+
+  //     setState(() {
+  //       allTasks = tasks;
+  //       if (_childButtonIndex == 1) {
+  //         _taskAll();
+  //       }
+  //     });
+  //   } catch (e) {
+  //     print('Error Fetching tasks: $e');
+  //   } finally {
+  //     setState(() => isLoading = false);
+  //   }
+  // }
+
   Future<void> fetchSingleTask(String leadId) async {
     setState(() => isLoading = true);
     try {
       // Fetch API response
       final List<Map<String, dynamic>> tasks =
-          await LeadsSrv.singleTasksById(leadId);
+          await LeadsSrv.singleTasksById(leadId); // No need to decode here
 
       setState(() {
         allTasks = tasks;
-        if (_childButtonIndex == 1) {
-          _updateDisplayData();
-        }
+        // if (_childButtonIndex == 1) {
+        _taskAll();
+        // }
       });
     } catch (e) {
       print('Error Fetching tasks: $e');
@@ -477,7 +540,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                     onPressed: () {
                                       setState(() {
                                         _childButtonIndex = 0;
-                                        _updateDisplayData();
+                                        _eventAll();
                                         if (allEvents.isEmpty) {
                                           fetchSingleEvent(widget.leadId);
                                         }
@@ -521,7 +584,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                   onPressed: () {
                                     setState(() {
                                       _childButtonIndex = 1;
-                                      _updateDisplayData();
+                                      _taskAll();
                                       if (allTasks.isEmpty) {
                                         fetchSingleTask(widget.leadId);
                                       }
@@ -565,32 +628,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                     ],
                   ),
 
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white,
-                  //     borderRadius: BorderRadius.circular(10),
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //         color: Colors.grey.shade300,
-                  //         blurRadius: 6,
-                  //         offset: const Offset(0, 3),
-                  //       ),
-                  //     ],
-                  //   ),
-                  //   padding: const EdgeInsets.all(16.0),
-                  //   child: isLoading
-                  //       ? const Center(child: CircularProgressIndicator())
-                  //       : Column(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           children: [
-                  //             const SizedBox(height: 50),
-                  //             if (_childButtonIndex == 0)
-                  //               TimelineSevenWid(events: allEvents)
-                  //             else
-                  //               TimelineEightWid(events: allTasks),
-                  //           ],
-                  //         ),
-                  // ),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,

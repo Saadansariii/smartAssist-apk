@@ -26,11 +26,11 @@ class TimelineSevenWid extends StatelessWidget {
     return Column(
       children: List.generate(reversedEvents.length, (index) {
         final event = reversedEvents[index];
-        String startTime = _formatDate(event['data']['start_date'] ?? 'N/A');
-        String subject = event['data']['subject'] ?? 'No Subject';
-        String priority = event['data']['priority'] ?? 'N/A';
-        String startDate = event['data']['start_date'] ?? 'N/A';
-        String endDate = event['data']['end_date'] ?? 'N/A';
+        String startTime = _formatDate(event['start_date'] ?? 'N/A');
+        String subject = event['subject'] ?? 'No Subject';
+        String priority = event['priority'] ?? 'N/A';
+        String startDate = event['start_date'] ?? 'N/A';
+        String endDate = event['end_date'] ?? 'N/A';
 
         return TimelineTile(
           alignment: TimelineAlign.manual,

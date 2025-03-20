@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'dart:convert';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_second.dart';
+import 'package:smart_assist/widgets/home_btn.dart/lead_old_popup/leads_second.dart';
 import 'package:smart_assist/utils/storage.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 

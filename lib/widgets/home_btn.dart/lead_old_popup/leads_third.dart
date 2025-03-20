@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_last.dart';
-import 'package:smart_assist/widgets/home_btn.dart/popups_model/leads_second.dart';
+import 'package:smart_assist/widgets/home_btn.dart/lead_old_popup/leads_last.dart';
+import 'package:smart_assist/widgets/home_btn.dart/lead_old_popup/leads_second.dart';
 
 class LeadsThird extends StatefulWidget {
   final String selectedSource;

@@ -34,7 +34,8 @@ class _FOpportunityState extends State<FOpportunity> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          upcomingTasks = data['rows'] ?? []; // Store only upcoming tasks
+          upcomingTasks =
+              data['data']['rows'] ?? []; // Store only upcoming tasks
           isLoading = false;
         });
       } else {
@@ -64,8 +65,11 @@ class _FOpportunityState extends State<FOpportunity> {
   }
 
   Widget _buildTasksList(List<dynamic> tasks) {
-    if (tasks.isEmpty) {
-      return const Center(child: Text('No Opportunity available'));
+     // Check if both lists are empty and show "No data found"
+    if (upcomingTasks.isEmpty ) {
+      return const Center(
+        child: Text('No data found'),
+      );
     }
 
     return ListView.builder(

@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followup.dart';
 import 'package:smart_assist/utils/storage.dart';
-
-// class FTestdrive extends StatefulWidget {
-//   const FTestdrive({super.key});
-
-//   @override
-//   State<FTestdrive> createState() => _FTestdriveState();
-// }
-
-// class _FTestdriveState extends State<FTestdrive> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
 
 class FTestdrive extends StatefulWidget {
   const FTestdrive({super.key});
@@ -50,8 +40,8 @@ class _FTestdriveState extends State<FTestdrive> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          upcomingTasks = data['upcomingTasks']['rows'] ?? [];
-          overdueTasks = data['overdueTasks']['rows'] ?? [];
+          upcomingTasks = data['data']['upcomingDrives']['rows'] ?? [];
+          overdueTasks = data['data']['overdueDrives']['rows'] ?? [];
           isLoading = false;
           print('this is from FOppointment ${Uri.parse}');
         });
@@ -118,29 +108,26 @@ class _FTestdriveState extends State<FTestdrive> {
       itemBuilder: (context, index) {
         var task = tasks[index];
         return TaskItem(
-          name: task['name'] ?? 'No Name',
-          date: task['due_date'] ?? 'No Date',
-          vehicle: task['vehicle'] ?? 'Discovery Sport',
-          leadId: task['lead_id'] ?? '',
-          taskId: task['task_id'] ?? '',
-          isFavorite: task['favourite'] ?? false,
-          isUpcoming: isUpcoming,
-          onFavoriteToggled: fetchTasksData,
-        );
+            key: ValueKey(task['event_id']),
+            name: task['name'],
+            startTime: task['start_time'],
+            date: task['start_date'],
+            vehicle: 'Discovery Sport',
+            leadId: task['lead_id'],
+            eventId: task['event_id'],
+            isFavorite: task['favourite'] ?? false,
+            fetchDashboardData: () {},
+            isUpcoming: isUpcoming);
       },
     );
   }
 }
 
 class TaskItem extends StatefulWidget {
-  final String name;
-  final String date;
-  final String vehicle;
-  final String leadId;
-  final String taskId;
+  final String name, date, vehicle, leadId, eventId, startTime;
   final bool isFavorite;
+  final VoidCallback fetchDashboardData;
   final bool isUpcoming;
-  final VoidCallback onFavoriteToggled;
 
   const TaskItem({
     super.key,
@@ -148,10 +135,11 @@ class TaskItem extends StatefulWidget {
     required this.date,
     required this.vehicle,
     required this.leadId,
-    required this.taskId,
     required this.isFavorite,
+    required this.eventId,
+    required this.startTime,
+    required this.fetchDashboardData,
     required this.isUpcoming,
-    required this.onFavoriteToggled,
   });
 
   @override
@@ -172,18 +160,18 @@ class _TaskItemState extends State<TaskItem> {
     try {
       final response = await http.put(
         Uri.parse(
-          'https://api.smartassistapp.in/api/favourites/mark-fav/task/${widget.taskId}',
+          'https://api.smartassistapp.in/api/favourites/mark-fav/task/${widget.eventId}',
         ),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'taskId': widget.taskId, 'favourite': !isFav}),
+        body: jsonEncode({'taskId': widget.eventId, 'favourite': !isFav}),
       );
 
       if (response.statusCode == 200) {
         setState(() => isFav = !isFav);
-        widget.onFavoriteToggled();
+        // widget.onFavoriteToggled();
       }
     } catch (e) {
       print('Error updating favorite status: $e');
@@ -195,81 +183,144 @@ class _TaskItemState extends State<TaskItem> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: AppColors.containerBg,
           borderRadius: BorderRadius.circular(10),
           border: Border(
             left: BorderSide(
               width: 8.0,
-              color: widget.isUpcoming ? Colors.green : Colors.red,
+              color:
+                  widget.isUpcoming ? AppColors.sideGreen : AppColors.sideRed,
             ),
           ),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              icon: Icon(
-                isFav ? Icons.star_rounded : Icons.star_border_rounded,
-                color: isFav ? Colors.amber : Colors.grey,
-                size: 40,
-              ),
-              onPressed: _toggleFavorite,
+            // IconButton(
+            //   icon: Icon(
+            //     isFav ? Icons.star_rounded : Icons.star_border_rounded,
+            //     color: isFav
+            //         ? AppColors.starColorsYellow
+            //         : AppColors.starBorderColor,
+            //     size: 40,
+            //   ),
+            //   onPressed: _toggleFavorite,
+            // ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildUserDetails(),
+                const SizedBox(
+                    height: 4), // Spacing between user details and date-car
+                Row(
+                  children: [
+                    _date(),
+                    _buildVerticalDivider(20),
+                    _buildCarModel(),
+                  ],
+                ),
+              ],
             ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(
-                        widget.isUpcoming
-                            ? Icons.calendar_today
-                            : Icons.warning_rounded,
-                        color: widget.isUpcoming ? Colors.blue : Colors.red,
-                        size: 14,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        widget.date,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: widget.isUpcoming ? Colors.grey : Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 16),
-            Text(
-              widget.vehicle,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-            IconButton(
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: () {
-                if (widget.leadId.isNotEmpty) {
-                  Navigator.pushNamed(
-                    context,
-                    '/followup-details',
-                    arguments: widget.leadId,
-                  );
-                }
-              },
-            ),
+            _buildNavigationButton(context),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildNavigationButton(BuildContext context) {
+    // ✅ Accept context
+    return GestureDetector(
+      onTap: () {
+        if (widget.leadId.isNotEmpty) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => FollowupsDetails(leadId: widget.leadId)),
+          );
+        } else {
+          print("Invalid leadId");
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+            color: AppColors.arrowContainerColor,
+            borderRadius: BorderRadius.circular(30)),
+        child: const Icon(Icons.arrow_forward_ios_rounded,
+            size: 25, color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _buildUserDetails() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.name,
+            style: GoogleFonts.poppins(
+                color: AppColors.fontColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 14)),
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+
+  Widget _date() {
+    String formattedDate = '';
+    try {
+      DateTime parseDate = DateTime.parse(widget.date);
+      formattedDate = DateFormat('dd MMM').format(parseDate);
+    } catch (e) {
+      formattedDate = widget.date;
+    }
+    return Row(
+      children: [
+        const Icon(Icons.directions_car, color: Colors.blue, size: 20),
+        const SizedBox(width: 5),
+        Text(formattedDate,
+            style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    );
+  }
+
+  Widget _time() {
+    String formattedTime = '';
+    try {
+      DateTime parseDate = DateFormat("HH:mm:ss").parse(widget.startTime);
+      formattedTime = DateFormat.jm().format(parseDate);
+    } catch (e) {
+      formattedTime = widget.startTime;
+    }
+    return Row(
+      children: [
+        Text(formattedTime,
+            style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    );
+  }
+
+  Widget _buildVerticalDivider(double height) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      height: height,
+      width: 1,
+      decoration: const BoxDecoration(
+          border: Border(right: BorderSide(color: AppColors.fontColor))),
+    );
+  }
+
+  Widget _buildCarModel() {
+    return Text(
+      widget.vehicle,
+      textAlign: TextAlign.start,
+      style: GoogleFonts.poppins(fontSize: 10, color: AppColors.fontColor),
+      softWrap: true,
+      overflow: TextOverflow.visible,
     );
   }
 }
