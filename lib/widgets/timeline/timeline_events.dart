@@ -86,22 +86,22 @@ class TimelineSevenWid extends StatelessWidget {
                   child: RichText(
                     text: TextSpan(
                       children: [
-                        TextSpan(
-                          text: 'Start Time: ',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '$startTime\n',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
+                        // TextSpan(
+                        //   text: 'Start Time: ',
+                        //   style: GoogleFonts.poppins(
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.w400,
+                        //     color: Colors.grey,
+                        //   ),
+                        // ),
+                        // TextSpan(
+                        //   text: '$startTime\n',
+                        //   style: GoogleFonts.poppins(
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.w500,
+                        //     color: Colors.black,
+                        //   ),
+                        // ),
                         TextSpan(
                           text: 'Subject: ',
                           style: GoogleFonts.poppins(
@@ -127,7 +127,7 @@ class TimelineSevenWid extends StatelessWidget {
                           ),
                         ),
                         TextSpan(
-                          text: '$startDate\n',
+                          text: '$priority\n',
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -159,7 +159,7 @@ class TimelineSevenWid extends StatelessWidget {
                           ),
                         ),
                         TextSpan(
-                          text: '$endDate\n',
+                          text: endDate,
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -170,7 +170,7 @@ class TimelineSevenWid extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                // const SizedBox(height: 10),
               ],
             ),
           ),

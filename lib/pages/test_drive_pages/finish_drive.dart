@@ -198,13 +198,14 @@ class FinishDrive extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TestDriveDetails()),
-                            );
-                          },
+                          // onPressed: () {
+                          //   Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => TestDriveDetails()),
+                          //   );
+                          // },
+                          onPressed: () {  },
                           child: const Text(
                             'Finish',
                             style: TextStyle(

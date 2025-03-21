@@ -95,7 +95,7 @@ class TimelineEightWid extends StatelessWidget {
                     color: const Color(0xffE7F2FF),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.fromLTRB(10.0, 10, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(10.0, 10, 0, 10),
                   child: RichText(
                     text: TextSpan(
                       children: [
@@ -141,7 +141,7 @@ class TimelineEightWid extends StatelessWidget {
                           ),
                         ),
                         TextSpan(
-                          text: '$priority\n',
+                          text: priority,
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
