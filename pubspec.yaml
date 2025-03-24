@@ -53,6 +53,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   smooth_page_indicator: ^1.2.1
   flutter_svg: ^2.0.17
+  animated_toggle_switch: ^0.8.4
 
 dev_dependencies:
   flutter_test:

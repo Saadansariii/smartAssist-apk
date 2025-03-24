@@ -1,3 +1,4 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
@@ -210,574 +211,247 @@ class _ThreebtnState extends State<Threebtn> {
             ),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-              child: Container(
-                width: 150, // Set width of the container
-                height: 27,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: const Color(0xFF767676).withOpacity(0.3),
-                      width: 0.6), // Border around the container
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Row(
-                  children: [
-                    // Upcoming Button
-                    Expanded(
-                      child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _childButtonIndex = 0; // Set Upcoming as active
-                              _childSelection[_activeButtonIndex] = 0;
-                            });
-
-                            if (_activeButtonIndex == 0) {
-                              followUps(0);
-                            } else if (_activeButtonIndex == 1) {
-                              oppointment(0);
-                            } else if (_activeButtonIndex == 2) {
-                              testDrive(0);
-                            }
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: _childButtonIndex == 0
-                                ? const Color(0xFF51DF79)
-                                    .withOpacity(0.29) // Green for Upcoming
-                                : Colors.transparent,
-                            foregroundColor: _childButtonIndex == 0
-                                ? Colors.white
-                                : Colors.black,
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            side: BorderSide(
-                              color: _childButtonIndex == 0
-                                  ? const Color.fromARGB(255, 81, 223, 121)
-                                  : Colors.transparent,
-                              width: 1, // Border width
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  30), // Optional: Rounded corners
-                            ),
-                          ),
-                          child: Text(
-                            'Upcoming',
-                            style: GoogleFonts.poppins(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w400,
-                                color:
-                                    const Color(0xff000000).withOpacity(0.56)),
-                          )),
-                    ),
-
-                    // Overdue Button
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _childButtonIndex = 1; // Mark this button as active
-                            _childSelection[_activeButtonIndex] = 1;
-                          });
-
-                          // Call the respective API function
-                          if (_activeButtonIndex == 0) {
-                            followUps(1);
-                          } else if (_activeButtonIndex == 1) {
-                            oppointment(1);
-                          } else if (_activeButtonIndex == 2) {
-                            testDrive(1);
-                          }
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: _childButtonIndex == 1
-                              ? const Color(
-                                  0xFFFFF5F4) // Red highlight when active
-                              : Colors.transparent,
-                          foregroundColor: _childButtonIndex == 1
-                              ? Colors.white
-                              : Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          side: BorderSide(
-                            color: _childButtonIndex == 1
-                                ? const Color.fromRGBO(236, 81, 81, 1)
-                                    .withOpacity(0.59)
-                                : Colors.transparent,
-                            width: 1,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              _activeButtonIndex == 0
-                                  ? 'Overdue'
-                                  : _activeButtonIndex == 1
-                                      ? 'Overdue'
-                                      : 'Overdue',
-                              style: GoogleFonts.poppins(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w400,
-                                color:
-                                    const Color(0xff000000).withOpacity(0.56),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            if ((_activeButtonIndex == 0 &&
-                                    (widget.overdueFollowupsCount > 0 ||
-                                        widget.overdueFollowupsCount > 0)) ||
-                                (_activeButtonIndex == 1 &&
-                                    (widget.overdueAppointmentsCount > 0 ||
-                                        widget.overdueAppointmentsCount > 0)) ||
-                                (_activeButtonIndex == 2 &&
-                                    (widget.overdueTestDrivesCount > 0 ||
-                                        widget.overdueTestDrivesCount > 0)))
-                              Text(
-                                (_activeButtonIndex == 0)
-                                    ? '(${widget.overdueFollowupsCount})'
-                                    : (_activeButtonIndex == 1)
-                                        ? '(${widget.overdueAppointmentsCount})'
-                                        : '(${widget.overdueTestDrivesCount})',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w400,
-                                  color:
-                                      const Color(0xff000000).withOpacity(0.56),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // Expanded(
-                    //   child: TextButton(
-                    //     onPressed: () {
-                    //       setState(() {
-                    //         _childButtonIndex = 1; // Set Overdue as active
-                    //         _childSelection[_activeButtonIndex] = 1;
-                    //       });
-
-                    //       if (_activeButtonIndex == 0) {
-                    //         followUps(1);
-                    //       } else if (_activeButtonIndex == 1) {
-                    //         oppointment(1);
-                    //       } else if (_activeButtonIndex == 2) {
-                    //         testDrive(1);
-                    //       }
-                    //     },
-                    //     style: TextButton.styleFrom(
-                    //       backgroundColor: _childButtonIndex == 1
-                    //           ? const Color(0xFFFFF5F4) // Red for Overdue
-                    //           : Colors.transparent,
-                    //       foregroundColor: _childButtonIndex == 1
-                    //           ? Colors.white
-                    //           : Colors.black,
-                    //       padding: const EdgeInsets.symmetric(vertical: 5),
-                    //       side: BorderSide(
-                    //         color: _childButtonIndex == 1
-                    //             ? Color.fromRGBO(236, 81, 81, 1)
-                    //                 .withOpacity(0.59)
-                    //             : Colors.transparent,
-                    //         width: 1, // Border width
-                    //       ),
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(
-                    //             30), // Optional: Rounded corners
-                    //       ),
-                    //     ),
-                    //     child: Text('Overdue',
-                    //         style: GoogleFonts.poppins(
-                    //             fontSize: 10,
-                    //             fontWeight: FontWeight.w400,
-                    //             color:
-                    //                 const Color(0xff000000).withOpacity(0.56))),
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ),
-            ),
-            // Row(
-            //   // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //     if (_activeButtonIndex == 0)
-            //       GestureDetector(
-            //         onTap: () async {
-            //           final result = await showMenu<String>(
-            //             context: context,
-            //             position: const RelativeRect.fromLTRB(200, 230, 30, 0),
-            //             color: Colors.white,
-            //             items: [
-            //               PopupMenuItem<String>(
-            //                 padding: EdgeInsets.zero,
-            //                 height: 20,
-            //                 onTap: () {
-            //                   Future.delayed(Duration.zero, () async {
-            //                     final dialogResult = await showDialog<bool>(
-            //                       context: context,
-            //                       builder: (context) {
-            //                         return Dialog(
-            //                           backgroundColor: Colors.transparent,
-            //                           insetPadding: EdgeInsets.zero,
-            //                           child: Container(
-            //                             width:
-            //                                 MediaQuery.of(context).size.width,
-            //                             margin: const EdgeInsets.symmetric(
-            //                                 horizontal:
-            //                                     16), // Add some margin for better UX
-            //                             decoration: BoxDecoration(
-            //                               color: Colors.white,
-            //                               borderRadius:
-            //                                   BorderRadius.circular(10),
-            //                             ),
-            //                             child: _createFollowups,
-            //                           ),
-            //                         );
-            //                       },
-            //                     );
-            //                     if (dialogResult == true) {
-            //                       await widget.refreshDashboard();
-            //                     }
-            //                   });
-            //                 },
-            //                 value: 'followup',
-            //                 child: Padding(
-            //                   padding: const EdgeInsets.symmetric(
-            //                       horizontal: 0, vertical: 15),
-            //                   child: Row(
-            //                     children: [
-            //                       const Padding(
-            //                         padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
-            //                         child: Icon(
-            //                           Icons.add_call,
-            //                           size: 20,
-            //                           color: AppColors.fontColor,
-            //                         ),
-            //                       ),
-            //                       const SizedBox(
-            //                         width: 4,
-            //                       ),
-            //                       Container(
-            //                         margin: const EdgeInsets.only(right: 13),
-            //                         child: Text(
-            //                           'Create Followups',
-            //                           style: GoogleFonts.poppins(
-            //                               fontSize: 12,
-            //                               fontWeight: FontWeight.w500,
-            //                               color: AppColors.fontColor),
-            //                         ),
-            //                       ),
-            //                     ],
-            //                   ),
-            //                 ),
-            //               ),
-            //               // const PopupMenuDivider(height: 0.1),
-            //               PopupMenuItem<String>(
-            //                 padding: EdgeInsets.zero,
-            //                 height: 20,
-            //                 onTap: () {
-            //                   Future.delayed(Duration.zero, () {
-            //                     showDialog(
-            //                       context: context,
-            //                       builder: (context) {
-            //                         return Dialog(
-            //                           backgroundColor: Colors.transparent,
-            //                           insetPadding: EdgeInsets
-            //                               .zero, // Remove default padding
-            //                           child: Container(
-            //                             width:
-            //                                 MediaQuery.of(context).size.width,
-            //                             margin: const EdgeInsets.symmetric(
-            //                                 horizontal:
-            //                                     16), // Add some margin for better UX
-            //                             decoration: BoxDecoration(
-            //                               color: Colors.white,
-            //                               borderRadius:
-            //                                   BorderRadius.circular(10),
-            //                             ),
-            //                             // child: const LeadFirstStep(
-            //                             //   firstName: '',
-            //                             //   lastName: '',
-            //                             //   selectedPurchaseType: '',
-            //                             //   selectedSubType: '',
-            //                             //   selectedFuelType: '',
-            //                             //   selectedBrand: '',
-            //                             //   email: '',
-            //                             //   selectedEvent: '',
-            //                             // ),
-            //                             child: const CreateLeads(),
-            //                           ),
-            //                         );
-            //                       },
-            //                     );
-            //                   });
-            //                 },
-            //                 value: 'lead',
-            //                 child: Padding(
-            //                   padding: const EdgeInsets.symmetric(
-            //                       horizontal: 0, vertical: 15),
-            //                   child: Row(
-            //                     children: [
-            //                       const Padding(
-            //                         padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
-            //                         child: Icon(
-            //                           Icons.person_add_alt_1,
-            //                           size: 20,
-            //                           color: AppColors.fontColor,
-            //                         ),
-            //                       ),
-            //                       const SizedBox(
-            //                         width: 4,
-            //                       ),
-            //                       Text(
-            //                         'Create Leads',
-            //                         style: GoogleFonts.poppins(
-            //                             fontSize: 12,
-            //                             fontWeight: FontWeight.w500,
-            //                             color: AppColors.fontColor),
-            //                       ),
-            //                     ],
-            //                   ),
-            //                 ),
-            //               ),
-            //             ],
-            //           );
-            //           if (result != null) {
-            //             print('Selected: $result');
-            //           }
-            //         },
-            //         child: const Padding(
-            //           padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            //           child: Icon(
-            //             Icons.add,
-            //             size: 30,
-            //             color: AppColors.fontColor,
-            //           ),
-            //         ),
-            //       ),
-            //     if (_activeButtonIndex == 1)
-            //       GestureDetector(
-            //         onTap: () async {
-            //           final result = await showMenu<String>(
-            //             elevation: 2,
-            //             color: Colors.white,
-            //             context: context,
-            //             position: const RelativeRect.fromLTRB(200, 220, 30, 0),
-            //             items: [
-            //               // PopupMenuItem<String>(
-            //               //   padding: EdgeInsets.zero,
-            //               //   height: 20,
-            //               //   onTap: () {
-            //               //     Future.delayed(
-            //               //       Duration.zero,
-            //               //       () {
-            //               //         showDialog(
-            //               //           context: context,
-            //               //           builder: (context) {
-            //               //             return Dialog(
-            //               //               backgroundColor: Colors.transparent,
-            //               //               insetPadding: EdgeInsets
-            //               //                   .zero, // Remove default padding
-            //               //               child: Container(
-            //               //                 width:
-            //               //                     MediaQuery.of(context).size.width,
-            //               //                 margin: const EdgeInsets.symmetric(
-            //               //                     horizontal:
-            //               //                         16), // Add some margin for better UX
-            //               //                 decoration: BoxDecoration(
-            //               //                   color: Colors.white,
-            //               //                   borderRadius:
-            //               //                       BorderRadius.circular(10),
-            //               //                 ),
-
-            //               //                 child: _createAppoinment,
-            //               //                 // Appointment modal
-            //               //               ),
-            //               //             );
-            //               //           },
-            //               //         );
-
-            //               //       },
-            //               //     );
-            //               //   },
-            //               //   value: 'appointment',
-            //               //   child: Padding(
-            //               //     padding: const EdgeInsets.symmetric(
-            //               //         horizontal: 0, vertical: 15),
-            //               //     child: Row(
-            //               //       children: [
-            //               //         const Padding(
-            //               //           padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
-            //               //           child: Icon(
-            //               //             Icons.add_call,
-            //               //             size: 20,
-            //               //             color: AppColors.fontColor,
-            //               //           ),
-            //               //         ),
-            //               //         const SizedBox(
-            //               //           width: 4,
-            //               //         ),
-            //               //         Text(
-            //               //           'Create Appointment',
-            //               //           style: GoogleFonts.poppins(
-            //               //               fontSize: 12,
-            //               //               fontWeight: FontWeight.w500,
-            //               //               color: AppColors.fontColor),
-            //               //         ),
-            //               //       ],
-            //               //     ),
-            //               //   ),
-            //               // ),
-            //               PopupMenuItem<String>(
-            //                 padding: EdgeInsets.zero,
-            //                 height: 20,
-            //                 onTap: () {
-            //                   Future.delayed(Duration.zero, () async {
-            //                     final dialogResult = await showDialog<bool>(
-            //                       context: context,
-            //                       builder: (context) {
-            //                         return Dialog(
-            //                           backgroundColor: Colors.transparent,
-            //                           insetPadding: EdgeInsets
-            //                               .zero, // Remove default padding
-            //                           child: Container(
-            //                             width:
-            //                                 MediaQuery.of(context).size.width,
-            //                             margin: const EdgeInsets.symmetric(
-            //                                 horizontal:
-            //                                     16), // Add margin for better UX
-            //                             decoration: BoxDecoration(
-            //                               color: Colors.white,
-            //                               borderRadius:
-            //                                   BorderRadius.circular(10),
-            //                             ),
-            //                             child:
-            //                                 _createAppoinment, // Appointment modal
-            //                           ),
-            //                         );
-            //                       },
-            //                     );
-            //                     if (dialogResult == true) {
-            //                       await widget.refreshDashboard();
-            //                     }
-            //                   });
-            //                 },
-            //                 value: 'appointment',
-            //                 child: Padding(
-            //                   padding: const EdgeInsets.symmetric(
-            //                       horizontal: 0, vertical: 15),
-            //                   child: Row(
-            //                     children: [
-            //                       const Padding(
-            //                         padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
-            //                         child: Icon(
-            //                           Icons.add_call,
-            //                           size: 20,
-            //                           color: AppColors.fontColor,
-            //                         ),
-            //                       ),
-            //                       const SizedBox(width: 4),
-            //                       Text(
-            //                         'Create Appointment',
-            //                         style: GoogleFonts.poppins(
-            //                           fontSize: 12,
-            //                           fontWeight: FontWeight.w500,
-            //                           color: AppColors.fontColor,
-            //                         ),
-            //                       ),
-            //                     ],
-            //                   ),
-            //                 ),
-            //               ),
-
-            //               PopupMenuItem<String>(
-            //                 padding: EdgeInsets.zero,
-            //                 height: 20,
-            //                 onTap: () {
-            //                   Future.delayed(Duration.zero, () {
-            //                     showDialog(
-            //                       context: context,
-            //                       builder: (context) {
-            //                         return Dialog(
-            //                           backgroundColor: Colors.transparent,
-            //                           insetPadding: EdgeInsets.zero,
-            //                           child: Container(
-            //                             width:
-            //                                 MediaQuery.of(context).size.width,
-            //                             margin: const EdgeInsets.symmetric(
-            //                                 horizontal:
-            //                                     16), // Add some margin for better UX
-            //                             decoration: BoxDecoration(
-            //                               color: Colors.white,
-            //                               borderRadius:
-            //                                   BorderRadius.circular(10),
-            //                             ),
-            //                             // child: const LeadFirstStep(
-            //                             //   firstName: '',
-            //                             //   lastName: '',
-            //                             //   selectedPurchaseType: '',
-            //                             //   selectedSubType: '',
-            //                             //   selectedFuelType: '',
-            //                             //   selectedBrand: '',
-            //                             //   email: '',
-            //                             //   selectedEvent: '',
-            //                             // ),
-            //                             child: const CreateLeads(),
-            //                           ),
-            //                         );
-            //                       },
-            //                     );
-            //                   });
-            //                 },
-            //                 value: 'lead',
-            //                 child: Padding(
-            //                   padding: const EdgeInsets.symmetric(
-            //                       horizontal: 0, vertical: 15),
-            //                   child: Row(
-            //                     children: [
-            //                       const Padding(
-            //                         padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
-            //                         child: Icon(
-            //                           Icons.person_add_alt_1,
-            //                           size: 20,
-            //                           color: AppColors.fontColor,
-            //                         ),
-            //                       ),
-            //                       const SizedBox(
-            //                         width: 4,
-            //                       ),
-            //                       Text(
-            //                         'Create Leads',
-            //                         style: GoogleFonts.poppins(
-            //                             fontSize: 12,
-            //                             fontWeight: FontWeight.w500,
-            //                             color: AppColors.fontColor),
-            //                       ),
-            //                     ],
-            //                   ),
-            //                 ),
-            //               ),
-            //             ],
-            //           );
-            //           if (result != null) {
-            //             print('Selected: $result');
-            //           }
-            //         },
-            //         child: const Padding(
-            //           padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            //           child: Icon(Icons.add, size: 30),
-            //         ),
-            //       ),
-            //   ],
-            // ),
-          ],
+        const SizedBox(
+          height: 10,
         ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              AnimatedToggleSwitch<int>.size(
+                current: _childButtonIndex,
+                values: const [0, 1], // 0 = Upcoming, 1 = Overdue
+                onChanged: (index) {
+                  setState(() {
+                    _childButtonIndex = index;
+                    _childSelection[_activeButtonIndex] = index;
+                  });
+
+                  // Call the correct API function
+                  if (_activeButtonIndex == 0) {
+                    followUps(index);
+                  } else if (_activeButtonIndex == 1) {
+                    oppointment(index);
+                  } else if (_activeButtonIndex == 2) {
+                    testDrive(index);
+                  }
+                },
+                height: 27,
+                indicatorSize: const Size(95, 25), // Adjusted for better fit
+                iconAnimationType: AnimationType.onHover,
+                animationDuration:
+                    const Duration(milliseconds: 300), // Smooth transition
+                borderWidth: 0.6,
+                style: ToggleStyle(
+                  backgroundColor: Colors.transparent,
+                  borderRadius: BorderRadius.circular(30),
+                  indicatorColor: _childButtonIndex == 0
+                      ? const Color(0xFF51DF79)
+                          .withOpacity(0.29) // Green for Upcoming
+                      : const Color(0xFFFFF5F4), // Light Red for Overdue
+                ),
+                iconBuilder: (index) {
+                  int overdueCount = 0;
+                  if (_activeButtonIndex == 0) {
+                    overdueCount = widget.overdueFollowupsCount;
+                  } else if (_activeButtonIndex == 1) {
+                    overdueCount = widget.overdueAppointmentsCount;
+                  } else if (_activeButtonIndex == 2) {
+                    overdueCount = widget.overdueTestDrivesCount;
+                  }
+
+                  return Transform.scale(
+                    scale: 0.8, // Adjust scale to prevent size increase
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          index == 0 ? 'Upcoming' : 'Overdue',
+                          textScaleFactor:
+                              0.9, // Prevents auto-scaling when selected
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black.withOpacity(0.96),
+                          ),
+                        ),
+                        // const SizedBox(width: 5),
+                        if (index == 1 &&
+                            overdueCount > 0) // Show count only for Overdue
+                          Text(
+                            '($overdueCount)',
+                            textScaleFactor: 1.0, // Keeps text size stable
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black.withOpacity(0.92),
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(
+          height: 5,
+        ),
+
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     Padding(
+        //       padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+        //       child: Container(
+        //         width: 150, // Set width of the container
+        //         height: 27,
+        //         decoration: BoxDecoration(
+        //           border: Border.all(
+        //               color: const Color(0xFF767676).withOpacity(0.3),
+        //               width: 0.6), // Border around the container
+        //           borderRadius: BorderRadius.circular(30),
+        //         ),
+        //         child: Row(
+        //           children: [
+        //             // Upcoming Button
+        //             Expanded(
+        //               child: TextButton(
+        //                   onPressed: () {
+        //                     setState(() {
+        //                       _childButtonIndex = 0; // Set Upcoming as active
+        //                       _childSelection[_activeButtonIndex] = 0;
+        //                     });
+
+        //                     if (_activeButtonIndex == 0) {
+        //                       followUps(0);
+        //                     } else if (_activeButtonIndex == 1) {
+        //                       oppointment(0);
+        //                     } else if (_activeButtonIndex == 2) {
+        //                       testDrive(0);
+        //                     }
+        //                   },
+        //                   style: TextButton.styleFrom(
+        //                     backgroundColor: _childButtonIndex == 0
+        //                         ? const Color(0xFF51DF79)
+        //                             .withOpacity(0.29) // Green for Upcoming
+        //                         : Colors.transparent,
+        //                     foregroundColor: _childButtonIndex == 0
+        //                         ? Colors.white
+        //                         : Colors.black,
+        //                     padding: const EdgeInsets.symmetric(vertical: 5),
+        //                     side: BorderSide(
+        //                       color: _childButtonIndex == 0
+        //                           ? const Color.fromARGB(255, 81, 223, 121)
+        //                           : Colors.transparent,
+        //                       width: 1, // Border width
+        //                     ),
+        //                     shape: RoundedRectangleBorder(
+        //                       borderRadius: BorderRadius.circular(
+        //                           30), // Optional: Rounded corners
+        //                     ),
+        //                   ),
+        //                   child: Text(
+        //                     'Upcoming',
+        //                     style: GoogleFonts.poppins(
+        //                         fontSize: 10,
+        //                         fontWeight: FontWeight.w400,
+        //                         color:
+        //                             const Color(0xff000000).withOpacity(0.56)),
+        //                   )),
+        //             ),
+
+        //             // Overdue Button
+        //             Expanded(
+        //               child: TextButton(
+        //                 onPressed: () {
+        //                   setState(() {
+        //                     _childButtonIndex = 1; // Mark this button as active
+        //                     _childSelection[_activeButtonIndex] = 1;
+        //                   });
+
+        //                   // Call the respective API function
+        //                   if (_activeButtonIndex == 0) {
+        //                     followUps(1);
+        //                   } else if (_activeButtonIndex == 1) {
+        //                     oppointment(1);
+        //                   } else if (_activeButtonIndex == 2) {
+        //                     testDrive(1);
+        //                   }
+        //                 },
+        //                 style: TextButton.styleFrom(
+        //                   backgroundColor: _childButtonIndex == 1
+        //                       ? const Color(
+        //                           0xFFFFF5F4) // Red highlight when active
+        //                       : Colors.transparent,
+        //                   foregroundColor: _childButtonIndex == 1
+        //                       ? Colors.white
+        //                       : Colors.black,
+        //                   padding: const EdgeInsets.symmetric(vertical: 5),
+        //                   side: BorderSide(
+        //                     color: _childButtonIndex == 1
+        //                         ? const Color.fromRGBO(236, 81, 81, 1)
+        //                             .withOpacity(0.59)
+        //                         : Colors.transparent,
+        //                     width: 1,
+        //                   ),
+        //                   shape: RoundedRectangleBorder(
+        //                     borderRadius: BorderRadius.circular(30),
+        //                   ),
+        //                 ),
+        //                 child: Row(
+        //                   mainAxisAlignment: MainAxisAlignment.center,
+        //                   children: [
+        //                     Text(
+        //                       _activeButtonIndex == 0
+        //                           ? 'Overdue'
+        //                           : _activeButtonIndex == 1
+        //                               ? 'Overdue'
+        //                               : 'Overdue',
+        //                       style: GoogleFonts.poppins(
+        //                         fontSize: 10,
+        //                         fontWeight: FontWeight.w400,
+        //                         color:
+        //                             const Color(0xff000000).withOpacity(0.56),
+        //                       ),
+        //                     ),
+        //                     const SizedBox(width: 5),
+        //                     if ((_activeButtonIndex == 0 &&
+        //                             (widget.overdueFollowupsCount > 0 ||
+        //                                 widget.overdueFollowupsCount > 0)) ||
+        //                         (_activeButtonIndex == 1 &&
+        //                             (widget.overdueAppointmentsCount > 0 ||
+        //                                 widget.overdueAppointmentsCount > 0)) ||
+        //                         (_activeButtonIndex == 2 &&
+        //                             (widget.overdueTestDrivesCount > 0 ||
+        //                                 widget.overdueTestDrivesCount > 0)))
+        //                       Text(
+        //                         (_activeButtonIndex == 0)
+        //                             ? '(${widget.overdueFollowupsCount})'
+        //                             : (_activeButtonIndex == 1)
+        //                                 ? '(${widget.overdueAppointmentsCount})'
+        //                                 : '(${widget.overdueTestDrivesCount})',
+        //                         style: GoogleFonts.poppins(
+        //                           fontSize: 10,
+        //                           fontWeight: FontWeight.w400,
+        //                           color:
+        //                               const Color(0xff000000).withOpacity(0.56),
+        //                         ),
+        //                       ),
+        //                   ],
+        //                 ),
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     ),
+        //   ],
+        // ),
 
         // show data
         currentWidget ?? const SizedBox(height: 10),

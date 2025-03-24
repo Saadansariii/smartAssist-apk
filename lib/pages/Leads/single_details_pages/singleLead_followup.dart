@@ -49,6 +49,8 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   List<String> endTimeList = [];
   List<String> startDateList = [];
 
+  bool _isHidden = false;
+
   // dropdown
   final Widget _createFollowups = const LeadsCreateFollowup();
   final Widget _createAppoinment = const CreateAppointment();
@@ -739,239 +741,475 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                     ),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10.0, vertical: 0),
-                    child: isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Header Row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('History',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black)),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isHidden = !_isHidden;
+                                });
+                              },
+                              child: Text(
+                                _isHidden ? 'Show' : 'Hide',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // Show only if _isHidden is false
+                        if (!_isHidden) ...[
+                          // Filter buttons
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('History',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black)),
-                                  TextButton(
-                                      onPressed: () {},
-                                      child: Text('Hide',
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black)))
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          .8,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: const Color(0xFF767676)
-                                                .withOpacity(0.3),
-                                            width:
-                                                0.6), // Border around the container
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          // Upcoming Button
-                                          Expanded(
-                                            child: TextButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _childButtonIndex = 0;
-                                                    _eventAll();
-                                                    if (allEvents.isEmpty) {
-                                                      fetchSingleEvent(
-                                                          widget.leadId);
-                                                    }
-                                                  });
-                                                },
-                                                style: TextButton.styleFrom(
-                                                  backgroundColor:
-                                                      _childButtonIndex == 0
-                                                          ? Colors
-                                                              .blue // Red for Overdue
-                                                          : Colors.transparent,
-                                                  foregroundColor:
-                                                      _childButtonIndex == 0
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 5),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30), // Optional: Rounded corners
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  'Followups',
-                                                  style: GoogleFonts.poppins(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color:
-                                                          _childButtonIndex == 0
-                                                              ? Colors.white
-                                                              : Colors.black),
-                                                )),
-                                          ),
-
-                                          // Overdue Button
-                                          Expanded(
-                                            child: TextButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _childButtonIndex = 1;
-                                                  _taskAll();
-                                                  if (allTasks.isEmpty) {
-                                                    fetchSingleTask(
-                                                        widget.leadId);
-                                                  }
-                                                });
-                                              },
-                                              style: TextButton.styleFrom(
-                                                backgroundColor:
-                                                    _childButtonIndex == 1
-                                                        ? Colors
-                                                            .blue // Red for Overdue
-                                                        : Colors.transparent,
-                                                foregroundColor:
-                                                    _childButtonIndex == 1
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 5),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30), // Optional: Rounded corners
-                                                ),
-                                              ),
-                                              child: Text('Appointments',
-                                                  style: GoogleFonts.poppins(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color:
-                                                          _childButtonIndex == 1
-                                                              ? Colors.white
-                                                              : Colors.black)),
-                                            ),
-                                          ),
-
-                                          // Overdue Button
-                                          Expanded(
-                                            child: TextButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _childButtonIndex = 2;
-                                                  _eventAll();
-                                                  if (allEvents.isEmpty) {
-                                                    fetchTestDrive(
-                                                        widget.leadId,
-                                                        'Test%20Drive');
-                                                  }
-                                                });
-                                              },
-                                              style: TextButton.styleFrom(
-                                                backgroundColor:
-                                                    _childButtonIndex == 2
-                                                        ? Colors
-                                                            .blue // Red for Overdue
-                                                        : Colors.transparent,
-                                                foregroundColor:
-                                                    _childButtonIndex == 2
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 5),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30), // Optional: Rounded corners
-                                                ),
-                                              ),
-                                              child: Text('Test Drive',
-                                                  style: GoogleFonts.poppins(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color:
-                                                          _childButtonIndex == 2
-                                                              ? Colors.white
-                                                              : Colors.black)),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * .8,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: const Color(0xFF767676)
+                                            .withOpacity(0.3),
+                                        width: 0.6),
+                                    borderRadius: BorderRadius.circular(30),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 0),
-                              if (_childButtonIndex == 0)
-                                allEvents.isNotEmpty
-                                    ? TimelineSevenWid(
-                                        events:
-                                            allEvents) // Show data if exists
-                                    : const Center(
-                                        child: Text(
-                                          textAlign: TextAlign.start,
-                                          "No Events Found....",
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey,
+                                  child: Row(
+                                    children: [
+                                      // Followups Button
+                                      Expanded(
+                                        child: TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _childButtonIndex = 0;
+                                                _eventAll();
+                                                if (allEvents.isEmpty) {
+                                                  fetchSingleEvent(
+                                                      widget.leadId);
+                                                }
+                                              });
+                                            },
+                                            style: TextButton.styleFrom(
+                                              backgroundColor:
+                                                  _childButtonIndex == 0
+                                                      ? Colors.blue
+                                                      : Colors.transparent,
+                                              foregroundColor:
+                                                  _childButtonIndex == 0
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 5),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Followups',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: _childButtonIndex == 0
+                                                      ? Colors.white
+                                                      : Colors.black),
+                                            )),
+                                      ),
+
+                                      // Appointments Button
+                                      Expanded(
+                                        child: TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _childButtonIndex = 1;
+                                              _taskAll();
+                                              if (allTasks.isEmpty) {
+                                                fetchSingleTask(widget.leadId);
+                                              }
+                                            });
+                                          },
+                                          style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                _childButtonIndex == 1
+                                                    ? Colors.blue
+                                                    : Colors.transparent,
+                                            foregroundColor:
+                                                _childButtonIndex == 1
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
                                           ),
-                                        ),
-                                      ) // Show message if no data
-                              else if (_childButtonIndex == 1)
-                                allTasks.isNotEmpty
-                                    ? TimelineEightWid(
-                                        events: allTasks) // Show data if exists
-                                    : const Center(
-                                        child: Text(
-                                          textAlign: TextAlign.center,
-                                          "No Tasks Found...",
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      )
-                              else if (_childButtonIndex ==
-                                  2) // Show message if no data
-                                allTestdrive.isNotEmpty
-                                    ? TimelineNineWid(
-                                        testDrive:
-                                            allTestdrive) // Show data if exists
-                                    : const Center(
-                                        child: Text(
-                                          textAlign: TextAlign.center,
-                                          "No Test Drive Found...",
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey,
-                                          ),
+                                          child: Text('Appointments',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: _childButtonIndex == 1
+                                                      ? Colors.white
+                                                      : Colors.black)),
                                         ),
                                       ),
+
+                                      // Test Drive Button
+                                      Expanded(
+                                        child: TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _childButtonIndex = 2;
+                                              _eventAll();
+                                              if (allEvents.isEmpty) {
+                                                fetchTestDrive(widget.leadId,
+                                                    'Test%20Drive');
+                                              }
+                                            });
+                                          },
+                                          style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                _childButtonIndex == 2
+                                                    ? Colors.blue
+                                                    : Colors.transparent,
+                                            foregroundColor:
+                                                _childButtonIndex == 2
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          child: Text('Test Drive',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: _childButtonIndex == 2
+                                                      ? Colors.white
+                                                      : Colors.black)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
+
+                          // Data Section
+                          isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(height: 0),
+                                    if (_childButtonIndex == 0)
+                                      allEvents.isNotEmpty
+                                          ? TimelineSevenWid(events: allEvents)
+                                          : const Center(
+                                              child: Text(
+                                                textAlign: TextAlign.start,
+                                                "No Events Found....",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            )
+                                    else if (_childButtonIndex == 1)
+                                      allTasks.isNotEmpty
+                                          ? TimelineEightWid(events: allTasks)
+                                          : const Center(
+                                              child: Text(
+                                                textAlign: TextAlign.center,
+                                                "No Tasks Found...",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            )
+                                    else if (_childButtonIndex == 2)
+                                      allTestdrive.isNotEmpty
+                                          ? TimelineNineWid(
+                                              testDrive: allTestdrive)
+                                          : const Center(
+                                              child: Text(
+                                                textAlign: TextAlign.center,
+                                                "No Test Drive Found...",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ),
+                                  ],
+                                ),
+                        ]
+                      ],
+                    ),
                   )
+
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white,
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     boxShadow: [
+                  //       BoxShadow(
+                  //         color: Colors.grey.shade300,
+                  //         blurRadius: 6,
+                  //         offset: const Offset(0, 3),
+                  //       ),
+                  //     ],
+                  //   ),
+                  //   padding: const EdgeInsets.symmetric(
+                  //       horizontal: 10.0, vertical: 0),
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         children: [
+                  //           Text('History',
+                  //               style: GoogleFonts.poppins(
+                  //                   fontSize: 20,
+                  //                   fontWeight: FontWeight.w500,
+                  //                   color: Colors.black)),
+                  //           TextButton(
+                  //             onPressed: () {},
+                  //             child: Text(
+                  //               'Hide',
+                  //               style: GoogleFonts.poppins(
+                  //                   fontSize: 15,
+                  //                   fontWeight: FontWeight.w500,
+                  //                   color: Colors.black),
+                  //             ),
+                  //           )
+                  //         ],
+                  //       ),
+                  //       Row(
+                  //         mainAxisAlignment: MainAxisAlignment.start,
+                  //         children: [
+                  //           Padding(
+                  //             padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  //             child: Container(
+                  //               width: MediaQuery.of(context).size.width * .8,
+                  //               height: 30,
+                  //               decoration: BoxDecoration(
+                  //                 border: Border.all(
+                  //                     color: const Color(0xFF767676)
+                  //                         .withOpacity(0.3),
+                  //                     width:
+                  //                         0.6), // Border around the container
+                  //                 borderRadius: BorderRadius.circular(30),
+                  //               ),
+                  //               child: Row(
+                  //                 children: [
+                  //                   // Upcoming Button
+                  //                   Expanded(
+                  //                     child: TextButton(
+                  //                         onPressed: () {
+                  //                           setState(() {
+                  //                             _childButtonIndex = 0;
+                  //                             _eventAll();
+                  //                             if (allEvents.isEmpty) {
+                  //                               fetchSingleEvent(widget.leadId);
+                  //                             }
+                  //                           });
+                  //                         },
+                  //                         style: TextButton.styleFrom(
+                  //                           backgroundColor:
+                  //                               _childButtonIndex == 0
+                  //                                   ? Colors
+                  //                                       .blue // Red for Overdue
+                  //                                   : Colors.transparent,
+                  //                           foregroundColor:
+                  //                               _childButtonIndex == 0
+                  //                                   ? Colors.white
+                  //                                   : Colors.black,
+                  //                           padding: const EdgeInsets.symmetric(
+                  //                               vertical: 5),
+                  //                           shape: RoundedRectangleBorder(
+                  //                             borderRadius: BorderRadius.circular(
+                  //                                 30), // Optional: Rounded corners
+                  //                           ),
+                  //                         ),
+                  //                         child: Text(
+                  //                           'Followups',
+                  //                           style: GoogleFonts.poppins(
+                  //                               fontSize: 10,
+                  //                               fontWeight: FontWeight.w400,
+                  //                               color: _childButtonIndex == 0
+                  //                                   ? Colors.white
+                  //                                   : Colors.black),
+                  //                         )),
+                  //                   ),
+
+                  //                   // Overdue Button
+                  //                   Expanded(
+                  //                     child: TextButton(
+                  //                       onPressed: () {
+                  //                         setState(() {
+                  //                           _childButtonIndex = 1;
+                  //                           _taskAll();
+                  //                           if (allTasks.isEmpty) {
+                  //                             fetchSingleTask(widget.leadId);
+                  //                           }
+                  //                         });
+                  //                       },
+                  //                       style: TextButton.styleFrom(
+                  //                         backgroundColor: _childButtonIndex ==
+                  //                                 1
+                  //                             ? Colors.blue // Red for Overdue
+                  //                             : Colors.transparent,
+                  //                         foregroundColor:
+                  //                             _childButtonIndex == 1
+                  //                                 ? Colors.white
+                  //                                 : Colors.black,
+                  //                         padding: const EdgeInsets.symmetric(
+                  //                             vertical: 5),
+                  //                         shape: RoundedRectangleBorder(
+                  //                           borderRadius: BorderRadius.circular(
+                  //                               30), // Optional: Rounded corners
+                  //                         ),
+                  //                       ),
+                  //                       child: Text('Appointments',
+                  //                           style: GoogleFonts.poppins(
+                  //                               fontSize: 10,
+                  //                               fontWeight: FontWeight.w400,
+                  //                               color: _childButtonIndex == 1
+                  //                                   ? Colors.white
+                  //                                   : Colors.black)),
+                  //                     ),
+                  //                   ),
+
+                  //                   // Overdue Button
+                  //                   Expanded(
+                  //                     child: TextButton(
+                  //                       onPressed: () {
+                  //                         setState(() {
+                  //                           _childButtonIndex = 2;
+                  //                           _eventAll();
+                  //                           if (allEvents.isEmpty) {
+                  //                             fetchTestDrive(widget.leadId,
+                  //                                 'Test%20Drive');
+                  //                           }
+                  //                         });
+                  //                       },
+                  //                       style: TextButton.styleFrom(
+                  //                         backgroundColor: _childButtonIndex ==
+                  //                                 2
+                  //                             ? Colors.blue // Red for Overdue
+                  //                             : Colors.transparent,
+                  //                         foregroundColor:
+                  //                             _childButtonIndex == 2
+                  //                                 ? Colors.white
+                  //                                 : Colors.black,
+                  //                         padding: const EdgeInsets.symmetric(
+                  //                             vertical: 5),
+                  //                         shape: RoundedRectangleBorder(
+                  //                           borderRadius: BorderRadius.circular(
+                  //                               30), // Optional: Rounded corners
+                  //                         ),
+                  //                       ),
+                  //                       child: Text('Test Drive',
+                  //                           style: GoogleFonts.poppins(
+                  //                               fontSize: 10,
+                  //                               fontWeight: FontWeight.w400,
+                  //                               color: _childButtonIndex == 2
+                  //                                   ? Colors.white
+                  //                                   : Colors.black)),
+                  //                     ),
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       isLoading
+                  //           ? const Center(child: CircularProgressIndicator())
+                  //           : Column(
+                  //               mainAxisAlignment:
+                  //                   MainAxisAlignment.spaceBetween,
+                  //               children: [
+                  //                 const SizedBox(height: 0),
+                  //                 if (_childButtonIndex == 0)
+                  //                   allEvents.isNotEmpty
+                  //                       ? TimelineSevenWid(
+                  //                           events:
+                  //                               allEvents) // Show data if exists
+                  //                       : const Center(
+                  //                           child: Text(
+                  //                             textAlign: TextAlign.start,
+                  //                             "No Events Found....",
+                  //                             style: TextStyle(
+                  //                               fontSize: 16,
+                  //                               fontWeight: FontWeight.w500,
+                  //                               color: Colors.grey,
+                  //                             ),
+                  //                           ),
+                  //                         ) // Show message if no data
+                  //                 else if (_childButtonIndex == 1)
+                  //                   allTasks.isNotEmpty
+                  //                       ? TimelineEightWid(
+                  //                           events:
+                  //                               allTasks) // Show data if exists
+                  //                       : const Center(
+                  //                           child: Text(
+                  //                             textAlign: TextAlign.center,
+                  //                             "No Tasks Found...",
+                  //                             style: TextStyle(
+                  //                               fontSize: 16,
+                  //                               fontWeight: FontWeight.w500,
+                  //                               color: Colors.grey,
+                  //                             ),
+                  //                           ),
+                  //                         )
+                  //                 else if (_childButtonIndex ==
+                  //                     2) // Show message if no data
+                  //                   allTestdrive.isNotEmpty
+                  //                       ? TimelineNineWid(
+                  //                           testDrive:
+                  //                               allTestdrive) // Show data if exists
+                  //                       : const Center(
+                  //                           child: Text(
+                  //                             textAlign: TextAlign.center,
+                  //                             "No Test Drive Found...",
+                  //                             style: TextStyle(
+                  //                               fontSize: 16,
+                  //                               fontWeight: FontWeight.w500,
+                  //                               color: Colors.grey,
+                  //                             ),
+                  //                           ),
+                  //                         ),
+                  //               ],
+                  //             ),
+                  //     ],
+                  //   ),
+                  // )
                 ],
               ),
             ),

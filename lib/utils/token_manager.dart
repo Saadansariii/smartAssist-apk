@@ -2,7 +2,7 @@
 // import 'package:get/get.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:smart_assist/pages/login/login_page.dart';
-// import 'package:jwt_decoder/jwt_decoder.dart';  
+// import 'package:jwt_decoder/jwt_decoder.dart';
 
 // class TokenManager {
 //   static const String TOKEN_KEY = 'auth_token';
@@ -60,13 +60,13 @@
 //   }
 // }
 
- 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class TokenManager {
   static const String TOKEN_KEY = 'auth_token';
   static const String USER_ID_KEY = 'user_id';
+  static const String USER_ROLE = 'team_role';
 
   // Check token validity without clearing or redirecting
   static Future<bool> isTokenValid() async {
@@ -85,17 +85,15 @@ class TokenManager {
   }
 
   // Save token and user data
-  static Future<void> saveAuthData(String token, String userId) async {
+  static Future<void> saveAuthData(
+      String token, String userId,String teamRole) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(TOKEN_KEY, token);
     await prefs.setString(USER_ID_KEY, userId);
-    
-  }
+    await prefs.setString('USER_ROLE', teamRole);
 
-  // Get stored token
-  static Future<String?> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(TOKEN_KEY);
+    // Verify it was saved
+    print("Saved role: ${prefs.getString('USER_ROLE')}");
   }
 
   // Add this to your TokenManager class
@@ -103,6 +101,13 @@ class TokenManager {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(TOKEN_KEY);
     await prefs.remove(USER_ID_KEY);
+    await prefs.remove(USER_ROLE);
+  }
+
+  // Get stored token
+  static Future<String?> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(TOKEN_KEY);
   }
 
   // Refresh token method - implement your token refresh logic here

@@ -111,7 +111,6 @@ class _LoginPageState extends State<LoginPage>
                           },
                           child: Column(
                             children: [
-                              
                               const SizedBox(height: 32),
                               buildInputLabel('Email'),
                               buildTextField(
@@ -349,12 +348,13 @@ class _LoginPageState extends State<LoginPage>
       if (response['isSuccess'] == true && response['user'] != null) {
         final user = response['user'];
         final userId = user['user_id'];
+        final teamRole = user['team_role'];
         final authToken = response['token'];
 
         if (userId != null && authToken != null) {
           // Save authentication data
-          await TokenManager.saveAuthData(authToken, userId);
-
+          await TokenManager.saveAuthData(authToken, userId, teamRole);
+          print(teamRole);
           // Initialize FCM after successful login
           await NotificationService.instance.initialize();
 

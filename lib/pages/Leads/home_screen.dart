@@ -4,12 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/Leads/gloabal_search_page/global_search.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
 import 'package:smart_assist/pages/navbar_page/leads_all.dart';
 import 'package:smart_assist/pages/navbar_page/logout_page.dart';
+import 'package:smart_assist/pages/navbar_page/my_teams.dart';
 import 'package:smart_assist/pages/notification/notification.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
@@ -51,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> upcomingTestDrives = [];
   List<dynamic> overdueTestDrives = [];
   bool isDashboardLoading = false;
+  String? teamRole;
 
   // Search Functionality
   final TextEditingController _searchController = TextEditingController();
@@ -64,6 +67,19 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     fetchDashboardData();
     _searchController.addListener(_onSearchChanged);
+    // Load the team role
+    _loadTeamRole();
+    print(_loadTeamRole());
+  }
+
+  Future<void> _loadTeamRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      teamRole = prefs.getString('USER_ROLE');
+    });
+    // Print all relevant keys
+    print('USER_ROLE value: ${prefs.getString('USER_ROLE')}');
+    print('All keys: ${prefs.getKeys()}');
   }
 
   @override
@@ -172,6 +188,9 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // String? teamRole = await SharedPreferences.getInstance()
+  // .then((prefs) => prefs.getString('USER_ROLE'));
+
   @override
   Widget build(BuildContext context) {
 // final height = MediaQuery.of(context).size.height * 1;  use it for dynamic height as per the mobile
@@ -252,73 +271,174 @@ class _HomeScreenState extends State<HomeScreen> {
                             /// ✅ Row with Menu, Search Bar, and Microphone
                             Row(
                               children: [
+                                // IconButton(
+                                //   icon: const Icon(Icons.menu,
+                                //       color: AppColors.fontColor),
+                                //   onPressed: () {
+                                //     Get.bottomSheet(Container(
+                                //       padding: const EdgeInsets.all(16),
+                                //       height: 320,
+                                //       decoration: const BoxDecoration(
+                                //         color: Colors.white,
+                                //         borderRadius: BorderRadius.vertical(
+                                //             top: Radius.circular(30)),
+                                //       ),
+                                //       child: Column(
+                                //         children: [
+                                //           ListTile(
+                                //             leading: const Icon(Icons.search,
+                                //                 size: 28),
+                                //             title: Text('Leads',
+                                //                 style: GoogleFonts.poppins(
+                                //                     fontSize: 18)),
+                                //             onTap: () =>
+                                //                 Get.to(() => const AllLeads()),
+                                //           ),
+                                //           ListTile(
+                                //             leading: const Icon(
+                                //                 Icons.star_border_outlined,
+                                //                 size: 28),
+                                //             title: Text('Favorites',
+                                //                 style: GoogleFonts.poppins(
+                                //                     fontSize: 18)),
+                                //             onTap: () => Get.to(() =>
+                                //                 const FavoritePage(leadId: '')),
+                                //           ),
+                                //           ListTile(
+                                //             leading: const Icon(
+                                //                 Icons.person_outline,
+                                //                 size: 28),
+                                //             title: Text('Profile',
+                                //                 style: GoogleFonts.poppins(
+                                //                     fontSize: 18)),
+                                //             onTap: () => Get.back(),
+                                //           ),
+                                //           ListTile(
+                                //             leading: const Icon(
+                                //                 Icons.settings_outlined,
+                                //                 size: 28),
+                                //             title: Text('App Settings',
+                                //                 style: GoogleFonts.poppins(
+                                //                     fontSize: 18)),
+                                //             onTap: () => Get.to(
+                                //                 () => const AppSetting()),
+                                //           ),
+                                //           ListTile(
+                                //             leading: const Icon(
+                                //                 Icons.logout_outlined,
+                                //                 size: 28),
+                                //             title: Text('My Team ',
+                                //                 style: GoogleFonts.poppins(
+                                //                     fontSize: 18)),
+                                //             onTap: () =>
+                                //                 Get.to(() => const MyTeams()),
+                                //           ),
+                                //           ListTile(
+                                //             leading: const Icon(
+                                //                 Icons.logout_outlined,
+                                //                 size: 28),
+                                //             title: Text('Logout',
+                                //                 style: GoogleFonts.poppins(
+                                //                     fontSize: 18)),
+                                //             onTap: () => Get.to(
+                                //                 () => const LogoutPage()),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //     ));
+                                //   },
+                                // ),
+                                // First, you need to get the team role from SharedPreferences
+
+// Then in your bottom sheet code:
                                 IconButton(
                                   icon: const Icon(Icons.menu,
                                       color: AppColors.fontColor),
-                                  onPressed: () {
-                                    Get.bottomSheet(Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height: 320,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(30)),
+                                  onPressed: () async {
+                                    // Get the team role before showing the sheet
+                                    String? teamRole =
+                                        await SharedPreferences.getInstance()
+                                            .then((prefs) =>
+                                                prefs.getString('USER_ROLE'));
+
+                                    Get.bottomSheet(
+                                      Container(
+                                        padding: const EdgeInsets.all(16),
+                                        // Adjust height based on whether "My Team" is shown
+                                        height: teamRole == "Owner" ? 370 : 320,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(30)),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            ListTile(
+                                              leading: const Icon(Icons.search,
+                                                  size: 28),
+                                              title: Text('Leads',
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 18)),
+                                              onTap: () => Get.to(
+                                                  () => const AllLeads()),
+                                            ),
+                                            ListTile(
+                                              leading: const Icon(
+                                                  Icons.star_border_outlined,
+                                                  size: 28),
+                                              title: Text('Favorites',
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 18)),
+                                              onTap: () => Get.to(() =>
+                                                  const FavoritePage(
+                                                      leadId: '')),
+                                            ),
+                                            ListTile(
+                                              leading: const Icon(
+                                                  Icons.person_outline,
+                                                  size: 28),
+                                              title: Text('Profile',
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 18)),
+                                              onTap: () => Get.back(),
+                                            ),
+                                            ListTile(
+                                              leading: const Icon(
+                                                  Icons.settings_outlined,
+                                                  size: 28),
+                                              title: Text('App Settings',
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 18)),
+                                              onTap: () => Get.to(
+                                                  () => const AppSetting()),
+                                            ),
+                                            if (teamRole == "Owner")
+                                              ListTile(
+                                                leading: const Icon(Icons.group,
+                                                    size: 28),
+                                                title: Text('My Team ',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18)),
+                                                onTap: () => Get.to(
+                                                    () => const MyTeams()),
+                                              ),
+                                            ListTile(
+                                              leading: const Icon(
+                                                  Icons.logout_outlined,
+                                                  size: 28),
+                                              title: Text('Logout',
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 18)),
+                                              onTap: () => Get.to(
+                                                  () => const LogoutPage()),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      child: Column(
-                                        children: [
-                                          ListTile(
-                                            leading: const Icon(Icons.search,
-                                                size: 28),
-                                            title: Text('Leads',
-                                                style: GoogleFonts.poppins(
-                                                    fontSize: 18)),
-                                            onTap: () =>
-                                                Get.to(() => const AllLeads()),
-                                          ),
-                                          ListTile(
-                                            leading: const Icon(
-                                                Icons.star_border_outlined,
-                                                size: 28),
-                                            title: Text('Favorites',
-                                                style: GoogleFonts.poppins(
-                                                    fontSize: 18)),
-                                            onTap: () => Get.to(() =>
-                                                const FavoritePage(leadId: '')),
-                                          ),
-                                          ListTile(
-                                            leading: const Icon(
-                                                Icons.person_outline,
-                                                size: 28),
-                                            title: Text('Profile',
-                                                style: GoogleFonts.poppins(
-                                                    fontSize: 18)),
-                                            onTap: () => Get.back(),
-                                          ),
-                                          ListTile(
-                                            leading: const Icon(
-                                                Icons.settings_outlined,
-                                                size: 28),
-                                            title: Text('App Settings',
-                                                style: GoogleFonts.poppins(
-                                                    fontSize: 18)),
-                                            onTap: () => Get.to(
-                                                () => const AppSetting()),
-                                          ),
-                                          ListTile(
-                                            leading: const Icon(
-                                                Icons.logout_outlined,
-                                                size: 28),
-                                            title: Text('Logout',
-                                                style: GoogleFonts.poppins(
-                                                    fontSize: 18)),
-                                            onTap: () => Get.to(
-                                                () => const LogoutPage()),
-                                          ),
-                                        ],
-                                      ),
-                                    ));
+                                    );
                                   },
                                 ),
+
                                 Expanded(
                                   child: SizedBox(
                                     height: 35,
@@ -672,26 +792,26 @@ Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
               Clip.none, // Important! Allow children to render outside bounds
           children: [
             _buildPopupItem(controller, Icons.calendar_month_outlined,
-                "Appointment", -5, -32, onTap: () {
+                "Appointment", -0, -28, onTap: () {
               print("Appointment clicked!");
               controller.isFabExpanded.value = false;
               _showAppointmentPopup(context);
             }),
             _buildPopupItem(
-                controller, Icons.people_alt_rounded, "Lead", 70, -93,
+                controller, Icons.people_alt_rounded, "Lead", 75, -90,
                 onTap: () {
               print("Lead clicked");
               controller.isFabExpanded.value = false;
               _showLeadPopup(context);
             }),
-            _buildPopupItem(controller, Icons.call, "Followup", 30, 35,
+            _buildPopupItem(controller, Icons.call, "Followup", 35, 35,
                 onTap: () {
               print("Followup clicked");
               controller.isFabExpanded.value = false;
               _showFollowupPopup(context);
             }),
             _buildPopupItem(
-                controller, Icons.directions_car, "Test Drive", 20, 100,
+                controller, Icons.directions_car, "Test Drive", 30, 100,
                 onTap: () {
               print("Test Drive clicked");
               controller.isFabExpanded.value = false;
