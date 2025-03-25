@@ -184,6 +184,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
               child: Text('Plan a Follow-up',
                   style: AppFont.popupTitleBlack(context)),
             ),
+            _buildSearchField(),
             const SizedBox(height: 10),
             _buildDatePicker(
                 label: 'Select date:',
@@ -191,16 +192,15 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                 errorText: _errors['date'],
                 onTap: _pickDate),
             const SizedBox(height: 10),
-            _buildSearchField(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                _selectedInput(
-                  label: "Priority:",
-                  options: ["High"],
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   children: [
+            //     _selectedInput(
+            //       label: "Priority:",
+            //       options: ["High"],
+            //     ),
+            //   ],
+            // ),
             _buildButtons(
               label: 'Action:',
               // options: ['Call', 'Provide Quotation', 'Send Email'],

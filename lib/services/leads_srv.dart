@@ -652,10 +652,17 @@ class LeadsSrv {
       // Debug: Print response details
       print('Response status code: ${response.statusCode}');
       print('Response body: ${response.body}');
-
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return data; // Return the response data
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        // Ensure the expected structure exists before accessing it
+        if (responseData.containsKey('data') &&
+            responseData['data'].containsKey('lead')) {
+          return responseData['data']
+              ['lead']; // Extracting only the lead object
+        } else {
+          throw Exception('Unexpected response structure: ${response.body}');
+        }
       } else {
         throw Exception(
             'Failed to load data: ${response.statusCode} - ${response.body}');
@@ -816,7 +823,6 @@ class LeadsSrv {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
-          
         },
       );
 
@@ -836,7 +842,7 @@ class LeadsSrv {
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
       }
-    } catch (e) { 
+    } catch (e) {
       throw Exception('Error fetching data: $e');
     }
   }

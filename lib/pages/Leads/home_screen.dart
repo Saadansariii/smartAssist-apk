@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/getX/fab.controller.dart';
 import 'package:smart_assist/pages/Leads/gloabal_search_page/global_search.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
@@ -59,8 +60,11 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> _searchResults = [];
   bool _isLoadingSearch = false;
-  final NavigationController controller = Get.put(NavigationController());
+  // final NavigationController controller = Get.put(NavigationController());
   String _query = '';
+
+    // Initialize the controller
+  final FabController fabController = Get.put(FabController());
 
   @override
   void initState() {
@@ -512,6 +516,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
               ),
             ),
+            
             // ✅ Popup Menu
             Obx(() => controller.isFabExpanded.value
                 ? _buildPopupMenu(controller, context)
@@ -524,205 +529,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return GestureDetector(
-  //     excludeFromSemantics: true,
-  //     onTap: () => FocusScope.of(context).unfocus(),
-  //     child: Scaffold(
-  //       backgroundColor: Colors.white,
-  //       appBar: AppBar(
-  //         automaticallyImplyLeading: false,
-  //         backgroundColor: const Color(0xFF1380FE),
-  //         title: Text(
-  //           ' $greeting',
-  //           style: GoogleFonts.poppins(
-  //             fontSize: 14,
-  //             fontWeight: FontWeight.w400,
-  //             color: Colors.white,
-  //           ),
-  //         ),
-  //         actions: [
-  //           Stack(
-  //             children: [
-  //               IconButton(
-  //                 onPressed: () {
-  //                   Navigator.push(
-  //                     context,
-  //                     MaterialPageRoute(
-  //                         builder: (context) => const NotificationPage()),
-  //                   );
-  //                 },
-  //                 icon: const Icon(Icons.notifications),
-  //                 color: Colors.white,
-  //               ),
-  //               if (notificationCount > 0)
-  //                 Positioned(
-  //                   right: 11,
-  //                   top: 5,
-  //                   child: Container(
-  //                     padding: const EdgeInsets.all(1),
-  //                     decoration: const BoxDecoration(
-  //                       color: AppColors.sideRed,
-  //                       shape: BoxShape.circle,
-  //                     ),
-  //                     constraints: const BoxConstraints(
-  //                       minWidth: 5,
-  //                       minHeight: 5,
-  //                     ),
-  //                     child: Text(
-  //                       notificationCount.toString(),
-  //                       style: const TextStyle(
-  //                         color: Colors.white,
-  //                         fontSize: 8,
-  //                         fontWeight: FontWeight.bold,
-  //                       ),
-  //                       textAlign: TextAlign.center,
-  //                     ),
-  //                   ),
-  //                 ),
-  //             ],
-  //           )
-  //         ],
-  //       ),
-  //       body: Stack(
-  //         children: [
-  //           // ✅ Main Content
-  //           SafeArea(
-  //             child: RefreshIndicator(
-  //               onRefresh: fetchDashboardData,
-  //               child: isDashboardLoading
-  //                   ? const Center(child: CircularProgressIndicator())
-  //                   : SingleChildScrollView(
-  //                       keyboardDismissBehavior:
-  //                           ScrollViewKeyboardDismissBehavior.onDrag,
-  //                       child: Column(
-  //                         children: [
-  //                           const SizedBox(height: 5),
-
-  //                           /// ✅ Search Bar, Menu, and Microphone
-  //                           Row(
-  //                             children: [
-  //                               IconButton(
-  //                                 icon: const Icon(Icons.menu,
-  //                                     color: AppColors.fontColor),
-  //                                 onPressed: () {
-  //                                   Get.bottomSheet(Container(
-  //                                     padding: const EdgeInsets.all(16),
-  //                                     height: 320,
-  //                                     decoration: const BoxDecoration(
-  //                                       color: Colors.white,
-  //                                       borderRadius: BorderRadius.vertical(
-  //                                           top: Radius.circular(30)),
-  //                                     ),
-  //                                     child: Column(
-  //                                       children: [
-  //                                         ListTile(
-  //                                           leading: const Icon(Icons.search,
-  //                                               size: 28),
-  //                                           title: Text('Leads',
-  //                                               style: GoogleFonts.poppins(
-  //                                                   fontSize: 18)),
-  //                                           onTap: () =>
-  //                                               Get.to(() => const AllLeads()),
-  //                                         ),
-  //                                         ListTile(
-  //                                           leading: const Icon(
-  //                                               Icons.star_border_outlined,
-  //                                               size: 28),
-  //                                           title: Text('Favorites',
-  //                                               style: GoogleFonts.poppins(
-  //                                                   fontSize: 18)),
-  //                                           onTap: () => Get.to(() =>
-  //                                               const FavoritePage(leadId: '')),
-  //                                         ),
-  //                                       ],
-  //                                     ),
-  //                                   ));
-  //                                 },
-  //                               ),
-  //                               Expanded(
-  //                                 child: SizedBox(
-  //                                   height: 35,
-  //                                   child: GestureDetector(
-  //                                     onTap: () {
-  //                                       Get.to(() => const GlobalSearch());
-  //                                     },
-  //                                     child: AbsorbPointer(
-  //                                       child: TextField(
-  //                                         textAlignVertical:
-  //                                             TextAlignVertical.center,
-  //                                         decoration: InputDecoration(
-  //                                           enabledBorder: OutlineInputBorder(
-  //                                             borderRadius:
-  //                                                 BorderRadius.circular(30),
-  //                                             borderSide: BorderSide.none,
-  //                                           ),
-  //                                           contentPadding:
-  //                                               const EdgeInsets.fromLTRB(
-  //                                                   10, 0, 0, 0),
-  //                                           filled: true,
-  //                                           fillColor: AppColors.searchBar,
-  //                                           hintText: 'Search',
-  //                                           hintStyle: GoogleFonts.poppins(
-  //                                             fontSize: 12,
-  //                                             fontWeight: FontWeight.w300,
-  //                                           ),
-  //                                           suffixIcon: const Icon(
-  //                                             FontAwesomeIcons.magnifyingGlass,
-  //                                             color: AppColors.fontColor,
-  //                                             size: 15,
-  //                                           ),
-  //                                           border: OutlineInputBorder(
-  //                                             borderRadius:
-  //                                                 BorderRadius.circular(30),
-  //                                             borderSide: BorderSide.none,
-  //                                           ),
-  //                                         ),
-  //                                       ),
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                               ),
-  //                             ],
-  //                           ),
-
-  //                           const SizedBox(height: 3),
-  //                           Threebtn(
-  //                             leadId: leadId ?? 'empty',
-  //                             upcomingFollowups: upcomingFollowups,
-  //                             overdueFollowups: overdueFollowups,
-  //                             upcomingAppointments: upcomingAppointments,
-  //                             overdueAppointments: overdueAppointments,
-  //                             upcomingTestDrives: upcomingTestDrives,
-  //                             overdueTestDrives: overdueTestDrives,
-  //                             refreshDashboard: fetchDashboardData,
-  //                             overdueFollowupsCount: overdueFollowupsCount,
-  //                             overdueAppointmentsCount:
-  //                                 overdueAppointmentsCount,
-  //                             overdueTestDrivesCount: overdueTestDrivesCount,
-  //                           ),
-  //                           const BottomBtnSecond(),
-  //                         ],
-  //                       ),
-  //                     ),
-  //             ),
-  //           ),
-
-  //           // ✅ Popup Menu
-  //           Obx(() => controller.isFabExpanded.value
-  //               ? _buildPopupMenu(controller, context)
-  //               : const SizedBox.shrink()),
-  //         ],
-  //       ),
-
-  //       // ✅ Floating Action Button (FAB)
-  //       floatingActionButton: _buildFloatingActionButton(controller, context),
-  //       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-  //     ),
-  //   );
-  // }
+ 
 }
 
 // ✅ Floating Action Button (FAB)

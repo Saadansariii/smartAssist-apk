@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/services/leads_srv.dart';
-import 'package:smart_assist/utils/bottom_navigation.dart'; 
+import 'package:smart_assist/utils/bottom_navigation.dart';
 
 class SingleLeadsById extends StatefulWidget {
   final String leadId;
@@ -40,19 +40,19 @@ class _SingleLeadsByIdState extends State<SingleLeadsById> {
     try {
       final leadData = await LeadsSrv.fetchLeadsById(leadId);
       setState(() {
-        phoneNumber = leadData['data']['mobile'] ?? 'N/A';
-        subtype = leadData['data']['sub_type'] ?? 'N/A';
-        email = leadData['data']['email'] ?? 'N/A';
-        brand = leadData['data']['brand'] ?? 'N/A';
-        dealerName = leadData['data']['dealer_name'] ?? 'N/A';
-        pmi = leadData['data']['PMI'] ?? 'N/A';
-        status = leadData['data']['status'] ?? 'N/A';
-        leadSource = leadData['data']['lead_source'] ?? 'N/A';
-        purchaseType = leadData['data']['purchase_type'] ?? 'N/A';
-        leadOwner = leadData['data']['lead_owner'] ?? 'N/A';
-        flag = leadData['data']['flag'] ?? 'N/A';
-        enquiryType = leadData['data']['enquiry_type'] ?? 'N/A';
-        leadName = leadData['data']['lead_name'] ?? 'N/A';
+        phoneNumber = leadData['mobile'] ?? 'N/A';
+        subtype = leadData['sub_type'] ?? 'N/A';
+        email = leadData['email'] ?? 'N/A';
+        brand = leadData['brand'] ?? 'N/A';
+        dealerName = leadData['dealer_name'] ?? 'N/A';
+        pmi = leadData['PMI'] ?? 'N/A';
+        status = leadData['status'] ?? 'N/A';
+        leadSource = leadData['lead_source'] ?? 'N/A';
+        purchaseType = leadData['purchase_type'] ?? 'N/A';
+        leadOwner = leadData['lead_owner'] ?? 'N/A';
+        flag = leadData['flag'] ?? 'N/A';
+        enquiryType = leadData['enquiry_type'] ?? 'N/A';
+        leadName = leadData['lead_name'] ?? 'N/A';
       });
       // ignore: avoid_print
       print("Leads data: $leadData");
@@ -127,41 +127,7 @@ class _SingleLeadsByIdState extends State<SingleLeadsById> {
     );
   }
 
-  // Widget _buildActionButton(
-  //     String text, Color color, VoidCallback onPressed, IconData icon) {
-  //   return Expanded(
-  //     child: Container(
-  //       height: 45,
-  //       decoration: BoxDecoration(
-  //         color: color,
-  //         borderRadius: BorderRadius.circular(8),
-  //       ),
-  //       child: TextButton(
-  //         onPressed: onPressed,
-  //         style: TextButton.styleFrom(
-  //           padding:
-  //               const EdgeInsets.symmetric(horizontal: 10), // Adjust padding
-  //         ),
-  //         child: Row(
-  //           mainAxisAlignment:
-  //               MainAxisAlignment.center, // Center the icon & text
-  //           children: [
-  //             Icon(icon, size: 16, color: Colors.white), // Icon added
-  //             const SizedBox(width: 5), // Space between icon and text
-  //             Text(
-  //               text,
-  //               style: GoogleFonts.poppins(
-  //                 fontSize: 12,
-  //                 fontWeight: FontWeight.w400,
-  //                 color: Colors.white,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+ 
 
   Widget _buildActionButton(
       String text, Color color, VoidCallback onPressed, IconData icon) {
