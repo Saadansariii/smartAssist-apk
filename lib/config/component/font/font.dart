@@ -162,10 +162,33 @@ class AppFont {
     );
   }
 
-
   static TextStyle smallText(
     BuildContext context, {
     double fontSize = 12,
+    Color color = Colors.black,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
+  static TextStyle smallTextBold(
+    BuildContext context, {
+    double fontSize = 12,
+    Color color = Colors.black,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: FontWeight.w600,
+    );
+  }
+
+  static TextStyle tinytext(
+    BuildContext context, {
+    double fontSize = 10,
     Color color = Colors.black,
   }) {
     return GoogleFonts.poppins(
@@ -308,7 +331,7 @@ class AppFont {
     );
   }
 
-    static TextStyle validationtxt(
+  static TextStyle validationtxt(
     BuildContext context, {
     double fontSize = 10,
     Color color = Colors.redAccent,

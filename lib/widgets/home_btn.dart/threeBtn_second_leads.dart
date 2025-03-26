@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/pages/Leads/All_field_bottomArrow/all_followups.dart';
 import 'package:smart_assist/widgets/home_btn.dart/leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/order.dart';
 import 'package:smart_assist/widgets/home_btn.dart/test_drive.dart';
@@ -15,132 +13,121 @@ class BottomBtnSecond extends StatefulWidget {
 }
 
 class _BottomBtnSecondState extends State<BottomBtnSecond> {
-  int _selectedBtnIndex = 0;
-  final List<Widget> _widgets = [
-    const Leads(),
-    const Order(),
-    const TestDrive(),
-  ];
+  Widget? currentWidget;
 
   int _leadButton = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Set a default widget if needed
+    currentWidget = const Leads();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     GestureDetector(
-        //       onTap: () {
-        //         Navigator.push(
-        //             context,
-        //             MaterialPageRoute(
-        //                 builder: (context) =>   AddFollowups()));
-        //       },
-        //       child: const Icon(
-        //         Icons.keyboard_arrow_down_outlined,
-        //         size: 36,
-        //       ),
-        //     )
-        //   ],
-        // ),
-        // SizedBox(height: 2),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.searchBar,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: SizedBox(
-              height: 32,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  // Follow Ups Button
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _leadButton = 0;
-                          _selectedBtnIndex = 0;
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        backgroundColor: _leadButton == 0
-                            ? const Color(0xFF1380FE)
-                            : Colors.transparent,
-                        foregroundColor: _leadButton == 0
-                            ? Colors.white
-                            : AppColors.fontColor,
-                        // padding: const EdgeInsets.symmetric(vertical: 10),
-                        textStyle: AppFont.threeBtn(context),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+          color: AppColors.containerBg,
+          border: Border.all(color: Colors.black.withOpacity(.1)),
+          borderRadius: const BorderRadius.all(Radius.circular(5))),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.searchBar,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: SizedBox(
+                height: 32,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    // Leads Button
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _leadButton = 0;
+                            leads(0);
+                          });
+                        },
+                        style: _buttonStyle(_leadButton == 0),
+                        child:
+                            const Text('Enquiry', textAlign: TextAlign.center),
                       ),
-                      child: const Text('Leads', textAlign: TextAlign.center),
                     ),
-                  ),
 
-                  // Appointments Button
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _leadButton = 1;
-                          _selectedBtnIndex = 2;
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        backgroundColor: _leadButton == 1
-                            ? const Color(0xFF1380FE)
-                            : Colors.transparent,
-                        foregroundColor: _leadButton == 1
-                            ? Colors.white
-                            : AppColors.fontColor,
-                        // padding: const EdgeInsets.symmetric(vertical: 10),
-                        textStyle: AppFont.threeBtn(context),
+                    // Test Drive Button
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _leadButton = 1;
+                            testDrive(1);
+                          });
+                        },
+                        style: _buttonStyle(_leadButton == 1),
+                        child: const Text('Test Drive',
+                            textAlign: TextAlign.center),
                       ),
-                      child:
-                          const Text('Test Drive', textAlign: TextAlign.center),
                     ),
-                  ),
 
-                  // Test Drive Button
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _leadButton = 2;
-                          _selectedBtnIndex = 1;
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          backgroundColor: _leadButton == 2
-                              ? const Color(0xFF1380FE)
-                              : Colors.transparent,
-                          foregroundColor: _leadButton == 2
-                              ? Colors.white
-                              : AppColors.fontColor,
-                          // padding: const EdgeInsets.symmetric(vertical: 10),
-                          textStyle: AppFont.threeBtn(context)),
-                      child: const Text('Orders', textAlign: TextAlign.center),
+                    // Orders Button
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _leadButton = 2;
+                            orders(2);
+                          });
+                        },
+                        style: _buttonStyle(_leadButton == 2),
+                        child:
+                            const Text('Orders', textAlign: TextAlign.center),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        _widgets[_selectedBtnIndex],
-      ],
+          currentWidget ?? Container() // Handle null case
+        ],
+      ),
     );
+  }
+
+  // Button Style
+  ButtonStyle _buttonStyle(bool isSelected) {
+    return TextButton.styleFrom(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      backgroundColor:
+          isSelected ? const Color(0xFF1380FE) : Colors.transparent,
+      foregroundColor: isSelected ? Colors.white : AppColors.fontColor,
+      textStyle: AppFont.threeBtn(context),
+    );
+  }
+
+  // Update Widgets
+  void leads(int index) {
+    setState(() {
+      currentWidget = const Leads();
+    });
+  }
+
+  void testDrive(int index) {
+    setState(() {
+      currentWidget = const TestDrive();
+    });
+  }
+
+  void orders(int index) {
+    setState(() {
+      currentWidget = const Order();
+    });
   }
 }

@@ -1,284 +1,457 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_emoji/flutter_emoji.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 
-class Order extends StatelessWidget {
+class Order extends StatefulWidget {
   const Order({super.key});
 
   @override
+  State<Order> createState() => _OrderState();
+}
+
+class _OrderState extends State<Order> {
+  int _childButtonIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 15),
-      child: Column(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFF1380FE), // Outer container color
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-              ),
-              // Optional rounded corners
-            ),
-            padding: const EdgeInsets.only(left: 12),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white, // Inner container color
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                children: [
-                  // First Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // First child
-                      SizedBox(
-                        height: 140,
-                        width: 180,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE1EFFF),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(5),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Average Order \nprocessing Time.',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall),
-                                    Text('4.5m',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge)
-                                  ],
-                                ),
-                                Text('Today',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall),
-                              ],
-                            ),
+    // Get screen width and height for responsiveness
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Column(
+      children: [
+        // Row with Buttons and Enquiry Bank
+
+        const SizedBox(height: 10),
+
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch, // Match heights
+            children: [
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max, // Use full height
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(left: 10),
+                          width: screenWidth * 0.43,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Row(
+                            children: [
+                              _buildButton('MTD', 0),
+                              _buildButton('QTD', 1),
+                              _buildButton('YTD', 2),
+                            ],
                           ),
                         ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: _buildInfoCard(
+                        context,
+                        _getLeftOneTitle(_childButtonIndex),
+                        _getLeftOneValue(_childButtonIndex),
+                        _getLeftTwoTitle(_childButtonIndex),
+                        _getLeftTwoValue(_childButtonIndex),
+                        screenWidth,
+                        _getGreenCardColor(_childButtonIndex),
+                        _getRedCardColor(_childButtonIndex),
                       ),
-                      // Second child
-                      SizedBox(
-                        height: 140,
-                        width: 180,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 10, 15, 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE1EFFF),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(5),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Order Fulfillment \nRate.',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall,
-                                    ),
-                                    Text('90%',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge)
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      'Today',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                        child: Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: _buildInfoCardSecond(
+                        context,
+                        screenWidth,
                       ),
-                    ],
-                  ),
-                  // Second Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Third child
-                      SizedBox(
-                        height: 140,
-                        width: 180,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE1EFFF),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Customer \nSatisfaction Score',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall,
-                                    ),
-                                    Image.asset('assets/Emoji.png'),
-                                  ],
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Today',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall),
-                                    Text(
-                                      '79%',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Fourth child
-                      SizedBox(
-                        height: 140,
-                        width: 180,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 15, 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE1EFFF),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  'Great you are doing!\vbetter then 87% of salesperson.',
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                                const SizedBox(height: 5),
-                                Text('4.5m',
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFF1380FE), // Set the background color
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
+                    )),
+                  ],
                 ),
               ),
-              padding: const EdgeInsets.all(10),
-              child: const Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceEvenly, // Space between text and image
-                    children: [
-                      // Text on the left
-                      Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start, // Align text to the left
-                        children: [
-                          Text(
-                            'Order Fulfillment \nstatus',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            'Your Order Fulfillment is excellent.',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          Padding(padding: EdgeInsets.only(bottom: 10)),
-                          // SizedBox(height: 10)
-                        ],
+              const SizedBox(width: 10),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max, // Use full height
+                  children: [
+                    Expanded(
+                        // 🔹 Make the right column stretch fully
+                        child: Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      child: _buildInfoCard2(
+                        context,
+                        _getRightOneCardTitle(_childButtonIndex),
+                        _getRightOneCardValue(_childButtonIndex),
+                        screenWidth,
+                        _getGreenCardColor(_childButtonIndex),
                       ),
-                      // Image with text in the middle
-                      Stack(
-                        alignment: Alignment
-                            .center, // Aligns the text in the center of the image
-                        children: [
-                          Image(
-                            image: AssetImage('assets/circle-main.jpg'),
-                            height: 100,
-                            width: 100,
-                            color:
-                                Color(0xFF1380FE), // Blend white over the image
-                            colorBlendMode:
-                                BlendMode.multiply, // Apply blend mode
-                          ),
-                          Text(
-                            '85%',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 26,
-                            ),
-                          ),
-                        ],
+                    )),
+                    const SizedBox(height: 10),
+                    Expanded(
+                        // 🔹 Ensure both cards take equal space
+                        child: Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      child: _buildInfoCard2(
+                        context,
+                        _getRightTwoCardTitle(_childButtonIndex),
+                        _getRightTwoCardValue(_childButtonIndex),
+                        screenWidth,
+                        _getBlueCardColor(_childButtonIndex),
                       ),
-                    ],
-                  ),
-                ],
+                    )),
+                  ],
+                ),
               ),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+
+  // Dynamic Titles and Values for Each Selected Button
+  String _getLeftOneTitle(int index) {
+    switch (index) {
+      case 0:
+        return 'Orders with you';
+      case 1:
+        return 'Orders with you';
+      case 2:
+        return 'Orders with you';
+      default:
+        return '';
+    }
+  }
+
+  String _getLeftOneValue(int index) {
+    switch (index) {
+      case 0:
+        return '3';
+      case 1:
+        return '50';
+      case 2:
+        return '120';
+      default:
+        return '';
+    }
+  }
+
+  String _getLeftTwoTitle(int index) {
+    switch (index) {
+      case 0:
+        return 'Is your target';
+      case 1:
+        return 'Is your target';
+      case 2:
+        return 'Is your target';
+      default:
+        return '';
+    }
+  }
+
+  String _getLeftTwoValue(int index) {
+    switch (index) {
+      case 0:
+        return '1';
+      case 1:
+        return '50';
+      case 2:
+        return '120';
+      default:
+        return '';
+    }
+  }
+
+  Color _getGreenCardColor(int index) {
+    switch (index) {
+      case 0:
+        return Colors.green; // Color for MTD
+      case 1:
+        return Colors.green; // Color for QTD
+      case 2:
+        return Colors.green; // Color for YTD
+      default:
+        return Colors.black; // Default color
+    }
+  }
+
+  Color _getRedCardColor(int index) {
+    switch (index) {
+      case 0:
+        return Colors.red; // Color for MTD
+      case 1:
+        return Colors.red; // Color for QTD
+      case 2:
+        return Colors.red; // Color for YTD
+      default:
+        return Colors.black; // Default color
+    }
+  }
+
+  Color _getBlueCardColor(int index) {
+    switch (index) {
+      case 0:
+        return Colors.blue; // Color for MTD
+      case 1:
+        return Colors.blue; // Color for QTD
+      case 2:
+        return Colors.blue; // Color for YTD
+      default:
+        return Colors.black; // Default color
+    }
+  }
+
+  String _getMiddleCardValue(int index) {
+    switch (index) {
+      case 0:
+        return '8';
+      case 1:
+        return '40';
+      case 2:
+        return '100';
+      default:
+        return '';
+    }
+  }
+
+  String _getRightOneCardTitle(int index) {
+    switch (index) {
+      case 0:
+        return '45%';
+      case 1:
+        return '100';
+      case 2:
+        return '350';
+      default:
+        return '';
+    }
+  }
+
+  String _getRightTwoCardTitle(int index) {
+    switch (index) {
+      case 0:
+        return '25%';
+      case 1:
+        return '100';
+      case 2:
+        return '350';
+      default:
+        return '';
+    }
+  }
+
+  String _getRightOneCardValue(int index) {
+    switch (index) {
+      case 0:
+        return 'Test drive to retail ratio';
+      case 1:
+        return 'Test drive to retail ratio';
+      case 2:
+        return 'Test drive to retail ratio';
+      default:
+        return '';
+    }
+  }
+
+  String _getRightTwoCardValue(int index) {
+    switch (index) {
+      case 0:
+        return 'Digital enquiry to new order ratio';
+      case 1:
+        return 'Digital enquiry to new order ratio';
+      case 2:
+        return 'Digital enquiry to new order ratio';
+      default:
+        return '';
+    }
+  }
+
+  // Button Builder
+  Widget _buildButton(String text, int index) {
+    bool isSelected = _childButtonIndex == index;
+
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSelected
+                ? Colors.blue
+                : Colors.transparent, // Only selected has blue border
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: TextButton(
+          onPressed: () {
+            setState(() {
+              _childButtonIndex = index;
+            });
+          },
+          style: TextButton.styleFrom(
+            foregroundColor: isSelected
+                ? Colors.blue
+                : Colors.black, // Selected text blue, others black
+            backgroundColor: Colors.transparent, // No background color change
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
             ),
+          ),
+          child: Text(
+            text,
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: isSelected ? Colors.blue : Colors.black,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Small Info Cards
+  Widget _buildInfoCard(
+      BuildContext context,
+      String title1,
+      String value1,
+      String title2,
+      String value2,
+      double screenWidth,
+      Color valueColor1,
+      Color valueColor2) {
+    // Accept second color
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(screenWidth * 0.04),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                value1,
+                style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: valueColor1),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  title1,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: GoogleFonts.poppins(
+                      fontSize: 14, fontWeight: FontWeight.w400),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10), // Spacing between rows
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                value2,
+                style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: valueColor2),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  title2,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: GoogleFonts.poppins(
+                      fontSize: 14, fontWeight: FontWeight.w400),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Small Info Cards
+  Widget _buildInfoCardSecond(
+    BuildContext context,
+    double screenWidth,
+  ) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(screenWidth * 0.04),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'Your contribution (2) to 20% of dealership cancellations',
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 4,
+              style: GoogleFonts.poppins(
+                  fontSize: 14, fontWeight: FontWeight.w400),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Large Info Card
+  Widget _buildInfoCard2(BuildContext context, String title, String value,
+      double screenWidth, Color valueColor) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(screenWidth * 0.04),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.inter(
+                fontSize: 30, fontWeight: FontWeight.w700, color: valueColor),
+          ),
+          // const SizedBox(height: 2),
+          Text(
+            value,
+            style: AppFont.smallText(context),
           ),
         ],
       ),

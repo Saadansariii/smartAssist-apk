@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:smart_assist/config/route/route.dart';
 import 'package:smart_assist/config/route/route_name.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:smart_assist/pages/Leads/home_screen.dart';
 import 'package:smart_assist/services/notifacation_srv.dart';
 
 void main() async {
@@ -31,9 +32,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: RoutesName.splashScreen,
-      onGenerateRoute: Routes.generateRoute,
-
+      initialRoute: RoutesName.splashScreen, // uncomment
+      onGenerateRoute: Routes.generateRoute, // uncommment
+// home: HomeScreen(greeting: 'greeting', leadId: 'leadId'), //this line should be comment
       // home: BottomNavigation(),
       theme: ThemeData(
         // buttonTheme: const ButtonThemeData(),

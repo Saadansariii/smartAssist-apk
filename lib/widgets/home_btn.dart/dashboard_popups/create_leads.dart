@@ -1418,7 +1418,7 @@ class _CreateLeadsState extends State<CreateLeads> {
         'type': 'Product',
         'sub_type': selectedSubType,
         'sp_id': spId,
-        'PMI': 'Range rover',
+        'PMI': 'Discovery',
         'expected_date_purchase': endDateController.text,
         'fuel_type': _selectedFuel,
         'enquiry_type': _selectedEnquiryType,

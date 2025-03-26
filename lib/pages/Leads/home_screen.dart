@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // final NavigationController controller = Get.put(NavigationController());
   String _query = '';
 
-    // Initialize the controller
+  // Initialize the controller
   final FabController fabController = Get.put(FabController());
 
   @override
@@ -197,69 +197,67 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-// final height = MediaQuery.of(context).size.height * 1;  use it for dynamic height as per the mobile
-//  height * .2 not use like that 100 & 200
     return GestureDetector(
       excludeFromSemantics: true,
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: const Color(0xFF1380FE),
-          title: Text(
-            ' $greeting',
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
+      child: Stack(children: [
+        Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: const Color(0xFF1380FE),
+            title: Text(
+              ' $greeting',
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+              ),
             ),
-          ),
-          actions: [
-            Stack(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const NotificationPage()),
-                    );
-                  },
-                  icon: const Icon(Icons.notifications),
-                  color: Colors.white,
-                ),
-                if (notificationCount > 0)
-                  Positioned(
-                    right: 11,
-                    top: 5,
-                    child: Container(
-                      padding: const EdgeInsets.all(1),
-                      decoration: const BoxDecoration(
-                        color: AppColors.sideRed,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 5,
-                        minHeight: 5,
-                      ),
-                      child: Text(
-                        notificationCount.toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                          fontWeight: FontWeight.bold,
+            actions: [
+              Stack(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NotificationPage()),
+                      );
+                    },
+                    icon: const Icon(Icons.notifications),
+                    color: Colors.white,
+                  ),
+                  if (notificationCount > 0)
+                    Positioned(
+                      right: 11,
+                      top: 5,
+                      child: Container(
+                        padding: const EdgeInsets.all(1),
+                        decoration: const BoxDecoration(
+                          color: AppColors.sideRed,
+                          shape: BoxShape.circle,
                         ),
-                        textAlign: TextAlign.center,
+                        constraints: const BoxConstraints(
+                          minWidth: 5,
+                          minHeight: 5,
+                        ),
+                        child: Text(
+                          notificationCount.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            )
-          ],
-        ),
-        body: Stack(
-          children: [
+                ],
+              )
+            ],
+          ),
+          body: Stack(children: [
             SafeArea(
               child: RefreshIndicator(
                 onRefresh: fetchDashboardData,
@@ -354,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 // ),
                                 // First, you need to get the team role from SharedPreferences
 
-// Then in your bottom sheet code:
+                                // Then in your bottom sheet code:
                                 IconButton(
                                   icon: const Icon(Icons.menu,
                                       color: AppColors.fontColor),
@@ -516,34 +514,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
               ),
             ),
-            
-            // ✅ Popup Menu
-            Obx(() => controller.isFabExpanded.value
-                ? _buildPopupMenu(controller, context)
-                : const SizedBox.shrink()),
-          ],
+
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: _buildFloatingActionButton(context),
+            ),
+
+            // Popup Menu (Conditionally Rendered)
+            Obx(() => fabController.isFabExpanded.value
+                ? _buildPopupMenu(context)
+                : SizedBox.shrink()),
+          ]),
         ),
-        // ✅ Floating Action Button (FAB)
-        floatingActionButton: _buildFloatingActionButton(controller, context),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      ),
+      ]),
     );
   }
- 
-}
 
-// ✅ Floating Action Button (FAB)
-Widget _buildFloatingActionButton(
-    NavigationController controller, BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      HapticFeedback.lightImpact();
-      controller.isFabExpanded.toggle();
-    },
-    child: Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
+  // FAB Builder
+  Widget _buildFloatingActionButton(BuildContext context) {
+    return Obx(
+      () => GestureDetector(
+        onTap: fabController.toggleFab,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
           width: MediaQuery.of(context).size.width * .15,
           height: MediaQuery.of(context).size.height * .08,
           decoration: BoxDecoration(
@@ -553,129 +547,120 @@ Widget _buildFloatingActionButton(
           ),
           child: Center(
             child: AnimatedRotation(
-              turns: controller.isFabExpanded.value ? 0.250 : 0.0,
+              turns: fabController.isFabExpanded.value ? 0.25 : 0.0,
               duration: const Duration(milliseconds: 300),
               child: Icon(
-                controller.isFabExpanded.value ? Icons.close : Icons.add,
+                fabController.isFabExpanded.value ? Icons.close : Icons.add,
                 color: Colors.white,
                 size: 30,
               ),
             ),
           ),
         ),
-      ],
-    ),
-  );
-}
+      ),
+    );
+  }
 
-Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
-  return Stack(
-    children: [
-      // Background overlay
-      Positioned.fill(
-        child: GestureDetector(
-          onTap: () {
-            controller.isFabExpanded.value = false;
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            color: Colors.black.withOpacity(0.7),
+  // Popup Menu Builder
+  Widget _buildPopupMenu(BuildContext context) {
+    return GestureDetector(
+      onTap: fabController.closeFab,
+      child: Stack(
+        children: [
+          // Background overlay
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.7),
+            ),
           ),
-        ),
-      ),
 
-      // Popup Items
-      Positioned(
-        bottom: 90,
-        left: MediaQuery.of(context).size.width / 2 -
-            150, // Expanded to fit all items
-        // Make container larger to encompass all items including those with negative positions
-        width: 300, // Large enough to contain all items with their offsets
-        height: 300, // Large enough to contain all items with their offsets
-        child: Stack(
-          // Changed to center so offsets work properly from the middle
-          alignment: Alignment.center,
-          clipBehavior:
-              Clip.none, // Important! Allow children to render outside bounds
-          children: [
-            _buildPopupItem(controller, Icons.calendar_month_outlined,
-                "Appointment", -0, -28, onTap: () {
-              print("Appointment clicked!");
-              controller.isFabExpanded.value = false;
-              _showAppointmentPopup(context);
-            }),
-            _buildPopupItem(
-                controller, Icons.people_alt_rounded, "Lead", 75, -90,
-                onTap: () {
-              print("Lead clicked");
-              controller.isFabExpanded.value = false;
-              _showLeadPopup(context);
-            }),
-            _buildPopupItem(controller, Icons.call, "Followup", 35, 35,
-                onTap: () {
-              print("Followup clicked");
-              controller.isFabExpanded.value = false;
-              _showFollowupPopup(context);
-            }),
-            _buildPopupItem(
-                controller, Icons.directions_car, "Test Drive", 30, 100,
-                onTap: () {
-              print("Test Drive clicked");
-              controller.isFabExpanded.value = false;
-              _showTestdrivePopup(context);
-            }),
-          ],
-        ),
+          // Popup Items (Similar to your existing implementation)
+          Positioned(
+            bottom: 90,
+            left: MediaQuery.of(context).size.width / 2 - 150,
+            width: 300,
+            height: 300,
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [
+                _buildPopupItem(
+                    Icons.calendar_month_outlined, "Appointment", -5, -32,
+                    onTap: () {
+                  fabController.closeFab();
+                  _showAppointmentPopup(context);
+                }),
+                _buildPopupItem(Icons.people_alt_rounded, "Lead", 70, -93,
+                    onTap: () {
+                  fabController.closeFab();
+                  _showLeadPopup(context);
+                }),
+                _buildPopupItem(Icons.call, "Followup", 30, 35, onTap: () {
+                  fabController.closeFab();
+                  _showFollowupPopup(context);
+                }),
+                _buildPopupItem(Icons.directions_car, "Test Drive", 20, 100,
+                    onTap: () {
+                  fabController.closeFab();
+                  _showTestdrivePopup(context);
+                }),
+              ],
+            ),
+          ),
+        ],
       ),
-    ],
-  );
-}
+    );
+  }
 
-Widget _buildPopupItem(NavigationController controller, IconData icon,
-    String label, double dx, double dy,
-    {required Function() onTap}) {
-  return TweenAnimationBuilder(
-    tween: Tween<double>(begin: 0, end: controller.isFabExpanded.value ? 1 : 0),
-    duration: const Duration(milliseconds: 300),
-    curve: Curves.easeOutBack,
-    builder: (context, double value, child) {
-      return Positioned(
-        // Position from center of the Stack
-        left: 150 + (dx * value), // Center point (300/2) + offset
-        top: 150 + (dy * value), // Center point (300/2) + offset
-        child: Opacity(
-          opacity: value.clamp(0.1, 1.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                label,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(width: 5),
-              GestureDetector(
-                onTap: onTap,
-                behavior:
-                    HitTestBehavior.opaque, // Important for better hit testing
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
+  // Popup Item Builder
+  Widget _buildPopupItem(IconData icon, String label, double dx, double dy,
+      {required Function() onTap}) {
+    return Obx(() => TweenAnimationBuilder(
+          tween: Tween<double>(
+              begin: 0, end: fabController.isFabExpanded.value ? 1 : 0),
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutBack,
+          builder: (context, double value, child) {
+            return Positioned(
+              left: 150 + (dx * value),
+              top: 150 + (dy * value),
+              child: Opacity(
+                opacity: value.clamp(0.1, 1.0),
+                child: Opacity(
+                  opacity: value.clamp(0.1, 1.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        label,
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      GestureDetector(
+                        onTap: onTap,
+                        behavior: HitTestBehavior
+                            .opaque, // Important for better hit testing
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Icon(icon, color: Colors.blue, size: 24),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Icon(icon, color: Colors.blue, size: 24),
                 ),
               ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
+            );
+          },
+        ));
+  }
 }
 
 // ✅ Function to Show `CreateFollowupsPopups` on "Lead"

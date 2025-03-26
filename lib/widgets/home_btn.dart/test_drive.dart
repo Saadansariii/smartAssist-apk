@@ -1,58 +1,429 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_emoji/flutter_emoji.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 
-class TestDrive extends StatelessWidget {
+class TestDrive extends StatefulWidget {
   const TestDrive({super.key});
 
   @override
+  State<TestDrive> createState() => _TestDriveState();
+}
+
+class _TestDriveState extends State<TestDrive> {
+  int _childButtonIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
-    
+    // Get screen width and height for responsiveness
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
-        const SizedBox(height: 20), // Adds space at the top
-        Container(
-          decoration: const BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: Color.fromARGB(255, 231, 228, 228), // Top border color
-                width: 1.5, // Top border thickness
+        // Row with Buttons and Enquiry Bank
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Buttons with Fixed Width
+              Container(
+                width: screenWidth * 0.45, // Adjust width if needed
+                height: 30,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  children: [
+                    _buildButton('MTD', 0),
+                    _buildButton('QTD', 1),
+                    _buildButton('YTD', 2),
+                  ],
+                ),
               ),
-            ),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+
+              // Enquiry Bank
+              // Container(
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.circular(30),
+              //   ),
+              //   padding:
+              //       const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              //   child: Row(
+              //     mainAxisSize: MainAxisSize.min, // Keep it compact
+              //     children: [
+              //       Text(
+              //         'Enquiry bank',
+              //         style: AppFont.tinytext(context),
+              //       ),
+              //       const SizedBox(width: 10),
+              //       Text(
+              //         '137',
+              //         style: AppFont.smallTextBold(context),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 10),
+
+        // Info Cards Layout
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        //   child: Row(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       // Left side (stacked cards)
+        //       Expanded(
+        //         flex: 1,
+        //         child: Column(
+        //           children: [
+        //             _buildInfoCard(context, 'Total Leads', '3', screenWidth),
+        //             const SizedBox(height: 10),
+        //             _buildInfoCard(context, 'Great you are doing!\nbetter', '8',
+        //                 screenWidth),
+        //           ],
+        //         ),
+        //       ),
+
+        //       const SizedBox(width: 10),
+
+        //       // Right side (single larger card)
+        //       Expanded(
+        //         flex: 1,
+        //         child: _buildInfoCard2(
+        //           context,
+        //           '6',
+        //           'Almost there! Keep pushing forward. You need\n5',
+        //           screenWidth,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+
+        // Info Cards based on selected button
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        //   child: Row(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       // Left side (stacked cards)
+        //       Expanded(
+        //         flex: 1,
+        //         child: Column(
+        //           children: [
+        //             _buildInfoCard(
+        //               context,
+        //               _getLeftCardTitle(_childButtonIndex),
+        //               _getLeftCardValue(_childButtonIndex),
+        //               screenWidth,
+        //               _getGreenCardColor(_childButtonIndex),
+        //             ),
+        //             const SizedBox(height: 10),
+        //             _buildInfoCard(
+        //               context,
+        //               _getMiddleCardTitle(_childButtonIndex),
+        //               _getMiddleCardValue(_childButtonIndex),
+        //               screenWidth,
+        //               _getRedCardColor(_childButtonIndex),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+
+        //       const SizedBox(width: 10),
+
+        //       // Right side (single larger card)
+        //       Expanded(
+        //         flex: 1,
+        //         child: _buildInfoCard2(
+        //           context,
+        //           _getRightCardTitle(_childButtonIndex),
+        //           _getRightCardValue(_childButtonIndex),
+        //           screenWidth,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment:
+                CrossAxisAlignment.stretch, // Ensures same height
+            children: [
+              Expanded(
+                  flex: 1,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: Column(
+                      children: [
+                        _buildInfoCard(
+                          context,
+                          _getLeftCardTitle(_childButtonIndex),
+                          _getLeftCardValue(_childButtonIndex),
+                          screenWidth,
+                          _getGreenCardColor(_childButtonIndex),
+                        ),
+                        const SizedBox(height: 10),
+                        _buildInfoCard(
+                          context,
+                          _getMiddleCardTitle(_childButtonIndex),
+                          _getMiddleCardValue(_childButtonIndex),
+                          screenWidth,
+                          _getRedCardColor(_childButtonIndex),
+                        ),
+                      ],
+                    ),
+                  )),
+              const SizedBox(width: 10),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  child: _buildInfoCard2(
+                    context,
+                    _getRightCardTitle(_childButtonIndex),
+                    _getRightCardValue(_childButtonIndex),
+                    screenWidth,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+
+  // Dynamic Titles and Values for Each Selected Button
+  String _getLeftCardTitle(int index) {
+    switch (index) {
+      case 0:
+        return 'Unique Test drive';
+      case 1:
+        return 'Unique Test drive';
+      case 2:
+        return 'Unique Test drive';
+      default:
+        return '';
+    }
+  }
+
+  String _getLeftCardValue(int index) {
+    switch (index) {
+      case 0:
+        return '5';
+      case 1:
+        return '50';
+      case 2:
+        return '120';
+      default:
+        return '';
+    }
+  }
+
+  Color _getGreenCardColor(int index) {
+    switch (index) {
+      case 0:
+        return Colors.green; // Color for MTD
+      case 1:
+        return Colors.green; // Color for QTD
+      case 2:
+        return Colors.green; // Color for YTD
+      default:
+        return Colors.black; // Default color
+    }
+  }
+
+  Color _getRedCardColor(int index) {
+    switch (index) {
+      case 0:
+        return Colors.red; // Color for MTD
+      case 1:
+        return Colors.red; // Color for QTD
+      case 2:
+        return Colors.red; // Color for YTD
+      default:
+        return Colors.black; // Default color
+    }
+  }
+
+  String _getMiddleCardTitle(int index) {
+    switch (index) {
+      case 0:
+        return 'Average test drive to order time';
+      case 1:
+        return 'Average test drive to order time';
+      case 2:
+        return 'Average test drive to order time';
+      default:
+        return '';
+    }
+  }
+
+  String _getMiddleCardValue(int index) {
+    switch (index) {
+      case 0:
+        return '8';
+      case 1:
+        return '40';
+      case 2:
+        return '100';
+      default:
+        return '';
+    }
+  }
+
+  String _getRightCardTitle(int index) {
+    switch (index) {
+      case 0:
+        return '45';
+      case 1:
+        return '100';
+      case 2:
+        return '350';
+      default:
+        return '';
+    }
+  }
+
+  String _getRightCardValue(int index) {
+    switch (index) {
+      case 0:
+        return 'More Test drive to achieve your target';
+      case 1:
+        return 'More Test drive to achieve your target';
+      case 2:
+        return 'More Test drive to achieve your target';
+      default:
+        return '';
+    }
+  }
+
+  // Button Builder
+  Widget _buildButton(String text, int index) {
+    bool isSelected = _childButtonIndex == index;
+
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSelected
+                ? Colors.blue
+                : Colors.transparent, // Only selected has blue border
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: TextButton(
+          onPressed: () {
+            setState(() {
+              _childButtonIndex = index;
+            });
+          },
+          style: TextButton.styleFrom(
+            foregroundColor: isSelected
+                ? Colors.blue
+                : Colors.black, // Selected text blue, others black
+            backgroundColor: Colors.transparent, // No background color change
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                    10, // Generates labels from 90 to 0
-                    (index) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: Text(
-                        '${(10 - index) * 10}',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10), // Space between labels and graph
-                Expanded(
-                  child: Image.asset(
-                    'assets/graph.png',
-                    fit: BoxFit.contain, // Ensures image scales well
-                  ),
-                ),
-              ],
+          child: Text(
+            text,
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: isSelected ? Colors.blue : Colors.black,
             ),
           ),
         ),
-      ],
+      ),
+    );
+  }
+
+  // Small Info Cards
+  Widget _buildInfoCard(BuildContext context, String title, String value,
+      double screenWidth, Color valueColor) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(screenWidth * 0.04),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            value,
+            style: GoogleFonts.poppins(
+                fontSize: 30, fontWeight: FontWeight.w700, color: valueColor),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              title,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 4,
+              style: GoogleFonts.poppins(
+                  fontSize: 14, fontWeight: FontWeight.w400),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Large Info Card
+  Widget _buildInfoCard2(
+      BuildContext context, String title, String value, double screenWidth) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(screenWidth * 0.04),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.inter(
+                fontSize: 30, fontWeight: FontWeight.w700, color: Colors.blue),
+          ),
+          // const SizedBox(height: 2),
+          Text(
+            value,
+            style: AppFont.dropDowmLabel(context),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                textAlign: TextAlign.center,
+                '😍',
+                style:
+                    TextStyle(fontSize: 20, fontFamily: 'YourAppleEmojiFont'),
+              ))
+        ],
+      ),
     );
   }
 }
