@@ -4,9 +4,8 @@ import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/pages/Calendar/calender.dart';
 import 'package:smart_assist/pages/Leads/home_screen.dart';
 import 'package:smart_assist/pages/Leads/opportunity.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/services.dart'; 
+import 'package:flutter/services.dart';
 
 class BottomNavigation extends StatelessWidget {
   BottomNavigation({super.key});
@@ -26,7 +25,6 @@ class BottomNavigation extends StatelessWidget {
     );
   }
 }
-
 
 // ✅ Bottom Navigation Bar
 Widget _buildBottomNavigationBar(NavigationController controller) {
@@ -50,12 +48,19 @@ Widget _buildBottomNavigationBar(NavigationController controller) {
             children: [
               _buildNavItem(
                   icon: Icons.people_alt_rounded,
-                  label: 'Leads',
+                  label: 'Enquiry',
                   index: 0,
+                  isIcon: true,
+                  isImg: false,
                   controller: controller),
               // SizedBox(width: 10), // Space for the FAB
               _buildNavItem(
-                  icon: FontAwesomeIcons.calendarDays,
+                  isImg: true,
+                  isIcon: false,
+                  img: Image.asset(
+                    'assets/calendar.png',
+                    fit: BoxFit.contain,
+                  ),
                   label: 'Calendar',
                   index: 2,
                   controller: controller),
@@ -69,10 +74,13 @@ Widget _buildBottomNavigationBar(NavigationController controller) {
 
 // ✅ Bottom Navigation Bar Item
 Widget _buildNavItem({
-  required IconData icon,
+  Image? img, // made nullable
+  IconData? icon, // made nullable
   required String label,
   required int index,
   required NavigationController controller,
+  required bool isImg,
+  required bool isIcon,
 }) {
   final isSelected = controller.selectedIndex.value == index;
 
@@ -92,11 +100,29 @@ Widget _buildNavItem({
             AnimatedScale(
               duration: const Duration(milliseconds: 200),
               scale: isSelected ? 1.2 : 1.0,
-              child: Icon(
-                icon,
-                color: isSelected ? AppColors.colorsBlue : Colors.black54,
-                size: 22,
-              ),
+              child: isImg && img != null
+                  ? SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                          isSelected
+                              ? AppColors.colorsBlue
+                              : AppColors.iconGrey,
+                          BlendMode.srcIn,
+                        ),
+                        child: img,
+                      ),
+                    )
+                  : isIcon && icon != null
+                      ? Icon(
+                          icon,
+                          color: isSelected
+                              ? AppColors.colorsBlue
+                              : AppColors.iconGrey,
+                          size: 22,
+                        )
+                      : const SizedBox.shrink(),
             ),
             const SizedBox(height: 4),
             Text(

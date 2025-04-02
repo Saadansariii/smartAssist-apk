@@ -510,7 +510,6 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
   //     ],
   //   );
   // }
-
   Widget _buildSearchField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -518,8 +517,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
         Text('Select Lead', style: AppFont.dropDowmLabel(context)),
         const SizedBox(height: 5),
         Container(
-          height: MediaQuery.of(context).size.height *
-              .055, // Match height from previous widget
+          height: MediaQuery.of(context).size.height * 0.055,
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
@@ -527,97 +525,94 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
           ),
           child: Row(
             children: [
-              // TextField itself
               Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: TextField(
-                    controller: _searchController,
-                    onTap: () => FocusScope.of(context).unfocus(),
-                    decoration: InputDecoration(
-                      filled: true,
-                      alignLabelWithHint: true,
-                      fillColor: AppColors.containerBg,
-                      hintText: selectedLeadsName ?? 'Select Leads',
-                      hintStyle: TextStyle(
-                          color: selectedLeadsName != null
-                              ? Colors.black
-                              : Colors.grey),
-                      prefixIcon: const Icon(
-                        FontAwesomeIcons.magnifyingGlass,
-                        size: 15,
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: AppColors.containerBg,
+                    hintText: selectedLeadsName ?? 'Select Leads',
+                    hintStyle: TextStyle(
+                      color: selectedLeadsName != null
+                          ? Colors.black
+                          : Colors.grey,
+                    ),
+                    prefixIcon: const Icon(
+                      FontAwesomeIcons.magnifyingGlass,
+                      size: 15,
+                      color: AppColors.fontColor,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: const Icon(
+                        FontAwesomeIcons.microphone,
                         color: AppColors.fontColor,
+                        size: 15,
                       ),
-                      suffixIcon: IconButton(
-                        icon: const Icon(
-                          FontAwesomeIcons.microphone,
-                          color: AppColors.fontColor,
-                          size: 15, // Adjusted to match sizing
-                        ),
-                        onPressed: () {
-                          // Implement the action for the microphone button here
-                          print('Microphone button pressed');
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide.none,
-                      ),
+                      onPressed: () {
+                        print('Microphone button pressed');
+                      },
                     ),
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide.none,
                     ),
+                  ),
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
                   ),
                 ),
               ),
             ],
           ),
         ),
-        if (_isLoadingSearch) const Center(child: CircularProgressIndicator()),
+
+        // Show loading indicator
+        if (_isLoadingSearch)
+          const Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+
+        // Show search results
         if (_searchResults.isNotEmpty)
-          Positioned(
-            top: 60, // Adjusted top positioning for proper dropdown placement
-            left: 20,
-            right: 20,
-            child: Material(
-              elevation: 5,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true, // Shrink to fit the content height
-                  physics:
-                      NeverScrollableScrollPhysics(), // Prevent scrolling inside the dropdown
-                  itemCount: _searchResults.length,
-                  itemBuilder: (context, index) {
-                    final result = _searchResults[index];
-                    return ListTile(
-                      onTap: () {
-                        setState(() {
-                          FocusScope.of(context).unfocus();
-                          selectedLeads = result['lead_id'];
-                          selectedLeadsName = result['lead_name'];
-                          _searchController.clear();
-                          _searchResults.clear();
-                        });
-                      },
-                      title: Text(
-                        result['lead_name'] ?? 'No Name',
-                        style: TextStyle(
-                          color: selectedLeads == result['lead_id']
-                              ? Colors.black // Selected item color
-                              : AppColors.fontBlack, // Default color
-                        ),
-                      ),
-                      leading: const Icon(Icons.person),
-                    );
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: const [
+                BoxShadow(color: Colors.black12, blurRadius: 4)
+              ],
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _searchResults.length,
+              itemBuilder: (context, index) {
+                final result = _searchResults[index];
+                return ListTile(
+                  onTap: () {
+                    setState(() {
+                      FocusScope.of(context).unfocus();
+                      selectedLeads = result['lead_id'];
+                      selectedLeadsName = result['lead_name'];
+                      _searchController.clear();
+                      _searchResults.clear();
+                    });
                   },
-                ),
-              ),
+                  title: Text(
+                    result['lead_name'] ?? 'No Name',
+                    style: TextStyle(
+                      color: selectedLeads == result['lead_id']
+                          ? Colors.black
+                          : AppColors.fontBlack,
+                    ),
+                  ),
+                  leading: const Icon(Icons.person),
+                );
+              },
             ),
           ),
       ],
@@ -630,52 +625,81 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
   //     children: [
   //       Text('Select Lead', style: AppFont.dropDowmLabel(context)),
   //       const SizedBox(height: 5),
-  //       TextField(
-  //         controller: _searchController,
-  //         onTap: () => FocusScope.of(context).unfocus(),
-  //         decoration: InputDecoration(
-  //           filled: true,
-  //           alignLabelWithHint: true,
-  //           fillColor: AppColors.containerBg,
-  //           hintText: selectedLeadsName ?? 'Select Leads',
-  //           hintStyle: AppFont.dropDown(context),
-  //           prefixIcon: const Icon(
-  //             FontAwesomeIcons.magnifyingGlass,
-  //             size: 15,
-  //             color: AppColors.fontColor,
-  //           ),
-  //           suffixIcon: IconButton(
-  //             icon: const Icon(
-  //               FontAwesomeIcons.microphone,
-  //               color: AppColors.fontColor,
-  //               size: 15, // Increase the size of the microphone icon
+  //       Container(
+  //         height: MediaQuery.of(context).size.height *
+  //             .055, // Match height from previous widget
+  //         width: double.infinity,
+  //         decoration: BoxDecoration(
+  //           borderRadius: BorderRadius.circular(5),
+  //           color: AppColors.containerBg,
+  //         ),
+  //         child: Row(
+  //           children: [
+  //             // TextField itself
+  //             Expanded(
+  //               child: Align(
+  //                 alignment: Alignment.bottomCenter,
+  //                 child: TextField(
+  //                   controller: _searchController,
+  //                   onTap: () => FocusScope.of(context).unfocus(),
+  //                   decoration: InputDecoration(
+  //                     filled: true,
+  //                     alignLabelWithHint: true,
+  //                     fillColor: AppColors.containerBg,
+  //                     hintText: selectedLeadsName ?? 'Select Leads',
+  //                     hintStyle: TextStyle(
+  //                         color: selectedLeadsName != null
+  //                             ? Colors.black
+  //                             : Colors.grey),
+  //                     prefixIcon: const Icon(
+  //                       FontAwesomeIcons.magnifyingGlass,
+  //                       size: 15,
+  //                       color: AppColors.fontColor,
+  //                     ),
+  //                     suffixIcon: IconButton(
+  //                       icon: const Icon(
+  //                         FontAwesomeIcons.microphone,
+  //                         color: AppColors.fontColor,
+  //                         size: 15, // Adjusted to match sizing
+  //                       ),
+  //                       onPressed: () {
+  //                         // Implement the action for the microphone button here
+  //                         print('Microphone button pressed');
+  //                       },
+  //                     ),
+  //                     border: OutlineInputBorder(
+  //                       borderRadius: BorderRadius.circular(5),
+  //                       borderSide: BorderSide.none,
+  //                     ),
+  //                   ),
+  //                   style: GoogleFonts.poppins(
+  //                     fontSize: 14,
+  //                     fontWeight: FontWeight.w500,
+  //                     color: Colors.black,
+  //                   ),
+  //                 ),
+  //               ),
   //             ),
-  //             onPressed: () {
-  //               // Implement the action for the microphone button here
-  //               print('Microphone button pressed');
-  //             },
-  //           ),
-  //           border: OutlineInputBorder(
-  //             borderRadius: BorderRadius.circular(5),
-  //             borderSide: BorderSide.none,
-  //           ),
+  //           ],
   //         ),
   //       ),
   //       if (_isLoadingSearch) const Center(child: CircularProgressIndicator()),
   //       if (_searchResults.isNotEmpty)
   //         Positioned(
-  //           top: 50,
+  //           top: 60, // Adjusted top positioning for proper dropdown placement
   //           left: 20,
   //           right: 20,
   //           child: Material(
   //             elevation: 5,
   //             child: Container(
-  //               height: MediaQuery.of(context).size.height * .2,
   //               decoration: BoxDecoration(
   //                 color: Colors.white,
   //                 borderRadius: BorderRadius.circular(5),
   //               ),
   //               child: ListView.builder(
+  //                 shrinkWrap: true, // Shrink to fit the content height
+  //                 physics:
+  //                     NeverScrollableScrollPhysics(), // Prevent scrolling inside the dropdown
   //                 itemCount: _searchResults.length,
   //                 itemBuilder: (context, index) {
   //                   final result = _searchResults[index];

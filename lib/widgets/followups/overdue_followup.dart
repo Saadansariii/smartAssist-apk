@@ -343,7 +343,7 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.name, style: AppFont.dashboardName(context)),
-        const SizedBox(height: 5),
+        // const SizedBox(height: 5),
       ],
     );
   }

@@ -111,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 data['overdueFollowupsCount'] is int
             ? data['overdueFollowupsCount']
             : 0;
+
         overdueAppointmentsCount =
             data.containsKey('overdueAppointmentsCount') &&
                     data['overdueAppointmentsCount'] is int
@@ -231,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   if (notificationCount > 0)
                     Positioned(
-                      right: 11,
+                      right: 8,
                       top: 5,
                       child: Container(
                         padding: const EdgeInsets.all(1),
@@ -240,15 +241,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: BoxShape.circle,
                         ),
                         constraints: const BoxConstraints(
-                          minWidth: 5,
-                          minHeight: 5,
+                          minWidth: 15,
+                          minHeight: 15,
+                          maxWidth: 20,
+                          maxHeight: 20,
                         ),
                         child: Text(
                           notificationCount.toString(),
-                          style: const TextStyle(
+                          style: GoogleFonts.poppins(
                             color: Colors.white,
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -377,9 +380,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Column(
                                           children: [
                                             ListTile(
-                                              leading: const Icon(Icons.search,
+                                              leading: const Icon(
+                                                  Icons.people_alt_outlined,
                                                   size: 28),
-                                              title: Text('Leads',
+                                              title: Text('Enquiries',
                                                   style: GoogleFonts.poppins(
                                                       fontSize: 18)),
                                               onTap: () => Get.to(
@@ -387,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             ListTile(
                                               leading: const Icon(
-                                                  Icons.star_border_outlined,
+                                                  Icons.star_border_rounded,
                                                   size: 28),
                                               title: Text('Favorites',
                                                   style: GoogleFonts.poppins(
@@ -530,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Positioned(
               bottom: 26,
-              right: 16,
+              right: 18,
               child: _buildFloatingActionButton(context),
             ),
 
@@ -574,6 +578,36 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  // Widget _buildFloatingActionButton(BuildContext context) {
+  //   return Obx(
+  //     () => GestureDetector(
+  //       onTap: fabController.toggleFab,
+  //       child: AnimatedContainer(
+  //         duration: const Duration(milliseconds: 300),
+  //         width: MediaQuery.of(context).size.width * .15,
+  //         height: MediaQuery.of(context).size.height * .08,
+  //         decoration: BoxDecoration(
+  //           color: fabController.isFabExpanded.value
+  //               ? Colors.red
+  //               : AppColors.colorsBlue,
+  //           shape: BoxShape.circle,
+  //         ),
+  //         child: Center(
+  //           child: AnimatedRotation(
+  //             turns: fabController.isFabExpanded.value ? 0.25 : 0.0,
+  //             duration: const Duration(milliseconds: 300),
+  //             child: Icon(
+  //               fabController.isFabExpanded.value ? Icons.close : Icons.add,
+  //               color: Colors.white,
+  //               size: 30,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // Popup Menu Builder
   // Widget _buildPopupMenu(BuildContext context) {
@@ -625,7 +659,6 @@ class _HomeScreenState extends State<HomeScreen> {
   //     ),
   //   );
   // }
-
   Widget _buildPopupMenu(BuildContext context) {
     return GestureDetector(
       onTap: fabController.closeFab,
@@ -643,7 +676,7 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: 90,
             right: 20,
             child: SizedBox(
-              width: 200, // width to handle text + icon
+              width: 200,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -671,6 +704,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+          ),
+
+          // ✅ FAB positioned above the overlay
+          Positioned(
+            bottom: 26,
+            right: 18,
+            child: _buildFloatingActionButton(context),
           ),
         ],
       ),
@@ -710,10 +750,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.colorsBlue,
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          child: Icon(icon, color: Colors.blue, size: 24),
+                          child: Icon(icon, color: Colors.white, size: 24),
                         ),
                       ),
                     ],

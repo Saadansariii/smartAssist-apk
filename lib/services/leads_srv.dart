@@ -654,12 +654,10 @@ class LeadsSrv {
       print('Response body: ${response.body}');
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-
-        // Ensure the expected structure exists before accessing it
-        if (responseData.containsKey('data') &&
-            responseData['data'].containsKey('lead')) {
-          return responseData['data']
-              ['lead']; // Extracting only the lead object
+ 
+        if (responseData.containsKey('data')) {
+          return responseData[
+              'data'];  
         } else {
           throw Exception('Unexpected response structure: ${response.body}');
         }
@@ -683,11 +681,6 @@ class LeadsSrv {
     }
 
     try {
-      // Ensure the actual leadId is being passed correctly
-      // print('Fetching data for Lead ID: $leadId');
-      // print(
-      //     'API URL: ${apiUrl + leadId}');
-
       final response = await http.get(
         Uri.parse('$apiUrl$leadId'),
         headers: {

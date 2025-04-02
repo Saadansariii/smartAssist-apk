@@ -72,7 +72,7 @@ class _AllLeadsState extends State<AllLeads> {
           ),
         ),
         title: Text(
-          'Leads List',
+          'All Enquiries',
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w400,
