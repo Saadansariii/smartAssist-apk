@@ -28,8 +28,8 @@ class _TestDriveState extends State<TestDrive> {
             children: [
               // Buttons with Fixed Width
               Container(
-                width: screenWidth * 0.45, // Adjust width if needed
-                height: 30,
+                width: screenWidth * 0.42, // Adjust width if needed
+                height: 27,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),

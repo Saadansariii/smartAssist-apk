@@ -38,7 +38,7 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.searchBar,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(5),
               ),
               child: SizedBox(
@@ -56,8 +56,11 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
                           });
                         },
                         style: _buttonStyle(_leadButton == 0),
-                        child:
-                            const Text('Enquiry', textAlign: TextAlign.center),
+                        child: Text(
+                          'Enquiry',
+                          textAlign: TextAlign.center,
+                          style: AppFont.buttonwhite(context),
+                        ),
                       ),
                     ),
 
@@ -71,8 +74,9 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
                           });
                         },
                         style: _buttonStyle(_leadButton == 1),
-                        child: const Text('Test Drive',
-                            textAlign: TextAlign.center),
+                        child: Text('Test Drive',
+                            textAlign: TextAlign.center,
+                            style: AppFont.buttonwhite(context)),
                       ),
                     ),
 
@@ -86,8 +90,9 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
                           });
                         },
                         style: _buttonStyle(_leadButton == 2),
-                        child:
-                            const Text('Orders', textAlign: TextAlign.center),
+                        child: Text('Orders',
+                            textAlign: TextAlign.center,
+                            style: AppFont.buttonwhite(context)),
                       ),
                     ),
                   ],
@@ -95,7 +100,15 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
               ),
             ),
           ),
-          currentWidget ?? Container() // Handle null case
+          currentWidget ??
+              const SizedBox(
+                height: 10,
+              ), // Handle null case
+
+
+          const SizedBox(
+            height: 5,
+          ),
         ],
       ),
     );

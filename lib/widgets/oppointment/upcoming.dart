@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followup.dart';
 
@@ -12,10 +13,12 @@ import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followu
 class OppUpcoming extends StatefulWidget {
   final List<dynamic> upcomingOpp;
   final bool isNested;
+  final Function(String, bool)? onFavoriteToggle;
   const OppUpcoming({
     super.key,
     required this.upcomingOpp,
     required this.isNested,
+    this.onFavoriteToggle,
   });
 
   @override
@@ -24,7 +27,7 @@ class OppUpcoming extends StatefulWidget {
 
 class _OppUpcomingState extends State<OppUpcoming> {
   bool isLoading = false;
-
+  final Map<String, double> _swipeOffsets = {};
   bool _showLoader = true;
   List<dynamic> upcomingAppointments = [];
 
@@ -37,12 +40,58 @@ class _OppUpcomingState extends State<OppUpcoming> {
     print(widget.upcomingOpp);
   }
 
+  void _onHorizontalDragUpdate(DragUpdateDetails details, String eventId) {
+    setState(() {
+      _swipeOffsets[eventId] =
+          (_swipeOffsets[eventId] ?? 0) + (details.primaryDelta ?? 0);
+    });
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details, dynamic item, int index) {
+    String eventId = item['event_id'];
+
+    double swipeOffset = _swipeOffsets[eventId] ?? 0;
+
+    if (swipeOffset > 100) {
+      // Right Swipe (Favorite)
+      _toggleFavorite(eventId, index);
+    } else if (swipeOffset < -100) {
+      // Left Swipe (Call)
+      _handleCall(item);
+    }
+
+    // Reset animation
+    setState(() {
+      _swipeOffsets[eventId] = 0.0;
+    });
+  }
+
+  void _handleCall(dynamic item) {
+    print("Call action triggered for ${item['name']}");
+    // Implement actual call functionality here
+  }
+
+  Future<void> _toggleFavorite(String eventId, int index) async {
+    bool newFavoriteStatus = !(widget.upcomingOpp[index]['favourite'] ?? false);
+
+    setState(() {
+      widget.upcomingOpp[index]['favourite'] = newFavoriteStatus;
+    });
+
+    if (widget.onFavoriteToggle != null) {
+      widget.onFavoriteToggle!(eventId, newFavoriteStatus);
+    }
+
+    print(
+        "Favorite toggled for Task ID: $eventId, New Status: $newFavoriteStatus");
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.upcomingOpp.isEmpty) {
-      return Container(
-        height: 250,
-        child: const Center(child: Text('No upcoming Appointment available')),
+      return const SizedBox(
+        height: 240,
+        child: Center(child: Text('No upcoming Appointment available')),
       );
     }
     return ListView.builder(
@@ -50,25 +99,40 @@ class _OppUpcomingState extends State<OppUpcoming> {
       physics: widget.isNested
           ? const NeverScrollableScrollPhysics()
           : const AlwaysScrollableScrollPhysics(),
-      itemCount: upcomingAppointments.length,
+      itemCount: widget.upcomingOpp.length,
       itemBuilder: (context, index) {
         var item = widget.upcomingOpp[index];
-        return (item.containsKey('assigned_to') &&
-                item.containsKey('start_date') &&
-                item.containsKey('lead_id') &&
-                item.containsKey('event_id'))
-            ? OppUpcomingItem(
-                key: ValueKey(item['event_id']),
-                name: item['name'] ?? 'No Name',
-                date: item['start_date'],
-                vehicle: 'Discovery Sport',
-                time: item['start_time'],
-                leadId: item['lead_id'],
-                eventId: item['event_id'],
-                isFavorite: item['favourite'] ?? false,
-                fetchDashboardData: () {},
-              )
-            : ListTile(title: Text('Invalid data at index $index'));
+
+        if (!(item.containsKey('assigned_to') &&
+            item.containsKey('start_date') &&
+            item.containsKey('lead_id') &&
+            item.containsKey('event_id'))) {
+          return ListTile(title: Text('Invalid data at index $index'));
+        }
+
+        String eventId = item['event_id'];
+        double swipeOffset = _swipeOffsets[eventId] ?? 0;
+
+        return GestureDetector(
+          onHorizontalDragUpdate: (details) =>
+              _onHorizontalDragUpdate(details, eventId),
+          onHorizontalDragEnd: (details) =>
+              _onHorizontalDragEnd(details, item, index),
+          child: OppUpcomingItem(
+            key: ValueKey(item['event_id']),
+            name: item['name'],
+            subject: item['subject'] ?? 'Meeting',
+            date: item['start_date'],
+            vehicle: 'Discovery Sport',
+            leadId: item['lead_id'],
+            time: item['start_time'],
+            eventId: item['event_id'],
+            isFavorite: item['favourite'] ?? false,
+            swipeOffset: swipeOffset,
+            fetchDashboardData:
+                () {}, // Placeholder, replace with actual method
+          ),
+        );
       },
     );
   }
@@ -76,8 +140,9 @@ class _OppUpcomingState extends State<OppUpcoming> {
 
 // ---------------- INDIVIDUAL FOLLOWUP ITEM ----------------
 class OppUpcomingItem extends StatefulWidget {
-  final String name, date, vehicle, leadId, eventId, time;
+  final String name, date, vehicle, leadId, eventId, time, subject;
   final bool isFavorite;
+  final double swipeOffset;
   final VoidCallback fetchDashboardData;
 
   const OppUpcomingItem(
@@ -89,7 +154,9 @@ class OppUpcomingItem extends StatefulWidget {
       required this.isFavorite,
       required this.fetchDashboardData,
       required this.eventId,
-      required this.time});
+      required this.time,
+      required this.subject,
+      required this.swipeOffset});
 
   @override
   State<OppUpcomingItem> createState() => _OppUpcomingItemState();
@@ -97,150 +164,222 @@ class OppUpcomingItem extends StatefulWidget {
 
 class _OppUpcomingItemState extends State<OppUpcomingItem> {
   late bool isFav;
-  String? leadId;
+  // String? leadId;
   @override
   void initState() {
     super.initState();
-    leadId = widget.leadId;
-    print('eventid');
-    print(widget.eventId);
-    isFav = widget.isFavorite;
-  }
-
-  Future<void> _toggleFavorite() async {
-    final token = await Storage.getToken();
-    final url = Uri.parse(
-        'https://api.smartassistapp.in/api/favourites/mark-fav/event/${widget.eventId}');
-
-    try {
-      final response = await http.put(
-        url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json'
-        },
-        body: jsonEncode({'eventId': widget.eventId, 'favourite': !isFav}),
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          isFav = !isFav;
-        });
-        widget.fetchDashboardData();
-      } else {
-        print('Failed to update favorite status: ${response.body}');
-      }
-    } catch (e) {
-      print('Error updating favorite status: $e');
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-      child: Slidable(
-        endActionPane: const ActionPane(
-          motion: StretchMotion(),
-          children: [
-            ReusableSlidableAction(
-                onPressed: _phoneAction,
-                backgroundColor: Colors.blue,
-                icon: Icons.phone),
-            ReusableSlidableAction(
-                onPressed: _messageAction,
-                backgroundColor: Colors.green,
-                icon: Icons.message_rounded),
-            ReusableSlidableAction(
-                onPressed: _mailAction,
-                backgroundColor: Colors.grey,
-                icon: Icons.mail,
-                foregroundColor: Colors.red),
-          ],
-        ),
-        child: _buildFollowupCard(),
-      ),
+      child: _buildFollowupCard(context),
     );
   }
 
-  Widget _buildFollowupCard() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.containerBg,
-        borderRadius: BorderRadius.circular(10),
-        border: const Border(
-            left: BorderSide(width: 8.0, color: AppColors.sideGreen)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            icon: Icon(isFav ? Icons.star_rounded : Icons.star_border_rounded,
-                color: isFav
-                    ? AppColors.starColorsYellow
-                    : AppColors.starBorderColor,
-                size: 40),
-            onPressed: _toggleFavorite,
-          ),
-          // _buildUserDetails(),
-          // _buildVerticalDivider(),
-          // _buildCarModel(),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+  Widget _buildFollowupCard(BuildContext context) {
+    bool isFavoriteSwipe = widget.swipeOffset > 50;
+    bool isCallSwipe = widget.swipeOffset < -50;
+    // Gradient background for swipe
+    LinearGradient _buildSwipeGradient() {
+      if (isFavoriteSwipe) {
+        return const LinearGradient(
+          colors: [
+            Color.fromRGBO(239, 206, 29, 0.67),
+            // Colors.yellow.withOpacity(0.2),
+            // Colors.yellow.withOpacity(0.8)
+            Color.fromRGBO(239, 206, 29, 0.67)
+          ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        );
+      } else if (isCallSwipe) {
+        return LinearGradient(
+          colors: [
+            Colors.green.withOpacity(0.2),
+            Colors.green.withOpacity(0.8)
+          ],
+          begin: Alignment.centerRight,
+          end: Alignment.centerLeft,
+        );
+      }
+      return const LinearGradient(
+        colors: [AppColors.containerBg, AppColors.containerBg],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      );
+    }
+
+    return Stack(
+      children: [
+        // Favorite Swipe Overlay
+        if (isFavoriteSwipe)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.yellow.withOpacity(0.2),
+                    Colors.yellow.withOpacity(0.8)
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildUserDetails(),
-                    const SizedBox(width: 8),
-                    _buildVerticalDivider(20),
-                    const SizedBox(width: 8),
-                    _buildCarModel(),
+                    const SizedBox(width: 15),
+                    Icon(
+                        widget.isFavorite
+                            ? Icons.star_outline_rounded
+                            : Icons.star_rounded,
+                        color: const Color.fromRGBO(226, 195, 34, 1),
+                        size: 40),
+                    const SizedBox(width: 10),
+                    Text(widget.isFavorite ? 'Unfavorite' : 'Favorite',
+                        style: GoogleFonts.poppins(
+                            color: Color.fromRGBO(187, 158, 0, 1),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
                   ],
                 ),
-                const SizedBox(
-                    height: 4), // Spacing between user details and date-car
-                Row(
-                  children: [
-                    _date(),
-                    const SizedBox(width: 8),
-                    _time(),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
 
-          _buildNavigationButton(context, widget.leadId),
-        ],
-      ),
+        // Call Swipe Overlay
+        if (isCallSwipe)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.green.withOpacity(0.2),
+                    Colors.green.withOpacity(0.8)
+                  ],
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Icon(Icons.phone_in_talk,
+                        color: Colors.white, size: 30),
+                    const SizedBox(width: 10),
+                    Text('Call',
+                        style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 5),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+        // Main Container
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          decoration: BoxDecoration(
+            gradient: _buildSwipeGradient(),
+            borderRadius: BorderRadius.circular(5),
+            border: Border(
+              left: BorderSide(
+                width: 8.0,
+                color: widget.isFavorite
+                    ? (isCallSwipe
+                        ? Colors.green
+                            .withOpacity(0.9) // Green when swiping for a call
+                        : Colors.yellow.withOpacity(isFavoriteSwipe
+                            ? 0.1
+                            : 0.9)) // Keep yellow when favorite
+                    : (isFavoriteSwipe
+                        ? Colors.yellow.withOpacity(0.1)
+                        : (isCallSwipe
+                            ? AppColors.sideGreen.withOpacity(0.5)
+                            : AppColors.sideGreen)),
+              ),
+            ),
+          ),
+          child: Opacity(
+            opacity: (isFavoriteSwipe || isCallSwipe) ? 0 : 1.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            _buildUserDetails(context),
+                            _buildVerticalDivider(15),
+                            _buildCarModel(context),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            _buildSubjectDetails(context),
+                            _date(context),
+                            _time(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                _buildNavigationButton(context),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildUserDetails() {
+  Widget _buildUserDetails(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.name,
-          style: GoogleFonts.poppins(
-              color: AppColors.fontColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 14),
-        ),
+        Text(widget.name, style: AppFont.dashboardName(context)),
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+
+  Widget _buildSubjectDetails(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(Icons.people_alt_rounded, color: Colors.blue, size: 18),
+        const SizedBox(width: 5),
+        Text('${widget.subject},', style: AppFont.smallText(context)),
       ],
     );
   }
 
   Widget _time() {
     DateTime parsedTime = DateFormat("HH:mm:ss").parse(widget.time);
-    String formattedTime = DateFormat("h:mm a").format(parsedTime);
+    String formattedTime = DateFormat("ha").format(parsedTime);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Icon(Icons.access_time, color: Colors.grey, size: 14),
         const SizedBox(width: 4),
         Text(formattedTime,
             style: GoogleFonts.poppins(
@@ -251,57 +390,84 @@ class _OppUpcomingItemState extends State<OppUpcomingItem> {
     );
   }
 
-  Widget _date() {
+  Widget _date(BuildContext context) {
     String formattedDate = '';
     try {
       DateTime parseDate = DateTime.parse(widget.date);
-      formattedDate = DateFormat('dd MMM').format(parseDate);
+      // formattedDate = DateFormat('dd MMM').format(parseDate);
+      // Check if the date is today
+      if (parseDate.year == DateTime.now().year &&
+          parseDate.month == DateTime.now().month &&
+          parseDate.day == DateTime.now().day) {
+        formattedDate = 'Today';
+      } else {
+        // If not today, format it as "26th March"
+        int day = parseDate.day;
+        String suffix = _getDaySuffix(day);
+        String month = DateFormat('MMM').format(parseDate); // Full month name
+        formattedDate = '${day}$suffix $month';
+      }
     } catch (e) {
       formattedDate = widget.date;
     }
     return Row(
       children: [
-        const Icon(Icons.phone_in_talk, color: Colors.blue, size: 14),
         const SizedBox(width: 5),
-        Text(formattedDate,
-            style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(formattedDate, style: AppFont.smallText(context)),
       ],
     );
   }
 
+  // Helper method to get the suffix for the day (e.g., "st", "nd", "rd", "th")
+  String _getDaySuffix(int day) {
+    if (day >= 11 && day <= 13) {
+      return 'th';
+    }
+    switch (day % 10) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
+    }
+  }
+
   Widget _buildVerticalDivider(double height) {
     return Container(
-      // margin: const EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       height: height,
-      width: 1.5,
+      width: 0.1,
       decoration: const BoxDecoration(
-          border: Border(right: BorderSide(color: AppColors.fontColor))),
+        border: Border(right: BorderSide(color: AppColors.fontColor)),
+      ),
     );
   }
 
-  Widget _buildCarModel() {
+  Widget _buildCarModel(BuildContext context) {
     return ConstrainedBox(
       constraints:
           const BoxConstraints(maxWidth: 100), // Adjust width as needed
       child: Text(
         widget.vehicle,
-        style: GoogleFonts.poppins(fontSize: 10, color: AppColors.fontColor),
+        style: AppFont.dashboardCarName(context),
         overflow: TextOverflow.visible, // Allow text wrapping
         softWrap: true, // Enable wrapping
       ),
     );
   }
 
-  Widget _buildNavigationButton(BuildContext context, String leadId) {
+  Widget _buildNavigationButton(BuildContext context) {
+    // ✅ Accept context
     return GestureDetector(
       onTap: () {
-        if (leadId.isNotEmpty) {
-          print("Navigating with leadId: $leadId");
+        if (widget.leadId.isNotEmpty) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => FollowupsDetails(leadId: leadId),
-            ),
+                builder: (context) => FollowupsDetails(leadId: widget.leadId)),
           );
         } else {
           print("Invalid leadId");
@@ -312,44 +478,13 @@ class _OppUpcomingItemState extends State<OppUpcomingItem> {
         decoration: BoxDecoration(
             color: AppColors.arrowContainerColor,
             borderRadius: BorderRadius.circular(30)),
-        child: const Icon(Icons.arrow_forward_ios_sharp,
+        child: const Icon(Icons.arrow_forward_ios_rounded,
             size: 25, color: Colors.white),
       ),
     );
   }
 }
-
-// ---------------- REUSABLE SLIDABLE ACTION ----------------
-class ReusableSlidableAction extends StatelessWidget {
-  final VoidCallback onPressed;
-  final Color backgroundColor;
-  final IconData icon;
-  final Color? foregroundColor;
-
-  const ReusableSlidableAction({
-    super.key,
-    required this.onPressed,
-    required this.backgroundColor,
-    required this.icon,
-    this.foregroundColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomSlidableAction(
-      backgroundColor: backgroundColor,
-      foregroundColor: foregroundColor,
-      onPressed: (context) => onPressed(),
-      child: Icon(icon, size: 30, color: Colors.white),
-    );
-  }
-}
-
-// ---------------- ACTION HANDLERS ----------------
-void _phoneAction() => print("Phone action triggered");
-void _messageAction() => print("Message action triggered");
-void _mailAction() => print("Mail action triggered");
-
+ 
 
 // import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';

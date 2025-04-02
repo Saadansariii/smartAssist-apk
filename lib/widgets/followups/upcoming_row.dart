@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followup.dart';
 
 class FollowupsUpcoming extends StatefulWidget {
@@ -110,6 +111,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
           child: UpcomingFollowupItem(
             name: item['name'],
             date: item['due_date'],
+            subject: item['subject'] ?? '',
             vehicle: 'Discovery Sport',
             leadId: item['lead_id'],
             taskId: taskId,
@@ -125,7 +127,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
 }
 
 class UpcomingFollowupItem extends StatelessWidget {
-  final String name, date, vehicle, leadId, taskId;
+  final String name, date, vehicle, leadId, taskId, subject;
   final bool isFavorite;
   final double swipeOffset;
   final VoidCallback fetchDashboardData;
@@ -140,6 +142,7 @@ class UpcomingFollowupItem extends StatelessWidget {
     required this.isFavorite,
     required this.swipeOffset,
     required this.fetchDashboardData,
+    required this.subject,
   });
 
   @override
@@ -157,10 +160,12 @@ class UpcomingFollowupItem extends StatelessWidget {
     // Gradient background for swipe
     LinearGradient _buildSwipeGradient() {
       if (isFavoriteSwipe) {
-        return LinearGradient(
+        return const LinearGradient(
           colors: [
-            Colors.yellow.withOpacity(0.2),
-            Colors.yellow.withOpacity(0.8)
+            Color.fromRGBO(239, 206, 29, 0.67),
+            // Colors.yellow.withOpacity(0.2),
+            // Colors.yellow.withOpacity(0.8)
+            Color.fromRGBO(239, 206, 29, 0.67)
           ],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
@@ -175,7 +180,7 @@ class UpcomingFollowupItem extends StatelessWidget {
           end: Alignment.centerLeft,
         );
       }
-      return LinearGradient(
+      return const LinearGradient(
         colors: [AppColors.containerBg, AppColors.containerBg],
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
@@ -203,13 +208,17 @@ class UpcomingFollowupItem extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const SizedBox(width: 5),
-                    Icon(Icons.star_rounded,
-                        color: Colors.yellow.withOpacity(0.7), size: 40),
+                    const SizedBox(width: 15),
+                    Icon(
+                        isFavorite
+                            ? Icons.star_outline_rounded
+                            : Icons.star_rounded,
+                        color: Color.fromRGBO(226, 195, 34, 1),
+                        size: 40),
                     const SizedBox(width: 10),
-                    Text('Favorite',
+                    Text(isFavorite ? 'Unfavorite' : 'Favorite',
                         style: GoogleFonts.poppins(
-                            color: Colors.yellow.withOpacity(0.9),
+                            color: Color.fromRGBO(187, 158, 0, 1),
                             fontSize: 18,
                             fontWeight: FontWeight.bold)),
                   ],
@@ -257,17 +266,29 @@ class UpcomingFollowupItem extends StatelessWidget {
 
         // Main Container
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
           decoration: BoxDecoration(
             gradient: _buildSwipeGradient(),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(7),
             border: Border(
               left: BorderSide(
                 width: 8.0,
+                // color: isFavorite
+                //     ? (isFavoriteSwipe
+                //         ? Colors.yellow.withOpacity(0.1)
+                //         : Colors.yellow.withOpacity(0.9))
+                //     : (isFavoriteSwipe
+                //         ? Colors.yellow.withOpacity(0.1)
+                //         : (isCallSwipe
+                //             ? Colors.green.withOpacity(0.1)
+                //             : AppColors.sideGreen)),
                 color: isFavorite
-                    ? (isFavoriteSwipe
-                        ? Colors.yellow.withOpacity(0.1)
-                        : Colors.yellow.withOpacity(0.9))
+                    ? (isCallSwipe
+                        ? Colors.green
+                            .withOpacity(0.9) // Green when swiping for a call
+                        : Colors.yellow.withOpacity(isFavoriteSwipe
+                            ? 0.1
+                            : 0.9)) // Keep yellow when favorite
                     : (isFavoriteSwipe
                         ? Colors.yellow.withOpacity(0.1)
                         : (isCallSwipe
@@ -297,13 +318,19 @@ class UpcomingFollowupItem extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildUserDetails(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            _buildUserDetails(context),
+                            _buildVerticalDivider(15),
+                            _buildCarModel(context),
+                          ],
+                        ),
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            _date(),
-                            _buildVerticalDivider(20),
-                            _buildCarModel(),
+                            _buildSubjectDetails(context),
+                            _date(context),
                           ],
                         ),
                       ],
@@ -318,115 +345,6 @@ class UpcomingFollowupItem extends StatelessWidget {
       ],
     );
   }
-
-  // Widget _buildFollowupCard(BuildContext context) {
-  //   bool isFavoriteSwipe = swipeOffset > 50;
-
-  //   // Gradient background for swipe
-  //   LinearGradient _buildSwipeGradient() {
-  //     return LinearGradient(
-  //       colors: isFavoriteSwipe
-  //           ? [Colors.yellow.withOpacity(0.2), Colors.yellow.withOpacity(0.8)]
-  //           : [AppColors.containerBg, AppColors.containerBg],
-  //       begin: Alignment.centerLeft,
-  //       end: Alignment.centerRight,
-  //     );
-  //   }
-
-  //   return Stack(
-  //     children: [
-  //       // Swipe Overlay
-  //       if (isFavoriteSwipe)
-  //         Positioned.fill(
-  //           child: Container(
-  //             decoration: BoxDecoration(
-  //               gradient: LinearGradient(
-  //                 colors: [
-  //                   Colors.yellow.withOpacity(0.2),
-  //                   Colors.yellow.withOpacity(0.8)
-  //                 ],
-  //                 begin: Alignment.centerLeft,
-  //                 end: Alignment.centerRight,
-  //               ),
-  //               borderRadius: BorderRadius.circular(10),
-  //             ),
-  //             child: Center(
-  //               child: Row(
-  //                 mainAxisAlignment: MainAxisAlignment.start,
-  //                 children: [
-  //                   const SizedBox(
-  //                     width: 5,
-  //                   ),
-  //                   Icon(Icons.star_rounded,
-  //                       color: Colors.yellow.withOpacity(0.7), size: 40),
-  //                   const SizedBox(width: 10),
-  //                   Text('Favorite',
-  //                       style: GoogleFonts.poppins(
-  //                           color: Colors.yellow.withOpacity(0.9),
-  //                           fontSize: 18,
-  //                           fontWeight: FontWeight.bold)),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-
-  //       // Main Container
-  //       Container(
-  //         padding: const EdgeInsets.all(10),
-  //         decoration: BoxDecoration(
-  //           gradient: _buildSwipeGradient(),
-  //           borderRadius: BorderRadius.circular(10),
-  //           border: Border(
-  //             left: BorderSide(
-  //                 width: 8.0,
-  //                 color: isFavoriteSwipe
-  //                     ? Colors.yellow.withOpacity(0.1)
-  //                     : AppColors.sideGreen),
-  //           ),
-  //         ),
-  //         child: Opacity(
-  //           opacity: isFavoriteSwipe ? 0 : 1.0,
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             crossAxisAlignment: CrossAxisAlignment.center,
-  //             children: [
-  //               Row(
-  //                 children: [
-  //                   // Conditional favorite star
-  //                   if (isFavorite || isFavoriteSwipe)
-  //                     Icon(
-  //                       Icons.star_rounded,
-  //                       color: isFavoriteSwipe
-  //                           ? Colors.white
-  //                           : AppColors.starColorsYellow,
-  //                       size: 40,
-  //                     ),
-  //                   const SizedBox(width: 8),
-  //                   Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     children: [
-  //                       _buildUserDetails(),
-  //                       const SizedBox(height: 4),
-  //                       Row(
-  //                         children: [
-  //                           _date(),
-  //                           _buildVerticalDivider(20),
-  //                           _buildCarModel(),
-  //                         ],
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ],
-  //               ),
-  //               _buildNavigationButton(context),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
 
   Widget _buildNavigationButton(BuildContext context) {
     // ✅ Accept context
@@ -453,53 +371,84 @@ class UpcomingFollowupItem extends StatelessWidget {
     );
   }
 
-  Widget _buildUserDetails() {
-    return Column(
+  Widget _buildUserDetails(BuildContext context) {
+    return Text(name,
+        textAlign: TextAlign.end, style: AppFont.dashboardName(context));
+  }
+
+  Widget _buildSubjectDetails(BuildContext context) {
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(name,
-            style: GoogleFonts.poppins(
-                color: AppColors.fontColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 14)),
-        const SizedBox(height: 5),
+        const Icon(Icons.phone_in_talk, color: Colors.blue, size: 18),
+        const SizedBox(width: 5),
+        Text('$subject,', style: AppFont.smallText(context)),
       ],
     );
   }
 
-  Widget _date() {
+  Widget _date(BuildContext context) {
     String formattedDate = '';
+
     try {
       DateTime parseDate = DateTime.parse(date);
-      formattedDate = DateFormat('dd MMM').format(parseDate);
+
+      // Check if the date is today
+      if (parseDate.year == DateTime.now().year &&
+          parseDate.month == DateTime.now().month &&
+          parseDate.day == DateTime.now().day) {
+        formattedDate = 'Today';
+      } else {
+        // If not today, format it as "26th March"
+        int day = parseDate.day;
+        String suffix = _getDaySuffix(day);
+        String month = DateFormat('MMM').format(parseDate); // Full month name
+        formattedDate = '${day}$suffix $month';
+      }
     } catch (e) {
-      formattedDate = date;
+      formattedDate = date; // Fallback if date parsing fails
     }
+
     return Row(
       children: [
-        const Icon(Icons.phone_in_talk, color: Colors.blue, size: 14),
         const SizedBox(width: 5),
-        Text(formattedDate,
-            style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(formattedDate, style: AppFont.smallText(context)),
       ],
     );
+  }
+
+// Helper method to get the suffix for the day (e.g., "st", "nd", "rd", "th")
+  String _getDaySuffix(int day) {
+    if (day >= 11 && day <= 13) {
+      return 'th';
+    }
+    switch (day % 10) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
+    }
   }
 
   Widget _buildVerticalDivider(double height) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.only(bottom: 3, left: 10, right: 10),
       height: height,
-      width: 1,
+      width: 0.1,
       decoration: const BoxDecoration(
           border: Border(right: BorderSide(color: AppColors.fontColor))),
     );
   }
 
-  Widget _buildCarModel() {
+  Widget _buildCarModel(BuildContext context) {
     return Text(
       vehicle,
       textAlign: TextAlign.start,
-      style: GoogleFonts.poppins(fontSize: 10, color: AppColors.fontColor),
+      style: AppFont.dashboardCarName(context),
       softWrap: true,
       overflow: TextOverflow.visible,
     );

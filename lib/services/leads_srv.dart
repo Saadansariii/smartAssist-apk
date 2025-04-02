@@ -716,10 +716,10 @@ class LeadsSrv {
 
 // history data api
 
-  static Future<List<Map<String, dynamic>>> singleEventById(
+  static Future<List<Map<String, dynamic>>> singleTaskById(
       String leadId) async {
     const String apiUrl =
-        "https://api.smartassistapp.in/api/admin/leads/events/all/";
+        "https://api.smartassistapp.in/api/admin/leads/tasks/all/";
 
     final token = await Storage.getToken();
     if (token == null) {
@@ -747,11 +747,11 @@ class LeadsSrv {
 
         // Handle the nested structure with allEvents.rows
         if (data.containsKey('data') &&
-            data['data'].containsKey('allEvents') &&
-            data['data']['allEvents'].containsKey('rows')) {
+            data['data'].containsKey('allTasks') &&
+            data['data']['allTasks'].containsKey('rows')) {
           // Extract the rows containing the task data
           return List<Map<String, dynamic>>.from(
-              data['data']['allEvents']['rows']);
+              data['data']['allTasks']['rows']);
         } else {
           return []; // Return empty list if no tasks found
         }
@@ -850,7 +850,7 @@ class LeadsSrv {
   static Future<List<Map<String, dynamic>>> singleTasksById(
       String leadId) async {
     const String apiUrl =
-        "https://api.smartassistapp.in/api/admin/leads/tasks/all/";
+        "https://api.smartassistapp.in/api/admin/leads/events/all/";
 
     final token = await Storage.getToken();
     if (token == null) {
@@ -878,11 +878,11 @@ class LeadsSrv {
 
         // Ensure the data structure contains 'allTasks' and 'rows'
         if (data.containsKey('data') &&
-            data['data'].containsKey('allTasks') &&
-            data['data']['allTasks'].containsKey('rows')) {
+            data['data'].containsKey('allEvents') &&
+            data['data']['allEvents'].containsKey('rows')) {
           // Extract the rows containing the task data
           return List<Map<String, dynamic>>.from(
-              data['data']['allTasks']['rows']);
+              data['data']['allEvents']['rows']);
         } else {
           return []; // Return empty list if no tasks found
         }
@@ -1043,10 +1043,12 @@ class LeadsSrv {
     final token = await Storage.getToken();
     try {
       final response = await http.get(
-        Uri.parse('${baseUrl}users/dashboard'),
+        Uri.parse('${baseUrl}users/dashboard?filterType=MTD&category=Leads'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
+          // 'filterType' : ''
+          // 'category' : ''
         },
       );
 

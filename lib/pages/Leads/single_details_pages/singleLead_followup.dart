@@ -57,16 +57,19 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   final Widget _createAppoinment = const CreateAppointment();
   // Initialize the controller
   final FabController fabController = Get.put(FabController());
-
+  String leadId = '';
   int _childButtonIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    print(widget.leadId);
+    print(
+        'this is the liead by in the single ovedue 333333333333333333333333333333333333333333333333333333333333333333333');
     fetchSingleIdData(widget.leadId);
-    fetchSingleEvent(widget.leadId);
-    fetchTestDrive(widget.leadId, 'Test%20Drive');
     fetchSingleTask(widget.leadId);
+    fetchTestDrive(widget.leadId, 'Test%20Drive');
+    fetchSingleEvents(widget.leadId);
     // fetchSingleTask(widget.leadId);
   }
 
@@ -84,19 +87,19 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     try {
       final leadData = await LeadsSrv.singleFollowupsById(leadId);
       setState(() {
-        mobile = leadData['data']['lead']['mobile'] ?? 'N/A';
-        email = leadData['data']['lead']['email'] ?? 'N/A';
-        status = leadData['data']['lead']['status'] ?? 'N/A';
-        company = leadData['data']['lead']['brand'] ?? 'N/A';
-        address = leadData['data']['lead']['address'] ?? 'N/A';
-        leadSource = leadData['data']['lead']['lead_source'] ?? 'N/A';
-        fuel_type = leadData['data']['lead']['fuel_type'] ?? 'N/A';
-        PMI = leadData['data']['lead']['PMI'] ?? 'N/A';
-        purchase_type = leadData['data']['lead']['purchase_type'] ?? 'N/A';
-        enquiry_type = leadData['data']['lead']['enquiry_type'] ?? 'N/A';
+        mobile = leadData['data']['mobile'] ?? 'N/A';
+        email = leadData['data']['email'] ?? 'N/A';
+        status = leadData['data']['status'] ?? 'N/A';
+        company = leadData['data']['brand'] ?? 'N/A';
+        address = leadData['data']['address'] ?? 'N/A';
+        leadSource = leadData['data']['lead_source'] ?? 'N/A';
+        fuel_type = leadData['data']['fuel_type'] ?? 'N/A';
+        PMI = leadData['data']['PMI'] ?? 'N/A';
+        purchase_type = leadData['data']['purchase_type'] ?? 'N/A';
+        enquiry_type = leadData['data']['enquiry_type'] ?? 'N/A';
         expected_date_purchase =
-            leadData['data']['lead']['expected_date_purchase'] ?? 'N/A';
-        lead_owner = leadData['data']['lead']['lead_name'] ?? 'N/A';
+            leadData['data']['expected_date_purchase'] ?? 'N/A';
+        lead_owner = leadData['data']['lead_name'] ?? 'N/A';
       });
     } catch (e) {
       print('Error fetching data: $e');
@@ -153,12 +156,12 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   List<Map<String, dynamic>> allTasks = [];
   List<Map<String, dynamic>> allTestdrive = [];
 
-  Future<void> fetchSingleEvent(String leadId) async {
+  Future<void> fetchSingleTask(String leadId) async {
     setState(() => isLoading = true);
     try {
       // Fetch API response
       final List<Map<String, dynamic>> events =
-          await LeadsSrv.singleEventById(leadId);
+          await LeadsSrv.singleTaskById(leadId);
 
       setState(() {
         allEvents = events;
@@ -173,7 +176,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     }
   }
 
-  Future<void> fetchSingleTask(String leadId) async {
+  Future<void> fetchSingleEvents(String leadId) async {
     setState(() => isLoading = true);
     try {
       // Fetch API response
@@ -317,26 +320,26 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                                   fontWeight: FontWeight.w700,
                                                   color: Colors.black)),
                                           const SizedBox(
-                                            width: 5,
+                                            width: 10,
                                           ),
-                                          Text(
-                                            email,
-                                            softWrap: true,
-                                            overflow: TextOverflow.visible,
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w400,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                                color: AppColors.iconGrey),
-                                          ),
+                                          Text(company,
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black)),
                                         ],
                                       ),
-                                      Text(company,
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black)),
+                                      Text(
+                                        email,
+                                        softWrap: true,
+                                        overflow: TextOverflow.visible,
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            color: AppColors.iconGrey),
+                                      ),
                                     ],
                                   )
                                 ],
@@ -531,7 +534,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                                     _childButtonIndex = 0;
                                                     _eventAll();
                                                     if (allEvents.isEmpty) {
-                                                      fetchSingleEvent(
+                                                      fetchSingleTask(
                                                           widget.leadId);
                                                     }
                                                   });
@@ -873,8 +876,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
           },
         ));
   }
-
-
 }
 
 class ContactRow extends StatefulWidget {

@@ -422,7 +422,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                   ),
                   borderRadius: BorderRadius.circular(15),
                   color:
-                      isSelected ? Colors.blue.withOpacity(0.2) : Colors.white,
+                      isSelected ? Colors.blue.withOpacity(0.2) : AppColors.innerContainerBg,
                 ),
                 child: Text(
                   shortText, // ✅ Only show short text

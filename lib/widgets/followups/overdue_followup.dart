@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followup.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:smart_assist/utils/storage.dart';
+import 'package:smart_assist/widgets/home_btn.dart/lead_old_popup/leads_third.dart';
 
 class OverdueFollowup extends StatefulWidget {
   final bool isNested;
   final List<dynamic> overdueeFollowups;
-
+  final Function(String, bool)? onFavoriteToggle;
   const OverdueFollowup(
-      {super.key, required this.overdueeFollowups, required this.isNested});
+      {super.key,
+      required this.overdueeFollowups,
+      required this.isNested,
+      this.onFavoriteToggle});
 
   @override
   State<OverdueFollowup> createState() => _OverdueFollowupState();
@@ -21,6 +27,7 @@ class OverdueFollowup extends StatefulWidget {
 
 class _OverdueFollowupState extends State<OverdueFollowup> {
   bool isLoading = false;
+  final Map<String, double> _swipeOffsets = {};
   List<dynamic> overdueFollowups = [];
 
   @override
@@ -28,6 +35,52 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
     super.initState();
     print("widget.upcomingFollowups");
     print(widget.overdueeFollowups);
+  }
+
+  void _onHorizontalDragUpdate(DragUpdateDetails details, String taskId) {
+    setState(() {
+      _swipeOffsets[taskId] =
+          (_swipeOffsets[taskId] ?? 0) + (details.primaryDelta ?? 0);
+    });
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details, dynamic item, int index) {
+    String taskId = item['task_id'];
+    double swipeOffset = _swipeOffsets[taskId] ?? 0;
+
+    if (swipeOffset > 100) {
+      // Right Swipe (Favorite)
+      _toggleFavorite(taskId, index);
+    } else if (swipeOffset < -100) {
+      // Left Swipe (Call)
+      _handleCall(item);
+    }
+
+    // Reset animation
+    setState(() {
+      _swipeOffsets[taskId] = 0.0;
+    });
+  }
+
+  void _handleCall(dynamic item) {
+    print("Call action triggered for ${item['name']}");
+    // Implement actual call functionality here
+  }
+
+  Future<void> _toggleFavorite(String taskId, int index) async {
+    bool newFavoriteStatus =
+        !(widget.overdueeFollowups[index]['favourite'] ?? false);
+
+    setState(() {
+      widget.overdueeFollowups[index]['favourite'] = newFavoriteStatus;
+    });
+
+    if (widget.onFavoriteToggle != null) {
+      widget.onFavoriteToggle!(taskId, newFavoriteStatus);
+    }
+
+    print(
+        "Favorite toggled for Task ID: $taskId, New Status: $newFavoriteStatus");
   }
 
   @override
@@ -38,273 +91,351 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
         child: Center(child: Text('No overdue followups available')),
       );
     }
-    return isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : ListView.builder(
-            shrinkWrap: true,
-            physics: widget.isNested
-                ? const NeverScrollableScrollPhysics()
-                : const AlwaysScrollableScrollPhysics(),
-            itemCount: widget.overdueeFollowups.length,
-            itemBuilder: (context, index) {
-              var item = widget.overdueeFollowups[index];
-              if (item.containsKey('name') &&
-                  item.containsKey('due_date') &&
-                  item.containsKey('lead_id') &&
-                  item.containsKey('task_id')) {
-                return overdueeFollowupsItem(
-                  key: ValueKey(item['task_id']),
-                  name: item['name'],
-                  date: item['due_date'],
-                  vehicle: 'Discovery Sport',
-                  taskId: item['task_id'],
-                  leadId: item['lead_id'],
-                  isFavorite: item['favourite'] ?? false,
-                  fetchDashboardData: () {},
-                );
-              } else {
-                return ListTile(title: Text('Invalid data at index $index'));
-              }
-            },
-          );
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: widget.isNested
+          ? const NeverScrollableScrollPhysics()
+          : const AlwaysScrollableScrollPhysics(),
+      itemCount: widget.overdueeFollowups.length,
+      itemBuilder: (context, index) {
+        var item = widget.overdueeFollowups[index];
+
+        if (!(item.containsKey('name') &&
+            item.containsKey('due_date') &&
+            item.containsKey('lead_id') &&
+            item.containsKey('task_id'))) {
+          return ListTile(title: Text('Invalid data at index $index'));
+        }
+
+        String taskId = item['task_id'];
+        double swipeOffset = _swipeOffsets[taskId] ?? 0;
+
+        return GestureDetector(
+          onHorizontalDragUpdate: (details) =>
+              _onHorizontalDragUpdate(details, taskId),
+          onHorizontalDragEnd: (details) =>
+              _onHorizontalDragEnd(details, item, index),
+          child: overdueeFollowupsItem(
+            name: item['name'],
+            subject: item['subject'] ?? 'call',
+            date: item['due_date'],
+            vehicle: 'Discovery Sport',
+            leadId: item['lead_id'],
+            taskId: taskId,
+            isFavorite: item['favourite'] ?? false,
+            swipeOffset: swipeOffset,
+            fetchDashboardData:
+                () {}, // Placeholder, replace with actual method
+          ),
+        );
+      },
+    );
   }
 }
 
 class overdueeFollowupsItem extends StatefulWidget {
-  final String name;
-  final String date;
-  final String vehicle;
-  final String leadId;
-  final String taskId;
+  final String name, date, vehicle, leadId, taskId, subject;
   final bool isFavorite;
+  final double swipeOffset;
   final VoidCallback fetchDashboardData;
-
-  const overdueeFollowupsItem({
-    super.key,
-    required this.name,
-    required this.date,
-    required this.vehicle,
-    required this.leadId,
-    required this.taskId,
-    required this.isFavorite,
-    required this.fetchDashboardData,
-  });
+  const overdueeFollowupsItem(
+      {super.key,
+      required this.name,
+      required this.date,
+      required this.vehicle,
+      required this.leadId,
+      required this.taskId,
+      required this.isFavorite,
+      required this.swipeOffset,
+      required this.fetchDashboardData,
+      required this.subject});
 
   @override
   State<overdueeFollowupsItem> createState() => _overdueeFollowupsItemState();
 }
 
 class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
-  late bool isFav;
-  String? leadId;
-  @override
-  void initState() {
-    super.initState();
-    isFav = widget.isFavorite;
-    leadId = widget.leadId;
-  }
-
-  Future<void> _toggleFavorite() async {
-    final token = await Storage.getToken();
-    final url = Uri.parse(
-        'https://api.smartassistapp.in/api/favourites/mark-fav/task/${widget.taskId}');
-
-    try {
-      final response = await http.put(
-        url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({'taskId': widget.taskId, 'favourite': !isFav}),
-      );
-
-      if (response.statusCode == 200) {
-        print('this is the url ${url}');
-        setState(() {
-          isFav = !isFav;
-        });
-      } else {
-        print('Failed to update favorite status: ${response.body}');
-        print('this is the url ${url}');
-      }
-    } catch (e) {
-      print('Error updating favorite status: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-      child: Slidable(
-        endActionPane: const ActionPane(
-          motion: StretchMotion(),
-          children: [
-            ReusableSlidableAction(
-                onPressed: _phoneAction,
-                backgroundColor: Colors.blue,
-                icon: Icons.phone),
-            ReusableSlidableAction(
-                onPressed: _messageAction,
-                backgroundColor: Colors.green,
-                icon: Icons.message_rounded),
-            ReusableSlidableAction(
-                onPressed: _mailAction,
-                backgroundColor: Colors.grey,
-                icon: Icons.mail,
-                foregroundColor: Colors.red),
-          ],
-        ),
-        child: _buildOverdueCard(),
-      ),
+      child: _buildOverdueCard(context),
     );
   }
 
-  Widget _buildOverdueCard() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.containerBg,
-        borderRadius: BorderRadius.circular(10),
-        border: const Border(
-          left: BorderSide(width: 8.0, color: AppColors.sideRed),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment:
-            CrossAxisAlignment.center, // Ensures vertical centering
-        children: [
-          // Star Icon - Centered
-          IconButton(
-            icon: Icon(
-              isFav ? Icons.star_rounded : Icons.star_border_rounded,
-              color: isFav
-                  ? AppColors.starColorsYellow
-                  : AppColors.starBorderColor,
-              size: 40,
-            ),
-            onPressed: _toggleFavorite,
-          ),
+  Widget _buildOverdueCard(BuildContext context) {
+    bool isFavoriteSwipe = widget.swipeOffset > 50;
+    bool isCallSwipe = widget.swipeOffset < -50;
 
-          // User Details (Aligned to Left)
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildUserDetails(),
-                const SizedBox(height: 4), // Spacing between name and details
-                Row(
+    // Gradient background for swipe
+    LinearGradient _buildSwipeGradient() {
+      if (isFavoriteSwipe) {
+        return const LinearGradient(
+          colors: [
+            Color.fromRGBO(239, 206, 29, 0.67),
+            // Colors.yellow.withOpacity(0.2),
+            // Colors.yellow.withOpacity(0.8)
+            Color.fromRGBO(239, 206, 29, 0.67)
+          ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        );
+      } else if (isCallSwipe) {
+        return LinearGradient(
+          colors: [
+            Colors.green.withOpacity(0.2),
+            Colors.green.withOpacity(0.8)
+          ],
+          begin: Alignment.centerRight,
+          end: Alignment.centerLeft,
+        );
+      }
+      return const LinearGradient(
+        colors: [AppColors.containerBg, AppColors.containerBg],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      );
+    }
+
+    return Stack(
+      children: [
+        // Favorite Swipe Overlay
+        if (isFavoriteSwipe)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.yellow.withOpacity(0.2),
+                    Colors.yellow.withOpacity(0.8)
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _date(),
-                    const SizedBox(
-                        width: 8), // Add spacing between date and divider
-                    _buildVerticalDivider(20),
-                    const SizedBox(
-                        width: 8), // Add spacing between divider and car model
-                    _buildCarModel(),
+                    const SizedBox(width: 15),
+                    Icon(
+                        widget.isFavorite
+                            ? Icons.star_outline_rounded
+                            : Icons.star_rounded,
+                        color: const Color.fromRGBO(226, 195, 34, 1),
+                        size: 40),
+                    const SizedBox(width: 10),
+                    Text(widget.isFavorite ? 'Unfavorite' : 'Favorite',
+                        style: GoogleFonts.poppins(
+                            color: Color.fromRGBO(187, 158, 0, 1),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
                   ],
                 ),
+              ),
+            ),
+          ),
+
+        // Call Swipe Overlay
+        if (isCallSwipe)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.green.withOpacity(0.2),
+                    Colors.green.withOpacity(0.8)
+                  ],
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Icon(Icons.phone_in_talk,
+                        color: Colors.white, size: 30),
+                    const SizedBox(width: 10),
+                    Text('Call',
+                        style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 5),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+        // Main Container
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          decoration: BoxDecoration(
+            gradient: _buildSwipeGradient(),
+            borderRadius: BorderRadius.circular(5),
+            border: Border(
+              left: BorderSide(
+                width: 8.0,
+                color: widget.isFavorite
+                    ? (isCallSwipe
+                        ? Colors.green
+                            .withOpacity(0.9) // Green when swiping for a call
+                        : Colors.yellow.withOpacity(isFavoriteSwipe
+                            ? 0.1
+                            : 0.9)) // Keep yellow when favorite
+                    : (isFavoriteSwipe
+                        ? Colors.yellow.withOpacity(0.1)
+                        : (isCallSwipe
+                            ? AppColors.sideRed.withOpacity(0.5)
+                            : AppColors.sideRed)),
+              ),
+            ),
+          ),
+          child: Opacity(
+            opacity: (isFavoriteSwipe || isCallSwipe) ? 0 : 1.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            _buildUserDetails(context),
+                            _buildVerticalDivider(15),
+                            _buildCarModel(context),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            _buildSubjectDetails(context),
+                            _date(context),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                _buildNavigationButton(context),
               ],
             ),
           ),
-
-          // Arrow Button - Centered
-          _buildNavigationButton(context, widget.leadId),
-        ],
-      ),
-    );
-  }
-
-  // Widget _buildUserDetails() {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text(
-  //         widget.name,
-  //         style: GoogleFonts.poppins(
-  //             fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
-  //       ),
-  //       const SizedBox(height: 5),
-  //       Row(
-  //         children: [
-  //           const Icon(Icons.phone, color: Colors.blue, size: 14),
-  //           const SizedBox(width: 10),
-  //           Text(widget.date,
-  //               style: const TextStyle(fontSize: 12, color: Colors.grey)),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  Widget _buildUserDetails() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(widget.name,
-            style: GoogleFonts.poppins(
-                color: AppColors.fontColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 14)),
-        // const SizedBox(height: 5),
+        ),
       ],
     );
   }
 
-  Widget _date() {
+  Widget _buildUserDetails(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.name, style: AppFont.dashboardName(context)),
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+
+  Widget _buildSubjectDetails(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(Icons.phone_in_talk, color: Colors.blue, size: 18),
+        const SizedBox(width: 5),
+        Text('${widget.subject},', style: AppFont.smallText(context)),
+      ],
+    );
+  }
+
+  Widget _date(BuildContext context) {
     String formattedDate = '';
     try {
       DateTime parseDate = DateTime.parse(widget.date);
-      formattedDate = DateFormat('dd MMM').format(parseDate);
+      // formattedDate = DateFormat('dd MMM').format(parseDate);
+      // Check if the date is today
+      if (parseDate.year == DateTime.now().year &&
+          parseDate.month == DateTime.now().month &&
+          parseDate.day == DateTime.now().day) {
+        formattedDate = 'Today';
+      } else {
+        // If not today, format it as "26th March"
+        int day = parseDate.day;
+        String suffix = _getDaySuffix(day);
+        String month = DateFormat('MMM').format(parseDate); // Full month name
+        formattedDate = '${day}$suffix $month';
+      }
     } catch (e) {
       formattedDate = widget.date;
     }
     return Row(
       children: [
-        const Icon(Icons.phone_in_talk, color: Colors.blue, size: 14),
         const SizedBox(width: 5),
-        Text(formattedDate,
-            style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(formattedDate, style: AppFont.smallText(context)),
       ],
     );
   }
 
+  // Helper method to get the suffix for the day (e.g., "st", "nd", "rd", "th")
+  String _getDaySuffix(int day) {
+    if (day >= 11 && day <= 13) {
+      return 'th';
+    }
+    switch (day % 10) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
+    }
+  }
+
   Widget _buildVerticalDivider(double height) {
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       height: height,
-      width: 1.5,
+      width: 0.1,
       decoration: const BoxDecoration(
-        border: Border(right: BorderSide(color: AppColors.fontColor)),
-      ),
+          border: Border(right: BorderSide(color: AppColors.fontColor))),
     );
   }
 
-  Widget _buildCarModel() {
+  Widget _buildCarModel(BuildContext context) {
     return ConstrainedBox(
       constraints:
           const BoxConstraints(maxWidth: 100), // Adjust width as needed
       child: Text(
         widget.vehicle,
-        style: GoogleFonts.poppins(fontSize: 10, color: AppColors.fontColor),
+        style: AppFont.dashboardCarName(context),
         overflow: TextOverflow.visible, // Allow text wrapping
         softWrap: true, // Enable wrapping
       ),
     );
   }
 
-  Widget _buildNavigationButton(BuildContext context, String leadId) {
+  Widget _buildNavigationButton(BuildContext context) {
+    // ✅ Accept context
     return GestureDetector(
       onTap: () {
-        if (leadId.isNotEmpty) {
-          print("Navigating with leadId: $leadId");
+        if (widget.leadId.isNotEmpty) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => FollowupsDetails(leadId: leadId),
-            ),
+                builder: (context) => FollowupsDetails(leadId: widget.leadId)),
           );
         } else {
           print("Invalid leadId");
@@ -315,55 +446,9 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
         decoration: BoxDecoration(
             color: AppColors.arrowContainerColor,
             borderRadius: BorderRadius.circular(30)),
-        child: const Icon(Icons.arrow_forward_ios_sharp,
+        child: const Icon(Icons.arrow_forward_ios_rounded,
             size: 25, color: Colors.white),
       ),
     );
   }
-}
-
-class ReusableSlidableAction extends StatelessWidget {
-  final VoidCallback onPressed;
-  final Color backgroundColor;
-  final IconData icon;
-  final Color? foregroundColor;
-
-  const ReusableSlidableAction({
-    super.key,
-    required this.onPressed,
-    required this.backgroundColor,
-    required this.icon,
-    this.foregroundColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomSlidableAction(
-      backgroundColor: backgroundColor,
-      foregroundColor: foregroundColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 30,
-            color: Colors.white,
-          )
-        ],
-      ),
-      onPressed: (context) => onPressed(),
-    );
-  }
-}
-
-void _phoneAction() {
-  print("Phone action triggered");
-}
-
-void _messageAction() {
-  print("Message action triggered");
-}
-
-void _mailAction() {
-  print("Mail action triggered");
 }

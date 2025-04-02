@@ -22,7 +22,7 @@ class _OrderState extends State<Order> {
       children: [
         // Row with Buttons and Enquiry Bank
 
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
 
         IntrinsicHeight(
           child: Row(
@@ -38,8 +38,8 @@ class _OrderState extends State<Order> {
                       children: [
                         Container(
                           margin: const EdgeInsets.only(left: 10),
-                          width: screenWidth * 0.43,
-                          height: 30,
+                          width: screenWidth * 0.40,
+                          height: 27,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(30),

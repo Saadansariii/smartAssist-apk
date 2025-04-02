@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,7 @@ import 'package:smart_assist/utils/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
+import 'package:smart_assist/utils/style_text.dart';
 
 class CreateFollowupsPopups extends StatefulWidget {
   const CreateFollowupsPopups({super.key});
@@ -175,14 +177,32 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Plan a Follow-up',
-                  style: AppFont.popupTitleBlack(context)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Plan a Followup',
+                    style: AppFont.popupTitleBlack(context)),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    textAlign: TextAlign.start,
+                    'Cancel',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: AppColors.colorsBlue,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 10,
             ),
             _buildSearchField(),
             const SizedBox(height: 10),
@@ -206,8 +226,9 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
               // options: ['Call', 'Provide Quotation', 'Send Email'],
               options: {
                 "Call": "Call",
-                'Provide Quotation': "Provide Quotation",
-                "Send Email": "Send Email"
+                'Provide quotation': "Provide Quotation",
+                "Send Email": "Send Email",
+                "Send sms": "Send Email"
               },
               groupValue: _selectedSubject,
               onChanged: (value) {
@@ -219,28 +240,33 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
             _buildTextField(
                 label: 'Comments:',
                 controller: descriptionController,
-                hint: 'Enter Comments'),
+                hint: 'Add Comments'),
             const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
+                          padding: EdgeInsets.zero,
+                          backgroundColor: AppColors.innerContainerBg,
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5))),
                       onPressed: () => Navigator.pop(context),
-                      child: Text("Cancel", style: AppFont.buttons(context))),
+                      child: Text("Assign to bot",
+                          textAlign: TextAlign.center,
+                          style: AppFont.buttons(context))),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.zero,
                         backgroundColor: AppColors.colorsBlue,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: _submit,
-                    child: Text("Submit", style: AppFont.buttons(context)),
+                    child: Text("I'll do it", style: AppFont.buttons(context)),
                   ),
                 ),
               ],
@@ -332,13 +358,14 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                       fontWeight: FontWeight.w500,
                       color: controller.text.isEmpty
                           ? AppColors.fontColor
-                          : Colors.black,
+                          : AppColors.fontColor,
                     ),
                   ),
                 ),
                 const Icon(
                   Icons.calendar_month,
-                  color: AppColors.fontBlack,
+                  color: AppColors.fontColor,
+                  size: 20,
                 ),
               ],
             ),
@@ -361,77 +388,210 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
           child: Text(
             label,
             style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.fontBlack),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: AppColors.fontBlack,
+            ),
           ),
         ),
         Container(
-          height: MediaQuery.of(context).size.height * .055,
+          height:
+              MediaQuery.of(context).size.height * .055, // Set a fixed height
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: AppColors.containerBg,
           ),
-          child: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey),
-              contentPadding: const EdgeInsets.only(left: 10),
-              border: InputBorder.none,
-            ),
-            style: GoogleFonts.poppins(
-                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+          child: Row(
+            children: [
+              // TextField itself
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: hint,
+                    hintStyle: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                    border: InputBorder.none,
+                  ),
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              // Suffix icon (microphone)
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    FontAwesomeIcons.microphone,
+                    color: AppColors.fontColor,
+                    size: 15, // Adjust the size for better alignment
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 
+  // Widget _buildTextField({
+  //   required String label,
+  //   required TextEditingController controller,
+  //   required String hint,
+  // }) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Padding(
+  //         padding: const EdgeInsets.symmetric(vertical: 5.0),
+  //         child: Text(
+  //           label,
+  //           style: GoogleFonts.poppins(
+  //             fontSize: 14,
+  //             fontWeight: FontWeight.w500,
+  //             color: AppColors.fontBlack,
+  //           ),
+  //         ),
+  //       ),
+  //       Container(
+  //         width: double.infinity,
+  //         decoration: BoxDecoration(
+  //           borderRadius: BorderRadius.circular(5),
+  //           color: AppColors.containerBg,
+  //         ),
+  //         child: Row(
+  //           children: [
+  //             // TextField itself
+  //             Expanded(
+  //               child: TextField(
+  //                 controller: controller,
+  //                 decoration: InputDecoration(
+  //                   hintText: hint,
+  //                   hintStyle: GoogleFonts.poppins(
+  //                     fontSize: 14,
+  //                     fontWeight: FontWeight.w500,
+  //                     color: Colors.grey,
+  //                   ),
+  //                   contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+  //                   border: InputBorder.none,
+  //                 ),
+  //                 style: GoogleFonts.poppins(
+  //                   fontSize: 14,
+  //                   fontWeight: FontWeight.w500,
+  //                   color: Colors.black,
+  //                 ),
+  //               ),
+  //             ),
+  //             // Suffix icon (microphone)
+  //             TextButton(
+  //               onPressed: () {},
+  //               child: const Align(
+  //                 alignment: Alignment.centerRight,
+  //                 child: Icon(
+  //                   FontAwesomeIcons.microphone,
+  //                   color: AppColors.fontColor,
+  //                   size: 16, // Adjust the size for better alignment
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
   Widget _buildSearchField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Choose Lead', style: AppFont.dropDowmLabel(context)),
+        Text('Select Lead', style: AppFont.dropDowmLabel(context)),
         const SizedBox(height: 5),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * .05,
-          child: TextField(
-            controller: _searchController,
-            onTap: () => FocusScope.of(context).unfocus(),
-            decoration: InputDecoration(
-              filled: true,
-              alignLabelWithHint: true,
-              fillColor: AppColors.containerBg,
-              hintText: selectedLeadsName ?? 'Select New Leads',
-              hintStyle: AppFont.dropDown(context),
-              prefixIcon:
-                  const Icon(FontAwesomeIcons.magnifyingGlass, size: 15),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide.none),
-            ),
+        Container(
+          height: MediaQuery.of(context).size.height *
+              .055, // Match height from previous widget
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: AppColors.containerBg,
+          ),
+          child: Row(
+            children: [
+              // TextField itself
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: TextField(
+                    controller: _searchController,
+                    onTap: () => FocusScope.of(context).unfocus(),
+                    decoration: InputDecoration(
+                      filled: true,
+                      alignLabelWithHint: true,
+                      fillColor: AppColors.containerBg,
+                      hintText: selectedLeadsName ?? 'Select Leads',
+                      hintStyle: TextStyle(
+                          color: selectedLeadsName != null
+                              ? Colors.black
+                              : Colors.grey),
+                      prefixIcon: const Icon(
+                        FontAwesomeIcons.magnifyingGlass,
+                        size: 15,
+                        color: AppColors.fontColor,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.microphone,
+                          color: AppColors.fontColor,
+                          size: 15, // Adjusted to match sizing
+                        ),
+                        onPressed: () {
+                          // Implement the action for the microphone button here
+                          print('Microphone button pressed');
+                        },
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         if (_isLoadingSearch) const Center(child: CircularProgressIndicator()),
         if (_searchResults.isNotEmpty)
           Positioned(
-            top: 50,
+            top: 60, // Adjusted top positioning for proper dropdown placement
             left: 20,
             right: 20,
             child: Material(
               elevation: 5,
               child: Container(
-                height: MediaQuery.of(context).size.height * .2,
-                // margin: const EdgeInsets.only(top: 5),
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5)),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 child: ListView.builder(
+                  shrinkWrap: true, // Shrink to fit the content height
+                  physics:
+                      NeverScrollableScrollPhysics(), // Prevent scrolling inside the dropdown
                   itemCount: _searchResults.length,
                   itemBuilder: (context, index) {
                     final result = _searchResults[index];
@@ -445,11 +605,14 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                           _searchResults.clear();
                         });
                       },
-                      title: Text(result['lead_name'] ?? 'No Name',
-                          style: const TextStyle(
-                            color: AppColors.fontBlack,
-                          )),
-                      // subtitle: Text(result['email'] ?? 'No Email'),
+                      title: Text(
+                        result['lead_name'] ?? 'No Name',
+                        style: TextStyle(
+                          color: selectedLeads == result['lead_id']
+                              ? Colors.black // Selected item color
+                              : AppColors.fontBlack, // Default color
+                        ),
+                      ),
                       leading: const Icon(Icons.person),
                     );
                   },
@@ -460,6 +623,90 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
       ],
     );
   }
+
+  // Widget _buildSearchField() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text('Select Lead', style: AppFont.dropDowmLabel(context)),
+  //       const SizedBox(height: 5),
+  //       TextField(
+  //         controller: _searchController,
+  //         onTap: () => FocusScope.of(context).unfocus(),
+  //         decoration: InputDecoration(
+  //           filled: true,
+  //           alignLabelWithHint: true,
+  //           fillColor: AppColors.containerBg,
+  //           hintText: selectedLeadsName ?? 'Select Leads',
+  //           hintStyle: AppFont.dropDown(context),
+  //           prefixIcon: const Icon(
+  //             FontAwesomeIcons.magnifyingGlass,
+  //             size: 15,
+  //             color: AppColors.fontColor,
+  //           ),
+  //           suffixIcon: IconButton(
+  //             icon: const Icon(
+  //               FontAwesomeIcons.microphone,
+  //               color: AppColors.fontColor,
+  //               size: 15, // Increase the size of the microphone icon
+  //             ),
+  //             onPressed: () {
+  //               // Implement the action for the microphone button here
+  //               print('Microphone button pressed');
+  //             },
+  //           ),
+  //           border: OutlineInputBorder(
+  //             borderRadius: BorderRadius.circular(5),
+  //             borderSide: BorderSide.none,
+  //           ),
+  //         ),
+  //       ),
+  //       if (_isLoadingSearch) const Center(child: CircularProgressIndicator()),
+  //       if (_searchResults.isNotEmpty)
+  //         Positioned(
+  //           top: 50,
+  //           left: 20,
+  //           right: 20,
+  //           child: Material(
+  //             elevation: 5,
+  //             child: Container(
+  //               height: MediaQuery.of(context).size.height * .2,
+  //               decoration: BoxDecoration(
+  //                 color: Colors.white,
+  //                 borderRadius: BorderRadius.circular(5),
+  //               ),
+  //               child: ListView.builder(
+  //                 itemCount: _searchResults.length,
+  //                 itemBuilder: (context, index) {
+  //                   final result = _searchResults[index];
+  //                   return ListTile(
+  //                     onTap: () {
+  //                       setState(() {
+  //                         FocusScope.of(context).unfocus();
+  //                         selectedLeads = result['lead_id'];
+  //                         selectedLeadsName = result['lead_name'];
+  //                         _searchController.clear();
+  //                         _searchResults.clear();
+  //                       });
+  //                     },
+  //                     title: Text(
+  //                       result['lead_name'] ?? 'No Name',
+  //                       style: TextStyle(
+  //                         color: selectedLeads == result['lead_id']
+  //                             ? Colors.black // Selected item color
+  //                             : AppColors.fontBlack, // Default color
+  //                       ),
+  //                     ),
+  //                     leading: const Icon(Icons.person),
+  //                   );
+  //                 },
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildButtons({
     required Map<String, String> options, // ✅ Short display & actual value
@@ -494,20 +741,21 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
               },
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: isSelected ? Colors.blue : Colors.black,
                     width: .5,
                   ),
                   borderRadius: BorderRadius.circular(15),
-                  color:
-                      isSelected ? Colors.blue.withOpacity(0.2) : Colors.white,
+                  color: isSelected
+                      ? Colors.blue.withOpacity(0.2)
+                      : AppColors.innerContainerBg,
                 ),
                 child: Text(
                   shortText, // ✅ Only show short text
                   style: TextStyle(
-                    color: isSelected ? Colors.blue : Colors.black,
+                    color: isSelected ? Colors.blue : AppColors.fontColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),

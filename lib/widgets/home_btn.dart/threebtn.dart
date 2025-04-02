@@ -142,10 +142,9 @@ class _ThreebtnState extends State<Threebtn> {
                         // padding: const EdgeInsets.symmetric(vertical: 0),
                         textStyle: AppFont.threeBtn(context),
                       ),
-                      child: const Text(
-                        'FollowUps',
-                        textAlign: TextAlign.center,
-                      ),
+                      child: Text('Followups',
+                          textAlign: TextAlign.center,
+                          style: AppFont.buttonwhite(context)),
                     ),
                   ),
 
@@ -171,10 +170,9 @@ class _ThreebtnState extends State<Threebtn> {
                             : AppColors.fontColor,
                         textStyle: AppFont.threeBtn(context),
                       ),
-                      child: const Text(
-                        'Appointments',
-                        textAlign: TextAlign.center,
-                      ),
+                      child: Text('Appointments',
+                          textAlign: TextAlign.center,
+                          style: AppFont.buttonwhite(context)),
                     ),
                   ),
 
@@ -200,10 +198,9 @@ class _ThreebtnState extends State<Threebtn> {
                         // padding: const EdgeInsets.symmetric(vertical: 10),
                         textStyle: AppFont.threeBtn(context),
                       ),
-                      child: const Text(
-                        'Test Drive',
-                        textAlign: TextAlign.center,
-                      ),
+                      child: Text('Test Drive',
+                          textAlign: TextAlign.center,
+                          style: AppFont.buttonwhite(context)),
                     ),
                   ),
                 ],
@@ -211,96 +208,6 @@ class _ThreebtnState extends State<Threebtn> {
             ),
           ),
         ),
-        // const SizedBox(
-        //   height: 10,
-        // ),
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 10.0),
-        //   child: Row(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     mainAxisAlignment: MainAxisAlignment.start,
-        //     children: [
-        //       AnimatedToggleSwitch<int>.size(
-        //         current: _childButtonIndex,
-        //         values: const [0, 1], // 0 = Upcoming, 1 = Overdue
-        //         onChanged: (index) {
-        //           setState(() {
-        //             _childButtonIndex = index;
-        //             _childSelection[_activeButtonIndex] = index;
-        //           });
-
-        //           // Call the correct API function
-        //           if (_activeButtonIndex == 0) {
-        //             followUps(index);
-        //           } else if (_activeButtonIndex == 1) {
-        //             oppointment(index);
-        //           } else if (_activeButtonIndex == 2) {
-        //             testDrive(index);
-        //           }
-        //         },
-        //         height: 27,
-        //         indicatorSize: const Size(95, 25), // Adjusted for better fit
-        //         iconAnimationType: AnimationType.onHover,
-        //         animationDuration:
-        //             const Duration(milliseconds: 300), // Smooth transition
-        //         borderWidth: 0.6,
-        //         style: ToggleStyle(
-        //           backgroundColor: Colors.transparent,
-        //           borderRadius: BorderRadius.circular(30),
-        //           indicatorColor: _childButtonIndex == 0
-        //               ? const Color(0xFF51DF79)
-        //                   .withOpacity(0.29) // Green for Upcoming
-        //               : const Color(0xFFFFF5F4), // Light Red for Overdue
-        //         ),
-        //         iconBuilder: (index) {
-        //           int overdueCount = 0;
-        //           if (_activeButtonIndex == 0) {
-        //             overdueCount = widget.overdueFollowupsCount;
-        //           } else if (_activeButtonIndex == 1) {
-        //             overdueCount = widget.overdueAppointmentsCount;
-        //           } else if (_activeButtonIndex == 2) {
-        //             overdueCount = widget.overdueTestDrivesCount;
-        //           }
-
-        //           return Transform.scale(
-        //             scale: 0.8, // Adjust scale to prevent size increase
-        //             child: Row(
-        //               mainAxisAlignment: MainAxisAlignment.center,
-        //               children: [
-        //                 Text(
-        //                   index == 0 ? 'Upcoming' : 'Overdue',
-        //                   textScaleFactor:
-        //                       0.9, // Prevents auto-scaling when selected
-        //                   style: GoogleFonts.poppins(
-        //                     fontSize: 12,
-        //                     fontWeight: FontWeight.w400,
-        //                     color: Colors.black.withOpacity(0.96),
-        //                   ),
-        //                 ),
-        //                 // const SizedBox(width: 5),
-        //                 if (index == 1 &&
-        //                     overdueCount > 0) // Show count only for Overdue
-        //                   Text(
-        //                     '($overdueCount)',
-        //                     textScaleFactor: 1.0, // Keeps text size stable
-        //                     style: GoogleFonts.poppins(
-        //                       fontSize: 12,
-        //                       fontWeight: FontWeight.w400,
-        //                       color: Colors.black.withOpacity(0.92),
-        //                     ),
-        //                   ),
-        //               ],
-        //             ),
-        //           );
-        //         },
-        //       ),
-        //     ],
-        //   ),
-        // ),
-
-        // const SizedBox(
-        //   height: 5,
-        // ),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -313,7 +220,7 @@ class _ThreebtnState extends State<Threebtn> {
                 decoration: BoxDecoration(
                   border: Border.all(
                       color: const Color(0xFF767676).withOpacity(0.3),
-                      width: 0.6), // Border around the container
+                      width: 0.5), // Border around the container
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Row(
@@ -360,8 +267,11 @@ class _ThreebtnState extends State<Threebtn> {
                             style: GoogleFonts.poppins(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w400,
-                                color:
-                                    const Color(0xff000000).withOpacity(0.56)),
+                                color: _childButtonIndex == 0
+                                    ? Color.fromARGB(255, 78, 206, 114)
+                                        .withOpacity(0.9)
+                                    : const Color(0xff000000)
+                                        .withOpacity(0.56)),
                           )),
                     ),
 
@@ -415,11 +325,12 @@ class _ThreebtnState extends State<Threebtn> {
                               style: GoogleFonts.poppins(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w400,
-                                color:
-                                    const Color(0xff000000).withOpacity(0.56),
+                                color: _childButtonIndex == 1
+                                    ? const Color.fromRGBO(236, 81, 81, 1)
+                                    : const Color(0xff000000).withOpacity(0.56),
                               ),
                             ),
-                            const SizedBox(width: 5),
+                            // const SizedBox(width: 5),
                             if ((_activeButtonIndex == 0 &&
                                     (widget.overdueFollowupsCount > 0 ||
                                         widget.overdueFollowupsCount > 0)) ||
@@ -438,8 +349,10 @@ class _ThreebtnState extends State<Threebtn> {
                                 style: GoogleFonts.poppins(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w400,
-                                  color:
-                                      const Color(0xff000000).withOpacity(0.56),
+                                  color: _childButtonIndex == 1
+                                      ? const Color.fromRGBO(236, 81, 81, 1)
+                                      : const Color(0xff000000)
+                                          .withOpacity(0.56),
                                 ),
                               ),
                           ],

@@ -124,16 +124,27 @@ import 'package:smart_assist/config/component/color/colors.dart';
 class AppFont {
   // ✅ Utility function to scale font dynamically based on device type
   static double scaleFont(BuildContext context, double baseSize) {
+    // Get the text scale factor from the system settings
+    double textScaleFactor = MediaQuery.of(context).textScaleFactor;
+
+    // Optionally, you can limit the scale factor to prevent extreme text scaling
+    textScaleFactor = textScaleFactor > 1.5
+        ? 1.5
+        : textScaleFactor; // Limiting max scaling factor
+
     double screenWidth = MediaQuery.of(context).size.width;
 
+    // Scale font based on screen width (you already had this logic)
+    double scaledFont = baseSize * textScaleFactor;
+
     if (screenWidth < 360) {
-      return baseSize * 0.85; // ✅ Smaller screens (Compact mobiles)
+      return scaledFont * 0.85; // Smaller screens
     } else if (screenWidth >= 360 && screenWidth <= 480) {
-      return baseSize * 1.0; // ✅ Standard mobile screens
+      return scaledFont * 1.0; // Standard screens
     } else if (screenWidth > 480 && screenWidth <= 720) {
-      return baseSize * 1.2; // ✅ Tablets
+      return scaledFont * 1.2; // Tablets
     } else {
-      return baseSize * 1.5; // ✅ Large screens (Laptops, PCs)
+      return scaledFont * 1.5; // Large screens
     }
   }
 
@@ -162,14 +173,48 @@ class AppFont {
     );
   }
 
-  static TextStyle smallText(
+  static TextStyle dashboardName(
     BuildContext context, {
-    double fontSize = 12,
-    Color color = Colors.black,
+    double fontSize = 16,
+    Color color = const Color.fromRGBO(78, 78, 78, 1),
   }) {
     return GoogleFonts.poppins(
       fontSize: scaleFont(context, fontSize),
       color: color,
+      fontWeight: FontWeight.w700,
+    );
+  }
+
+  static TextStyle dashboardCarName(
+    BuildContext context, {
+    double fontSize = 12,
+    Color color = const Color.fromRGBO(78, 78, 78, 1),
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
+  static TextStyle smallText(
+    BuildContext context, {
+    double fontSize = 12,
+    Color color = const Color.fromRGBO(78, 78, 78, 1),
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
+  static TextStyle buttonwhite(
+    BuildContext context, {
+    double fontSize = 12,
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
       fontWeight: FontWeight.w400,
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/getX/fab.controller.dart';
@@ -453,42 +454,50 @@ class _HomeScreenState extends State<HomeScreen> {
                                           textAlignVertical:
                                               TextAlignVertical.center,
                                           decoration: InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                            contentPadding:
-                                                const EdgeInsets.fromLTRB(
-                                                    10, 0, 0, 0),
-                                            filled: true,
-                                            fillColor: AppColors.searchBar,
-                                            hintText: 'Search',
-                                            hintStyle: GoogleFonts.poppins(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                            suffixIcon: const Icon(
-                                              FontAwesomeIcons.magnifyingGlass,
-                                              color: AppColors.fontColor,
-                                              size: 15,
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                          ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              contentPadding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 0, 0, 0),
+                                              filled: true,
+                                              fillColor: AppColors.containerBg,
+                                              hintText: 'Search',
+                                              hintStyle: GoogleFonts.poppins(
+                                                fontSize: 14,
+                                                color: AppColors.fontColor,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              prefixIcon: const Icon(
+                                                FontAwesomeIcons
+                                                    .magnifyingGlass,
+                                                color: AppColors.iconGrey,
+                                                size: 15,
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              suffixIcon: const Icon(
+                                                  FontAwesomeIcons.microphone,
+                                                  size: 18,
+                                                  color: AppColors.iconGrey)),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                                IconButton(
-                                  icon: const Icon(FontAwesomeIcons.microphone,
-                                      size: 18, color: AppColors.fontColor),
-                                  onPressed: () {},
+                                const SizedBox(
+                                  width: 10,
                                 ),
+                                // IconButton(
+                                //   icon: const Icon(FontAwesomeIcons.microphone,
+                                //       size: 18, color: AppColors.fontColor),
+                                //   onPressed: () {},
+                                // ),
                               ],
                             ),
 
@@ -509,6 +518,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               overdueTestDrivesCount: overdueTestDrivesCount,
                             ),
                             const BottomBtnSecond(),
+
+                            const SizedBox(
+                              height: 10,
+                            )
                           ],
                         ),
                       ),
@@ -516,7 +529,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             Positioned(
-              bottom: 16,
+              bottom: 26,
               right: 16,
               child: _buildFloatingActionButton(context),
             ),
@@ -524,7 +537,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // Popup Menu (Conditionally Rendered)
             Obx(() => fabController.isFabExpanded.value
                 ? _buildPopupMenu(context)
-                : SizedBox.shrink()),
+                : const SizedBox.shrink()),
           ]),
         ),
       ]),
@@ -541,8 +554,9 @@ class _HomeScreenState extends State<HomeScreen> {
           width: MediaQuery.of(context).size.width * .15,
           height: MediaQuery.of(context).size.height * .08,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 2),
-            color: AppColors.colorsBlue,
+            color: fabController.isFabExpanded.value
+                ? Colors.red
+                : AppColors.colorsBlue,
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -562,6 +576,56 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Popup Menu Builder
+  // Widget _buildPopupMenu(BuildContext context) {
+  //   return GestureDetector(
+  //     onTap: fabController.closeFab,
+  //     child: Stack(
+  //       children: [
+  //         // Background overlay
+  //         Positioned.fill(
+  //           child: Container(
+  //             color: Colors.black.withOpacity(0.7),
+  //           ),
+  //         ),
+
+  //         // Popup Items (Similar to your existing implementation)
+  //         Positioned(
+  //           bottom: 90,
+  //           left: MediaQuery.of(context).size.width / 2 - 150,
+  //           width: 300,
+  //           height: 300,
+  //           child: Stack(
+  //             alignment: Alignment.center,
+  //             clipBehavior: Clip.none,
+  //             children: [
+  //               _buildPopupItem(
+  //                   Icons.calendar_month_outlined, "Appointment", -5, -32,
+  //                   onTap: () {
+  //                 fabController.closeFab();
+  //                 _showAppointmentPopup(context);
+  //               }),
+  //               _buildPopupItem(Icons.people_alt_rounded, "Lead", 70, -93,
+  //                   onTap: () {
+  //                 fabController.closeFab();
+  //                 _showLeadPopup(context);
+  //               }),
+  //               _buildPopupItem(Icons.call, "Followup", 30, 35, onTap: () {
+  //                 fabController.closeFab();
+  //                 _showFollowupPopup(context);
+  //               }),
+  //               _buildPopupItem(Icons.directions_car, "Test Drive", 20, 100,
+  //                   onTap: () {
+  //                 fabController.closeFab();
+  //                 _showTestdrivePopup(context);
+  //               }),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget _buildPopupMenu(BuildContext context) {
     return GestureDetector(
       onTap: fabController.closeFab,
@@ -574,37 +638,38 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Popup Items (Similar to your existing implementation)
+          // Popup Items Container aligned bottom right
           Positioned(
             bottom: 90,
-            left: MediaQuery.of(context).size.width / 2 - 150,
-            width: 300,
-            height: 300,
-            child: Stack(
-              alignment: Alignment.center,
-              clipBehavior: Clip.none,
-              children: [
-                _buildPopupItem(
-                    Icons.calendar_month_outlined, "Appointment", -5, -32,
-                    onTap: () {
-                  fabController.closeFab();
-                  _showAppointmentPopup(context);
-                }),
-                _buildPopupItem(Icons.people_alt_rounded, "Lead", 70, -93,
-                    onTap: () {
-                  fabController.closeFab();
-                  _showLeadPopup(context);
-                }),
-                _buildPopupItem(Icons.call, "Followup", 30, 35, onTap: () {
-                  fabController.closeFab();
-                  _showFollowupPopup(context);
-                }),
-                _buildPopupItem(Icons.directions_car, "Test Drive", 20, 100,
-                    onTap: () {
-                  fabController.closeFab();
-                  _showTestdrivePopup(context);
-                }),
-              ],
+            right: 20,
+            child: SizedBox(
+              width: 200, // width to handle text + icon
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _buildPopupItem(
+                      Icons.calendar_month_outlined, "Appointment", -80,
+                      onTap: () {
+                    fabController.closeFab();
+                    _showAppointmentPopup(context);
+                  }),
+                  _buildPopupItem(Icons.people_alt_rounded, "Lead", -60,
+                      onTap: () {
+                    fabController.closeFab();
+                    _showLeadPopup(context);
+                  }),
+                  _buildPopupItem(Icons.call, "Followup", -40, onTap: () {
+                    fabController.closeFab();
+                    _showFollowupPopup(context);
+                  }),
+                  _buildPopupItem(Icons.directions_car, "Test Drive", -20,
+                      onTap: () {
+                    fabController.closeFab();
+                    _showTestdrivePopup(context);
+                  }),
+                ],
+              ),
             ),
           ),
         ],
@@ -613,7 +678,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Popup Item Builder
-  Widget _buildPopupItem(IconData icon, String label, double dx, double dy,
+  Widget _buildPopupItem(IconData icon, String label, double offsetY,
       {required Function() onTap}) {
     return Obx(() => TweenAnimationBuilder(
           tween: Tween<double>(
@@ -621,13 +686,12 @@ class _HomeScreenState extends State<HomeScreen> {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOutBack,
           builder: (context, double value, child) {
-            return Positioned(
-              left: 150 + (dx * value),
-              top: 150 + (dy * value),
+            return Transform.translate(
+              offset: Offset(0, offsetY * (1 - value)),
               child: Opacity(
-                opacity: value.clamp(0.1, 1.0),
-                child: Opacity(
-                  opacity: value.clamp(0.1, 1.0),
+                opacity: value.clamp(0.0, 1.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -639,11 +703,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(width: 5),
+                      const SizedBox(width: 8),
                       GestureDetector(
                         onTap: onTap,
-                        behavior: HitTestBehavior
-                            .opaque, // Important for better hit testing
+                        behavior: HitTestBehavior.opaque,
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(

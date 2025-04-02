@@ -120,12 +120,6 @@ class _CreateLeadsState extends State<CreateLeads> {
         _errors['mobile'] = 'Please enter a valid 10-digit mobile number';
         isValid = false;
       }
-
-      // Validate lead source
-      // if (_selectedType.isEmpty) {
-      //   _errors['leadSource'] = 'Please select a lead source';
-      //   isValid = false;
-      // }
     });
 
     return isValid;
@@ -241,13 +235,19 @@ class _CreateLeadsState extends State<CreateLeads> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const SizedBox(
+              height: 5,
+            ),
             Align(
               alignment: Alignment.centerLeft,
-              child:
-                  Text('Add New lead', style: AppFont.popupTitleBlack(context)),
+              child: Container(
+                margin: const EdgeInsets.only(left: 10),
+                child: Text('Add New Enquiry',
+                    style: AppFont.popupTitleBlack(context)),
+              ),
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             Column(
               children: [
@@ -282,14 +282,15 @@ class _CreateLeadsState extends State<CreateLeads> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            'Contact Details',
-                            style: TextStyle(
-                              fontSize: 12,
+                            'Contact \nDetails',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
                               color: _currentStep == 0
                                   ? AppColors.colorsBlue
                                   : Colors.grey,
                               fontWeight: _currentStep == 0
-                                  ? FontWeight.bold
+                                  ? FontWeight.w600
                                   : FontWeight.normal,
                             ),
                           ),
@@ -334,14 +335,15 @@ class _CreateLeadsState extends State<CreateLeads> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            'Vehicle Details',
-                            style: TextStyle(
-                              fontSize: 12,
+                            'Vehicle \nDetails',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
                               color: _currentStep == 1
                                   ? AppColors.colorsBlue
                                   : Colors.grey,
                               fontWeight: _currentStep == 1
-                                  ? FontWeight.bold
+                                  ? FontWeight.w600
                                   : FontWeight.normal,
                             ),
                           ),
@@ -352,8 +354,11 @@ class _CreateLeadsState extends State<CreateLeads> {
                 ),
               ],
             ),
+            const SizedBox(
+              height: 10,
+            ),
             SizedBox(
-              height: height * .65,
+              height: height * .57,
               child: PageView(
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
@@ -368,7 +373,6 @@ class _CreateLeadsState extends State<CreateLeads> {
                                 label: 'First Name',
                                 controller: firstNameController,
                                 hintText: 'first name',
-                                isRequired: true,
                                 errorText: _errors['firstName'],
                                 onChanged: (value) {
                                   if (_errors.containsKey('firstName')) {
@@ -382,7 +386,6 @@ class _CreateLeadsState extends State<CreateLeads> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: _buildTextField(
-                                isRequired: true,
                                 label: 'Last Name',
                                 errorText: _errors['lastName'],
                                 controller: lastNameController,
@@ -399,7 +402,6 @@ class _CreateLeadsState extends State<CreateLeads> {
                         ],
                       ),
                       _buildTextField(
-                          isRequired: true,
                           label: 'Email',
                           controller: emailController,
                           hintText: 'Email',
@@ -413,7 +415,6 @@ class _CreateLeadsState extends State<CreateLeads> {
                             print("email : $value");
                           }),
                       _buildTextField(
-                          isRequired: true,
                           label: 'Mobile No',
                           controller: mobileController,
                           errorText: _errors['mobile'],
@@ -551,7 +552,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                                 horizontal: 10, vertical: 10),
                             filled: true,
                             fillColor: AppColors.containerBg,
-                            hintText: 'Select Lead',
+                            hintText: 'Type',
                             hintStyle: AppFont.dropDown(context),
                             prefixIcon: const Icon(
                               FontAwesomeIcons.magnifyingGlass,
@@ -584,7 +585,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
+                      backgroundColor: const Color.fromRGBO(217, 217, 217, 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -601,7 +602,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                       }
                     },
                     child: Text(
-                      _currentStep == 0 ? "Cancel" : "Go Back",
+                      _currentStep == 0 ? "Cancel" : "Previous",
                       style: AppFont.buttons(context),
                     ),
                   ),
@@ -693,14 +694,6 @@ class _CreateLeadsState extends State<CreateLeads> {
             ),
           ),
         ),
-        if (errorText != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 5, top: 0),
-            child: Text(
-              errorText,
-              style: AppFont.validationtxt(context),
-            ),
-          ),
       ],
     );
   }
@@ -778,9 +771,11 @@ class _CreateLeadsState extends State<CreateLeads> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
+          // margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 248, 247, 247),
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
             border: errorText != null
                 ? Border.all(color: Colors.red, width: 1.0)
                 : null,
@@ -799,10 +794,6 @@ class _CreateLeadsState extends State<CreateLeads> {
                           style: AppFont.dropDowmLabel(context),
                           children: [
                             TextSpan(text: label),
-                            const TextSpan(
-                              text: " *",
-                              style: TextStyle(color: Colors.red),
-                            ),
                           ],
                         ),
                         textAlign: TextAlign.left,
@@ -832,14 +823,14 @@ class _CreateLeadsState extends State<CreateLeads> {
             ),
           ),
         ),
-        if (errorText != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 5, top: 0),
-            child: Text(
-              errorText,
-              style: GoogleFonts.poppins(color: Colors.redAccent, fontSize: 12),
-            ),
-          ),
+        // if (errorText != null)
+        //   Padding(
+        //     padding: const EdgeInsets.only(left: 5, top: 0),
+        //     child: Text(
+        //       errorText,
+        //       style: GoogleFonts.poppins(color: Colors.redAccent, fontSize: 12),
+        //     ),
+        //   ),
       ],
     );
   }
@@ -1068,23 +1059,24 @@ class _CreateLeadsState extends State<CreateLeads> {
         onChanged(options[shortText]!);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected ? AppColors.colorsBlue : Colors.grey,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(15),
-          color:
-              isSelected ? AppColors.colorsBlue.withOpacity(0.2) : Colors.white,
+          color: isSelected
+              ? AppColors.colorsBlue.withOpacity(0.1)
+              : AppColors.innerContainerBg,
         ),
         child: Center(
           child: Text(
             shortText,
             style: TextStyle(
-              color: isSelected ? AppColors.colorsBlue : Colors.black,
+              color: isSelected ? AppColors.colorsBlue : AppColors.fontColor,
               fontSize: 12,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
@@ -1363,11 +1355,12 @@ class _CreateLeadsState extends State<CreateLeads> {
               },
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
                 margin: const EdgeInsets.only(right: 10),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: isSelected ? AppColors.colorsBlue : Colors.black,
+                    color:
+                        isSelected ? AppColors.colorsBlue : AppColors.fontColor,
                     width: .5,
                   ),
                   borderRadius: BorderRadius.circular(15),
@@ -1378,9 +1371,10 @@ class _CreateLeadsState extends State<CreateLeads> {
                 child: Text(
                   shortText, // ✅ Only show short text
                   style: TextStyle(
-                    color: isSelected ? AppColors.colorsBlue : Colors.black,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
+                    color:
+                        isSelected ? AppColors.colorsBlue : AppColors.fontColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
