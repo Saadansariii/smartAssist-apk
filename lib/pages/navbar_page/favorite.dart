@@ -9,10 +9,7 @@ import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_leads.d
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_opportunity.dart';
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_testdrive.dart';
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_upcoming.dart';
-import 'package:smart_assist/utils/bottom_navigation.dart';
-import 'package:smart_assist/utils/storage.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:smart_assist/utils/bottom_navigation.dart'; 
 
 class FavoritePage extends StatefulWidget {
   final String leadId;

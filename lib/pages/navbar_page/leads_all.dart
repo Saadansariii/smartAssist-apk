@@ -36,6 +36,18 @@ class _AllLeadsState extends State<AllLeads> {
     if (swipeOffset > 100) {
       // Right Swipe (Favorite)
       _toggleFavorite(leadId, index);
+
+      // Find and get reference to the TaskItem's state
+      final GlobalKey<_TaskItemState> itemKey = GlobalKey<_TaskItemState>();
+
+      // Instead, use a callback to update the UI
+      bool currentStatus = item['favourite'] ?? false;
+      bool newStatus = !currentStatus;
+
+      // Update the UI immediately without waiting for API
+      setState(() {
+        upcomingTasks[index]['favourite'] = newStatus;
+      });
     } else if (swipeOffset < -100) {
       // Left Swipe (Call)
       _handleCall(item);
@@ -46,6 +58,7 @@ class _AllLeadsState extends State<AllLeads> {
       _swipeOffsets[leadId] = 0.0;
     });
   }
+ 
 
   Future<void> _toggleFavorite(String leadId, int index) async {
     final token = await Storage.getToken();
@@ -65,13 +78,15 @@ class _AllLeadsState extends State<AllLeads> {
       );
 
       if (response.statusCode == 200) {
+        // Parse the response to get the updated favorite status
+        final responseData = json.decode(response.body);
+
+        // Update only the specific item in the list
         setState(() {
-          // Update local state to reflect the change
           upcomingTasks[index]['favourite'] = newFavoriteStatus;
         });
 
-        // Refresh the data to ensure everything is up to date
-        // fetchTasksData(); // Alternatively, you could refresh the whole list
+        // No need to call fetchTasksData() which would reload everything
       } else {
         print('Failed to toggle favorite: ${response.statusCode}');
       }
@@ -79,6 +94,7 @@ class _AllLeadsState extends State<AllLeads> {
       print('Error toggling favorite: $e');
     }
   }
+ 
 
   void _handleCall(dynamic item) {
     print("Call action triggered for ${item['name']}");
@@ -197,6 +213,11 @@ class _AllLeadsState extends State<AllLeads> {
             swipeOffset: swipeOffset,
             fetchDashboardData: () {},
             onFavoriteToggled: fetchTasksData,
+            onFavoriteChanged: (newStatus) {
+              setState(() {
+                upcomingTasks[index]['favourite'] = newStatus;
+              });
+            },
           ),
         );
       },
@@ -215,6 +236,7 @@ class TaskItem extends StatefulWidget {
   final bool isFavorite;
   final VoidCallback fetchDashboardData;
   final VoidCallback onFavoriteToggled;
+  final Function(bool) onFavoriteChanged;
 
   const TaskItem({
     super.key,
@@ -229,6 +251,7 @@ class TaskItem extends StatefulWidget {
     required this.subject,
     required this.swipeOffset,
     required this.fetchDashboardData,
+    required this.onFavoriteChanged,
   });
 
   @override
@@ -237,6 +260,12 @@ class TaskItem extends StatefulWidget {
 
 class _TaskItemState extends State<TaskItem> {
   late bool isFav;
+
+  void updateFavoriteStatus(bool newStatus) {
+    setState(() {
+      isFav = newStatus;
+    });
+  }
 
   @override
   void initState() {

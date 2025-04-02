@@ -1,4 +1,3 @@
-
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -53,7 +52,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
     });
   }
 
-  Future<void> _toggleFavorite(String taskId, int index) async { 
+  Future<void> _toggleFavorite(String taskId, int index) async {
     final token = await Storage.getToken();
     try {
       // Get the current favorite status before toggling
@@ -73,7 +72,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
       );
 
       if (response.statusCode == 200) {
-        setState(() { 
+        setState(() {
           widget.upcomingFollowups[index]['favourite'] = newFavoriteStatus;
         });
 
@@ -133,6 +132,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
           onHorizontalDragEnd: (details) =>
               _onHorizontalDragEnd(details, item, index),
           child: UpcomingFollowupItem(
+            key: ValueKey(item['task_id']),
             name: item['name'],
             date: item['due_date'],
             subject: item['subject'] ?? '',
