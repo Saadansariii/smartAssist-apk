@@ -65,21 +65,59 @@ class _TestUpcomingState extends State<TestUpcoming> {
     // Implement actual call functionality here
   }
 
-  Future<void> _toggleFavorite(String eventId, int index) async {
-    bool newFavoriteStatus =
-        !(widget.upcomingTestDrive[index]['favourite'] ?? false);
+   Future<void> _toggleFavorite(String eventId, int index) async {
+    final token = await Storage.getToken();
+    try {
+      // Get the current favorite status before toggling
+      bool currentStatus = widget.upcomingTestDrive[index]['favourite'] ?? false;
+      bool newFavoriteStatus = !currentStatus;
 
-    setState(() {
-      widget.upcomingTestDrive[index]['favourite'] = newFavoriteStatus;
-    });
+      final response = await http.put(
+        Uri.parse(
+          'https://api.smartassistapp.in/api/favourites/mark-fav/event/$eventId',
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        // No need to send in body since taskId is already in the URL
+      );
 
-    if (widget.onFavoriteToggle != null) {
-      widget.onFavoriteToggle!(eventId, newFavoriteStatus);
+      if (response.statusCode == 200) {
+        setState(() {
+          widget.upcomingTestDrive[index]['favourite'] = newFavoriteStatus;
+        });
+
+        // Notify the parent if the callback is provided
+        if (widget.onFavoriteToggle != null) {
+          widget.onFavoriteToggle!(eventId, newFavoriteStatus);
+        }
+      } else {
+        print('Failed to toggle favorite: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error toggling favorite: $e');
     }
-
-    print(
-        "Favorite toggled for Task ID: $eventId, New Status: $newFavoriteStatus");
   }
+
+
+  // Future<void> _toggleFavorite(String eventId, int index) async {
+  //   bool newFavoriteStatus =
+  //       !(widget.upcomingTestDrive[index]['favourite'] ?? false);
+
+  //   setState(() {
+  //     widget.upcomingTestDrive[index]['favourite'] = newFavoriteStatus;
+  //   });
+
+  //   if (widget.onFavoriteToggle != null) {
+  //     widget.onFavoriteToggle!(eventId, newFavoriteStatus);
+  //   }
+
+  //   print(
+  //       "Favorite toggled for Task ID: $eventId, New Status: $newFavoriteStatus");
+  // }
+
+  
 
   @override
   Widget build(BuildContext context) {

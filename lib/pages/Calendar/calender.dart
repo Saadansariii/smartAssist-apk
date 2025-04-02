@@ -47,6 +47,7 @@ class _CalenderState extends State<Calender> {
 
   Future<void> _fetchAppointments(DateTime selectedDate) async {
     final data = await LeadsSrv.fetchAppointments(selectedDate);
+    if (!mounted) return;
     setState(() {
       appointments = data;
     });
@@ -55,7 +56,7 @@ class _CalenderState extends State<Calender> {
   Future<void> _fetchTasks(DateTime? selectedDate) async {
     final DateTime finalDate = selectedDate ?? DateTime.now();
     final data = await LeadsSrv.fetchtasks(finalDate);
-    if(!mounted) return;
+    if (!mounted) return;
     setState(() {
       tasks = data;
     });

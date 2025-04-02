@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followup.dart';
+import 'package:smart_assist/utils/storage.dart';
 
 class TestOverdue extends StatefulWidget {
   final List<dynamic> overdueTestDrive;
@@ -64,19 +66,38 @@ class _TestOverdueState extends State<TestOverdue> {
   }
 
   Future<void> _toggleFavorite(String eventId, int index) async {
-    bool newFavoriteStatus =
-        !(widget.overdueTestDrive[index]['favourite'] ?? false);
+    final token = await Storage.getToken();
+    try {
+      // Get the current favorite status before toggling
+      bool currentStatus = widget.overdueTestDrive[index]['favourite'] ?? false;
+      bool newFavoriteStatus = !currentStatus;
 
-    setState(() {
-      widget.overdueTestDrive[index]['favourite'] = newFavoriteStatus;
-    });
+      final response = await http.put(
+        Uri.parse(
+          'https://api.smartassistapp.in/api/favourites/mark-fav/event/$eventId',
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        // No need to send in body since taskId is already in the URL
+      );
 
-    if (widget.onFavoriteToggle != null) {
-      widget.onFavoriteToggle!(eventId, newFavoriteStatus);
+      if (response.statusCode == 200) {
+        setState(() {
+          widget.overdueTestDrive[index]['favourite'] = newFavoriteStatus;
+        });
+
+        // Notify the parent if the callback is provided
+        if (widget.onFavoriteToggle != null) {
+          widget.onFavoriteToggle!(eventId, newFavoriteStatus);
+        }
+      } else {
+        print('Failed to toggle favorite: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error toggling favorite: $e');
     }
-
-    print(
-        "Favorite toggled for Task ID: $eventId, New Status: $newFavoriteStatus");
   }
 
   @override
