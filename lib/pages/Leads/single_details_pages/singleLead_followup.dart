@@ -7,11 +7,14 @@ import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/config/getX/fab.controller.dart';
 import 'package:smart_assist/services/leads_srv.dart';
-import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/appointment_popup.dart';
 import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/create_Followups_popups.dart';
 import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/create_leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/create_testDrive.dart';
+import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/appointment_ids.dart';
+import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/followups_ids.dart';
+import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/leads_ids.dart';
+import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/testdrive_ids.dart';
 import 'package:smart_assist/widgets/leads_details_popup/create_appointment.dart';
 import 'package:smart_assist/widgets/leads_details_popup/create_followups.dart';
 import 'package:smart_assist/widgets/timeline/timeline_nine_wid.dart';
@@ -756,8 +759,9 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
           width: MediaQuery.of(context).size.width * .15,
           height: MediaQuery.of(context).size.height * .08,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 2),
-            color: AppColors.colorsBlue,
+            color: fabController.isFabExpanded.value
+                ? Colors.red
+                : AppColors.colorsBlue,
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -789,38 +793,46 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
             ),
           ),
 
-          // Popup Items (Similar to your existing implementation)
+          // Popup Items Container aligned bottom right
           Positioned(
             bottom: 90,
-            left: MediaQuery.of(context).size.width / 2 - 150,
-            width: 300,
-            height: 300,
-            child: Stack(
-              alignment: Alignment.center,
-              clipBehavior: Clip.none,
-              children: [
-                _buildPopupItem(
-                    Icons.calendar_month_outlined, "Appointment", -5, -32,
-                    onTap: () {
-                  fabController.closeFab();
-                  _showAppointmentPopup(context);
-                }),
-                _buildPopupItem(Icons.people_alt_rounded, "Lead", 70, -93,
-                    onTap: () {
-                  fabController.closeFab();
-                  _showLeadPopup(context);
-                }),
-                _buildPopupItem(Icons.call, "Followup", 30, 35, onTap: () {
-                  fabController.closeFab();
-                  _showFollowupPopup(context);
-                }),
-                _buildPopupItem(Icons.directions_car, "Test Drive", 20, 100,
-                    onTap: () {
-                  fabController.closeFab();
-                  _showTestdrivePopup(context);
-                }),
-              ],
+            right: 20,
+            child: SizedBox(
+              width: 200,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _buildPopupItem(Icons.call, "Followup", -40, onTap: () {
+                    fabController.closeFab();
+                    _showFollowupPopup(context, widget.leadId);
+                  }),
+                  _buildPopupItem(
+                      Icons.calendar_month_outlined, "Appointment", -80,
+                      onTap: () {
+                    fabController.closeFab();
+                    _showAppointmentPopup(context , widget.leadId);
+                  }),
+                  // _buildPopupItem(Icons.people_alt_rounded, "Lead", -60,
+                  //     onTap: () {
+                  //   fabController.closeFab();
+                  //   _showLeadPopup(context);
+                  // }),
+                  _buildPopupItem(Icons.directions_car, "Test Drive", -20,
+                      onTap: () {
+                    fabController.closeFab();
+                    _showTestdrivePopup(context , widget.leadId);
+                  }),
+                ],
+              ),
             ),
+          ),
+
+          // ✅ FAB positioned above the overlay
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: _buildFloatingActionButton(context),
           ),
         ],
       ),
@@ -828,7 +840,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   }
 
   // Popup Item Builder
-  Widget _buildPopupItem(IconData icon, String label, double dx, double dy,
+  Widget _buildPopupItem(IconData icon, String label, double offsetY,
       {required Function() onTap}) {
     return Obx(() => TweenAnimationBuilder(
           tween: Tween<double>(
@@ -836,13 +848,12 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOutBack,
           builder: (context, double value, child) {
-            return Positioned(
-              left: 150 + (dx * value),
-              top: 150 + (dy * value),
+            return Transform.translate(
+              offset: Offset(0, offsetY * (1 - value)),
               child: Opacity(
-                opacity: value.clamp(0.1, 1.0),
-                child: Opacity(
-                  opacity: value.clamp(0.1, 1.0),
+                opacity: value.clamp(0.0, 1.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -854,18 +865,17 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(width: 5),
+                      const SizedBox(width: 8),
                       GestureDetector(
                         onTap: onTap,
-                        behavior: HitTestBehavior
-                            .opaque, // Important for better hit testing
+                        behavior: HitTestBehavior.opaque,
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.colorsBlue,
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          child: Icon(icon, color: Colors.blue, size: 24),
+                          child: Icon(icon, color: Colors.white, size: 24),
                         ),
                       ),
                     ],
@@ -988,118 +998,23 @@ class NavigationController extends GetxController {
   }
 }
 
-// Widget _buildPopupMenu(NavigationController controller, BuildContext context) {
-//   return Obx(() => AnimatedOpacity(
-//       duration: const Duration(milliseconds: 300),
-//       opacity: controller.isFabExpanded.value ? 1.0 : 0.0,
-//       child: IgnorePointer(
-//         ignoring: !controller.isFabExpanded.value,
-//         child: Stack(
-//           children: [
-//             // Background overlay
-//             Positioned.fill(
-//               child: GestureDetector(
-//                 onTap: () {
-//                   controller.isFabExpanded.value = false;
-//                 },
-//                 child: AnimatedContainer(
-//                   duration: const Duration(milliseconds: 300),
-//                   color: Colors.black.withOpacity(0.7),
-//                 ),
-//               ),
-//             ),
-
-//             // Popup Items
-//             Positioned(
-//               bottom: 90,
-//               left: MediaQuery.of(context).size.width / 2 -
-//                   150, // Expanded to fit all items
-//               // Make container larger to encompass all items including those with negative positions
-//               width:
-//                   300, // Large enough to contain all items with their offsets
-//               height:
-//                   300, // Large enough to contain all items with their offsets
-//               child: Stack(
-//                 // Changed to center so offsets work properly from the middle
-//                 alignment: Alignment.center,
-//                 clipBehavior: Clip
-//                     .none, // Important! Allow children to render outside bounds
-//                 children: [
-//                   _buildPopupItem(controller, Icons.calendar_month_outlined,
-//                       "Appointment", -5, -32, onTap: () {
-//                     print("Appointment clicked!");
-//                     controller.isFabExpanded.value = false;
-//                     _showAppointmentPopup(context);
-//                   }),
-//                   _buildPopupItem(
-//                       controller, Icons.people_alt_rounded, "Lead", 70, -93,
-//                       onTap: () {
-//                     print("Lead clicked");
-//                     controller.isFabExpanded.value = false;
-//                     _showLeadPopup(context);
-//                   }),
-//                   _buildPopupItem(controller, Icons.call, "Followup", 30, 35,
-//                       onTap: () {
-//                     print("Followup clicked");
-//                     controller.isFabExpanded.value = false;
-//                     _showFollowupPopup(context);
-//                   }),
-//                   _buildPopupItem(
-//                       controller, Icons.directions_car, "Test Drive", 20, 100,
-//                       onTap: () {
-//                     print("Test Drive clicked");
-//                     controller.isFabExpanded.value = false;
-//                     _showTestdrivePopup(context);
-//                   }),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       )));
-// }
-
-// Widget _buildPopupItem(NavigationController controller, IconData icon,
-//     String label, double dx, double dy,
-//     {required Function() onTap}) {
-//   return TweenAnimationBuilder(
-//     tween: Tween<double>(begin: 0, end: controller.isFabExpanded.value ? 1 : 0),
-//     duration: const Duration(milliseconds: 300),
-//     curve: Curves.easeOutBack,
-//     builder: (context, double value, child) {
-//       return Positioned(
-//         // Position from center of the Stack
-//         left: 150 + (dx * value), // Center point (300/2) + offset
-//         top: 150 + (dy * value), // Center point (300/2) + offset
-//         child: Opacity(
-//           opacity: value.clamp(0.1, 1.0),
-//           child: Row(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               Text(
-//                 label,
-//                 style: GoogleFonts.poppins(
-//                   fontSize: 14,
-//                   fontWeight: FontWeight.w500,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//               const SizedBox(width: 5),
-//               GestureDetector(
-//                 onTap: onTap,
-//                 behavior:
-//                     HitTestBehavior.opaque, // Important for better hit testing
-//                 child: Container(
-//                   padding: const EdgeInsets.all(12),
-//                   decoration: BoxDecoration(
-//                     color: Colors.white,
-//                     borderRadius: BorderRadius.circular(30),
-//                   ),
-//                   child: Icon(icon, color: Colors.blue, size: 24),
-//                 ),
-//               ),
-//             ],
+// // ✅ Function to Show `CreateFollowupsPopups` on "Lead"
+// void _showLeadPopup(BuildContext context) {
+//   showDialog(
+//     context: context,
+//     builder: (context) {
+//       return Dialog(
+//         backgroundColor: Colors.transparent,
+//         insetPadding: EdgeInsets.zero,
+//         child: Container(
+//           width: MediaQuery.of(context).size.width,
+//           margin: const EdgeInsets.symmetric(
+//               horizontal: 16), // Add some margin for better UX
+//           decoration: BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.circular(10),
 //           ),
+//           child: const LeadsIds(),
 //         ),
 //       );
 //     },
@@ -1107,7 +1022,7 @@ class NavigationController extends GetxController {
 // }
 
 // ✅ Function to Show `CreateFollowupsPopups` on "Lead"
-void _showLeadPopup(BuildContext context) {
+void _showFollowupPopup(BuildContext context, String leadId) {
   showDialog(
     context: context,
     builder: (context) {
@@ -1122,37 +1037,14 @@ void _showLeadPopup(BuildContext context) {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const CreateLeads(),
+          child: FollowupsIds(leadId: leadId),
         ),
       );
     },
   );
 }
 
-// ✅ Function to Show `CreateFollowupsPopups` on "Lead"
-void _showFollowupPopup(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 16), // Add some margin for better UX
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const CreateFollowupsPopups(),
-        ),
-      );
-    },
-  );
-}
-
-void _showAppointmentPopup(BuildContext context) {
+void _showAppointmentPopup(BuildContext context, String leadId) {
   showDialog(
     context: context,
     builder: (context) {
@@ -1167,14 +1059,14 @@ void _showAppointmentPopup(BuildContext context) {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const AppointmentPopup(), // Appointment modal
+          child:   AppointmentIds(leadId : leadId), // Appointment modal
         ),
       );
     },
   );
 }
 
-void _showTestdrivePopup(BuildContext context) {
+void _showTestdrivePopup(BuildContext context, String leadId) {
   showDialog(
     context: context,
     builder: (context) {
@@ -1189,7 +1081,7 @@ void _showTestdrivePopup(BuildContext context) {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const CreateTestdrive(), // Appointment modal
+          child:   TestdriveIds(leadId : leadId), // Appointment modal
         ),
       );
     },

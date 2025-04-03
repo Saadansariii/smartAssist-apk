@@ -11,14 +11,14 @@ import 'package:smart_assist/pages/Leads/single_id_screens/single_leads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 
-class CreateLeads extends StatefulWidget {
-  const CreateLeads({super.key});
+class LeadsIds extends StatefulWidget {
+  const LeadsIds({super.key});
 
   @override
-  State<CreateLeads> createState() => _CreateLeadsState();
+  State<LeadsIds> createState() => _LeadsIdsState();
 }
 
-class _CreateLeadsState extends State<CreateLeads> {
+class _LeadsIdsState extends State<LeadsIds> {
   final PageController _pageController = PageController();
   List<Map<String, String>> dropdownItems = [];
   // final _formKey = GlobalKey<FormState>();
@@ -171,15 +171,6 @@ class _CreateLeadsState extends State<CreateLeads> {
     return isValid;
   }
 
-  bool _validatePage3() {
-    bool isValid = false;
-
-    setState(() {
-      _errors = {};
-    });
-    return isValid;
-  }
-
   // Email validation
   bool _isValidEmail(String email) {
     final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
@@ -213,29 +204,12 @@ class _CreateLeadsState extends State<CreateLeads> {
           ),
         );
       }
-    } else if (_currentStep == 1) {
+    } else {
       // Validate second page before submitting
       if (_validatePage2()) {
-        // _submitForm();
-        _pageController.nextPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-        setState(() => _currentStep++);
-      } else {
-        // Show a snackbar with validation errors
-        print('select the fiels first');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please complete all required fields'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } else {
-      if (_validatePage3()) {
         _submitForm();
-        print('select the field first');
+      } else {
+        print('select the fiels first');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Please complete all required fields'),
@@ -375,58 +349,6 @@ class _CreateLeadsState extends State<CreateLeads> {
                           ),
                         ],
                       ),
-
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              bottom: 17), // Move line up to align with circles
-                          height: 2,
-                          color: _currentStep == 2
-                              ? Colors.grey.shade300
-                              : Colors.grey.shade300,
-                        ),
-                      ),
-
-                      // Step 3 indicator column
-                      Column(
-                        children: [
-                          Container(
-                            width: 30,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              color: _currentStep == 2
-                                  ? AppColors.colorsBlue
-                                  : Colors.grey.shade300,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Text(
-                                '3',
-                                style: TextStyle(
-                                  color: _currentStep == 2
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            'More \n Details',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              color: _currentStep == 2
-                                  ? AppColors.colorsBlue
-                                  : Colors.grey,
-                              fontWeight: _currentStep == 2
-                                  ? FontWeight.w600
-                                  : FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 ),
@@ -450,7 +372,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                             child: _buildTextField(
                                 label: 'First Name',
                                 controller: firstNameController,
-                                hintText: 'First name',
+                                hintText: 'first name',
                                 errorText: _errors['firstName'],
                                 onChanged: (value) {
                                   if (_errors.containsKey('firstName')) {
@@ -653,54 +575,6 @@ class _CreateLeadsState extends State<CreateLeads> {
                           onTap: () => _pickDate(isStartDate: false)),
                     ],
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text('Primary Model Intrest',
-                              style: AppFont.dropDowmLabel(context)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      SizedBox(
-                        height: 45,
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  5), // Keep border radius small
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  5), // Match with enabledBorder
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            filled: true,
-                            fillColor: AppColors.containerBg,
-                            hintText: 'Type',
-                            hintStyle: AppFont.dropDown(context),
-                            prefixIcon: const Icon(
-                              FontAwesomeIcons.magnifyingGlass,
-                              color: AppColors.fontColor,
-                              size: 15,
-                            ),
-                            // suffixIcon: const Icon(
-                            //   FontAwesomeIcons.microphone,
-                            //   color: AppColors.fontColor,
-                            //   size: 15,
-                            // ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -744,7 +618,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                     ),
                     onPressed: _nextStep,
                     child: Text(
-                      _currentStep == 2 ? "Create" : "Continue",
+                      _currentStep == 1 ? "Create" : "Continue",
                       style: AppFont.buttons(context),
                     ),
                   ),

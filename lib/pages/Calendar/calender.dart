@@ -62,12 +62,16 @@ class _CalenderState extends State<Calender> {
     });
   }
 
-  Future<void> _fetchCount(DateTime selectedDate) async {
+Future<void> _fetchCount(DateTime selectedDate) async {
+    // Check if the widget is still mounted before proceeding
+    if (!mounted) return;
+
     String formattedDate =
         DateFormat('dd-MM-yyyy').format(selectedDate); // Ensure correct format
     final data = await LeadsSrv.fetchCount(selectedDate);
 
-    // print("API Response for $formattedDate: $data");
+    // Check again after the async operation completes
+    if (!mounted) return;
 
     if (data.isNotEmpty) {
       setState(() {
@@ -76,12 +80,6 @@ class _CalenderState extends State<Calender> {
         upcomingAppointmentsCount = data['upcomingAppointmentsCount'] ?? 0;
         overdueAppointmentsCount = data['overdueAppointmentsCount'] ?? 0;
       });
-
-      // print("Updated counts: "
-      //     "Upcoming Follow-ups: $upcomingFollowupsCount, "
-      //     "Overdue Follow-ups: $overdueFollowupsCount, "
-      //     "Upcoming Appointments: $upcomingAppointmentsCount, "
-      //     "Overdue Appointments: $overdueAppointmentsCount");
     } else {
       // print("No data returned for $formattedDate");
     }

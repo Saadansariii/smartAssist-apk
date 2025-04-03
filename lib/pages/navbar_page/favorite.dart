@@ -9,7 +9,7 @@ import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_leads.d
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_opportunity.dart';
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_testdrive.dart';
 import 'package:smart_assist/pages/navbar_page/favorites/favoritesbtns/f_upcoming.dart';
-import 'package:smart_assist/utils/bottom_navigation.dart'; 
+import 'package:smart_assist/utils/bottom_navigation.dart';
 
 class FavoritePage extends StatefulWidget {
   final String leadId;
@@ -52,12 +52,12 @@ class _FavoritePageState extends State<FavoritePage> {
         return const FAppointment();
       case 2:
         // return _buildDataList(testDriveData);
-        return FTestdrive();
+        return const FTestdrive();
       case 3:
         // return _buildDataList(opportunityData);
         return FLeads();
-      case 4:
-        return FOpportunity();
+      // case 4:
+      //   return FOpportunity();
       default:
         return const SizedBox();
     }
@@ -156,44 +156,23 @@ class _FavoritePageState extends State<FavoritePage> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  FlexibleButton(
-                    title: 'Leads',
-                    onPressed: () {
-                      setState(() {
-                        _selectedButtonIndex = 3;
-                      });
-                    },
-                    decoration: BoxDecoration(
-                      border: _selectedButtonIndex == 3
-                          ? Border.all(color: Colors.blue)
-                          : Border.all(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(13),
-                    ),
-                    textStyle: GoogleFonts.poppins(
-                      color: _selectedButtonIndex == 3
-                          ? Colors.blue
-                          : Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: FlexibleButton(
-                      title: 'Opportunity',
+                      title: 'Leads',
                       onPressed: () {
                         setState(() {
-                          _selectedButtonIndex = 4;
+                          _selectedButtonIndex = 3;
                         });
                       },
                       decoration: BoxDecoration(
-                        border: _selectedButtonIndex == 4
+                        border: _selectedButtonIndex == 3
                             ? Border.all(color: Colors.blue)
                             : Border.all(color: Colors.transparent),
                         borderRadius: BorderRadius.circular(13),
                       ),
                       textStyle: GoogleFonts.poppins(
-                        color: _selectedButtonIndex == 4
+                        color: _selectedButtonIndex == 3
                             ? Colors.blue
                             : Colors.black,
                         fontSize: 14,
@@ -201,6 +180,30 @@ class _FavoritePageState extends State<FavoritePage> {
                       ),
                     ),
                   ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 5.0),
+                  //   child: FlexibleButton(
+                  //     title: 'Opportunity',
+                  //     onPressed: () {
+                  //       setState(() {
+                  //         _selectedButtonIndex = 4;
+                  //       });
+                  //     },
+                  //     decoration: BoxDecoration(
+                  //       border: _selectedButtonIndex == 4
+                  //           ? Border.all(color: Colors.blue)
+                  //           : Border.all(color: Colors.transparent),
+                  //       borderRadius: BorderRadius.circular(13),
+                  //     ),
+                  //     textStyle: GoogleFonts.poppins(
+                  //       color: _selectedButtonIndex == 4
+                  //           ? Colors.blue
+                  //           : Colors.black,
+                  //       fontSize: 14,
+                  //       fontWeight: FontWeight.w400,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

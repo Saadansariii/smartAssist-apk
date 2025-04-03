@@ -62,7 +62,6 @@ class _FUpcomingState extends State<FUpcoming> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        // No need to send in body since taskId is already in the URL
       );
 
       if (response.statusCode == 200) {
@@ -72,6 +71,7 @@ class _FUpcomingState extends State<FUpcoming> {
         // Update only the specific item in the list
         setState(() {
           upcomingTasks[index]['favourite'] = newFavoriteStatus;
+          overdueTasks[index]['favourite'] = newFavoriteStatus;
         });
       } else {
         print('Failed to toggle favorite: ${response.statusCode}');
@@ -132,27 +132,7 @@ class _FUpcomingState extends State<FUpcoming> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTasksList(upcomingTasks, isUpcoming: true),
-          _buildTasksList(overdueTasks, isUpcoming: false),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(
-    String title,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          _buildTasksList(overdueTasks, isUpcoming: true),
         ],
       ),
     );
@@ -167,13 +147,14 @@ class _FUpcomingState extends State<FUpcoming> {
     }
 
     return ListView.builder(
-      // shrinkWrap: true,
+      shrinkWrap: true,
       // physics: widget.isNested
       //     ? const NeverScrollableScrollPhysics()
       //     : const AlwaysScrollableScrollPhysics(),
-      itemCount: upcomingTasks.length,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: tasks.length,
       itemBuilder: (context, index) {
-        var item = upcomingTasks[index];
+        var item = tasks[index];
 
         if (!(item.containsKey('name') &&
             item.containsKey('due_date') &&
@@ -255,7 +236,7 @@ class _TaskItemState extends State<TaskItem> {
   @override
   void initState() {
     super.initState();
-    // isFav = widget.isFavorite;
+    isFav = widget.isFavorite;
   }
 
   Widget _buildFollowupCard(BuildContext context) {
@@ -321,7 +302,7 @@ class _TaskItemState extends State<TaskItem> {
                     const SizedBox(width: 10),
                     Text(isFav ? 'Unfavorite' : 'Favorite',
                         style: GoogleFonts.poppins(
-                            color: Color.fromRGBO(187, 158, 0, 1),
+                            color: const Color.fromRGBO(187, 158, 0, 1),
                             fontSize: 18,
                             fontWeight: FontWeight.bold)),
                   ],
@@ -399,15 +380,6 @@ class _TaskItemState extends State<TaskItem> {
               children: [
                 Row(
                   children: [
-                    // Conditional favorite star
-                    // if (isFavorite || isFavoriteSwipe)
-                    //   Icon(
-                    //     Icons.star_rounded,
-                    //     color: isFavoriteSwipe
-                    //         ? Colors.white
-                    //         : AppColors.starColorsYellow,
-                    //     size: 40,
-                    //   ),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -476,7 +448,7 @@ class _TaskItemState extends State<TaskItem> {
       children: [
         const Icon(Icons.phone_in_talk, color: Colors.blue, size: 18),
         const SizedBox(width: 5),
-        Text('$widget.subject,', style: AppFont.smallText(context)),
+        Text(widget.subject, style: AppFont.smallText(context)),
       ],
     );
   }
