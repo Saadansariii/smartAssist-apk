@@ -7,7 +7,11 @@ class Leads extends StatefulWidget {
   final Map<String, dynamic> MtdData;
   final Map<String, dynamic> YtdData;
   final Map<String, dynamic> QtdData;
-  const Leads({super.key, required this.MtdData, required this.YtdData, required this.QtdData});
+  const Leads(
+      {super.key,
+      required this.MtdData,
+      required this.YtdData,
+      required this.QtdData});
 
   @override
   State<Leads> createState() => _LeadsState();
@@ -17,52 +21,17 @@ class _LeadsState extends State<Leads> {
   int _childButtonIndex = 0;
   final PageController _pageController = PageController();
 
-  // Future API method placeholder
-  Future<Map<String, dynamic>> fetchLeadsData(int buttonIndex) async {
-    // This will be replaced with actual API call
-    // For now, we'll return mock data
-    return {
-      'newEnquiries': _getMockNewEnquiries(buttonIndex),
-      'lostEnquiries': _getMockLostEnquiries(buttonIndex),
-      'remainingTarget': _getMockRemainingTarget(buttonIndex),
-    };
-  }
-
-  // Mock data methods - to be replaced with API calls
-  int _getMockNewEnquiries(int index) {
-    final Map<int, int> enquiriesMap = {
-      0: 15, // MTD
-      1: 50, // QTD
-      2: 120, // YTD
-      3: 15, // Slide 2 - First index
-      4: 60, // Slide 2 - Second index
-      5: 25, // Slide 2 - Third index
-    };
-    return enquiriesMap[index] ?? 0;
-  }
-
-  int _getMockLostEnquiries(int index) {
-    final Map<int, int> lostEnquiriesMap = {
-      0: 8, // MTD
-      1: 40, // QTD
-      2: 100, // YTD
-      3: 5, // Slide 2 - First index
-      4: 20, // Slide 2 - Second index
-      5: 10, // Slide 2 - Third index
-    };
-    return lostEnquiriesMap[index] ?? 0;
-  }
-
-  int _getMockRemainingTarget(int index) {
-    final Map<int, int> targetMap = {
-      0: 45, // MTD
-      1: 100, // QTD
-      2: 350, // YTD
-      3: 20, // Slide 2 - First index
-      4: 80, // Slide 2 - Second index
-      5: 35, // Slide 2 - Third index
-    };
-    return targetMap[index] ?? 0;
+  Map<String, dynamic> getSelectedData() {
+    switch (_childButtonIndex) {
+      case 0:
+        return widget.MtdData;
+      case 1:
+        return widget.QtdData;
+      case 2:
+        return widget.YtdData;
+      default:
+        return {};
+    }
   }
 
   @override
@@ -114,11 +83,18 @@ class _LeadsState extends State<Leads> {
                       ),
                     ),
                     Text(
-                      '137',
+                      '${getSelectedData()['enquiryBank'] ?? 0}',
                       style: AppFont.smallTextBold(context).copyWith(
                         color: Colors.blue,
                       ),
                     ),
+
+                    // Text(
+                    //   '137',
+                    //   style: AppFont.smallTextBold(context).copyWith(
+                    //     color: Colors.blue,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -162,6 +138,8 @@ class _LeadsState extends State<Leads> {
 
   // First Slide
   Widget _buildFirstSlide(BuildContext context, double screenWidth) {
+    final selectedData = getSelectedData();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: IntrinsicHeight(
@@ -174,15 +152,15 @@ class _LeadsState extends State<Leads> {
                   _buildInfoCard(
                     context,
                     'total Enquiries',
-                    _getMockNewEnquiries(_childButtonIndex).toString(),
+                    '${selectedData['totalEnquiries'] ?? 0}',
                     screenWidth,
                     Colors.green,
                   ),
                   const SizedBox(height: 10),
                   _buildInfoCard(
                     context,
-                    'lostEnquiries',
-                    _getMockLostEnquiries(_childButtonIndex).toString(),
+                    'lost Enquiries',
+                    '${selectedData['lostEnquiries'] ?? 0}',
                     screenWidth,
                     Colors.red,
                   ),
@@ -193,8 +171,8 @@ class _LeadsState extends State<Leads> {
             Expanded(
               child: _buildRightInfoCard(
                 context,
-                'remainingEnquiries',
-                _getMockRemainingTarget(_childButtonIndex).toString(),
+                'remaining Enquiries',
+                '${selectedData['remainingEnquiries'] ?? 0}',
                 screenWidth,
               ),
             ),
@@ -206,6 +184,8 @@ class _LeadsState extends State<Leads> {
 
   // Second Slide
   Widget _buildSecondSlide(BuildContext context, double screenWidth) {
+    final selectedData = getSelectedData();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
@@ -217,7 +197,7 @@ class _LeadsState extends State<Leads> {
                 _buildInfoCard(
                   context,
                   'Converted Enquiries',
-                  _getMockNewEnquiries(_childButtonIndex + 3).toString(),
+                  '${selectedData['enquiryBank'] ?? 0}',
                   screenWidth,
                   Colors.green,
                 ),
@@ -225,7 +205,7 @@ class _LeadsState extends State<Leads> {
                 _buildInfoCard(
                   context,
                   'Pending Enquiries',
-                  _getMockLostEnquiries(_childButtonIndex + 3).toString(),
+                  '${selectedData['remainingTestDrives'] ?? 0}',
                   screenWidth,
                   Colors.orange,
                 ),
@@ -236,8 +216,8 @@ class _LeadsState extends State<Leads> {
           Expanded(
             child: _buildRightInfoCard(
               context,
-              'avgEnquiry',
-              _getMockRemainingTarget(_childButtonIndex + 3).toString(),
+              'avg Enquiry',
+              '${selectedData['avgEnquiry'] ?? 0}',
               screenWidth,
             ),
           ),

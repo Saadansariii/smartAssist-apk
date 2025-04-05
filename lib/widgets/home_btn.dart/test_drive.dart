@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/font/font.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class TestDrive extends StatefulWidget {
-  const TestDrive({super.key});
+  final Map<String, dynamic> MtdData;
+  final Map<String, dynamic> YtdData;
+  final Map<String, dynamic> QtdData;
+  const TestDrive(
+      {super.key,
+      required this.MtdData,
+      required this.YtdData,
+      required this.QtdData});
 
   @override
   State<TestDrive> createState() => _TestDriveState();
@@ -12,301 +20,172 @@ class TestDrive extends StatefulWidget {
 
 class _TestDriveState extends State<TestDrive> {
   int _childButtonIndex = 0;
+  final PageController _pageController = PageController();
+
+  Map<String, dynamic> getSelectedData() {
+    switch (_childButtonIndex) {
+      case 0:
+        return widget.MtdData;
+      case 1:
+        return widget.QtdData;
+      case 2:
+        return widget.YtdData;
+      default:
+        return {};
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width and height for responsiveness
     double screenWidth = MediaQuery.of(context).size.width;
+    final selectedData = getSelectedData();
 
-    return Column(
-      children: [
-        // Row with Buttons and Enquiry Bank
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Buttons with Fixed Width
-              Container(
-                width: screenWidth * 0.42, // Adjust width if needed
-                height: 27,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Row(
-                  children: [
-                    _buildButton('MTD', 0),
-                    _buildButton('QTD', 1),
-                    _buildButton('YTD', 2),
-                  ],
-                ),
-              ),
-
-              // Enquiry Bank
-              // Container(
-              //   decoration: BoxDecoration(
-              //     color: Colors.white,
-              //     borderRadius: BorderRadius.circular(30),
-              //   ),
-              //   padding:
-              //       const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              //   child: Row(
-              //     mainAxisSize: MainAxisSize.min, // Keep it compact
-              //     children: [
-              //       Text(
-              //         'Enquiry bank',
-              //         style: AppFont.tinytext(context),
-              //       ),
-              //       const SizedBox(width: 10),
-              //       Text(
-              //         '137',
-              //         style: AppFont.smallTextBold(context),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 10),
-
-        // Info Cards Layout
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        //   child: Row(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       // Left side (stacked cards)
-        //       Expanded(
-        //         flex: 1,
-        //         child: Column(
-        //           children: [
-        //             _buildInfoCard(context, 'Total Leads', '3', screenWidth),
-        //             const SizedBox(height: 10),
-        //             _buildInfoCard(context, 'Great you are doing!\nbetter', '8',
-        //                 screenWidth),
-        //           ],
-        //         ),
-        //       ),
-
-        //       const SizedBox(width: 10),
-
-        //       // Right side (single larger card)
-        //       Expanded(
-        //         flex: 1,
-        //         child: _buildInfoCard2(
-        //           context,
-        //           '6',
-        //           'Almost there! Keep pushing forward. You need\n5',
-        //           screenWidth,
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-
-        // Info Cards based on selected button
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        //   child: Row(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       // Left side (stacked cards)
-        //       Expanded(
-        //         flex: 1,
-        //         child: Column(
-        //           children: [
-        //             _buildInfoCard(
-        //               context,
-        //               _getLeftCardTitle(_childButtonIndex),
-        //               _getLeftCardValue(_childButtonIndex),
-        //               screenWidth,
-        //               _getGreenCardColor(_childButtonIndex),
-        //             ),
-        //             const SizedBox(height: 10),
-        //             _buildInfoCard(
-        //               context,
-        //               _getMiddleCardTitle(_childButtonIndex),
-        //               _getMiddleCardValue(_childButtonIndex),
-        //               screenWidth,
-        //               _getRedCardColor(_childButtonIndex),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-
-        //       const SizedBox(width: 10),
-
-        //       // Right side (single larger card)
-        //       Expanded(
-        //         flex: 1,
-        //         child: _buildInfoCard2(
-        //           context,
-        //           _getRightCardTitle(_childButtonIndex),
-        //           _getRightCardValue(_childButtonIndex),
-        //           screenWidth,
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment:
-                CrossAxisAlignment.stretch, // Ensures same height
-            children: [
-              Expanded(
-                  flex: 1,
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: Column(
-                      children: [
-                        _buildInfoCard(
-                          context,
-                          _getLeftCardTitle(_childButtonIndex),
-                          _getLeftCardValue(_childButtonIndex),
-                          screenWidth,
-                          _getGreenCardColor(_childButtonIndex),
-                        ),
-                        const SizedBox(height: 10),
-                        _buildInfoCard(
-                          context,
-                          _getMiddleCardTitle(_childButtonIndex),
-                          _getMiddleCardValue(_childButtonIndex),
-                          screenWidth,
-                          _getRedCardColor(_childButtonIndex),
-                        ),
-                      ],
-                    ),
-                  )),
-              const SizedBox(width: 10),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  child: _buildInfoCard2(
-                    context,
-                    _getRightCardTitle(_childButtonIndex),
-                    _getRightCardValue(_childButtonIndex),
-                    screenWidth,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  width: screenWidth * 0.42,
+                  height: 27,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Row(
+                    children: [
+                      _buildButton('MTD', 0),
+                      _buildButton('QTD', 1),
+                      _buildButton('YTD', 2),
+                    ],
                   ),
                 ),
-              )
-            ],
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-      ],
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 200,
+            child: PageView(
+              controller: _pageController,
+              children: [
+                _buildFirstSlide(context, screenWidth),
+                _buildSecondSlide(context, screenWidth),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          // Smooth Page Indicator
+          SmoothPageIndicator(
+            controller: _pageController,
+            count: 2,
+            effect: WormEffect(
+              activeDotColor: Colors.blue,
+              dotColor: Colors.grey.shade300,
+              dotHeight: 8,
+              dotWidth: 8,
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+        ],
+      ),
     );
   }
 
-  // Dynamic Titles and Values for Each Selected Button
-  String _getLeftCardTitle(int index) {
-    switch (index) {
-      case 0:
-        return 'totalTestDrives';
-      case 1:
-        return 'Unique Test ';
-      case 2:
-        return 'Unique Test drive';
-      default:
-        return '';
-    }
+  Widget _buildFirstSlide(BuildContext context, double screenWidth) {
+    final selectedData = getSelectedData();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Container(
+                margin: const EdgeInsets.only(left: 10),
+                child: Column(
+                  children: [
+                    _buildInfoCard(
+                      context,
+                      'Total Test Drives',
+                      '${selectedData['totalTestDrives'] ?? 0}',
+                      screenWidth,
+                      Colors.green,
+                    ),
+                    const SizedBox(height: 10),
+                    _buildInfoCard(
+                      context,
+                      'Test Drive to Order Avg Time',
+                      '${selectedData['TestDrivesAvg'] ?? 0}',
+                      screenWidth,
+                      Colors.red,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              flex: 1,
+              child: Container(
+                margin: const EdgeInsets.only(right: 10),
+                child: _buildInfoCard2(
+                  context,
+                  '${selectedData['remainingTestDrives'] ?? 0}',
+                  'More Test Drives to achieve your target',
+                  screenWidth,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  String _getLeftCardValue(int index) {
-    switch (index) {
-      case 0:
-        return '5';
-      case 1:
-        return '50';
-      case 2:
-        return '120';
-      default:
-        return '';
-    }
-  }
-
-  Color _getGreenCardColor(int index) {
-    switch (index) {
-      case 0:
-        return Colors.green; // Color for MTD
-      case 1:
-        return Colors.green; // Color for QTD
-      case 2:
-        return Colors.green; // Color for YTD
-      default:
-        return Colors.black; // Default color
-    }
-  }
-
-  Color _getRedCardColor(int index) {
-    switch (index) {
-      case 0:
-        return Colors.red; // Color for MTD
-      case 1:
-        return Colors.red; // Color for QTD
-      case 2:
-        return Colors.red; // Color for YTD
-      default:
-        return Colors.black; // Default color
-    }
-  }
-
-  String _getMiddleCardTitle(int index) {
-    switch (index) {
-      case 0:
-        return 'Average test drive to order time TestDrivesAvg';
-      case 1:
-        return 'Average test drive to order time';
-      case 2:
-        return 'Average test drive to order time';
-      default:
-        return '';
-    }
-  }
-
-  String _getMiddleCardValue(int index) {
-    switch (index) {
-      case 0:
-        return '8';
-      case 1:
-        return '40';
-      case 2:
-        return '100';
-      default:
-        return '';
-    }
-  }
-
-  String _getRightCardTitle(int index) {
-    switch (index) {
-      case 0:
-        return '45';
-      case 1:
-        return '100';
-      case 2:
-        return '350';
-      default:
-        return '';
-    }
-  }
-
-  String _getRightCardValue(int index) {
-    switch (index) {
-      case 0:
-        return 'More Test drive to achieve your target remainingTestDrives';
-      case 1:
-        return 'More Test drive to achieve your target';
-      case 2:
-        return 'More Test drive to achieve your target';
-      default:
-        return '';
-    }
+  Widget _buildSecondSlide(BuildContext context, double screenWidth) {
+    final selectedData = getSelectedData();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Container(
+                margin: const EdgeInsets.only(right: 10),
+                child: _buildInfoCard3(
+                  context,
+                  '${selectedData['remainingTestDrives'] ?? 0}',
+                  'Enquiry to Unique test drive ratio',
+                  screenWidth,
+                ),
+              ),
+            ),
+            // const SizedBox(width: 5),
+            Expanded(
+              flex: 1,
+              child: Container(
+                // margin: const EdgeInsets.only(right: 10),
+                child: _buildInfoCard3(
+                  context,
+                  '${selectedData['remainingTestDrives'] ?? 0}',
+                  'Enquiry to test drive ratio',
+                  screenWidth,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // Button Builder
@@ -411,9 +290,9 @@ class _TestDriveState extends State<TestDrive> {
             value,
             style: AppFont.dropDowmLabel(context),
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          // const SizedBox(
+          //   height: 5,
+          // ),
           const Align(
               alignment: Alignment.centerRight,
               child: Text(
@@ -422,6 +301,35 @@ class _TestDriveState extends State<TestDrive> {
                 style:
                     TextStyle(fontSize: 20, fontFamily: 'YourAppleEmojiFont'),
               ))
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoCard3(
+      BuildContext context, String title, String value, double screenWidth) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(screenWidth * 0.04),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.inter(
+                fontSize: 30, fontWeight: FontWeight.w700, color: Colors.blue),
+          ),
+          // const SizedBox(height: 2),
+          Text(
+            value,
+            style: AppFont.dropDowmLabel(context),
+          ),
+          const SizedBox(height: 5),
         ],
       ),
     );

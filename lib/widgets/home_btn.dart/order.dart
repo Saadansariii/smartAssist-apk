@@ -4,7 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/font/font.dart';
 
 class Order extends StatefulWidget {
-  const Order({super.key});
+    final Map<String, dynamic> MtdData;
+  final Map<String, dynamic> YtdData;
+  final Map<String, dynamic> QtdData;
+  const Order({super.key, required this.MtdData, required this.YtdData, required this.QtdData});
 
   @override
   State<Order> createState() => _OrderState();

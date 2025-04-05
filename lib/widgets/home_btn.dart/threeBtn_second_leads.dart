@@ -27,11 +27,11 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
     super.initState();
     // Set a default widget if needed
     _loadDashboardAnalytics();
-    currentWidget = Leads(
-      MtdData: MtdData,
-      YtdData: YtdData,
-      QtdData: QtdData,
-    );
+    // currentWidget = Leads(
+    //   MtdData: MtdData,
+    //   YtdData: YtdData,
+    //   QtdData: QtdData,
+    // );
   }
 
   Future<void> _loadDashboardAnalytics() async {
@@ -41,6 +41,15 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
         MtdData = data['MTD'] ?? {};
         QtdData = data['QTD'] ?? {};
         YtdData = data['YTD'] ?? {};
+
+        // Rebuild Leads widget with updated data
+        if (_leadButton == 0) {
+          currentWidget = Leads(
+            MtdData: MtdData,
+            QtdData: QtdData,
+            YtdData: YtdData,
+          );
+        }
       });
     } catch (e) {
       print("Error loading analytics: $e");
@@ -160,13 +169,21 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
 
   void testDrive(int index) {
     setState(() {
-      currentWidget = const TestDrive();
+      currentWidget =   TestDrive(
+        MtdData: MtdData,
+        QtdData: QtdData,
+        YtdData: YtdData,
+      );
     });
   }
 
   void orders(int index) {
     setState(() {
-      currentWidget = const Order();
+      currentWidget =   Order(
+        MtdData: MtdData,
+        QtdData: QtdData,
+        YtdData: YtdData,
+      );
     });
   }
 }

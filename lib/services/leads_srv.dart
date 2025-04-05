@@ -1070,12 +1070,11 @@ class LeadsSrv {
     }
   }
 
-
-   static Future<Map<String, dynamic>> fetchDashboardAnalytics() async {
+  static Future<Map<String, dynamic>> fetchDashboardAnalytics() async {
     final token = await Storage.getToken();
     try {
       final response = await http.get(
-        Uri.parse('${baseUrl}users/dashboard?filterType=MTD&category=Leads'),
+        Uri.parse('${baseUrl}users/dashboard/analytics'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -1083,10 +1082,10 @@ class LeadsSrv {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body); 
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final Map<String, dynamic> data = jsonResponse['data'];
         return data;
-      } else { 
+      } else {
         final Map<String, dynamic> errorData = json.decode(response.body);
         final String errorMessage =
             errorData['message'] ?? 'Failed to load dashboard data';
@@ -1107,5 +1106,4 @@ class LeadsSrv {
       throw Exception(e.toString());
     }
   }
- 
 }
