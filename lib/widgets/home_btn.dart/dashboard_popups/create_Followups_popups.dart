@@ -248,7 +248,8 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.zero,
-                          backgroundColor: AppColors.innerContainerBg,
+                          backgroundColor:
+                              const Color.fromRGBO(217, 217, 217, 1),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5))),
@@ -529,34 +530,35 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    filled: true,
-                    fillColor: AppColors.containerBg,
-                    hintText: selectedLeadsName ?? 'Select Leads',
-                    hintStyle: TextStyle(
-                      color: selectedLeadsName != null
-                          ? Colors.black
-                          : Colors.grey,
-                    ),
-                    prefixIcon: const Icon(
-                      FontAwesomeIcons.magnifyingGlass,
-                      size: 15,
-                      color: AppColors.fontColor,
-                    ),
-                    suffixIcon: IconButton(
-                      icon: const Icon(
-                        FontAwesomeIcons.microphone,
-                        color: AppColors.fontColor,
-                        size: 15,
+                      filled: true,
+                      fillColor: AppColors.containerBg,
+                      hintText: selectedLeadsName ?? 'Select Leads',
+                      hintStyle: TextStyle(
+                        color: selectedLeadsName != null
+                            ? Colors.black
+                            : Colors.grey,
                       ),
-                      onPressed: () {
-                        print('Microphone button pressed');
-                      },
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
+                      prefixIcon: const Icon(
+                        FontAwesomeIcons.magnifyingGlass,
+                        size: 15,
+                        color: AppColors.fontColor,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.microphone,
+                          color: AppColors.fontColor,
+                          size: 15,
+                        ),
+                        onPressed: () {
+                          print('Microphone button pressed');
+                        },
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 0, horizontal: 10)),
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -63,6 +64,7 @@ class _CreateLeadsState extends State<CreateLeads> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
+  TextEditingController pinController = TextEditingController();
   TextEditingController modelInterestController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
   String _query = '';
@@ -635,7 +637,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                             }
                             print("email : $value");
                           }),
-                      _buildTextField(
+                      _buildNumberWidget(
                           label: 'Mobile No',
                           controller: mobileController,
                           errorText: _errors['mobile'],
@@ -745,50 +747,64 @@ class _CreateLeadsState extends State<CreateLeads> {
                             });
                           }),
                       const SizedBox(height: 5),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text('PIN Code',
-                              style: AppFont.dropDowmLabel(context)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      SizedBox(
-                        height: 45,
-                        child: TextField(
-                          autofocus: false,
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  5), // Keep border radius small
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  5), // Match with enabledBorder
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            filled: true,
-                            fillColor: AppColors.containerBg,
-                            hintText: 'Pin Code',
-                            hintStyle: AppFont.dropDown(context),
-                            // prefixIcon: const Icon(
-                            //   FontAwesomeIcons.magnifyingGlass,
-                            //   color: AppColors.fontColor,
-                            //   size: 15,
-                            // ),
-                            // suffixIcon: const Icon(
-                            //   FontAwesomeIcons.microphone,
-                            //   color: AppColors.fontColor,
-                            //   size: 15,
-                            // ),
-                          ),
-                        ),
-                      ),
+                      _buildNumberWidget(
+                          label: 'Pin Code',
+                          controller: pinController,
+                          errorText: _errors['PIN Code'],
+                          hintText: '11220',
+                          onChanged: (value) {
+                            if (_errors.containsKey('pin')) {
+                              setState(() {
+                                _errors.remove('pin');
+                              });
+                            }
+                            print("pin : $value");
+                          }),
+                      // Align(
+                      //   alignment: Alignment.centerLeft,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      //     child: Text('PIN Code',
+                      //         style: AppFont.dropDowmLabel(context)),
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 5),
+                      // SizedBox(
+                      //   height: 45,
+                      //   child: TextField(
+                      //     autofocus: false,
+                      //     textAlignVertical: TextAlignVertical.center,
+                      //     decoration: InputDecoration(
+                      //       enabledBorder: OutlineInputBorder(
+                      //         borderRadius: BorderRadius.circular(
+                      //             5), // Keep border radius small
+                      //         borderSide: BorderSide.none,
+                      //       ),
+                      //       focusedBorder: OutlineInputBorder(
+                      //         borderRadius: BorderRadius.circular(
+                      //             5), // Match with enabledBorder
+                      //         borderSide: BorderSide.none,
+                      //       ),
+                      //       contentPadding: const EdgeInsets.symmetric(
+                      //           horizontal: 10, vertical: 10),
+                      //       filled: true,
+                      //       fillColor: AppColors.containerBg,
+                      //       hintText: 'Pin Code',
+                      //       hintStyle: AppFont.dropDown(context),
+                      //       // prefixIcon: const Icon(
+                      //       //   FontAwesomeIcons.magnifyingGlass,
+                      //       //   color: AppColors.fontColor,
+                      //       //   size: 15,
+                      //       // ),
+                      //       // suffixIcon: const Icon(
+                      //       //   FontAwesomeIcons.microphone,
+                      //       //   color: AppColors.fontColor,
+                      //       //   size: 15,
+                      //       // ),
+                      //     ),
+                      //   ),
+                      // ),
+
                       // const SizedBox(height: 2),
                       _buildDatePicker(
                           label: 'Expected purchase date',
@@ -1141,6 +1157,75 @@ class _CreateLeadsState extends State<CreateLeads> {
               },
             ),
           ),
+      ],
+    );
+  }
+
+  Widget _buildNumberWidget({
+    required TextEditingController controller,
+    required String hintText,
+    required String label,
+    required ValueChanged<String> onChanged,
+    bool isRequired = false,
+    String? errorText,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(
+          height: 5,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 5),
+          child: RichText(
+            text: TextSpan(
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: AppColors.fontBlack,
+              ),
+              children: [
+                TextSpan(text: label),
+                if (isRequired)
+                  const TextSpan(
+                    text: " *",
+                    style: TextStyle(color: Colors.red),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: const Color.fromARGB(255, 248, 247, 247),
+            border: errorText != null
+                ? Border.all(color: Colors.red, width: 1.0)
+                : null,
+          ),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: TextField(
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              controller: controller,
+              style: AppFont.dropDowmLabel(context),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle:
+                    GoogleFonts.poppins(color: Colors.grey, fontSize: 12),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                border: InputBorder.none,
+              ),
+              onChanged: onChanged,
+            ),
+          ),
+        ),
       ],
     );
   }

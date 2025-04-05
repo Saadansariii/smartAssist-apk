@@ -36,6 +36,8 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
   final TextEditingController _searchController = TextEditingController();
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
+  TextEditingController startTimeController = TextEditingController();
+  TextEditingController endTimeController = TextEditingController();
 
   @override
   void initState() {
@@ -95,30 +97,181 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     });
   }
 
-  Future<void> _pickDate({required bool isStartDate}) async {
-    DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100));
-    if (pickedDate != null) {
-      TimeOfDay? pickedTime =
-          await showTimePicker(context: context, initialTime: TimeOfDay.now());
-      if (pickedTime != null) {
-        DateTime combinedDateTime = DateTime(pickedDate.year, pickedDate.month,
-            pickedDate.day, pickedTime.hour, pickedTime.minute);
-        String formattedDateTime =
-            DateFormat('dd/MM/yyyy hh:mm a').format(combinedDateTime);
-        setState(() {
-          if (isStartDate) {
-            startDateController.text = formattedDateTime;
-          } else {
-            endDateController.text = formattedDateTime;
-          }
-        });
+  Future<void> _pickStartTime() async {
+    FocusScope.of(context).unfocus();
+
+    // Get current time from startTimeController or use current time
+    TimeOfDay initialTime;
+    try {
+      if (startTimeController.text.isNotEmpty) {
+        final parsedTime =
+            DateFormat('hh:mm a').parse(startTimeController.text);
+        initialTime =
+            TimeOfDay(hour: parsedTime.hour, minute: parsedTime.minute);
+      } else {
+        initialTime = TimeOfDay.now();
       }
+    } catch (e) {
+      initialTime = TimeOfDay.now();
+    }
+
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+    );
+
+    if (pickedTime != null) {
+      // Create a temporary DateTime to format the time
+      final now = DateTime.now();
+      final time = DateTime(
+          now.year, now.month, now.day, pickedTime.hour, pickedTime.minute);
+      String formattedTime = DateFormat('hh:mm a').format(time);
+
+      // Calculate end time (1 hour later)
+      final endHour = (pickedTime.hour + 1) % 24;
+      final endTime =
+          DateTime(now.year, now.month, now.day, endHour, pickedTime.minute);
+      String formattedEndTime = DateFormat('hh:mm a').format(endTime);
+
+      setState(() {
+        // Set start time
+        startTimeController.text = formattedTime;
+
+        // Auto-set end time ONLY if empty
+        if (endTimeController.text.isEmpty) {
+          endTimeController.text = formattedEndTime;
+          print("Auto-filled end time: $formattedEndTime");
+        }
+      });
     }
   }
+
+  Future<void> _pickEndTime() async {
+    FocusScope.of(context).unfocus();
+
+    // Get current end time or use current time
+    TimeOfDay initialTime;
+    try {
+      if (endTimeController.text.isNotEmpty) {
+        final parsedTime = DateFormat('hh:mm a').parse(endTimeController.text);
+        initialTime =
+            TimeOfDay(hour: parsedTime.hour, minute: parsedTime.minute);
+      } else {
+        initialTime = TimeOfDay.now();
+      }
+    } catch (e) {
+      initialTime = TimeOfDay.now();
+    }
+
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+    );
+
+    if (pickedTime != null) {
+      final now = DateTime.now();
+      final time = DateTime(
+          now.year, now.month, now.day, pickedTime.hour, pickedTime.minute);
+      String formattedTime = DateFormat('hh:mm a').format(time);
+
+      setState(() {
+        endTimeController.text = formattedTime;
+      });
+    }
+  }
+
+  Future<void> _pickStartDate() async {
+    FocusScope.of(context).unfocus();
+
+    // Get current start date or use today
+    DateTime initialDate;
+    try {
+      if (startDateController.text.isNotEmpty) {
+        initialDate = DateFormat('dd MMM yyyy').parse(startDateController.text);
+      } else {
+        initialDate = DateTime.now();
+      }
+    } catch (e) {
+      initialDate = DateTime.now();
+    }
+
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('dd MMM yyyy').format(pickedDate);
+
+      setState(() {
+        // Set start date
+        startDateController.text = formattedDate;
+
+        // Auto-set end date ONLY if empty
+        if (endDateController.text.isEmpty) {
+          endDateController.text = formattedDate;
+          print("Auto-filled end date: $formattedDate");
+        }
+      });
+    }
+  }
+
+  Future<void> _pickEndDate() async {
+    FocusScope.of(context).unfocus();
+
+    // Get current end date or use today
+    DateTime initialDate;
+    try {
+      if (endDateController.text.isNotEmpty) {
+        initialDate = DateFormat('dd MMM yyyy').parse(endDateController.text);
+      } else {
+        initialDate = DateTime.now();
+      }
+    } catch (e) {
+      initialDate = DateTime.now();
+    }
+
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('dd MMM yyyy').format(pickedDate);
+      setState(() {
+        endDateController.text = formattedDate;
+      });
+    }
+  }
+
+  // Future<void> _pickDate({required bool isStartDate}) async {
+  //   DateTime? pickedDate = await showDatePicker(
+  //       context: context,
+  //       initialDate: DateTime.now(),
+  //       firstDate: DateTime(2000),
+  //       lastDate: DateTime(2100));
+  //   if (pickedDate != null) {
+  //     TimeOfDay? pickedTime =
+  //         await showTimePicker(context: context, initialTime: TimeOfDay.now());
+  //     if (pickedTime != null) {
+  //       DateTime combinedDateTime = DateTime(pickedDate.year, pickedDate.month,
+  //           pickedDate.day, pickedTime.hour, pickedTime.minute);
+  //       String formattedDateTime =
+  //           DateFormat('dd/MM/yyyy hh:mm a').format(combinedDateTime);
+  //       setState(() {
+  //         if (isStartDate) {
+  //           startDateController.text = formattedDateTime;
+  //         } else {
+  //           endDateController.text = formattedDateTime;
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
 
   // void _nextStep() {
   //   if (_currentStep == 0) {
@@ -189,32 +342,55 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  Expanded(
-                    child: _buildDatePicker(
-                      label: 'Start Date',
-                      controller: startDateController,
-                      onTap: () => _pickDate(isStartDate: true),
-                    ),
+                  Text(
+                    'starts',
+                    style: AppFont.dropDowmLabel(context),
                   ),
                   const SizedBox(
-                      width: 10), // Space between the two date pickers
+                    width: 10,
+                  ),
                   Expanded(
                     child: _buildDatePicker(
-                      label: 'End Date',
-                      controller: endDateController,
-                      onTap: () => _pickDate(isStartDate: false),
+                      controller: startDateController,
+                      onTap: _pickStartDate,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _buildDatePicker(
+                      controller: startTimeController,
+                      onTap: _pickStartTime,
                     ),
                   ),
                 ],
               ),
-              // _buildDatePicker(
-              //     label: 'Start Date',
-              //     controller: startDateController,
-              //     onTap: () => _pickDate(isStartDate: true)),
-              // _buildDatePicker(
-              //     label: 'End Date',
-              //     controller: endDateController,
-              //     onTap: () => _pickDate(isStartDate: false)),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Text(
+                    'Ends',
+                    style: AppFont.dropDowmLabel(context),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // End Date Picker - fills half remaining space
+                  Expanded(
+                    child: _buildDatePicker(
+                      controller: endDateController,
+                      onTap: _pickEndDate,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // End Time Picker - fills other half
+                  Expanded(
+                    child: _buildDatePicker(
+                      controller: endTimeController,
+                      onTap: _pickEndTime,
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 10),
               _buildButtons(
                 options: {
@@ -233,24 +409,14 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
             ],
           ),
           const SizedBox(height: 10),
-          // SmoothPageIndicator(
-          //     controller: _pageController,
-          //     count: 2,
-          //     effect: const WormEffect(
-          //       activeDotColor: Colors.black,
-          //       spacing: 4.0,
-          //       radius: 10.0,
-          //       dotWidth: 10.0,
-          //       dotHeight: 10.0,
-          //     )),
-          // const SizedBox(height: 10),
 
           Row(
             children: [
               Expanded(
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
+                        elevation: 0,
+                        backgroundColor: const Color.fromRGBO(217, 217, 217, 1),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () => Navigator.pop(context),
@@ -354,13 +520,13 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                         print('Microphone button pressed');
                       },
                     ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 0 , horizontal: 10),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: BorderSide.none,
                     ),
                   ),
-
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -504,7 +670,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 5, 0, 5),
+            padding: const EdgeInsets.fromLTRB(0.0, 5, 0, 10),
             child: Text(label, style: AppFont.dropDowmLabel(context)),
           ),
         ),
@@ -633,23 +799,13 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
   // }
 
   Widget _buildDatePicker({
-    required String label,
+    // required String label,
     required TextEditingController controller,
     required VoidCallback onTap,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          child: Text(
-            label,
-            style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.fontBlack),
-          ),
-        ),
         GestureDetector(
           onTap: onTap,
           child: Container(
@@ -663,9 +819,11 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+                Flexible(
                   child: Text(
                     controller.text.isEmpty ? "Select" : controller.text,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -673,10 +831,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                           controller.text.isEmpty ? Colors.grey : Colors.black,
                     ),
                   ),
-                ),
-                const Icon(
-                  Icons.calendar_month_outlined,
-                  color: AppColors.fontBlack,
                 ),
               ],
             ),
@@ -687,54 +841,58 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
   }
 
   Future<void> submitForm() async {
-    // Retrieve sp_id from SharedPreferences.
     final prefs = await SharedPreferences.getInstance();
     final spId = prefs.getString('user_id');
 
-    // Use the lead id from the dropdown selection.
     if (selectedLeads == null) {
       showErrorMessage(context, message: 'Please select a lead.');
       return;
     }
+
     final leadId = selectedLeads!;
 
-    // Parse and format the selected dates/times.
-    final startDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(startDateController.text);
-    final endDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(endDateController.text);
-    final formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
-    final formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
+    try {
+      // Parse raw date and time
+      final rawStartDate =
+          DateFormat('dd MMM yyyy').parse(startDateController.text);
+      final rawEndDate =
+          DateFormat('dd MMM yyyy').parse(endDateController.text);
 
-    if (spId == null || leadId.isEmpty) {
-      showErrorMessage(context,
-          message: 'User ID or Lead ID not found. Please log in again.');
-      return;
-    }
+      final rawStartTime =
+          DateFormat('hh:mm a').parse(startTimeController.text);
+      final rawEndTime = DateFormat('hh:mm a').parse(endTimeController.text);
 
-    // Prepare the appointment data.
-    final appointmentData = {
-      'start_date': startDateController.text,
-      'end_date': endDateController.text,
-      'priority': selectedPriority,
-      'start_time': formattedStartTime,
-      'end_time': formattedEndTime,
-      'subject': _selectedSubject,
-      'sp_id': spId,
-    };
+      // Format for API
+      final formattedStartDate = DateFormat('dd/MM/yyyy').format(rawStartDate);
+      final formattedEndDate = DateFormat('dd/MM/yyyy').format(rawEndDate);
 
-    // Call the service to submit the appointment.
-    final success = await LeadsSrv.submitAppoinment(appointmentData, leadId);
+      final formattedStartTime = DateFormat('HH:mm:ss').format(rawStartTime);
+      final formattedEndTime = DateFormat('HH:mm:ss').format(rawEndTime);
 
-    if (success) {
-      if (context.mounted) {
-        Navigator.pop(context, true); // Close the modal on success.
+      final appointmentData = {
+        'start_date': formattedStartDate,
+        'end_date': formattedEndDate,
+        'start_time': formattedStartTime,
+        'end_time': formattedEndTime,
+        'priority': selectedPriority,
+        'subject': _selectedSubject,
+        'sp_id': spId,
+      };
+
+      final success = await LeadsSrv.submitAppoinment(appointmentData, leadId);
+
+      if (success) {
+        if (context.mounted) {
+          Navigator.pop(context, true);
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Form Submit Successful.')),
+        );
+      } else {
+        showErrorMessage(context, message: 'Failed to submit appointment.');
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Form Submit Successful.')),
-      );
-    } else {
-      showErrorMessage(context, message: 'Failed to submit appointment.');
+    } catch (e) {
+      showErrorMessage(context, message: 'Invalid date or time format.');
     }
   }
 }

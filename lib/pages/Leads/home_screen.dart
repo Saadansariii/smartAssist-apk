@@ -53,6 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> overdueTestDrives = [];
   bool isDashboardLoading = false;
   String? teamRole;
+  Map<String, dynamic> MtdData = {};
+  Map<String, dynamic> QtdData = {};
+  Map<String, dynamic> YtdData = {};
 
   // Search Functionality
   final TextEditingController _searchController = TextEditingController();
@@ -68,10 +71,23 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     fetchDashboardData();
-    _searchController.addListener(_onSearchChanged);
-    // Load the team role
+    _searchController.addListener(_onSearchChanged); 
+    _loadDashboardAnalytics();
     _loadTeamRole();
     print(_loadTeamRole());
+  }
+
+  Future<void> _loadDashboardAnalytics() async {
+    try {
+      final data = await LeadsSrv.fetchDashboardAnalytics();
+      setState(() {
+        MtdData = data['MTD'] ?? {};
+        QtdData = data['QTD'] ?? {};
+        YtdData = data['YTD'] ?? {};
+      });
+    } catch (e) {
+      print("Error loading analytics: $e");
+    }
   }
 
   Future<void> _loadTeamRole() async {
@@ -518,7 +534,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   overdueAppointmentsCount,
                               overdueTestDrivesCount: overdueTestDrivesCount,
                             ),
-                            const BottomBtnSecond(),
+                            BottomBtnSecond(
+                              MtdData: MtdData,
+                              QtdData: QtdData,
+                              YtdData: YtdData,
+                            ),
 
                             const SizedBox(
                               height: 10,

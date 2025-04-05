@@ -13,6 +13,9 @@ class Opportunity extends StatefulWidget {
 }
 
 class _OpportunityState extends State<Opportunity> {
+  Map<String, dynamic> MtdData = {};
+  Map<String, dynamic> QtdData = {};
+  Map<String, dynamic> YtdData = {};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,10 +108,16 @@ class _OpportunityState extends State<Opportunity> {
                 refreshDashboard: () async {},
                 overdueFollowupsCount: 0,
                 overdueAppointmentsCount: 0,
-                overdueTestDrivesCount: 0, upcomingTestDrives: [], overdueTestDrives: [],
+                overdueTestDrivesCount: 0,
+                upcomingTestDrives: [],
+                overdueTestDrives: [],
               ),
 
-              const BottomBtnSecond(),
+              BottomBtnSecond(
+                MtdData: MtdData,
+                QtdData: QtdData,
+                YtdData: YtdData,
+              ),
             ],
           ),
         ),

@@ -426,7 +426,6 @@ class _ThreebtnState extends State<Threebtn> {
   void followUps(int type) {
     setState(() {
       _upcomingBtnFollowups = type;
-
       if (type == 0) {
         currentWidget = FollowupsUpcoming(
           upcomingFollowups: widget.upcomingFollowups,

@@ -7,16 +7,23 @@ import 'package:smart_assist/widgets/home_btn.dart/order.dart';
 import 'package:smart_assist/widgets/home_btn.dart/test_drive.dart';
 
 class BottomBtnSecond extends StatefulWidget {
-  const BottomBtnSecond({super.key});
+  final Map<String, dynamic> MtdData;
+  final Map<String, dynamic> YtdData;
+  final Map<String, dynamic> QtdData;
+  const BottomBtnSecond(
+      {super.key,
+      required this.MtdData,
+      required this.YtdData,
+      required this.QtdData});
 
   @override
   State<BottomBtnSecond> createState() => _BottomBtnSecondState();
 }
 
 class _BottomBtnSecondState extends State<BottomBtnSecond> {
-  Map<String, dynamic> MtdData = {};
-  Map<String, dynamic> QtdData = {};
-  Map<String, dynamic> YtdData = {};
+  // Map<String, dynamic> MtdData = {};
+  // Map<String, dynamic> QtdData = {};
+  // Map<String, dynamic> YtdData = {};
 
   Widget? currentWidget;
 
@@ -24,32 +31,54 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
 
   @override
   void initState() {
-    super.initState(); 
-    _loadDashboardAnalytics();
-  
+    super.initState();
+    // _loadDashboardAnalytics();
+    _setInitialWidget();
   }
 
-  Future<void> _loadDashboardAnalytics() async {
-    try {
-      final data = await LeadsSrv.fetchDashboardAnalytics();
-      setState(() {
-        MtdData = data['MTD'] ?? {};
-        QtdData = data['QTD'] ?? {};
-        YtdData = data['YTD'] ?? {};
-
-        // Rebuild Leads widget with updated data
-        if (_leadButton == 0) {
-          currentWidget = Leads(
-            MtdData: MtdData,
-            QtdData: QtdData,
-            YtdData: YtdData,
-          );
-        }
-      });
-    } catch (e) {
-      print("Error loading analytics: $e");
+  void _setInitialWidget() {
+    if (_leadButton == 0) {
+      currentWidget = Leads(
+        MtdData: widget.MtdData,
+        QtdData: widget.QtdData,
+        YtdData: widget.YtdData,
+      );
+    } else if (_leadButton == 1) {
+      currentWidget = TestDrive(
+        MtdData: widget.MtdData,
+        QtdData: widget.QtdData,
+        YtdData: widget.YtdData,
+      );
+    } else if (_leadButton == 2) {
+      currentWidget = Order(
+        MtdData: widget.MtdData,
+        QtdData: widget.QtdData,
+        YtdData: widget.YtdData,
+      ); // if Order doesn't use data
     }
   }
+
+  // Future<void> _loadDashboardAnalytics() async {
+  //   try {
+  //     final data = await LeadsSrv.fetchDashboardAnalytics();
+  //     setState(() {
+  //       MtdData = data['MTD'] ?? {};
+  //       QtdData = data['QTD'] ?? {};
+  //       YtdData = data['YTD'] ?? {};
+
+  //       // Rebuild Leads widget with updated data
+  //       if (_leadButton == 0) {
+  //         currentWidget = Leads(
+  //           MtdData: MtdData,
+  //           QtdData: QtdData,
+  //           YtdData: YtdData,
+  //         );
+  //       }
+  //     });
+  //   } catch (e) {
+  //     print("Error loading analytics: $e");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -155,29 +184,29 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
   void leads(int index) {
     setState(() {
       currentWidget = Leads(
-        MtdData: MtdData,
-        QtdData: QtdData,
-        YtdData: YtdData,
+        MtdData: widget.MtdData,
+        QtdData: widget.QtdData,
+        YtdData: widget.YtdData,
       );
     });
   }
 
   void testDrive(int index) {
     setState(() {
-      currentWidget =   TestDrive(
-        MtdData: MtdData,
-        QtdData: QtdData,
-        YtdData: YtdData,
+      currentWidget = TestDrive(
+        MtdData: widget.MtdData,
+        QtdData: widget.QtdData,
+        YtdData: widget.YtdData,
       );
     });
   }
 
   void orders(int index) {
     setState(() {
-      currentWidget =   Order(
-        MtdData: MtdData,
-        QtdData: QtdData,
-        YtdData: YtdData,
+      currentWidget = Order(
+        MtdData: widget.MtdData,
+        QtdData: widget.QtdData,
+        YtdData: widget.YtdData,
       );
     });
   }
