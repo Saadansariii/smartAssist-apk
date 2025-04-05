@@ -136,7 +136,10 @@ class _FLeadsState extends State<FLeads> {
 
   Widget _buildTasksList(List<dynamic> tasks) {
     if (tasks.isEmpty) {
-      return const Center(child: Text('No Leads available'));
+      return const Padding(
+        padding: EdgeInsets.only(top: 10.0),
+        child: Center(child: Text('No Leads available')),
+      );
     }
 
     return ListView.builder(

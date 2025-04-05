@@ -128,6 +128,13 @@ class _FTestdriveState extends State<FTestdrive> {
       return const Center(child: CircularProgressIndicator());
     }
 
+    if (upcomingTasks.isEmpty && overdueTasks.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 10.0),
+        child: Center(child: Text('No data found')),
+      );
+    }
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

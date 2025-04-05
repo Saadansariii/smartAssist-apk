@@ -208,9 +208,9 @@ class _TestDriveState extends State<TestDrive> {
   String _getLeftCardTitle(int index) {
     switch (index) {
       case 0:
-        return 'Unique Test drive';
+        return 'totalTestDrives';
       case 1:
-        return 'Unique Test drive';
+        return 'Unique Test ';
       case 2:
         return 'Unique Test drive';
       default:
@@ -260,7 +260,7 @@ class _TestDriveState extends State<TestDrive> {
   String _getMiddleCardTitle(int index) {
     switch (index) {
       case 0:
-        return 'Average test drive to order time';
+        return 'Average test drive to order time TestDrivesAvg';
       case 1:
         return 'Average test drive to order time';
       case 2:
@@ -299,7 +299,7 @@ class _TestDriveState extends State<TestDrive> {
   String _getRightCardValue(int index) {
     switch (index) {
       case 0:
-        return 'More Test drive to achieve your target';
+        return 'More Test drive to achieve your target remainingTestDrives';
       case 1:
         return 'More Test drive to achieve your target';
       case 2:

@@ -156,28 +156,25 @@ class _FavoritePageState extends State<FavoritePage> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: FlexibleButton(
-                      title: 'Leads',
-                      onPressed: () {
-                        setState(() {
-                          _selectedButtonIndex = 3;
-                        });
-                      },
-                      decoration: BoxDecoration(
-                        border: _selectedButtonIndex == 3
-                            ? Border.all(color: Colors.blue)
-                            : Border.all(color: Colors.transparent),
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      textStyle: GoogleFonts.poppins(
-                        color: _selectedButtonIndex == 3
-                            ? Colors.blue
-                            : Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
+                  FlexibleButton(
+                    title: 'Leads',
+                    onPressed: () {
+                      setState(() {
+                        _selectedButtonIndex = 3;
+                      });
+                    },
+                    decoration: BoxDecoration(
+                      border: _selectedButtonIndex == 3
+                          ? Border.all(color: Colors.blue)
+                          : Border.all(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(13),
+                    ),
+                    textStyle: GoogleFonts.poppins(
+                      color: _selectedButtonIndex == 3
+                          ? Colors.blue
+                          : Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                   // Padding(

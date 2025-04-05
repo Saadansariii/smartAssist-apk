@@ -354,11 +354,13 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                         print('Microphone button pressed');
                       },
                     ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 0 , horizontal: 10),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: BorderSide.none,
                     ),
                   ),
+
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,

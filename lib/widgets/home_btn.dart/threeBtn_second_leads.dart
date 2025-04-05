@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
+import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/widgets/home_btn.dart/leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/order.dart';
 import 'package:smart_assist/widgets/home_btn.dart/test_drive.dart';
@@ -13,6 +14,10 @@ class BottomBtnSecond extends StatefulWidget {
 }
 
 class _BottomBtnSecondState extends State<BottomBtnSecond> {
+  Map<String, dynamic> MtdData = {};
+  Map<String, dynamic> QtdData = {};
+  Map<String, dynamic> YtdData = {};
+
   Widget? currentWidget;
 
   int _leadButton = 0;
@@ -21,7 +26,25 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
   void initState() {
     super.initState();
     // Set a default widget if needed
-    currentWidget = const Leads();
+    _loadDashboardAnalytics();
+    currentWidget = Leads(
+      MtdData: MtdData,
+      YtdData: YtdData,
+      QtdData: QtdData,
+    );
+  }
+
+  Future<void> _loadDashboardAnalytics() async {
+    try {
+      final data = await LeadsSrv.fetchDashboardAnalytics();
+      setState(() {
+        MtdData = data['MTD'] ?? {};
+        QtdData = data['QTD'] ?? {};
+        YtdData = data['YTD'] ?? {};
+      });
+    } catch (e) {
+      print("Error loading analytics: $e");
+    }
   }
 
   @override
@@ -105,7 +128,6 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
                 height: 10,
               ), // Handle null case
 
-
           const SizedBox(
             height: 5,
           ),
@@ -128,7 +150,11 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
   // Update Widgets
   void leads(int index) {
     setState(() {
-      currentWidget = const Leads();
+      currentWidget = Leads(
+        MtdData: MtdData,
+        QtdData: QtdData,
+        YtdData: YtdData,
+      );
     });
   }
 

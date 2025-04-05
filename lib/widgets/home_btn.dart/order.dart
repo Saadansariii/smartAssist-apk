@@ -416,7 +416,8 @@ class _OrderState extends State<Order> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Your contribution (2) to 20% of dealership cancellations',
+              'Your contribution  to of dealership cancellations',
+              // 'Your contribution (dealerShipCancellation) to  //'${dealerShipCancellation}' of dealership cancellations', //this is the way for calling this api
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               maxLines: 4,

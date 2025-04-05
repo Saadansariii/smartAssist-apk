@@ -129,6 +129,13 @@ class _FAppointmentState extends State<FAppointment> {
       return const Center(child: CircularProgressIndicator());
     }
 
+    if (upcomingTasks.isEmpty && overdueTasks.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 10.0),
+        child: Center(child: Text('No data found')),
+      );
+    }
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,32 +147,7 @@ class _FAppointmentState extends State<FAppointment> {
     );
   }
 
-  // Widget _buildSectionHeader(
-  //   String title,
-  // ) {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(16.0),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: [
-  //         Text(
-  //           title,
-  //           style: const TextStyle(
-  //             fontSize: 18,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Widget _buildTasksList(List<dynamic> tasks, {required bool isUpcoming}) {
-    if (upcomingTasks.isEmpty && overdueTasks.isEmpty) {
-      return const Center(
-        child: Text('No data found'),
-      );
-    }
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

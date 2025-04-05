@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followup.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -22,6 +23,7 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   int _selectedButtonIndex = 0;
   List<dynamic> notifications = [];
+  bool result = false;
 
   @override
   void initState() {
@@ -79,6 +81,7 @@ class _NotificationPageState extends State<NotificationPage> {
             data['data']['read']['rows'] != null) {
           allNotifications.addAll(data['data']['read']['rows']);
         }
+
         print(data);
         setState(() {
           notifications = allNotifications;
@@ -142,51 +145,6 @@ class _NotificationPageState extends State<NotificationPage> {
       print("Error marking notification as read: $e");
     }
   }
-
-  // Future<void> markAsRead(String notificationId) async {
-  //   final token = await Storage.getToken();
-  //   final url =
-  //       'https://api.smartassistapp.in/api/users/notifications/$notificationId'; // Ensure this URL is correct
-
-  //   print(
-  //       'Marking notification as read with URL: $url'); // Log the URL being used for debugging
-
-  //   try {
-  //     final response = await http.put(
-  //       Uri.parse(url),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: json.encode({
-  //         'read': true,
-  //       }),
-  //     );
-
-  //     print(
-  //         'Response status: ${response.statusCode}'); // Log status code for debugging
-
-  //     if (response.statusCode == 200) {
-  //       print('Successfully marked notification as read');
-  //       setState(() {
-  //         // Update the notification status in the UI
-  //         notifications = notifications.map((notification) {
-  //           if (notification['data']['notification_id'] == notificationId) {
-  //             notification['data']['read'] = true;
-  //           }
-  //           if (notification['data']['recordId'] == notificationId) {
-  //             notification['data']['read'] = true;
-  //           }
-  //           return notification;
-  //         }).toList();
-  //       });
-  //     } else {
-  //       print("Failed to mark as read: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     print("Error marking notification as read: $e");
-  //   }
-  // }
 
   Widget _buildButton(String title, int index) {
     return Column(
@@ -280,18 +238,23 @@ class _NotificationPageState extends State<NotificationPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(
+                  height: 10,
+                ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Notification',
                     style: GoogleFonts.poppins(
-                        fontSize: 14, fontWeight: FontWeight.w500),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.fontColor),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          // const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
               itemCount: notifications.isNotEmpty
@@ -312,16 +275,43 @@ class _NotificationPageState extends State<NotificationPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FollowupsDetails(
-                                      leadId: notification['recordId'] ?? '')));
+                        // onTap: () {
+                        //   Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) => FollowupsDetails(
+                        //               leadId: notification['recordId'] ?? '')));
+                        //   if (!isRead) {
+                        //     markAsRead(notification['notification_id']);
+                        //   }
+                        //   // Refresh only if something changed
+                        //   if (result == true) {
+                        //     fetchNotifications(
+                        //         category: categories[_selectedButtonIndex]);
+                        //   }
+                        // },
+
+                        onTap: () async {
                           if (!isRead) {
-                            markAsRead(notification['notification_id']);
+                            await markAsRead(notification['notification_id']);
+                          }
+
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FollowupsDetails(
+                                leadId: notification['recordId'] ?? '',
+                              ),
+                            ),
+                          );
+
+                          // Refresh only if something changed
+                          if (result == true) {
+                            fetchNotifications(
+                                category: categories[_selectedButtonIndex]);
                           }
                         },
+
                         child: Card(
                           color: isRead ? Colors.white : Colors.white,
                           shape: const RoundedRectangleBorder(

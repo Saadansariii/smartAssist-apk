@@ -4,7 +4,10 @@ import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Leads extends StatefulWidget {
-  const Leads({super.key});
+  final Map<String, dynamic> MtdData;
+  final Map<String, dynamic> YtdData;
+  final Map<String, dynamic> QtdData;
+  const Leads({super.key, required this.MtdData, required this.YtdData, required this.QtdData});
 
   @override
   State<Leads> createState() => _LeadsState();
@@ -170,7 +173,7 @@ class _LeadsState extends State<Leads> {
                 children: [
                   _buildInfoCard(
                     context,
-                    'New Enquiries',
+                    'total Enquiries',
                     _getMockNewEnquiries(_childButtonIndex).toString(),
                     screenWidth,
                     Colors.green,
@@ -178,7 +181,7 @@ class _LeadsState extends State<Leads> {
                   const SizedBox(height: 10),
                   _buildInfoCard(
                     context,
-                    'Lost Enquiries',
+                    'lostEnquiries',
                     _getMockLostEnquiries(_childButtonIndex).toString(),
                     screenWidth,
                     Colors.red,
@@ -190,7 +193,7 @@ class _LeadsState extends State<Leads> {
             Expanded(
               child: _buildRightInfoCard(
                 context,
-                'Remaining Target',
+                'remainingEnquiries',
                 _getMockRemainingTarget(_childButtonIndex).toString(),
                 screenWidth,
               ),
@@ -233,7 +236,7 @@ class _LeadsState extends State<Leads> {
           Expanded(
             child: _buildRightInfoCard(
               context,
-              'Achieved Target',
+              'avgEnquiry',
               _getMockRemainingTarget(_childButtonIndex + 3).toString(),
               screenWidth,
             ),

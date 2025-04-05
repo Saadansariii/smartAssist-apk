@@ -9,6 +9,7 @@ import 'package:smart_assist/pages/Leads/single_id_screens/single_leads.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class AllLeads extends StatefulWidget {
@@ -22,6 +23,10 @@ class _AllLeadsState extends State<AllLeads> {
   bool isLoading = true;
   final Map<String, double> _swipeOffsets = {};
   List<dynamic> upcomingTasks = [];
+  List<dynamic> _searchResults = [];
+  bool _isLoadingSearch = false;
+  String _query = '';
+  final TextEditingController _searchController = TextEditingController();
 
   void _onHorizontalDragUpdate(DragUpdateDetails details, String leadId) {
     setState(() {
@@ -32,6 +37,8 @@ class _AllLeadsState extends State<AllLeads> {
 
   void _onHorizontalDragEnd(DragEndDetails details, dynamic item, int index) {
     String leadId = item['lead_id'];
+
+    final TextEditingController _searchController = TextEditingController();
     double swipeOffset = _swipeOffsets[leadId] ?? 0;
 
     if (swipeOffset > 100) {
@@ -59,7 +66,6 @@ class _AllLeadsState extends State<AllLeads> {
       _swipeOffsets[leadId] = 0.0;
     });
   }
- 
 
   Future<void> _toggleFavorite(String leadId, int index) async {
     final token = await Storage.getToken();
@@ -95,7 +101,6 @@ class _AllLeadsState extends State<AllLeads> {
       print('Error toggling favorite: $e');
     }
   }
- 
 
   void _handleCall(dynamic item) {
     print("Call action triggered for ${item['name']}");
@@ -106,6 +111,7 @@ class _AllLeadsState extends State<AllLeads> {
   void initState() {
     super.initState();
     fetchTasksData();
+    _searchController.addListener(_onSearchChanged);
   }
 
   Future<void> fetchTasksData() async {
@@ -134,6 +140,58 @@ class _AllLeadsState extends State<AllLeads> {
       print("Error fetching data: $e");
       setState(() => isLoading = false);
     }
+  }
+
+  Future<void> _fetchSearchResults(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        _searchResults.clear();
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoadingSearch = true;
+    });
+
+    try {
+      final token = await Storage.getToken();
+      final response = await http.get(
+        Uri.parse(
+            'https://api.smartassistapp.in/api/search/global?query=$query'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      final Map<String, dynamic> data = json.decode(response.body);
+      if (response.statusCode == 200) {
+        setState(() {
+          _searchResults = data['data']['suggestions'] ?? [];
+        });
+      } else {
+        showErrorMessage(context, message: data['message']);
+      }
+    } catch (e) {
+      showErrorMessage(context, message: 'Something went wrong..!');
+    } finally {
+      setState(() {
+        _isLoadingSearch = false;
+      });
+    }
+  }
+
+  void _onSearchChanged() {
+    final newQuery = _searchController.text.trim();
+    if (newQuery == _query) return;
+
+    _query = newQuery;
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (_query == _searchController.text.trim()) {
+        _fetchSearchResults(_query);
+      }
+    });
   }
 
   @override
@@ -167,9 +225,67 @@ class _AllLeadsState extends State<AllLeads> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildTasksList(upcomingTasks),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    child: SizedBox(
+                      width: double.infinity,
+                      // Adjust width as needed
+                      height: MediaQuery.of(context).size.height * .05,
+                      child: TextField(
+                        autofocus: true,
+                        controller: _searchController,
+                        onChanged: (value) => _onSearchChanged(),
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 15), // Reduce padding
+                          filled: true,
+                          fillColor: AppColors.searchBar,
+                          hintText: 'Search',
+                          hintStyle: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                          ),
+                          prefix: const Padding(
+                            padding: EdgeInsets.only(
+                                right: 8), // Reduce icon padding
+                            child: Icon(
+                              FontAwesomeIcons.magnifyingGlass,
+                              color: AppColors.fontColor,
+                              size: 15,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  _query.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10, bottom: 5),
+                              child: Text(
+                                'Showing results for: $_query',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 12, fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            _buildTasksList(_searchResults),
+                          ],
+                        )
+                      : _buildTasksList(upcomingTasks),
+                  // _buildTasksList(upcomingTasks),
                 ],
               ),
             ),
@@ -205,8 +321,8 @@ class _AllLeadsState extends State<AllLeads> {
             name: item['lead_name'] ?? '',
             date: item['created_at'] ?? '', // Using created_at as fallback
             subject: item['email'] ?? 'No subject',
-            vehicle:
-                item['PMI'] ?? 'No vehicle', // PMI contains the vehicle info
+            vehicle: item['PMI'] ??
+                'Discovery Sport', // PMI contains the vehicle info
             leadId: leadId,
             taskId: leadId, // Using leadId as taskId since there's no taskId
             brand: item['brand'] ?? '',
@@ -338,12 +454,12 @@ class _TaskItemState extends State<TaskItem> {
                     const SizedBox(width: 15),
                     Icon(
                         isFav ? Icons.star_outline_rounded : Icons.star_rounded,
-                        color: Color.fromRGBO(226, 195, 34, 1),
+                        color: const Color.fromRGBO(226, 195, 34, 1),
                         size: 40),
                     const SizedBox(width: 10),
                     Text(isFav ? 'Unfavorite' : 'Favorite',
                         style: GoogleFonts.poppins(
-                            color: Color.fromRGBO(187, 158, 0, 1),
+                            color: const Color.fromRGBO(187, 158, 0, 1),
                             fontSize: 18,
                             fontWeight: FontWeight.bold)),
                   ],

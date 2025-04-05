@@ -1,15 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
+import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followup.dart';
 import 'package:smart_assist/pages/Leads/single_id_screens/single_leads.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/utils/storage.dart';
 
 class CreateLeads extends StatefulWidget {
   const CreateLeads({super.key});
@@ -22,12 +25,23 @@ class _CreateLeadsState extends State<CreateLeads> {
   final PageController _pageController = PageController();
   List<Map<String, String>> dropdownItems = [];
   // final _formKey = GlobalKey<FormState>();
-  bool isLoading = false;
+  bool isLoading = true;
   int _currentStep = 0;
+  List<dynamic> vehicleList = [];
+  List<String> uniqueVehicleNames = [];
+  String? selectedVehicleName;
+
+  List<dynamic> _searchResults = [];
+  List<String> colorOptions = [];
+  String? selectedColor;
+  String? selectedExteriorColor;
+  String? selectedInteriorColor;
+  List<String> exteriorOptions = [];
+  List<String> interiorOptions = [];
 
   // Form error tracking
   Map<String, String> _errors = {};
-
+  bool _isLoadingSearch = false;
   String _selectedBrand = '';
   String _selectedType = '';
   String _selectedFuel = '';
@@ -40,14 +54,8 @@ class _CreateLeadsState extends State<CreateLeads> {
 
   // Initialize range values within min-max bounds
   late RangeValues _rangeAmount;
-
-  // String  selectedLeads = '';
-  // String selectedPurchaseType = 'New Vehicle';
-  // String selectedType = 'Product';
+  List<dynamic> vehicleName = [];
   String selectedSubType = 'Retail';
-  // String selectedTire = 'New';
-  // String? selectedSubject;
-  // String? selectedPriority;
 
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
@@ -56,12 +64,130 @@ class _CreateLeadsState extends State<CreateLeads> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController modelInterestController = TextEditingController();
-
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
   @override
   void initState() {
     super.initState();
     _rangeAmount = RangeValues(_minValue, _maxValue);
-    // fetchDropdownData();
+    // fetchVehicleData();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> fetchVehicleData(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        _searchResults = [];
+        _isLoadingSearch = false;
+      });
+      return;
+    }
+
+    final token = await Storage.getToken();
+
+    setState(() {
+      _isLoadingSearch = true;
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://api.smartassistapp.in/api/search/vehicles?vehicle=${Uri.encodeComponent(query)}',
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        final List<dynamic> results = data['data']['suggestions'] ?? [];
+
+        final Set<String> seenNames = {};
+        final List<dynamic> uniqueResults = [];
+
+        for (var vehicle in results) {
+          final name = vehicle['vehicle_name'];
+          if (name != null && seenNames.add(name)) {
+            uniqueResults.add(vehicle);
+          }
+        }
+
+        setState(() {
+          _searchResults = uniqueResults;
+        });
+      } else {
+        print("Failed to load data: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    } finally {
+      setState(() {
+        _isLoadingSearch = false;
+      });
+    }
+  }
+
+  void _onSearchChanged() {
+    final newQuery = _searchController.text.trim();
+    if (newQuery == _query) return;
+
+    _query = newQuery;
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (_query == _searchController.text.trim()) {
+        fetchVehicleData(_query);
+      }
+    });
+  }
+
+  Future<void> fetchVehicleColors(String vehicleName) async {
+    final token = await Storage.getToken();
+    final encodedName = Uri.encodeComponent(vehicleName);
+
+    final url =
+        'https://api.smartassistapp.in/api/users/vehicles/all?vehicle_name=$encodedName';
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List<dynamic> vehicles = data['data']['rows'] ?? [];
+
+        if (vehicles.isNotEmpty) {
+          final vehicle = vehicles.first;
+          final String? exterior = vehicle['exterior_color'];
+          final String? interior = vehicle['interior_color'];
+
+          setState(() {
+            exteriorOptions =
+                (exterior != null && exterior.isNotEmpty) ? [exterior] : [];
+            interiorOptions =
+                (interior != null && interior.isNotEmpty) ? [interior] : [];
+            selectedExteriorColor = null;
+            selectedInteriorColor = null;
+          });
+        }
+      } else {
+        print('Failed to fetch color data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching colors: $e');
+    }
   }
 
   Future<void> _pickDate({required bool isStartDate}) async {
@@ -162,21 +288,41 @@ class _CreateLeadsState extends State<CreateLeads> {
       // }
 
       // Validate expected purchase date
-      if (endDateController.text.trim().isEmpty) {
-        _errors['purchaseDate'] = 'Expected purchase date is required';
-        isValid = false;
-      }
+      // if (endDateController.text.trim().isEmpty) {
+      //   _errors['purchaseDate'] = 'Expected purchase date is required';
+      //   isValid = false;
+      // }
     });
 
     return isValid;
   }
 
-  bool _validatePage3() {
-    bool isValid = false;
+  // bool _validatePage3() {
+  //   bool isValid = false;
 
-    setState(() {
-      _errors = {};
-    });
+  //   setState(() {
+  //     // _errors = {};
+  //   });
+  //   return isValid;
+  // }
+
+  bool _validatePage3() {
+    bool isValid = true;
+
+    // Example checks — replace with your actual fields
+    if (selectedExteriorColor == null || selectedExteriorColor!.isEmpty) {
+      isValid = false;
+      _errors['exteriorColor'] = 'Please select exterior color';
+    }
+
+    if (selectedInteriorColor == null || selectedInteriorColor!.isEmpty) {
+      isValid = false;
+      _errors['interiorColor'] = 'Please select interior color';
+    }
+
+    // You can add more field checks here if needed
+
+    setState(() {}); // Update UI to show error messages if needed
     return isValid;
   }
 
@@ -197,7 +343,6 @@ class _CreateLeadsState extends State<CreateLeads> {
 
   void _nextStep() {
     if (_currentStep == 0) {
-      // Validate first page before proceeding
       if (_validatePage1()) {
         _pageController.nextPage(
           duration: const Duration(milliseconds: 300),
@@ -205,7 +350,6 @@ class _CreateLeadsState extends State<CreateLeads> {
         );
         setState(() => _currentStep++);
       } else {
-        // Show a snackbar with validation errors
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Please correct the errors before continuing'),
@@ -214,31 +358,27 @@ class _CreateLeadsState extends State<CreateLeads> {
         );
       }
     } else if (_currentStep == 1) {
-      // Validate second page before submitting
       if (_validatePage2()) {
-        // _submitForm();
         _pageController.nextPage(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
         setState(() => _currentStep++);
       } else {
-        // Show a snackbar with validation errors
-        print('select the fiels first');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Please complete all required fields'),
+            content: Text('Please complete all required fields 222'),
             backgroundColor: Colors.red,
           ),
         );
       }
     } else {
       if (_validatePage3()) {
-        _submitForm();
-        print('select the field first');
+        _submitForm(); // ✅ API will hit now
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Please complete all required fields'),
+            content: Text('Please complete all required fields 23223'),
             backgroundColor: Colors.red,
           ),
         );
@@ -479,6 +619,8 @@ class _CreateLeadsState extends State<CreateLeads> {
                           )
                         ],
                       ),
+
+                      //////////////////////////////////////////////////////////////
                       _buildTextField(
                           label: 'Email',
                           controller: emailController,
@@ -606,7 +748,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                         alignment: Alignment.centerLeft,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text('Primary Model Intrest',
+                          child: Text('PIN Code',
                               style: AppFont.dropDowmLabel(context)),
                         ),
                       ),
@@ -630,13 +772,13 @@ class _CreateLeadsState extends State<CreateLeads> {
                                 horizontal: 10, vertical: 10),
                             filled: true,
                             fillColor: AppColors.containerBg,
-                            hintText: 'Type',
+                            hintText: 'Pin Code',
                             hintStyle: AppFont.dropDown(context),
-                            prefixIcon: const Icon(
-                              FontAwesomeIcons.magnifyingGlass,
-                              color: AppColors.fontColor,
-                              size: 15,
-                            ),
+                            // prefixIcon: const Icon(
+                            //   FontAwesomeIcons.magnifyingGlass,
+                            //   color: AppColors.fontColor,
+                            //   size: 15,
+                            // ),
                             // suffixIcon: const Icon(
                             //   FontAwesomeIcons.microphone,
                             //   color: AppColors.fontColor,
@@ -656,49 +798,179 @@ class _CreateLeadsState extends State<CreateLeads> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text('Primary Model Intrest',
-                              style: AppFont.dropDowmLabel(context)),
+                      _buildSearchField(),
+
+                      if (selectedVehicleName != null &&
+                          (exteriorOptions.isNotEmpty ||
+                              interiorOptions.isNotEmpty)) ...[
+                        const SizedBox(height: 15),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Exterior Color',
+                                      style: AppFont.dropDowmLabel(context),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: AppColors.containerBg,
+                                    ),
+                                    child: DropdownButton<String>(
+                                      value: selectedExteriorColor,
+                                      hint: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          "Select Exterior Color",
+                                          style: AppFont.dropDown(context),
+                                        ),
+                                      ),
+                                      icon: const Padding(
+                                        padding: EdgeInsets.only(right: 15.0),
+                                        child: Icon(Icons.keyboard_arrow_down,
+                                            color: Colors.grey, size: 20),
+                                      ),
+                                      isExpanded: true,
+                                      underline: const SizedBox.shrink(),
+                                      items:
+                                          exteriorOptions.map((String color) {
+                                        return DropdownMenuItem<String>(
+                                          value: color,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: Text(color,
+                                                style: AppFont.dropDowmLabel(
+                                                    context)),
+                                          ),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedExteriorColor = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                                width: 10), // Add space between columns
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Interior Color',
+                                      style: AppFont.dropDowmLabel(context),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: AppColors.containerBg,
+                                    ),
+                                    child: DropdownButton<String>(
+                                      value: selectedInteriorColor,
+                                      hint: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          "Select Interior Color",
+                                          style: AppFont.dropDown(context),
+                                        ),
+                                      ),
+                                      icon: const Padding(
+                                        padding: EdgeInsets.only(right: 15.0),
+                                        child: Icon(Icons.keyboard_arrow_down,
+                                            color: Colors.grey, size: 20),
+                                      ),
+                                      isExpanded: true,
+                                      underline: const SizedBox.shrink(),
+                                      items:
+                                          interiorOptions.map((String color) {
+                                        return DropdownMenuItem<String>(
+                                          value: color,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: Text(color,
+                                                style: AppFont.dropDowmLabel(
+                                                    context)),
+                                          ),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedInteriorColor = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                      SizedBox(
-                        height: 45,
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  5), // Keep border radius small
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                  5), // Match with enabledBorder
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            filled: true,
-                            fillColor: AppColors.containerBg,
-                            hintText: 'Type',
-                            hintStyle: AppFont.dropDown(context),
-                            prefixIcon: const Icon(
-                              FontAwesomeIcons.magnifyingGlass,
-                              color: AppColors.fontColor,
-                              size: 15,
-                            ),
-                            // suffixIcon: const Icon(
-                            //   FontAwesomeIcons.microphone,
-                            //   color: AppColors.fontColor,
-                            //   size: 15,
-                            // ),
-                          ),
-                        ),
-                      ),
+                      ],
+
+                      // Align(
+                      //   alignment: Alignment.centerLeft,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      //     child: Text('Primary Model Intrest',
+                      //         style: AppFont.dropDowmLabel(context)),
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 5),
+                      // SizedBox(
+                      //   height: 45,
+                      //   child: TextField(
+                      //     textAlignVertical: TextAlignVertical.center,
+                      //     decoration: InputDecoration(
+                      //       enabledBorder: OutlineInputBorder(
+                      //         borderRadius: BorderRadius.circular(
+                      //             5), // Keep border radius small
+                      //         borderSide: BorderSide.none,
+                      //       ),
+                      //       focusedBorder: OutlineInputBorder(
+                      //         borderRadius: BorderRadius.circular(
+                      //             5), // Match with enabledBorder
+                      //         borderSide: BorderSide.none,
+                      //       ),
+                      //       contentPadding: const EdgeInsets.symmetric(
+                      //           horizontal: 10, vertical: 10),
+                      //       filled: true,
+                      //       fillColor: AppColors.containerBg,
+                      //       hintText: 'Type',
+                      //       hintStyle: AppFont.dropDown(context),
+                      //       prefixIcon: const Icon(
+                      //         FontAwesomeIcons.magnifyingGlass,
+                      //         color: AppColors.fontColor,
+                      //         size: 15,
+                      //       ),
+                      //       // suffixIcon: const Icon(
+                      //       //   FontAwesomeIcons.microphone,
+                      //       //   color: AppColors.fontColor,
+                      //       //   size: 15,
+                      //       // ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],
@@ -754,6 +1026,120 @@ class _CreateLeadsState extends State<CreateLeads> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSearchField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 10),
+        Text('Primary Model Interest', style: AppFont.dropDowmLabel(context)),
+        const SizedBox(height: 5),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.055,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: AppColors.containerBg,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: AppColors.containerBg,
+                    hintText: selectedVehicleName ?? 'Vehicle Name',
+                    hintStyle: TextStyle(
+                      color: selectedVehicleName != null
+                          ? Colors.black
+                          : Colors.grey,
+                    ),
+                    prefixIcon: const Icon(
+                      FontAwesomeIcons.magnifyingGlass,
+                      size: 15,
+                      color: AppColors.iconGrey,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: const Icon(
+                        FontAwesomeIcons.microphone,
+                        color: AppColors.iconGrey,
+                        size: 15,
+                      ),
+                      onPressed: () {
+                        print('Microphone button pressed');
+                      },
+                    ),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Show loading indicator
+        if (_isLoadingSearch)
+          const Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+
+        // Show search results
+        if (_searchResults.isNotEmpty)
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: const [
+                BoxShadow(color: Colors.black12, blurRadius: 4)
+              ],
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _searchResults.length,
+              itemBuilder: (context, index) {
+                final result = _searchResults[index];
+                return ListTile(
+                  onTap: () {
+                    setState(() {
+                      FocusScope.of(context).unfocus();
+                      // selectedLeads = result['lead_id'];
+                      selectedVehicleName = result['vehicle_name'];
+                      _searchController.clear();
+                      _searchResults.clear();
+                    });
+                    // ✅ Call the color-fetching function here!
+                    fetchVehicleColors(result['vehicle_name']);
+                  },
+                  title: Text(
+                    result['vehicle_name'] ?? 'No Name',
+                    style: TextStyle(
+                      color: selectedVehicleName == result['vehicle_name']
+                          ? Colors.black
+                          : AppColors.fontBlack,
+                    ),
+                  ),
+                  leading: const Icon(Icons.directions_car),
+                );
+              },
+            ),
+          ),
+      ],
     );
   }
 
@@ -1033,7 +1419,7 @@ class _CreateLeadsState extends State<CreateLeads> {
     final double startLakh = _rangeAmount.start / 100000;
     final double endLakh = _rangeAmount.end / 100000;
 
-    // Format with one decimal place
+    // Format with one decimal place 
     final startText = startLakh.toStringAsFixed(1);
     final endText = endLakh.toStringAsFixed(1);
 
@@ -1538,11 +1924,13 @@ class _CreateLeadsState extends State<CreateLeads> {
         'type': 'Product',
         'sub_type': selectedSubType,
         'sp_id': spId,
-        'PMI': 'Discovery',
+        'PMI': selectedVehicleName,
         'expected_date_purchase': endDateController.text,
         'fuel_type': _selectedFuel,
         'enquiry_type': _selectedEnquiryType,
         'lead_source': _selectedType,
+        'interior_color': selectedInteriorColor,
+        'exterior_color': selectedExteriorColor
       };
 
       print(
@@ -1560,7 +1948,7 @@ class _CreateLeadsState extends State<CreateLeads> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SingleLeadsById(leadId: leadId),
+                builder: (context) => FollowupsDetails(leadId: leadId),
               ),
             );
           }

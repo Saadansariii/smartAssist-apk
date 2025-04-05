@@ -654,10 +654,9 @@ class LeadsSrv {
       print('Response body: ${response.body}');
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
- 
+
         if (responseData.containsKey('data')) {
-          return responseData[
-              'data'];  
+          return responseData['data'];
         } else {
           throw Exception('Unexpected response structure: ${response.body}');
         }
@@ -1040,8 +1039,6 @@ class LeadsSrv {
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
-          // 'filterType' : ''
-          // 'category' : ''
         },
       );
 
@@ -1072,4 +1069,43 @@ class LeadsSrv {
       throw Exception(e.toString());
     }
   }
+
+
+   static Future<Map<String, dynamic>> fetchDashboardAnalytics() async {
+    final token = await Storage.getToken();
+    try {
+      final response = await http.get(
+        Uri.parse('${baseUrl}users/dashboard?filterType=MTD&category=Leads'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body); 
+        final Map<String, dynamic> data = jsonResponse['data'];
+        return data;
+      } else { 
+        final Map<String, dynamic> errorData = json.decode(response.body);
+        final String errorMessage =
+            errorData['message'] ?? 'Failed to load dashboard data';
+        print("Failed to load data: $errorMessage");
+
+        // Check if unauthorized: status 401 or error message includes "unauthorized"
+        if (response.statusCode == 401 ||
+            errorMessage.toLowerCase().contains("unauthorized")) {
+          await TokenManager.clearAuthData();
+          // Navigate to the login page using GetX
+          Get.offAll(() => LoginPage(email: '', onLoginSuccess: () {}));
+          throw Exception('Unauthorized. Redirecting to login.');
+        } else {
+          throw Exception(errorMessage);
+        }
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+ 
 }

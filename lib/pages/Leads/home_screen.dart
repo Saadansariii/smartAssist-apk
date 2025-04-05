@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart'; 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/getX/fab.controller.dart';
@@ -13,7 +13,7 @@ import 'package:smart_assist/pages/navbar_page/leads_all.dart';
 import 'package:smart_assist/pages/navbar_page/logout_page.dart';
 import 'package:smart_assist/pages/navbar_page/my_teams.dart';
 import 'package:smart_assist/pages/notification/notification.dart';
-import 'package:smart_assist/services/leads_srv.dart'; 
+import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/appointment_popup.dart';
@@ -684,7 +684,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     fabController.closeFab();
                     _showAppointmentPopup(context);
                   }),
-                  _buildPopupItem(Icons.people_alt_rounded, "Lead", -60,
+                  _buildPopupItem(Icons.people_alt_rounded, "Enquiry", -60,
                       onTap: () {
                     fabController.closeFab();
                     _showLeadPopup(context);

@@ -54,6 +54,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   List<String> startDateList = [];
 
   bool _isHidden = false;
+  bool _isHiddenTop = false;
 
   // dropdown
   final Widget _createFollowups = const LeadsCreateFollowup();
@@ -263,7 +264,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
           icon: const Icon(Icons.arrow_back_ios_new_outlined,
               color: AppColors.iconGrey),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           },
         ),
         elevation: 0,
@@ -308,156 +309,174 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                     ),
                                   ),
                                   const SizedBox(width: 10),
-                                  Column(
-                                    // mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Expanded(
+                                    child: Column(
+                                      // mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                                textAlign: TextAlign.left,
+                                                lead_owner,
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black)),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(company,
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.black)),
+                                          ],
+                                        ),
+                                        Text(
+                                          email,
+                                          softWrap: true,
+                                          overflow: TextOverflow.visible,
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.iconGrey),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
                                     children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                              textAlign: TextAlign.left,
-                                              lead_owner,
-                                              style: GoogleFonts.poppins(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.black)),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(company,
-                                              style: GoogleFonts.poppins(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.black)),
-                                        ],
-                                      ),
-                                      Text(
-                                        email,
-                                        softWrap: true,
-                                        overflow: TextOverflow.visible,
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w400,
-                                            decoration:
-                                                TextDecoration.underline,
-                                            color: AppColors.iconGrey),
+                                      IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _isHiddenTop = !_isHiddenTop;
+                                          });
+                                        },
+                                        icon: Icon(
+                                          _isHiddenTop
+                                              ? Icons
+                                                  .keyboard_arrow_down_rounded
+                                              : Icons.keyboard_arrow_up_rounded,
+                                          size: 35,
+                                          color: AppColors.iconGrey,
+                                        ),
                                       ),
                                     ],
                                   )
                                 ],
                               ),
-                              const Divider(
-                                thickness: 0.5,
-                              ),
-
-                              const SizedBox(height: 10),
-
+                              const SizedBox(height: 5),
                               // Contact Details Section (Phone, Company, Address)
-                              Row(
-                                children: [
-                                  // Left Section: Phone Number and Company
-                                  Expanded(
-                                    child: _buildContactRow(
-                                      icon: Icons.phone,
-                                      title: 'Phone Number',
-                                      subtitle: mobile,
+                              if (!_isHiddenTop) ...[
+                                const Divider(
+                                  thickness: 0.5,
+                                ),
+                                const SizedBox(height: 5),
+                                Row(
+                                  children: [
+                                    // Left Section: Phone Number and Company
+                                    Expanded(
+                                      child: _buildContactRow(
+                                        icon: Icons.phone,
+                                        title: 'Phone Number',
+                                        subtitle: mobile,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: _buildContactRow(
-                                      icon: Icons.location_on,
-                                      title: 'Company',
-                                      subtitle: company,
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: _buildContactRow(
+                                        icon: Icons.location_on,
+                                        title: 'Company',
+                                        subtitle: company,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: _buildContactRow(
-                                      icon: Icons.alt_route_outlined,
-                                      title: 'Status',
-                                      subtitle:
-                                          status, // Replace with the actual address variable
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: _buildContactRow(
+                                        icon: Icons.alt_route_outlined,
+                                        title: 'Status',
+                                        subtitle:
+                                            status, // Replace with the actual address variable
+                                      ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: _buildContactRow(
-                                      icon: Icons.person,
-                                      title: 'Address',
-                                      subtitle:
-                                          'Malad', // Replace with the actual address variable
+                                    Expanded(
+                                      child: _buildContactRow(
+                                        icon: Icons.person,
+                                        title: 'Address',
+                                        subtitle:
+                                            'Malad', // Replace with the actual address variable
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  // Left Section: Phone Number and Company
-                                  Expanded(
-                                    child: _buildContactRow(
-                                      icon:
-                                          Icons.account_balance_wallet_outlined,
-                                      title: 'Car budget',
-                                      subtitle: '2xxxxxxx',
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    // Left Section: Phone Number and Company
+                                    Expanded(
+                                      child: _buildContactRow(
+                                        icon: Icons
+                                            .account_balance_wallet_outlined,
+                                        title: 'Car budget',
+                                        subtitle: '2xxxxxxx',
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: _buildContactRow(
-                                      icon: Icons.directions_car,
-                                      title: 'Brand',
-                                      subtitle: PMI,
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: _buildContactRow(
+                                        icon: Icons.directions_car,
+                                        title: 'Brand',
+                                        subtitle: PMI,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: _buildContactRow(
-                                      icon: Icons.directions_car,
-                                      title: 'Purchase type',
-                                      subtitle:
-                                          purchase_type, // Replace with the actual address variable
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: _buildContactRow(
+                                        icon: Icons.directions_car,
+                                        title: 'Purchase type',
+                                        subtitle:
+                                            purchase_type, // Replace with the actual address variable
+                                      ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: _buildContactRow(
-                                      icon: Icons.local_gas_station,
-                                      title: 'Fuel type',
-                                      subtitle:
-                                          fuel_type, // Replace with the actual address variable
+                                    Expanded(
+                                      child: _buildContactRow(
+                                        icon: Icons.local_gas_station,
+                                        title: 'Fuel type',
+                                        subtitle:
+                                            fuel_type, // Replace with the actual address variable
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  // Left Section: Phone Number and Company
-                                  Expanded(
-                                    child: _buildContactRow(
-                                      icon: Icons.calendar_month,
-                                      title: 'Expected purchase date',
-                                      subtitle:
-                                          formatDate(expected_date_purchase),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    // Left Section: Phone Number and Company
+                                    Expanded(
+                                      child: _buildContactRow(
+                                        icon: Icons.calendar_month,
+                                        title: 'Expected purchase date',
+                                        subtitle:
+                                            formatDate(expected_date_purchase),
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: _buildContactRow(
-                                      icon: Icons.directions_car,
-                                      title: 'Enquiry type',
-                                      subtitle: enquiry_type,
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: _buildContactRow(
+                                        icon: Icons.directions_car,
+                                        title: 'Enquiry type',
+                                        subtitle: enquiry_type,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ]
                             ],
                           )),
                       const SizedBox(height: 10), // Spacer
@@ -811,7 +830,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                       Icons.calendar_month_outlined, "Appointment", -80,
                       onTap: () {
                     fabController.closeFab();
-                    _showAppointmentPopup(context , widget.leadId);
+                    _showAppointmentPopup(context, widget.leadId);
                   }),
                   // _buildPopupItem(Icons.people_alt_rounded, "Lead", -60,
                   //     onTap: () {
@@ -821,7 +840,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                   _buildPopupItem(Icons.directions_car, "Test Drive", -20,
                       onTap: () {
                     fabController.closeFab();
-                    _showTestdrivePopup(context , widget.leadId);
+                    _showTestdrivePopup(context, widget.leadId);
                   }),
                 ],
               ),
@@ -1059,7 +1078,7 @@ void _showAppointmentPopup(BuildContext context, String leadId) {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
-          child:   AppointmentIds(leadId : leadId), // Appointment modal
+          child: AppointmentIds(leadId: leadId), // Appointment modal
         ),
       );
     },
@@ -1081,7 +1100,7 @@ void _showTestdrivePopup(BuildContext context, String leadId) {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
-          child:   TestdriveIds(leadId : leadId), // Appointment modal
+          child: TestdriveIds(leadId: leadId), // Appointment modal
         ),
       );
     },
