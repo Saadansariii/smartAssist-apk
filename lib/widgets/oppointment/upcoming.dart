@@ -158,7 +158,7 @@ class _OppUpcomingState extends State<OppUpcoming> {
             name: item['name'],
             subject: item['subject'] ?? 'Meeting',
             date: item['start_date'],
-            vehicle: 'Discovery Sport',
+            vehicle: item['PMI'] ?? 'Range Rover Velar',
             leadId: item['lead_id'],
             time: item['start_time'],
             eventId: item['event_id'],

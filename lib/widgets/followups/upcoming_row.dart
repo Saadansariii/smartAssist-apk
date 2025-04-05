@@ -136,7 +136,7 @@ class _FollowupsUpcomingState extends State<FollowupsUpcoming> {
             name: item['name'],
             date: item['due_date'],
             subject: item['subject'] ?? '',
-            vehicle: 'Discovery Sport',
+            vehicle: item['PMI'] ?? 'Range Rover Velar',
             leadId: item['lead_id'],
             taskId: taskId,
             isFavorite: item['favourite'] ?? false,

@@ -24,14 +24,9 @@ class _BottomBtnSecondState extends State<BottomBtnSecond> {
 
   @override
   void initState() {
-    super.initState();
-    // Set a default widget if needed
+    super.initState(); 
     _loadDashboardAnalytics();
-    // currentWidget = Leads(
-    //   MtdData: MtdData,
-    //   YtdData: YtdData,
-    //   QtdData: QtdData,
-    // );
+  
   }
 
   Future<void> _loadDashboardAnalytics() async {

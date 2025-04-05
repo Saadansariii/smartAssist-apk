@@ -16,10 +16,24 @@ class Order extends StatefulWidget {
 class _OrderState extends State<Order> {
   int _childButtonIndex = 0;
 
+    Map<String, dynamic> getSelectedData() {
+    switch (_childButtonIndex) {
+      case 0:
+        return widget.MtdData;
+      case 1:
+        return widget.QtdData;
+      case 2:
+        return widget.YtdData;
+      default:
+        return {};
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get screen width and height for responsiveness
     double screenWidth = MediaQuery.of(context).size.width;
+    final selectedData = getSelectedData();
 
     return Column(
       children: [
@@ -153,6 +167,8 @@ class _OrderState extends State<Order> {
         return '';
     }
   }
+
+  
 
   String _getLeftTwoTitle(int index) {
     switch (index) {

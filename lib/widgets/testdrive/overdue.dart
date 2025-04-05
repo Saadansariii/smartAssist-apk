@@ -216,7 +216,7 @@ class _TestOverdueState extends State<TestOverdue> {
           child: upcomingTestDrivesItem(
             key: ValueKey(item['event_id']),
             name: item['name'],
-            vehicle: 'Discovery Sport',
+            vehicle: item['PMI'] ?? 'Range Rover Velar',
             subject: item['subject'] ?? 'Meeting',
             date: item['start_date'],
             leadId: item['lead_id'],

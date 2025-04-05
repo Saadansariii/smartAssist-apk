@@ -191,6 +191,7 @@ class _CreateLeadsState extends State<CreateLeads> {
   }
 
   Future<void> _pickDate({required bool isStartDate}) async {
+    FocusScope.of(context).unfocus();
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -312,12 +313,12 @@ class _CreateLeadsState extends State<CreateLeads> {
     // Example checks — replace with your actual fields
     if (selectedExteriorColor == null || selectedExteriorColor!.isEmpty) {
       isValid = false;
-      _errors['exteriorColor'] = 'Please select exterior color';
+      _errors['exteriorColor'] = 'select ';
     }
 
     if (selectedInteriorColor == null || selectedInteriorColor!.isEmpty) {
       isValid = false;
-      _errors['interiorColor'] = 'Please select interior color';
+      _errors['interiorColor'] = 'select';
     }
 
     // You can add more field checks here if needed
@@ -756,6 +757,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                       SizedBox(
                         height: 45,
                         child: TextField(
+                          autofocus: false,
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
@@ -1419,7 +1421,7 @@ class _CreateLeadsState extends State<CreateLeads> {
     final double startLakh = _rangeAmount.start / 100000;
     final double endLakh = _rangeAmount.end / 100000;
 
-    // Format with one decimal place 
+    // Format with one decimal place
     final startText = startLakh.toStringAsFixed(1);
     final endText = endLakh.toStringAsFixed(1);
 

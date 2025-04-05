@@ -54,7 +54,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   List<String> startDateList = [];
 
   bool _isHidden = false;
-  bool _isHiddenTop = false;
+  bool _isHiddenTop = true;
 
   // dropdown
   final Widget _createFollowups = const LeadsCreateFollowup();
@@ -94,7 +94,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
         mobile = leadData['data']['mobile'] ?? 'N/A';
         email = leadData['data']['email'] ?? 'N/A';
         status = leadData['data']['status'] ?? 'N/A';
-        company = leadData['data']['brand'] ?? 'N/A';
+        company = leadData['data']['PMI'] ?? 'N/A';
         address = leadData['data']['address'] ?? 'N/A';
         leadSource = leadData['data']['lead_source'] ?? 'N/A';
         fuel_type = leadData['data']['fuel_type'] ?? 'N/A';
@@ -327,22 +327,23 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                             const SizedBox(
                                               width: 10,
                                             ),
-                                            Text(company,
-                                                style: GoogleFonts.poppins(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black)),
                                           ],
                                         ),
-                                        Text(
-                                          email,
-                                          softWrap: true,
-                                          overflow: TextOverflow.visible,
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.iconGrey),
-                                        ),
+                                        Text(company,
+                                            maxLines: 4,
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.black)),
+                                        // Text(
+                                        //   email,
+                                        //   softWrap: true,
+                                        //   overflow: TextOverflow.visible,
+                                        //   style: GoogleFonts.poppins(
+                                        //       fontSize: 10,
+                                        //       fontWeight: FontWeight.w400,
+                                        //       color: AppColors.iconGrey),
+                                        // ),
                                       ],
                                     ),
                                   ),

@@ -99,6 +99,7 @@ class _TestDriveState extends State<TestDrive> {
 
   Widget _buildFirstSlide(BuildContext context, double screenWidth) {
     final selectedData = getSelectedData();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: IntrinsicHeight(
@@ -111,20 +112,24 @@ class _TestDriveState extends State<TestDrive> {
                 margin: const EdgeInsets.only(left: 10),
                 child: Column(
                   children: [
-                    _buildInfoCard(
-                      context,
-                      'Total Test Drives',
-                      '${selectedData['totalTestDrives'] ?? 0}',
-                      screenWidth,
-                      Colors.green,
+                    Expanded(
+                      child: _buildInfoCard(
+                        context,
+                        'Unique Test Drives',
+                        '${selectedData['totalTestDrives'] ?? 0}',
+                        screenWidth,
+                        Colors.green,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    _buildInfoCard(
-                      context,
-                      'Test Drive to Order Avg Time',
-                      '${selectedData['TestDrivesAvg'] ?? 0}',
-                      screenWidth,
-                      Colors.red,
+                    Expanded(
+                      child: _buildInfoCard(
+                        context,
+                        'Average Test Drive To Order Time',
+                        '${selectedData['TestDrivesAvg'] ?? 0}',
+                        screenWidth,
+                        Colors.red,
+                      ),
                     ),
                   ],
                 ),
@@ -163,7 +168,7 @@ class _TestDriveState extends State<TestDrive> {
                 margin: const EdgeInsets.only(right: 10),
                 child: _buildInfoCard3(
                   context,
-                  '${selectedData['remainingTestDrives'] ?? 0}',
+                  '45%',
                   'Enquiry to Unique test drive ratio',
                   screenWidth,
                 ),
@@ -176,7 +181,7 @@ class _TestDriveState extends State<TestDrive> {
                 // margin: const EdgeInsets.only(right: 10),
                 child: _buildInfoCard3(
                   context,
-                  '${selectedData['remainingTestDrives'] ?? 0}',
+                  '29%',
                   'Enquiry to test drive ratio',
                   screenWidth,
                 ),

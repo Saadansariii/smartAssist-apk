@@ -106,7 +106,7 @@ class _LeadsState extends State<Leads> {
 
         // PageView for Slides
         SizedBox(
-          height: 153,
+          height: 173,
           child: PageView(
             controller: _pageController,
             children: [
@@ -149,21 +149,25 @@ class _LeadsState extends State<Leads> {
             Expanded(
               child: Column(
                 children: [
-                  _buildInfoCard(
-                    context,
-                    'total Enquiries',
-                    '${selectedData['totalEnquiries'] ?? 0}',
-                    screenWidth,
-                    Colors.green,
+                  Expanded(
+                    child: _buildInfoCard(
+                      context,
+                      'Current month new enquiries',
+                      '${selectedData['totalEnquiries'] ?? 0}',
+                      screenWidth,
+                      Colors.green,
+                    ),
                   ),
                   const SizedBox(height: 10),
-                  _buildInfoCard(
-                    context,
-                    'lost Enquiries',
-                    '${selectedData['lostEnquiries'] ?? 0}',
-                    screenWidth,
-                    Colors.red,
-                  ),
+                  Expanded(
+                    child: _buildInfoCard(
+                      context,
+                      'Enquiries lost',
+                      '${selectedData['lostEnquiries'] ?? 0}',
+                      screenWidth,
+                      Colors.red,
+                    ),
+                  )
                 ],
               ),
             ),
@@ -171,7 +175,7 @@ class _LeadsState extends State<Leads> {
             Expanded(
               child: _buildRightInfoCard(
                 context,
-                'remaining Enquiries',
+                'More enquiries to achieve your target',
                 '${selectedData['remainingEnquiries'] ?? 0}',
                 screenWidth,
               ),
@@ -194,30 +198,35 @@ class _LeadsState extends State<Leads> {
           Expanded(
             child: Column(
               children: [
-                _buildInfoCard(
-                  context,
-                  'Converted Enquiries',
-                  '${selectedData['enquiryBank'] ?? 0}',
-                  screenWidth,
-                  Colors.green,
+                Expanded(
+                  child: _buildInfoCard(
+                    context,
+                    'No.of followups  lost per lost digital enquiry',
+                    // '${selectedData['enquiryBank'] ?? 0}',
+                    '1(3)',
+                    screenWidth,
+                    Colors.green,
+                  ),
                 ),
                 const SizedBox(height: 10),
-                _buildInfoCard(
-                  context,
-                  'Pending Enquiries',
-                  '${selectedData['remainingTestDrives'] ?? 0}',
-                  screenWidth,
-                  Colors.orange,
-                ),
+                Expanded(
+                  child: _buildInfoCard(
+                    context,
+                    'Average followups per lost digital enquiry',
+                    '3(5)',
+                    screenWidth,
+                    Colors.orange,
+                  ),
+                )
               ],
             ),
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: _buildRightInfoCard(
+            child: _buildRightInfoCard2(
               context,
-              'avg Enquiry',
-              '${selectedData['avgEnquiry'] ?? 0}',
+              'Avg Enquiry to order time',
+              '${selectedData['avgEnquiry'] ?? 0} days',
               screenWidth,
             ),
           ),
@@ -322,14 +331,6 @@ class _LeadsState extends State<Leads> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.grey.withOpacity(0.2),
-        //     spreadRadius: 1,
-        //     blurRadius: 3,
-        //     offset: const Offset(0, 2),
-        //   ),
-        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -352,6 +353,44 @@ class _LeadsState extends State<Leads> {
             alignment: Alignment.centerRight,
             child: Text(
               '😍',
+              style: TextStyle(fontSize: 20),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRightInfoCard2(
+      BuildContext context, String title, String value, double screenWidth) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(screenWidth * 0.04),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: GoogleFonts.inter(
+                fontSize: 28, fontWeight: FontWeight.w700, color: Colors.blue),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            title,
+            style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.grey[700]),
+          ),
+          const SizedBox(height: 10),
+          const Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              '⏰',
               style: TextStyle(fontSize: 20),
             ),
           )

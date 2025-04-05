@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followup.dart';
-import 'package:smart_assist/pages/Leads/single_id_screens/single_leads.dart';
 import 'package:smart_assist/utils/bottom_navigation.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -233,7 +232,7 @@ class _AllLeadsState extends State<AllLeads> {
                       // Adjust width as needed
                       height: MediaQuery.of(context).size.height * .05,
                       child: TextField(
-                        autofocus: true,
+                        autofocus: false,
                         controller: _searchController,
                         onChanged: (value) => _onSearchChanged(),
                         textAlignVertical: TextAlignVertical.center,
@@ -251,7 +250,7 @@ class _AllLeadsState extends State<AllLeads> {
                             fontSize: 12,
                             fontWeight: FontWeight.w300,
                           ),
-                          prefix: const Padding(
+                          prefixIcon: const Padding(
                             padding: EdgeInsets.only(
                                 right: 8), // Reduce icon padding
                             child: Icon(

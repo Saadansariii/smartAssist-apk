@@ -139,7 +139,7 @@ class _OverdueFollowupState extends State<OverdueFollowup> {
             name: item['name'],
             subject: item['subject'] ?? 'call',
             date: item['due_date'],
-            vehicle: 'Discovery Sport',
+            vehicle: item['PMI'] ?? 'Range Rover Velar',
             leadId: item['lead_id'],
             taskId: taskId,
             isFavorite: item['favourite'] ?? false,
