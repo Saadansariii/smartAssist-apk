@@ -14,7 +14,11 @@ import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
 
 class CreateFollowupsPopups extends StatefulWidget {
-  const CreateFollowupsPopups({super.key});
+  final Function onFormSubmit;
+  const CreateFollowupsPopups({
+    super.key,
+    required this.onFormSubmit,
+  });
 
   @override
   State<CreateFollowupsPopups> createState() => _CreateFollowupsPopupsState();
@@ -167,6 +171,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Follow-up submitted successfully!')),
       );
+      widget.onFormSubmit();
     } else {
       showErrorMessage(context, message: 'Submission failed. Try again.');
     }
@@ -228,7 +233,7 @@ class _CreateFollowupsPopupsState extends State<CreateFollowupsPopups> {
                 "Call": "Call",
                 'Provide quotation': "Provide Quotation",
                 "Send Email": "Send Email",
-                "Send sms": "Send Email"
+                "Send SMS": "Send Email"
               },
               groupValue: _selectedSubject,
               onChanged: (value) {

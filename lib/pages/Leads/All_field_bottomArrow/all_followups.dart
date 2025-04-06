@@ -16,7 +16,9 @@ class AddFollowups extends StatefulWidget {
 }
 
 class _AddFollowupsState extends State<AddFollowups> {
-  final Widget _createFollowups = const CreateFollowupsPopups();
+  final Widget _createFollowups = CreateFollowupsPopups(
+    onFormSubmit: () {},
+  );
   List<dynamic> _originalAllTasks = [];
   List<dynamic> _originalUpcomingTasks = [];
   List<dynamic> _originalOverdueTasks = [];

@@ -106,7 +106,7 @@ class _LeadsState extends State<Leads> {
 
         // PageView for Slides
         SizedBox(
-          height: 173,
+          height: 240,
           child: PageView(
             controller: _pageController,
             children: [
@@ -150,7 +150,7 @@ class _LeadsState extends State<Leads> {
               child: Column(
                 children: [
                   Expanded(
-                    child: _buildInfoCard(
+                    child: _buildInfoCard1(
                       context,
                       'Current month new enquiries',
                       '${selectedData['totalEnquiries'] ?? 0}',
@@ -160,7 +160,7 @@ class _LeadsState extends State<Leads> {
                   ),
                   const SizedBox(height: 10),
                   Expanded(
-                    child: _buildInfoCard(
+                    child: _buildInfoCard1(
                       context,
                       'Enquiries lost',
                       '${selectedData['lostEnquiries'] ?? 0}',
@@ -201,7 +201,7 @@ class _LeadsState extends State<Leads> {
                 Expanded(
                   child: _buildInfoCard(
                     context,
-                    'No.of followups  lost per lost digital enquiry',
+                    'No.of followups per lost digital enquiry',
                     // '${selectedData['enquiryBank'] ?? 0}',
                     '1(3)',
                     screenWidth,
@@ -212,7 +212,7 @@ class _LeadsState extends State<Leads> {
                 Expanded(
                   child: _buildInfoCard(
                     context,
-                    'Average followups per lost digital enquiry',
+                    'No.of followups per lost enquiry',
                     '3(5)',
                     screenWidth,
                     Colors.orange,
@@ -225,7 +225,7 @@ class _LeadsState extends State<Leads> {
           Expanded(
             child: _buildRightInfoCard2(
               context,
-              'Avg Enquiry to order time',
+              'Average Enquiry to order time',
               '${selectedData['avgEnquiry'] ?? 0} days',
               screenWidth,
             ),
@@ -275,23 +275,14 @@ class _LeadsState extends State<Leads> {
     );
   }
 
-  // Info Card for Left Columns
   Widget _buildInfoCard(BuildContext context, String title, String value,
       double screenWidth, Color valueColor) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(screenWidth * 0.04),
+      padding: EdgeInsets.all(screenWidth * 0.02),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.grey.withOpacity(0.2),
-        //     spreadRadius: 1,
-        //     blurRadius: 3,
-        //     offset: const Offset(0, 2),
-        //   ),
-        // ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -299,25 +290,72 @@ class _LeadsState extends State<Leads> {
           Text(
             softWrap: true,
             overflow: TextOverflow.ellipsis,
+            // textAlign: TextAlign.center,
             maxLines: 4,
             value,
             style: GoogleFonts.poppins(
-                fontSize: 28, fontWeight: FontWeight.w700, color: valueColor),
+                fontSize: 20, fontWeight: FontWeight.w700, color: valueColor),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 5),
           Expanded(
             child: Text(
               title,
               softWrap: true,
+              // textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               maxLines: 4,
               style: GoogleFonts.poppins(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w400,
                   color: Colors.grey[700]),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // Info Card for Left Columns
+  Widget _buildInfoCard1(BuildContext context, String title, String value,
+      double screenWidth, Color valueColor) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(screenWidth * 0.04),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              maxLines: 4,
+              value,
+              style: GoogleFonts.poppins(
+                  fontSize: 24, fontWeight: FontWeight.w700, color: valueColor),
+            ),
+            const SizedBox(height: 5),
+            Expanded(
+              child: Text(
+                title,
+                softWrap: true,
+                // textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 4,
+                style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[700]),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -333,6 +371,7 @@ class _LeadsState extends State<Leads> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -371,6 +410,7 @@ class _LeadsState extends State<Leads> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -386,7 +426,7 @@ class _LeadsState extends State<Leads> {
                 fontWeight: FontWeight.w400,
                 color: Colors.grey[700]),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           const Align(
             alignment: Alignment.centerRight,
             child: Text(

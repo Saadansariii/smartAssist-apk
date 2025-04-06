@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     fetchDashboardData();
-    _searchController.addListener(_onSearchChanged); 
+    _searchController.addListener(_onSearchChanged);
     _loadDashboardAnalytics();
     _loadTeamRole();
     print(_loadTeamRole());
@@ -781,7 +781,30 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ));
   }
+
+void _showFollowupPopup(BuildContext context) async {
+  final result = await showDialog<bool>(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: CreateFollowupsPopups(
+            onFormSubmit: fetchDashboardData, // Pass the function here
+          ),
+        ),
+      );
+    },
+  );
 }
+
 
 // ✅ Function to Show `CreateFollowupsPopups` on "Lead"
 void _showLeadPopup(BuildContext context) {
@@ -807,27 +830,30 @@ void _showLeadPopup(BuildContext context) {
 }
 
 // ✅ Function to Show `CreateFollowupsPopups` on "Lead"
-void _showFollowupPopup(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 16), // Add some margin for better UX
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const CreateFollowupsPopups(),
-        ),
-      );
-    },
-  );
-}
+// void _showFollowupPopup(BuildContext context) {
+//   showDialog(
+//     context: context,
+//     builder: (context) {
+//       return Dialog(
+//         backgroundColor: Colors.transparent,
+//         insetPadding: EdgeInsets.zero,
+//         child: Container(
+//           width: MediaQuery.of(context).size.width,
+//           margin: const EdgeInsets.symmetric(
+//               horizontal: 16), // Add some margin for better UX
+//           decoration: BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.circular(10),
+//           ),
+//           child: const CreateFollowupsPopups(),
+//         ),
+//       );
+//     },
+
+//   );
+// }
+
+// ✅ Function to Show `CreateFollowupsPopups` on "Lead"
 
 void _showAppointmentPopup(BuildContext context) {
   showDialog(
@@ -871,4 +897,5 @@ void _showTestdrivePopup(BuildContext context) {
       );
     },
   );
+}
 }

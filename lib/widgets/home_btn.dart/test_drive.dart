@@ -68,7 +68,7 @@ class _TestDriveState extends State<TestDrive> {
           ),
           const SizedBox(height: 10),
           SizedBox(
-            height: 200,
+            height: 230,
             child: PageView(
               controller: _pageController,
               children: [
@@ -125,10 +125,10 @@ class _TestDriveState extends State<TestDrive> {
                     Expanded(
                       child: _buildInfoCard(
                         context,
-                        'Average Test Drive To Order Time',
-                        '${selectedData['TestDrivesAvg'] ?? 0}',
+                        'More to achive your target',
+                        '${selectedData['remainingTestDrives'] ?? 0}',
                         screenWidth,
-                        Colors.red,
+                        Colors.blue,
                       ),
                     ),
                   ],
@@ -142,8 +142,8 @@ class _TestDriveState extends State<TestDrive> {
                 margin: const EdgeInsets.only(right: 10),
                 child: _buildInfoCard2(
                   context,
-                  '${selectedData['remainingTestDrives'] ?? 0}',
-                  'More Test Drives to achieve your target',
+                  '${selectedData['TestDrivesAvg'] ?? 0} days',
+                  'Average Test Drive To Order Time ',
                   screenWidth,
                 ),
               ),
@@ -247,11 +247,12 @@ class _TestDriveState extends State<TestDrive> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             value,
+            textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
                 fontSize: 30, fontWeight: FontWeight.w700, color: valueColor),
           ),
@@ -259,6 +260,7 @@ class _TestDriveState extends State<TestDrive> {
           Expanded(
             child: Text(
               title,
+              textAlign: TextAlign.center,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               maxLines: 4,
@@ -288,7 +290,7 @@ class _TestDriveState extends State<TestDrive> {
           Text(
             title,
             style: GoogleFonts.inter(
-                fontSize: 30, fontWeight: FontWeight.w700, color: Colors.blue),
+                fontSize: 30, fontWeight: FontWeight.w700, color: Colors.red),
           ),
           // const SizedBox(height: 2),
           Text(

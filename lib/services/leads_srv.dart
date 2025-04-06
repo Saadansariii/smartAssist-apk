@@ -802,6 +802,37 @@ class LeadsSrv {
   //   }
   // }
 
+  static Future<Map<String, dynamic>> eventTaskByLead(String leadId) async {
+    const String apiUrl = "${baseUrl}leads/events-&-tasks/";
+    final token = await Storage.getToken();
+
+    try {
+      // Append the leadId and subject to the API URL
+      print('Fetching data for Lead ID: $leadId');
+      print('API URL: ${apiUrl + leadId}');
+      final response = await http.get(
+        Uri.parse('${apiUrl + leadId}'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print('Response status code: ${response.statusCode}');
+      print('Response body for both data task and event: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final Map<String, dynamic> data = jsonResponse['data'];
+        return data;
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching data: $e');
+    }
+  }
+
   static Future<List<Map<String, dynamic>>> singleTestDriveById(
       String leadId, String subject) async {
     const String apiUrl = "${baseUrl}admin/leads/events/all/";

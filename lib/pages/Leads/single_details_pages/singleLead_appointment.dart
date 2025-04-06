@@ -22,6 +22,8 @@ class _AppointmentUpcomingState extends State<AppointmentUpcoming> {
   String address = '';
   String assign = '';
 
+  int _activeButtonIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -193,7 +195,7 @@ class ContactRow extends StatefulWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  final String eventId;  
+  final String eventId;
 
   const ContactRow({
     super.key,
@@ -238,7 +240,9 @@ class _ContactRowState extends State<ContactRow> {
   }
 
   @override
-  Widget build(BuildContext context ,) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(

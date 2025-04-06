@@ -824,6 +824,107 @@ class _CreateLeadsState extends State<CreateLeads> {
                         const SizedBox(height: 15),
                         Row(
                           children: [
+                            // Expanded(
+                            //   child: Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     children: [
+                            //       Align(
+                            //         alignment: Alignment.centerLeft,
+                            //         child: Text(
+                            //           'Exterior Color',
+                            //           style: AppFont.dropDowmLabel(context),
+                            //         ),
+                            //       ),
+                            //       const SizedBox(height: 5),
+                            //       Container(
+                            //         width: double.infinity,
+                            //         decoration: BoxDecoration(
+                            //           borderRadius: BorderRadius.circular(8),
+                            //           color: AppColors.containerBg,
+                            //         ),
+                            //         child: DropdownButton<String>(
+                            //           value: selectedExteriorColor,
+                            //           hint: Padding(
+                            //             padding:
+                            //                 const EdgeInsets.only(left: 10),
+                            //             child: Text(
+                            //               "Select",
+                            //               style: AppFont.dropDown(context),
+                            //             ),
+                            //           ),
+                            //           icon: const Padding(
+                            //             padding: EdgeInsets.only(right: 15.0),
+                            //             child: Icon(
+                            //               Icons.keyboard_arrow_down,
+                            //               color: Colors.grey,
+                            //               size: 20,
+                            //             ),
+                            //           ),
+                            //           isExpanded: true,
+                            //           underline: const SizedBox.shrink(),
+                            //           dropdownColor: Colors
+                            //               .white, // Dropdown background color
+                            //           // Customizing the dropdown menu items
+                            //           items:
+                            //               exteriorOptions.map((String color) {
+                            //             return DropdownMenuItem<String>(
+                            //               value: color,
+                            //               child: Padding(
+                            //                 padding: const EdgeInsets.symmetric(
+                            //                     horizontal:
+                            //                         10.0), // Add margin to items
+                            //                 child: Text(
+                            //                   color,
+                            //                   style: AppFont.dropDowmLabel(
+                            //                       context),
+                            //                 ),
+                            //               ),
+                            //             );
+                            //           }).toList(),
+                            //           onChanged: (value) {
+                            //             setState(() {
+                            //               selectedExteriorColor = value;
+                            //             });
+                            //           },
+                            //           // Customize selected item to look like a button
+                            //           selectedItemBuilder:
+                            //               (BuildContext context) {
+                            //             return exteriorOptions
+                            //                 .map((String color) {
+                            //               return Padding(
+                            //                 padding: const EdgeInsets.symmetric(
+                            //                     horizontal: 10.0), // Add margin
+                            //                 child: Container(
+                            //                   decoration: BoxDecoration(
+                            //                     color: AppColors
+                            //                         .containerBg, // Background color when selected
+                            //                     borderRadius:
+                            //                         BorderRadius.circular(5),
+                            //                   ),
+                            //                   child: Padding(
+                            //                     padding:
+                            //                         const EdgeInsets.symmetric(
+                            //                             vertical: 10.0,
+                            //                             horizontal: 15.0),
+                            //                     child: Text(
+                            //                       color,
+                            //                       style: AppFont.dropDowmLabel(
+                            //                               context)
+                            //                           .copyWith(
+                            //                         color: Colors
+                            //                             .white, // Text color for selected item
+                            //                       ),
+                            //                     ),
+                            //                   ),
+                            //                 ),
+                            //               );
+                            //             }).toList();
+                            //           },
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -848,7 +949,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                                         padding:
                                             const EdgeInsets.only(left: 10),
                                         child: Text(
-                                          "Select Exterior Color",
+                                          "Select",
                                           style: AppFont.dropDown(context),
                                         ),
                                       ),
@@ -860,7 +961,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                                       isExpanded: true,
                                       underline: const SizedBox.shrink(),
                                       items:
-                                          exteriorOptions.map((String color) {
+                                          interiorOptions.map((String color) {
                                         return DropdownMenuItem<String>(
                                           value: color,
                                           child: Padding(
@@ -882,6 +983,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                                 ],
                               ),
                             ),
+                          
                             const SizedBox(
                                 width: 10), // Add space between columns
                             Expanded(
@@ -908,7 +1010,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                                         padding:
                                             const EdgeInsets.only(left: 10),
                                         child: Text(
-                                          "Select Interior Color",
+                                          "Select",
                                           style: AppFont.dropDown(context),
                                         ),
                                       ),
@@ -1965,7 +2067,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                   borderRadius: BorderRadius.circular(15),
                   color: isSelected
                       ? AppColors.colorsBlue.withOpacity(0.2)
-                      : Colors.white,
+                      : AppColors.innerContainerBg,
                 ),
                 child: Text(
                   shortText, // ✅ Only show short text
