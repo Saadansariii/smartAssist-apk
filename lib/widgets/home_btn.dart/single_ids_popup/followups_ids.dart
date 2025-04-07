@@ -13,9 +13,11 @@ import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/style_text.dart';
 
-class FollowupsIds extends StatefulWidget { 
+class FollowupsIds extends StatefulWidget {
+  final Function onFormSubmit;
   final String leadId;
-  const FollowupsIds({super.key, required this.leadId});
+  const FollowupsIds(
+      {super.key, required this.leadId, required this.onFormSubmit});
 
   @override
   State<FollowupsIds> createState() => _FollowupsIdsState();
@@ -171,6 +173,7 @@ class _FollowupsIdsState extends State<FollowupsIds> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Follow-up submitted successfully!')),
       );
+      widget.onFormSubmit(widget.leadId);
     } else {
       showErrorMessage(context, message: 'Submission failed. Try again.');
     }

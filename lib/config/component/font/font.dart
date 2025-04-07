@@ -209,6 +209,18 @@ class AppFont {
     );
   }
 
+  static TextStyle tinyText(
+    BuildContext context, {
+    double fontSize = 8,
+    Color color = const Color.fromRGBO(78, 78, 78, 1),
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: FontWeight.w500,
+    );
+  }
+
   static TextStyle buttonwhite(
     BuildContext context, {
     double fontSize = 12,
@@ -306,7 +318,7 @@ class AppFont {
   static TextStyle buttons(
     BuildContext context, {
     double fontSize = 16,
-    Color color = Colors.white,
+    Color color = AppColors.white,
   }) {
     return GoogleFonts.poppins(
       fontSize: scaleFont(context, fontSize),

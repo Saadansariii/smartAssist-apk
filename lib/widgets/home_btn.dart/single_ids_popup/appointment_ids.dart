@@ -12,8 +12,10 @@ import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 
 class AppointmentIds extends StatefulWidget {
+  final Function onFormSubmit;
   final String leadId;
-  const AppointmentIds({super.key, required this.leadId});
+  const AppointmentIds(
+      {super.key, required this.leadId, required this.onFormSubmit});
 
   @override
   State<AppointmentIds> createState() => _AppointmentIdsState();
@@ -37,6 +39,8 @@ class _AppointmentIdsState extends State<AppointmentIds> {
   final TextEditingController _searchController = TextEditingController();
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
+  TextEditingController startTimeController = TextEditingController();
+  TextEditingController endTimeController = TextEditingController();
 
   @override
   void initState() {
@@ -96,28 +100,86 @@ class _AppointmentIdsState extends State<AppointmentIds> {
     });
   }
 
-  Future<void> _pickDate({required bool isStartDate}) async {
-    DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100));
-    if (pickedDate != null) {
-      TimeOfDay? pickedTime =
-          await showTimePicker(context: context, initialTime: TimeOfDay.now());
-      if (pickedTime != null) {
-        DateTime combinedDateTime = DateTime(pickedDate.year, pickedDate.month,
-            pickedDate.day, pickedTime.hour, pickedTime.minute);
-        String formattedDateTime =
-            DateFormat('dd/MM/yyyy hh:mm a').format(combinedDateTime);
-        setState(() {
-          if (isStartDate) {
-            startDateController.text = formattedDateTime;
-          } else {
-            endDateController.text = formattedDateTime;
-          }
-        });
+  Future<void> _pickStartDate() async {
+    FocusScope.of(context).unfocus();
+
+    // Get current start date or use today
+    DateTime initialDate;
+    try {
+      if (startDateController.text.isNotEmpty) {
+        initialDate = DateFormat('dd MMM yyyy').parse(startDateController.text);
+      } else {
+        initialDate = DateTime.now();
       }
+    } catch (e) {
+      initialDate = DateTime.now();
+    }
+
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('dd MMM yyyy').format(pickedDate);
+
+      setState(() {
+        // Set start date
+        startDateController.text = formattedDate;
+
+        // Set end date to the same as start date but not visible in the UI
+        // (Only passed to API)
+        endDateController.text = formattedDate;
+      });
+    }
+  }
+
+  Future<void> _pickStartTime() async {
+    FocusScope.of(context).unfocus();
+
+    // Get current time from startTimeController or use current time
+    TimeOfDay initialTime;
+    try {
+      if (startTimeController.text.isNotEmpty) {
+        final parsedTime =
+            DateFormat('hh:mm a').parse(startTimeController.text);
+        initialTime =
+            TimeOfDay(hour: parsedTime.hour, minute: parsedTime.minute);
+      } else {
+        initialTime = TimeOfDay.now();
+      }
+    } catch (e) {
+      initialTime = TimeOfDay.now();
+    }
+
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+    );
+
+    if (pickedTime != null) {
+      // Create a temporary DateTime to format the time
+      final now = DateTime.now();
+      final time = DateTime(
+          now.year, now.month, now.day, pickedTime.hour, pickedTime.minute);
+      String formattedTime = DateFormat('hh:mm a').format(time);
+
+      // Calculate end time (1 hour later)
+      final endHour = (pickedTime.hour + 1) % 24;
+      final endTime =
+          DateTime(now.year, now.month, now.day, endHour, pickedTime.minute);
+      String formattedEndTime = DateFormat('hh:mm a').format(endTime);
+
+      setState(() {
+        // Set start time
+        startTimeController.text = formattedTime;
+
+        // Set end time to 1 hour later but not visible in the UI
+        // (Only passed to API)
+        endTimeController.text = formattedEndTime;
+      });
     }
   }
 
@@ -139,32 +201,56 @@ class _AppointmentIdsState extends State<AppointmentIds> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // _buildSearchField(),
-              // const SizedBox(height: 10),
+              const SizedBox(height: 15),
               Row(
                 children: [
-                  Expanded(
-                    child: _buildDatePicker(
-                      label: 'Start Date',
-                      controller: startDateController,
-                      onTap: () => _pickDate(isStartDate: true),
-                    ),
+                  Text(
+                    'Start',
+                    style: AppFont.dropDowmLabel(context),
                   ),
                   const SizedBox(
-                      width: 10), // Space between the two date pickers
+                    width: 10,
+                  ),
                   Expanded(
                     child: _buildDatePicker(
-                      label: 'End Date',
-                      controller: endDateController,
-                      onTap: () => _pickDate(isStartDate: false),
+                      controller: startDateController,
+                      onTap: _pickStartDate,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _buildDatePicker1(
+                      controller: startTimeController,
+                      onTap: _pickStartTime,
                     ),
                   ),
                 ],
               ),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: _buildDatePicker(
+              //         label: 'Start Date',
+              //         controller: startDateController,
+              //         onTap: () => _pickDate(isStartDate: true),
+              //       ),
+              //     ),
+              //     const SizedBox(
+              //         width: 10), // Space between the two date pickers
+              //     Expanded(
+              //       child: _buildDatePicker(
+              //         label: 'End Date',
+              //         controller: endDateController,
+              //         onTap: () => _pickDate(isStartDate: false),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               const SizedBox(height: 10),
               _buildButtons(
                 options: {
                   "Meeting": "Meeting",
-                  "Test Drive": "Test Drive",
+                  "Quotation": "Quotation",
                   "Showroom appointment": "Showroom appointment",
                 },
                 groupValue: _selectedSubject,
@@ -195,7 +281,8 @@ class _AppointmentIdsState extends State<AppointmentIds> {
               Expanded(
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
+                        elevation: 0,
+                        backgroundColor: const Color.fromRGBO(217, 217, 217, 1),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () => Navigator.pop(context),
@@ -468,7 +555,7 @@ class _AppointmentIdsState extends State<AppointmentIds> {
               },
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: isSelected ? Colors.blue : Colors.black,
@@ -576,23 +663,12 @@ class _AppointmentIdsState extends State<AppointmentIds> {
   // }
 
   Widget _buildDatePicker({
-    required String label,
     required TextEditingController controller,
     required VoidCallback onTap,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          child: Text(
-            label,
-            style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.fontBlack),
-          ),
-        ),
         GestureDetector(
           onTap: onTap,
           child: Container(
@@ -629,6 +705,49 @@ class _AppointmentIdsState extends State<AppointmentIds> {
     );
   }
 
+  Widget _buildDatePicker1({
+    required TextEditingController controller,
+    required VoidCallback onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            height: 45,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: const Color.fromARGB(255, 248, 247, 247),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    controller.text.isEmpty ? "Select" : controller.text,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color:
+                          controller.text.isEmpty ? Colors.grey : Colors.black,
+                    ),
+                  ),
+                ),
+                const Icon(
+                  Icons.watch_later_outlined,
+                  color: AppColors.fontBlack,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<void> submitForm() async {
     // Retrieve sp_id from SharedPreferences.
     final prefs = await SharedPreferences.getInstance();
@@ -636,13 +755,23 @@ class _AppointmentIdsState extends State<AppointmentIds> {
 
     final leadId = widget.leadId;
 
-    // Parse and format the selected dates/times.
-    final startDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(startDateController.text);
-    final endDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(endDateController.text);
-    final formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
-    final formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
+    final rawStartDate =
+        DateFormat('dd MMM yyyy').parse(startDateController.text);
+    final rawEndDate = DateFormat('dd MMM yyyy')
+        .parse(endDateController.text); // Automatically set
+
+    final rawStartTime = DateFormat('hh:mm a').parse(startTimeController.text);
+    final rawEndTime = DateFormat('hh:mm a')
+        .parse(endTimeController.text); // Automatically set
+
+    // Format for API
+    final formattedStartDate = DateFormat('dd/MM/yyyy').format(rawStartDate);
+    final formattedEndDate =
+        DateFormat('dd/MM/yyyy').format(rawEndDate); // Automatically set
+
+    final formattedStartTime = DateFormat('HH:mm:ss').format(rawStartTime);
+    final formattedEndTime =
+        DateFormat('HH:mm:ss').format(rawEndTime); // Automatically set
 
     if (spId == null || leadId.isEmpty) {
       showErrorMessage(context,
@@ -652,8 +781,8 @@ class _AppointmentIdsState extends State<AppointmentIds> {
 
     // Prepare the appointment data.
     final appointmentData = {
-      'start_date': startDateController.text,
-      'end_date': endDateController.text,
+      'start_date': formattedStartDate,
+      'end_date': formattedEndDate,
       'priority': selectedPriority,
       'start_time': formattedStartTime,
       'end_time': formattedEndTime,
@@ -672,6 +801,7 @@ class _AppointmentIdsState extends State<AppointmentIds> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Form Submit Successful.')),
       );
+      widget.onFormSubmit(widget.leadId);
     } else {
       showErrorMessage(context, message: 'Failed to submit appointment.');
     }

@@ -12,8 +12,10 @@ import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 
 class TestdriveIds extends StatefulWidget {
+  final Function onFormSubmit;
   final String leadId;
-  const TestdriveIds({super.key, required this.leadId});
+  const TestdriveIds(
+      {super.key, required this.leadId, required this.onFormSubmit});
 
   @override
   State<TestdriveIds> createState() => _TestdriveIdsState();
@@ -23,24 +25,40 @@ class _TestdriveIdsState extends State<TestdriveIds> {
   // final PageController _pageController = PageController();
   List<Map<String, String>> dropdownItems = [];
   bool isLoading = false;
-
+  List<dynamic> vehicleList = [];
+  List<String> uniqueVehicleNames = [];
+  String? selectedVehicleName;
   bool _isLoadingSearch = false;
   String _query = '';
   String? selectedLeads;
   String? selectedLeadsName;
   String? selectedPriority;
-
+  bool _isLoadingSearch1 = false;
+ 
+  String _query1 = '';
   List<dynamic> _searchResults = [];
+  List<dynamic> _searchResults1 = [];
+  final TextEditingController _searchController1 = TextEditingController();
 
   final TextEditingController _searchController = TextEditingController();
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
+  TextEditingController startTimeController = TextEditingController();
+  TextEditingController endTimeController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
     // fetchDropdownData();
+    _searchController1.addListener(_onSearchChanged1);
+  }
+
+  @override
+  void dispose() { 
+    _searchController1.removeListener(_onSearchChanged1);
+    _searchController.dispose();
+    super.dispose();
   }
 
   /// Fetch search results from API
@@ -73,6 +91,7 @@ class _TestdriveIdsState extends State<TestdriveIds> {
           _searchResults = data['data']['suggestions'] ?? [];
         });
       }
+      widget.onFormSubmit(widget.leadId);
     } catch (e) {
       showErrorMessage(context, message: 'Something went wrong..!');
     } finally {
@@ -94,28 +113,156 @@ class _TestdriveIdsState extends State<TestdriveIds> {
     });
   }
 
-  Future<void> _pickDate({required bool isStartDate}) async {
-    DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100));
-    if (pickedDate != null) {
-      TimeOfDay? pickedTime =
-          await showTimePicker(context: context, initialTime: TimeOfDay.now());
-      if (pickedTime != null) {
-        DateTime combinedDateTime = DateTime(pickedDate.year, pickedDate.month,
-            pickedDate.day, pickedTime.hour, pickedTime.minute);
-        String formattedDateTime =
-            DateFormat('dd/MM/yyyy hh:mm a').format(combinedDateTime);
-        setState(() {
-          if (isStartDate) {
-            startDateController.text = formattedDateTime;
-          } else {
-            endDateController.text = formattedDateTime;
+  Future<void> fetchVehicleData(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        _searchResults1 = [];
+        _isLoadingSearch1 = false;
+      });
+      return;
+    }
+
+    final token = await Storage.getToken();
+
+    setState(() {
+      _isLoadingSearch1 = true;
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://api.smartassistapp.in/api/search/vehicles?vehicle=${Uri.encodeComponent(query)}',
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        final List<dynamic> results = data['data']['suggestions'] ?? [];
+
+        final Set<String> seenNames = {};
+        final List<dynamic> uniqueResults = [];
+
+        for (var vehicle in results) {
+          final name = vehicle['vehicle_name'];
+          if (name != null && seenNames.add(name)) {
+            uniqueResults.add(vehicle);
           }
-        });
+        }
+
+        if (_searchResults1 != uniqueResults) {
+          // Avoid unnecessary updates
+          setState(() {
+            _searchResults1 = uniqueResults;
+          });
+        }
+      } else {
+        print("Failed to load data: ${response.statusCode}");
       }
+    } catch (e) {
+      print("Error fetching data: $e");
+    } finally {
+      setState(() {
+        _isLoadingSearch1 = false;
+      });
+    }
+  }
+
+  void _onSearchChanged1() {
+    final newQuery = _searchController1.text.trim();
+    if (newQuery == _query1) return;
+
+    _query1 = newQuery; // This should be updated to use _query1
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (_query1 == _searchController1.text.trim()) {
+        fetchVehicleData(_query1); // Pass the correct query1 here
+      }
+    });
+  }
+
+  Future<void> _pickStartDate() async {
+    FocusScope.of(context).unfocus();
+
+    // Get current start date or use today
+    DateTime initialDate;
+    try {
+      if (startDateController.text.isNotEmpty) {
+        initialDate = DateFormat('dd MMM yyyy').parse(startDateController.text);
+      } else {
+        initialDate = DateTime.now();
+      }
+    } catch (e) {
+      initialDate = DateTime.now();
+    }
+
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('dd MMM yyyy').format(pickedDate);
+
+      setState(() {
+        // Set start date
+        startDateController.text = formattedDate;
+
+        // Set end date to the same as start date but not visible in the UI
+        // (Only passed to API)
+        endDateController.text = formattedDate;
+      });
+    }
+  }
+
+  Future<void> _pickStartTime() async {
+    FocusScope.of(context).unfocus();
+
+    // Get current time from startTimeController or use current time
+    TimeOfDay initialTime;
+    try {
+      if (startTimeController.text.isNotEmpty) {
+        final parsedTime =
+            DateFormat('hh:mm a').parse(startTimeController.text);
+        initialTime =
+            TimeOfDay(hour: parsedTime.hour, minute: parsedTime.minute);
+      } else {
+        initialTime = TimeOfDay.now();
+      }
+    } catch (e) {
+      initialTime = TimeOfDay.now();
+    }
+
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+    );
+
+    if (pickedTime != null) {
+      // Create a temporary DateTime to format the time
+      final now = DateTime.now();
+      final time = DateTime(
+          now.year, now.month, now.day, pickedTime.hour, pickedTime.minute);
+      String formattedTime = DateFormat('hh:mm a').format(time);
+
+      // Calculate end time (1 hour later)
+      final endHour = (pickedTime.hour + 1) % 24;
+      final endTime =
+          DateTime(now.year, now.month, now.day, endHour, pickedTime.minute);
+      String formattedEndTime = DateFormat('hh:mm a').format(endTime);
+
+      setState(() {
+        // Set start time
+        startTimeController.text = formattedTime;
+
+        // Set end time to 1 hour later but not visible in the UI
+        // (Only passed to API)
+        endTimeController.text = formattedEndTime;
+      });
     }
   }
 
@@ -137,23 +284,28 @@ class _TestdriveIdsState extends State<TestdriveIds> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // _buildSearchField(),
-              // const SizedBox(height: 10),
+              _buildSearchField1(),
+              const SizedBox(height: 15),
               Row(
                 children: [
-                  Expanded(
-                    child: _buildDatePicker(
-                      label: 'Start Date',
-                      controller: startDateController,
-                      onTap: () => _pickDate(isStartDate: true),
-                    ),
+                  Text(
+                    'Start',
+                    style: AppFont.dropDowmLabel(context),
                   ),
                   const SizedBox(
-                      width: 10), // Space between the two date pickers
+                    width: 10,
+                  ),
                   Expanded(
                     child: _buildDatePicker(
-                      label: 'End Date',
-                      controller: endDateController,
-                      onTap: () => _pickDate(isStartDate: false),
+                      controller: startDateController,
+                      onTap: _pickStartDate,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _buildDatePicker1(
+                      controller: startTimeController,
+                      onTap: _pickStartTime,
                     ),
                   ),
                 ],
@@ -166,7 +318,8 @@ class _TestdriveIdsState extends State<TestdriveIds> {
               Expanded(
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
+                        elevation: 0,
+                        backgroundColor: const Color.fromRGBO(217, 217, 217, 1),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () => Navigator.pop(context),
@@ -369,23 +522,12 @@ class _TestdriveIdsState extends State<TestdriveIds> {
   // }
 
   Widget _buildDatePicker({
-    required String label,
     required TextEditingController controller,
     required VoidCallback onTap,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          child: Text(
-            label,
-            style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.fontBlack),
-          ),
-        ),
         GestureDetector(
           onTap: onTap,
           child: Container(
@@ -412,7 +554,168 @@ class _TestdriveIdsState extends State<TestdriveIds> {
                 ),
                 const Icon(
                   Icons.calendar_month_outlined,
-                  color: AppColors.fontBlack,
+                  color: AppColors.iconGrey,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchField1() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 10),
+        Text('Select Vehicle', style: AppFont.dropDowmLabel(context)),
+        const SizedBox(height: 10),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.055,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: AppColors.containerBg,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController1,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: AppColors.containerBg,
+                    hintText: selectedVehicleName ?? 'Select',
+                    hintStyle: TextStyle(
+                      color: selectedVehicleName != null
+                          ? Colors.black
+                          : Colors.grey,
+                    ),
+                    prefixIcon: const Icon(
+                      FontAwesomeIcons.magnifyingGlass,
+                      size: 15,
+                      color: AppColors.iconGrey,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: const Icon(
+                        FontAwesomeIcons.microphone,
+                        color: AppColors.iconGrey,
+                        size: 15,
+                      ),
+                      onPressed: () {
+                        print('Microphone button pressed');
+                      },
+                    ),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Show loading indicator
+        if (_isLoadingSearch1)
+          const Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+
+        // Show search results
+        if (_searchResults1.isNotEmpty)
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: const [
+                BoxShadow(color: AppColors.iconGrey, blurRadius: 4)
+              ],
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _searchResults1.length,
+              itemBuilder: (context, index) {
+                final result1 = _searchResults1[index];
+                return ListTile(
+                  onTap: () {
+                    setState(() {
+                      FocusScope.of(context).unfocus();
+                      selectedVehicleName =
+                          result1['vehicle_name']; // Ensure this is not null
+                      _searchController1.clear();
+                      _searchResults1.clear();
+                    });
+
+                    // ✅ Call the color-fetching function here!
+                    // if (selectedVehicleName != null) {
+                    //   fetchVehicleColors(
+                    //       selectedVehicleName!); // Ensure vehicleName is not null
+                    // }
+                  },
+                  title: Text(
+                    result1['vehicle_name'] ?? 'No Name',
+                    style: TextStyle(
+                      color: selectedVehicleName == result1['vehicle_name']
+                          ? Colors.black
+                          : AppColors.fontBlack,
+                    ),
+                  ),
+                  leading: const Icon(Icons.directions_car),
+                );
+              },
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildDatePicker1({
+    required TextEditingController controller,
+    required VoidCallback onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            height: 45,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: const Color.fromARGB(255, 248, 247, 247),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    controller.text.isEmpty ? "Select" : controller.text,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color:
+                          controller.text.isEmpty ? Colors.grey : Colors.black,
+                    ),
+                  ),
+                ),
+                const Icon(
+                  Icons.watch_later_outlined,
+                  color: AppColors.iconGrey,
                 ),
               ],
             ),
@@ -435,12 +738,23 @@ class _TestdriveIdsState extends State<TestdriveIds> {
     final leadId = widget.leadId;
 
     // Parse and format the selected dates/times.
-    final startDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(startDateController.text);
-    final endDateTime =
-        DateFormat('dd/MM/yyyy hh:mm a').parse(endDateController.text);
-    final formattedStartTime = DateFormat('hh:mm a').format(startDateTime);
-    final formattedEndTime = DateFormat('hh:mm a').format(endDateTime);
+    final rawStartDate =
+        DateFormat('dd MMM yyyy').parse(startDateController.text);
+    final rawEndDate = DateFormat('dd MMM yyyy')
+        .parse(endDateController.text); // Automatically set
+
+    final rawStartTime = DateFormat('hh:mm a').parse(startTimeController.text);
+    final rawEndTime = DateFormat('hh:mm a')
+        .parse(endTimeController.text); // Automatically set
+
+    // Format for API
+    final formattedStartDate = DateFormat('dd/MM/yyyy').format(rawStartDate);
+    final formattedEndDate =
+        DateFormat('dd/MM/yyyy').format(rawEndDate); // Automatically set
+
+    final formattedStartTime = DateFormat('HH:mm:ss').format(rawStartTime);
+    final formattedEndTime =
+        DateFormat('HH:mm:ss').format(rawEndTime); // Automatically set
 
     if (spId == null || leadId.isEmpty) {
       showErrorMessage(context,
@@ -450,8 +764,8 @@ class _TestdriveIdsState extends State<TestdriveIds> {
 
     // Prepare the appointment data.
     final testdriveData = {
-      'start_date': startDateController.text,
-      'end_date': endDateController.text,
+      'start_date': formattedStartDate,
+      'end_date': formattedEndDate,
       'start_time': formattedStartTime,
       'end_time': formattedEndTime,
       'sp_id': spId,
@@ -468,6 +782,7 @@ class _TestdriveIdsState extends State<TestdriveIds> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Form Submit Successful.')),
       );
+      widget.onFormSubmit(widget.leadId);
     } else {
       showErrorMessage(context, message: 'Failed to submit appointment.');
     }

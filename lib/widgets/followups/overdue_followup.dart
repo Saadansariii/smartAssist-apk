@@ -296,7 +296,7 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
 
         // Main Container
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
             gradient: _buildSwipeGradient(),
             borderRadius: BorderRadius.circular(5),
@@ -308,8 +308,8 @@ class _overdueeFollowupsItemState extends State<overdueeFollowupsItem> {
                         ? Colors.green
                             .withOpacity(0.9) // Green when swiping for a call
                         : Colors.yellow.withOpacity(isFavoriteSwipe
-                            ? 0.1
-                            : 0.9)) // Keep yellow when favorite
+                            ? 0.1 
+                            : 0.9))  
                     : (isFavoriteSwipe
                         ? Colors.yellow.withOpacity(0.1)
                         : (isCallSwipe

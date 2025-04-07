@@ -81,7 +81,7 @@ class _FOpportunityState extends State<FOpportunity> {
         return TaskItem(
           name: task['name'] ?? 'No Name',
           date: task['due_date'] ?? 'No Date',
-          vehicle: task['vehicle'] ?? 'Discovery Sport',
+          vehicle: task['PMI'] ?? 'Discovery Sport',
           leadId: task['lead_id'] ?? '',
           taskId: task['task_id'] ?? '',
           isFavorite: task['favourite'] ?? false,

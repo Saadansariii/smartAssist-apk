@@ -51,7 +51,9 @@ class _ThreebtnState extends State<Threebtn> {
   final Widget _createFollowups = CreateFollowupsPopups(
     onFormSubmit: () {},
   );
-  final Widget _createAppoinment = const AppointmentPopup();
+  final Widget _createAppoinment = AppointmentPopup(
+    onFormSubmit: () {},
+  );
   String? leadId;
   Map<int, int> _childSelection = {0: 0, 1: 0, 2: 0};
 

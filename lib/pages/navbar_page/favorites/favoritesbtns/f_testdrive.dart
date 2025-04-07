@@ -178,7 +178,7 @@ class _FTestdriveState extends State<FTestdrive> {
           child: TaskItem(
               key: ValueKey(item['event_id']),
               name: item['name'],
-              vehicle: 'Discovery Sport',
+              vehicle: item['PMI'] ?? 'Discovery Sport',
               subject: item['subject'] ?? 'Meeting',
               date: item['start_date'],
               leadId: item['lead_id'],

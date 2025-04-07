@@ -16,7 +16,8 @@ import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class CreateLeads extends StatefulWidget {
-  const CreateLeads({super.key});
+    final Function onFormSubmit;
+  const CreateLeads({super.key, required this.onFormSubmit});
 
   @override
   State<CreateLeads> createState() => _CreateLeadsState();
@@ -655,7 +656,7 @@ class _CreateLeadsState extends State<CreateLeads> {
                       ),
                       _buildButtons(
                         label: 'Lead Source',
-                        options: {"Email": "Email", "Online Add": "Online Add"},
+                        options: {"Email": "Email", "Walk-in": "Walk-in" , "Social" : "Social" ,"Referral" : "Referral"},
                         groupValue: _selectedType,
                         errorText: _errors['leadSource'],
                         onChanged: (value) {
@@ -2144,6 +2145,7 @@ class _CreateLeadsState extends State<CreateLeads> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Form Submit Successful.')),
           );
+          widget.onFormSubmit();
         } else if (response.containsKey('error')) {
           String errorMsg = response['error'];
           print("API Error: $errorMsg"); // ✅ Log API error

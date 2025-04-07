@@ -12,7 +12,8 @@ import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 
 class AppointmentPopup extends StatefulWidget {
-  const AppointmentPopup({super.key});
+  final Function onFormSubmit;
+  const AppointmentPopup({super.key, required this.onFormSubmit});
 
   @override
   State<AppointmentPopup> createState() => _AppointmentPopupState();
@@ -122,6 +123,42 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     }
   }
 
+  Future<void> _pickStartDate() async {
+    FocusScope.of(context).unfocus();
+
+    // Get current start date or use today
+    DateTime initialDate;
+    try {
+      if (startDateController.text.isNotEmpty) {
+        initialDate = DateFormat('dd MMM yyyy').parse(startDateController.text);
+      } else {
+        initialDate = DateTime.now();
+      }
+    } catch (e) {
+      initialDate = DateTime.now();
+    }
+
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('dd MMM yyyy').format(pickedDate);
+
+      setState(() {
+        // Set start date
+        startDateController.text = formattedDate;
+
+        // Set end date to the same as start date but not visible in the UI
+        // (Only passed to API)
+        endDateController.text = formattedDate;
+      });
+    }
+  }
+
   Future<void> _pickStartTime() async {
     FocusScope.of(context).unfocus();
 
@@ -162,163 +199,12 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
         // Set start time
         startTimeController.text = formattedTime;
 
-        // Auto-set end time ONLY if empty
-        if (endTimeController.text.isEmpty) {
-          endTimeController.text = formattedEndTime;
-          print("Auto-filled end time: $formattedEndTime");
-        }
+        // Set end time to 1 hour later but not visible in the UI
+        // (Only passed to API)
+        endTimeController.text = formattedEndTime;
       });
     }
   }
-
-  Future<void> _pickEndTime() async {
-    FocusScope.of(context).unfocus();
-
-    // Get current end time or use current time
-    TimeOfDay initialTime;
-    try {
-      if (endTimeController.text.isNotEmpty) {
-        final parsedTime = DateFormat('hh:mm a').parse(endTimeController.text);
-        initialTime =
-            TimeOfDay(hour: parsedTime.hour, minute: parsedTime.minute);
-      } else {
-        initialTime = TimeOfDay.now();
-      }
-    } catch (e) {
-      initialTime = TimeOfDay.now();
-    }
-
-    TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: initialTime,
-    );
-
-    if (pickedTime != null) {
-      final now = DateTime.now();
-      final time = DateTime(
-          now.year, now.month, now.day, pickedTime.hour, pickedTime.minute);
-      String formattedTime = DateFormat('hh:mm a').format(time);
-
-      setState(() {
-        endTimeController.text = formattedTime;
-      });
-    }
-  }
-
-  Future<void> _pickStartDate() async {
-    FocusScope.of(context).unfocus();
-
-    // Get current start date or use today
-    DateTime initialDate;
-    try {
-      if (startDateController.text.isNotEmpty) {
-        initialDate = DateFormat('dd MMM yyyy').parse(startDateController.text);
-      } else {
-        initialDate = DateTime.now();
-      }
-    } catch (e) {
-      initialDate = DateTime.now();
-    }
-
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      String formattedDate = DateFormat('dd MMM yyyy').format(pickedDate);
-
-      setState(() {
-        // Set start date
-        startDateController.text = formattedDate;
-
-        // Auto-set end date ONLY if empty
-        if (endDateController.text.isEmpty) {
-          endDateController.text = formattedDate;
-          print("Auto-filled end date: $formattedDate");
-        }
-      });
-    }
-  }
-
-  Future<void> _pickEndDate() async {
-    FocusScope.of(context).unfocus();
-
-    // Get current end date or use today
-    DateTime initialDate;
-    try {
-      if (endDateController.text.isNotEmpty) {
-        initialDate = DateFormat('dd MMM yyyy').parse(endDateController.text);
-      } else {
-        initialDate = DateTime.now();
-      }
-    } catch (e) {
-      initialDate = DateTime.now();
-    }
-
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      String formattedDate = DateFormat('dd MMM yyyy').format(pickedDate);
-      setState(() {
-        endDateController.text = formattedDate;
-      });
-    }
-  }
-  // void _nextStep() {
-  //   if (_currentStep == 0) {
-  //     if (selectedLeads == null ||
-  //         selectedPriority == null ||
-  //         _selectedSubject == null ||
-  //         startDateController.text.isEmpty) {
-  //       showErrorMessage(context,
-  //           message: 'Please Fill all fields before Proceeding.');
-  //       return;
-  //     }
-  //     // _pageController.nextPage(
-  //     //     duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  //     setState(() => _currentStep = 1);
-  //   } else {
-  //     submitForm();
-  //   }
-  // }
-
-  // Future<void> submitForm() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final spId = prefs.getString('user_id');
-  //   final leadId = selectedLeads;
-
-  //   if (spId == null || leadId == null) {
-  //     showErrorMessage(context,
-  //         message: 'User ID or Lead ID not found. Please log in again.');
-  //     return;
-  //   }
-
-  //   final appointmentData = {
-  //     'start_date': startDateController.text,
-  //     'end_date': endDateController.text,
-  //     'priority': selectedPriority,
-  //     'subject': selectedSubject,
-  //     'sp_id': spId,
-  //   };
-
-  //   final success = await LeadsSrv.submitAppoinment(appointmentData, leadId);
-
-  //   if (success && context.mounted) {
-  //     Navigator.pop(context, true);
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text('Form Submit Successful.')));
-  //   } else {
-  //     showErrorMessage(context, message: 'Failed to submit appointment.');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -356,40 +242,40 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: _buildDatePicker(
+                    child: _buildDatePicker1(
                       controller: startTimeController,
                       onTap: _pickStartTime,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
-              Row(
-                children: [
-                  Text(
-                    'End  ',
-                    style: AppFont.dropDowmLabel(context),
-                  ),
-                  const SizedBox(width: 10),
+              // const SizedBox(height: 15),
+              // Row(
+              //   children: [
+              //     Text(
+              //       'End  ',
+              //       style: AppFont.dropDowmLabel(context),
+              //     ),
+              //     const SizedBox(width: 10),
 
-                  // End Date Picker - fills half remaining space
-                  Expanded(
-                    child: _buildDatePicker(
-                      controller: endDateController,
-                      onTap: _pickEndDate,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
+              //     // End Date Picker - fills half remaining space
+              //     Expanded(
+              //       child: _buildDatePicker(
+              //         controller: endDateController,
+              //         onTap: _pickEndDate,
+              //       ),
+              //     ),
+              //     const SizedBox(width: 10),
 
-                  // End Time Picker - fills other half
-                  Expanded(
-                    child: _buildDatePicker(
-                      controller: endTimeController,
-                      onTap: _pickEndTime,
-                    ),
-                  ),
-                ],
-              ),
+              //     // End Time Picker - fills other half
+              //     Expanded(
+              //       child: _buildDatePicker(
+              //         controller: endTimeController,
+              //         onTap: _pickEndTime,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               // _buildDatePicker(
               //     label: 'Start Date',
               //     controller: startDateController,
@@ -416,18 +302,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
             ],
           ),
           const SizedBox(height: 20),
-          // SmoothPageIndicator(
-          //     controller: _pageController,
-          //     count: 2,
-          //     effect: const WormEffect(
-          //       activeDotColor: Colors.black,
-          //       spacing: 4.0,
-          //       radius: 10.0,
-          //       dotWidth: 10.0,
-          //       dotHeight: 10.0,
-          //     )),
-          // const SizedBox(height: 10),
-
           Row(
             children: [
               Expanded(
@@ -453,44 +327,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
               ),
             ],
           ),
-          // Row(
-          //   children: [
-          //     Expanded(
-          //       child: ElevatedButton(
-          //         style: ElevatedButton.styleFrom(
-          //             backgroundColor: Colors.black,
-          //             shape: RoundedRectangleBorder(
-          //                 borderRadius: BorderRadius.circular(5))),
-          //         onPressed: () {
-          //           if (_currentStep == 0) {
-          //             // If on the first step, close the modal
-          //             Navigator.pop(context);
-          //           } else {
-          //             // If on the second step, go back to the first step
-
-          //             setState(() {
-          //               _currentStep = 0;
-          //             });
-          //           }
-          //         },
-          //         child: Text(_currentStep == 0 ? "Cancel" : "Back",
-          //             style: GoogleFonts.poppins(color: Colors.white)),
-          //       ),
-          //     ),
-          //     const SizedBox(width: 10),
-          //     Expanded(
-          //       child: ElevatedButton(
-          //         style: ElevatedButton.styleFrom(
-          //             backgroundColor: AppColors.colorsBlue,
-          //             shape: RoundedRectangleBorder(
-          //                 borderRadius: BorderRadius.circular(5))),
-          //         onPressed: _nextStep,
-          //         child: Text(_currentStep == 0 ? "Continue" : "Submit",
-          //             style: GoogleFonts.poppins(color: Colors.white)),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );
@@ -709,7 +545,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
               },
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: isSelected ? Colors.blue : Colors.black,
@@ -823,16 +659,6 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(vertical: 5.0),
-        //   child: Text(
-        //     label,
-        //     style: GoogleFonts.poppins(
-        //         fontSize: 14,
-        //         fontWeight: FontWeight.w500,
-        //         color: AppColors.fontBlack),
-        //   ),
-        // ),
         GestureDetector(
           onTap: onTap,
           child: Container(
@@ -869,6 +695,49 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
     );
   }
 
+  Widget _buildDatePicker1({
+    required TextEditingController controller,
+    required VoidCallback onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            height: 45,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: const Color.fromARGB(255, 248, 247, 247),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    controller.text.isEmpty ? "Select" : controller.text,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color:
+                          controller.text.isEmpty ? Colors.grey : Colors.black,
+                    ),
+                  ),
+                ),
+                const Icon(
+                  Icons.watch_later_outlined,
+                  color: AppColors.fontBlack,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<void> submitForm() async {
     final prefs = await SharedPreferences.getInstance();
     final spId = prefs.getString('user_id');
@@ -884,25 +753,28 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
       // Parse raw date and time
       final rawStartDate =
           DateFormat('dd MMM yyyy').parse(startDateController.text);
-      final rawEndDate =
-          DateFormat('dd MMM yyyy').parse(endDateController.text);
+      final rawEndDate = DateFormat('dd MMM yyyy')
+          .parse(endDateController.text); // Automatically set
 
       final rawStartTime =
           DateFormat('hh:mm a').parse(startTimeController.text);
-      final rawEndTime = DateFormat('hh:mm a').parse(endTimeController.text);
+      final rawEndTime = DateFormat('hh:mm a')
+          .parse(endTimeController.text); // Automatically set
 
       // Format for API
       final formattedStartDate = DateFormat('dd/MM/yyyy').format(rawStartDate);
-      final formattedEndDate = DateFormat('dd/MM/yyyy').format(rawEndDate);
+      final formattedEndDate =
+          DateFormat('dd/MM/yyyy').format(rawEndDate); // Automatically set
 
       final formattedStartTime = DateFormat('HH:mm:ss').format(rawStartTime);
-      final formattedEndTime = DateFormat('HH:mm:ss').format(rawEndTime);
+      final formattedEndTime =
+          DateFormat('HH:mm:ss').format(rawEndTime); // Automatically set
 
       final appointmentData = {
         'start_date': formattedStartDate,
-        'end_date': formattedEndDate,
+        'end_date': formattedEndDate, // Automatically passed to API
         'start_time': formattedStartTime,
-        'end_time': formattedEndTime,
+        'end_time': formattedEndTime, // Automatically passed to API
         'priority': selectedPriority,
         'subject': _selectedSubject,
         'sp_id': spId,
@@ -917,6 +789,7 @@ class _AppointmentPopupState extends State<AppointmentPopup> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Form Submit Successful.')),
         );
+        widget.onFormSubmit();
       } else {
         showErrorMessage(context, message: 'Failed to submit appointment.');
       }

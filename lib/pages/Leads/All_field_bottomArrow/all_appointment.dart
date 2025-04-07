@@ -16,7 +16,9 @@ class AllAppointment extends StatefulWidget {
 }
 
 class _AllAppointmentState extends State<AllAppointment> {
-  final Widget _createAppoinment = const AppointmentPopup();
+  final Widget _createAppoinment = AppointmentPopup(
+    onFormSubmit: () {},
+  );
   List<dynamic> _originalAllTasks = [];
   List<dynamic> _originalUpcomingTasks = [];
   List<dynamic> _originalOverdueTasks = [];

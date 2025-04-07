@@ -48,13 +48,17 @@ class _AddFollowupsState extends State<AddFollowups> {
           'Content-Type': 'application/json',
         },
       );
+      print('thisi si sht eurl ');
+      print(apiUrl);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
           _originalAllTasks = data['data']['allTasks']?['rows'] ?? [];
-          _originalUpcomingTasks = data['data']['upcomingTasks']?['rows'] ?? [];
-          _originalOverdueTasks = data['data']['overdueTasks']?['rows'] ?? [];
+          _originalUpcomingTasks =
+              data['data']['upcomingWeekTasks']?['rows'] ?? [];
+          _originalOverdueTasks =
+              data['data']['overdueWeekTasks']?['rows'] ?? [];
           _filteredAllTasks = List.from(_originalAllTasks);
           _filteredUpcomingTasks = List.from(_originalUpcomingTasks);
           _filteredOverdueTasks = List.from(_originalOverdueTasks);
@@ -166,7 +170,7 @@ class _AddFollowupsState extends State<AddFollowups> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 0),
                   child: Row(
                     children: [
                       const SizedBox(width: 20),
@@ -208,34 +212,6 @@ class _AddFollowupsState extends State<AddFollowups> {
               ],
             ),
           ),
-          // Main content: for "All", show both sections in one scroll;
-          // for "Upcoming" or "Overdue", show just that section.
-          // SliverToBoxAdapter(
-          //   child: _isLoading
-          //       ? const Center(child: CircularProgressIndicator())
-          //       : _upcommingButtonIndex == 0
-          //           ? Column(
-          //               children: [
-          //                 FollowupsUpcoming(
-          //                   upcomingFollowups: _filteredUpcomingTasks,
-          //                   isNested: true,
-          //                 ),
-          //                 OverdueFollowup(
-          //                   overdueeFollowups: _filteredOverdueTasks,
-          //                   isNested: true,
-          //                 ),
-          //               ],
-          //             )
-          //           : _upcommingButtonIndex == 1
-          //               ? FollowupsUpcoming(
-          //                   upcomingFollowups: _filteredUpcomingTasks,
-          //                   isNested: false,
-          //                 )
-          //               : OverdueFollowup(
-          //                   overdueeFollowups: _filteredOverdueTasks,
-          //                   isNested: false,
-          //                 ),
-          // ),
 
           SliverToBoxAdapter(
             child: _isLoading

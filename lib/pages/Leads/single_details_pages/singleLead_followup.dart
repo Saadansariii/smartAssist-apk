@@ -12,7 +12,6 @@ import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/followups_id
 import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/testdrive_ids.dart';
 import 'package:smart_assist/widgets/leads_details_popup/create_appointment.dart';
 import 'package:smart_assist/widgets/leads_details_popup/create_followups.dart';
-import 'package:smart_assist/widgets/timeline/timeline_nine_wid.dart';
 import 'package:smart_assist/widgets/timeline/timeline_tasks.dart';
 import 'package:smart_assist/widgets/timeline/timeline_events.dart';
 
@@ -40,9 +39,15 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   String expected_date_purchase = 'Loading...';
 
   bool isLoading = false;
+  int _childButtonIndex = 0;
+  Widget _selectedTaskWidget = Container();
   // fetchevent data
-  List<dynamic> upcomingTasks = [];
-  List<dynamic> completedTasks = [];
+
+  List<Map<String, dynamic>> upcomingTasks = [];
+  List<Map<String, dynamic>> upcomingEvents = [];
+  List<Map<String, dynamic>> completedEvents = [];
+  List<Map<String, dynamic>> completedTasks = [];
+
   List<String> subjectList = [];
   List<String> priorityList = [];
   List<String> startTimeList = [];
@@ -58,13 +63,18 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   // Initialize the controller
   final FabController fabController = Get.put(FabController());
   String leadId = '';
-  int _childButtonIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    eventandtask(leadId);
+    eventandtask(widget.leadId);
     fetchSingleIdData(widget.leadId);
+
+    // Initially, set the selected widget
+    _selectedTaskWidget = TimelineEightWid(
+      tasks: upcomingTasks,
+      upcomingEvents: upcomingEvents,
+    );
   }
 
   String formatDate(String date) {
@@ -100,52 +110,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     }
   }
 
-  void _eventAll() {
-    setState(() {
-      subjectList = [];
-      priorityList = [];
-      startTimeList = [];
-      endTimeList = [];
-      startDateList = [];
-
-      final dataSource = allEvents;
-
-      // Iterate through the rows of events
-      for (var item in dataSource) {
-        // Event data - access the fields directly from the item, not 'data'
-        subjectList.add(item['subject'] ?? 'N/A');
-        priorityList.add(item['priority'] ?? 'N/A');
-        startTimeList.add(_formatTime(item[
-            'start_time'])); // Assuming _formatTime is a method you defined
-        endTimeList.add(_formatTime(item['end_time']));
-        startDateList.add(item['start_date'] ?? 'N/A');
-      }
-    });
-  }
-
-  void _taskAll() {
-    setState(() {
-      subjectList = [];
-      priorityList = [];
-      startTimeList = [];
-      endTimeList = [];
-      startDateList = [];
-
-      // Choose the data source based on the button index
-      final dataSource = allTasks;
-
-      // Iterate through the dataSource (either allEvents or allTasks)
-      for (var item in dataSource) {
-        // Event data
-        subjectList.add(item['subject'] ?? 'N/A');
-        priorityList.add(item['priority'] ?? 'N/A');
-        startTimeList.add(_formatTime(item['start_time']));
-        endTimeList.add(_formatTime(item['end_time']));
-        startDateList.add(item['due_date'] ?? 'N/A');
-      }
-    });
-  }
-
   List<Map<String, dynamic>> allEvents = [];
   List<Map<String, dynamic>> allTasks = [];
   List<Map<String, dynamic>> allTestdrive = [];
@@ -153,18 +117,216 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   Future<void> eventandtask(String leadId) async {
     setState(() => isLoading = true);
     try {
-      final data = await LeadsSrv.eventTaskByLead(widget.leadId);
+      final data = await LeadsSrv.eventTaskByLead(leadId);
+
       setState(() {
-        completedTasks = data['completedTasks'];
-        upcomingTasks = data['upcomingTasks'];
-        print(upcomingTasks);
-        print(completedTasks);
+        // Ensure that upcomingTasks and completedTasks are correctly cast to List<Map<String, dynamic>>.
+        upcomingTasks = List<Map<String, dynamic>>.from(data['upcomingTasks']);
+        upcomingEvents =
+            List<Map<String, dynamic>>.from(data['upcomingEvents']);
+        completedTasks =
+            List<Map<String, dynamic>>.from(data['completedTasks']);
+        completedEvents =
+            List<Map<String, dynamic>>.from(data['completedEvents']);
+
+        // Now you can safely pass the upcomingTasks and completedTasks to the widgets.
+        _selectedTaskWidget = TimelineEightWid(
+          tasks: upcomingTasks,
+          upcomingEvents: upcomingEvents,
+        );
       });
     } catch (e) {
       print('Error Fetching events: $e');
     } finally {
       setState(() => isLoading = false);
     }
+  }
+
+  // Future<void> eventandtask(String leadId) async {
+  //   setState(() => isLoading = true);
+  //   try {
+  //     final data = await LeadsSrv.eventTaskByLead(widget.leadId);
+  //     setState(() {
+  //       completedTasks = data['completedTasks'];
+  //       completedEvents = data['completedEvents'];
+  //       upcomingTasks = data['upcomingTasks'];
+  //       upcomingEvents = data['upcomingEvents'];
+
+  //       _selectedTaskWidget = TimelineEightWid(tasks: upcomingTasks);
+
+  //       print(upcomingTasks);
+  //       print(completedTasks);
+  //     });
+  //   } catch (e) {
+  //     print('Error Fetching events: $e');
+  //   } finally {
+  //     setState(() => isLoading = false);
+  //   }
+  // }
+
+  void _toggleTasks(int index) {
+    setState(() {
+      _childButtonIndex = index;
+
+      if (index == 0) {
+        // Show upcoming tasks
+        _selectedTaskWidget = TimelineEightWid(
+            tasks: upcomingTasks, upcomingEvents: upcomingEvents);
+      } else {
+        // Show completed tasks
+        _selectedTaskWidget = TimelineSevenWid(
+            events: completedTasks, completedEvents: completedEvents);
+      }
+    });
+  }
+
+  // The method to show the toggle options (Upcoming / Completed)
+  Widget _buildToggleOption(int index, String text) {
+    final bool isActive = _childButtonIndex == index;
+    return GestureDetector(
+      onTap: () => _toggleTasks(index),
+      child: Text(
+        text,
+        style: GoogleFonts.poppins(
+          fontSize: isActive ? 18 : 12,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+
+  // Toggle switch to toggle between 'Upcoming' and 'Completed'
+  Widget _buildToggleSwitch() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildToggleOption(0, 'Upcoming'),
+        const SizedBox(width: 10),
+        _buildToggleOption(1, 'Completed'),
+      ],
+    );
+  }
+
+  void _showFollowupPopup(BuildContext context, String leadId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(
+                horizontal: 16), // Add some margin for better UX
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: FollowupsIds(
+              leadId: leadId,
+              onFormSubmit: eventandtask,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+void _showAppointmentPopup(BuildContext context, String leadId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero, // Remove default padding
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(
+                horizontal: 16), // Add margin for better UX
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: AppointmentIds(leadId: leadId ,
+              onFormSubmit: eventandtask,
+            ), // Appointment modal
+          ),
+        );
+      },
+    );
+  }
+
+  // void _showAppointmentPopup(BuildContext context, String leadId) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return Dialog(
+  //         backgroundColor: Colors.transparent,
+  //         insetPadding: EdgeInsets.zero, // Remove default padding
+  //         child: Container(
+  //           width: MediaQuery.of(context).size.width,
+  //           margin: const EdgeInsets.symmetric(
+  //               horizontal: 16), // Add margin for better UX
+  //           decoration: BoxDecoration(
+  //             color: Colors.white,
+  //             borderRadius: BorderRadius.circular(10),
+  //           ),
+  //           child: AppointmentIds(
+  //             leadId: leadId,
+  //           ), // Appointment modal
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+  // void _showTestdrivePopup(BuildContext context, String leadId) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return Dialog(
+  //         backgroundColor: Colors.transparent,
+  //         insetPadding: EdgeInsets.zero, // Remove default padding
+  //         child: Container(
+  //           width: MediaQuery.of(context).size.width,
+  //           margin: const EdgeInsets.symmetric(
+  //               horizontal: 16), // Add margin for better UX
+  //           decoration: BoxDecoration(
+  //             color: Colors.white,
+  //             borderRadius: BorderRadius.circular(10),
+  //           ),
+  //           child: TestdriveIds(leadId: leadId), // Appointment modal
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+
+  void _showTestdrivePopup(BuildContext context, String leadId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero, // Remove default padding
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(
+                horizontal: 16), // Add margin for better UX
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: TestdriveIds(leadId: leadId ,
+              onFormSubmit: eventandtask,
+            ), // Appointment modal
+          ),
+        );
+      },
+    );
   }
 
   // ✅ Function to Convert 24-hour Time to 12-hour Format
@@ -352,6 +514,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                             status, // Replace with the actual address variable
                                       ),
                                     ),
+                                    const SizedBox(width: 10),
                                     Expanded(
                                       child: _buildContactRow(
                                         icon: Icons.person,
@@ -393,6 +556,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                             purchase_type, // Replace with the actual address variable
                                       ),
                                     ),
+                                    const SizedBox(width: 10),
                                     Expanded(
                                       child: _buildContactRow(
                                         icon: Icons.local_gas_station,
@@ -472,219 +636,9 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
 
                             // Show only if _isHidden is false
                             if (!_isHidden) ...[
-                              // Filter buttons
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.start,
-                              //   children: [
-                              //     Padding(
-                              //       padding:
-                              //           const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                              //       child: Container(
-                              //         width: MediaQuery.of(context).size.width *
-                              //             .8,
-                              //         height: 30,
-                              //         decoration: BoxDecoration(
-                              //           border: Border.all(
-                              //               color: const Color(0xFF767676)
-                              //                   .withOpacity(0.3),
-                              //               width: 0.6),
-                              //           borderRadius: BorderRadius.circular(30),
-                              //         ),
-                              //         child: Row(
-                              //           children: [
-                              //             // Followups Button
-                              //             Expanded(
-                              //               child: TextButton(
-                              //                   onPressed: () {
-                              //                     setState(() {
-                              //                       _childButtonIndex = 0;
-                              //                       _eventAll();
-                              //                       if (allEvents.isEmpty) {
-                              //                         fetchSingleTask(
-                              //                             widget.leadId);
-                              //                       }
-                              //                     });
-                              //                   },
-                              //                   style: TextButton.styleFrom(
-                              //                     backgroundColor:
-                              //                         _childButtonIndex == 0
-                              //                             ? Colors.blue
-                              //                             : Colors.transparent,
-                              //                     foregroundColor:
-                              //                         _childButtonIndex == 0
-                              //                             ? Colors.white
-                              //                             : Colors.black,
-                              //                     padding: const EdgeInsets
-                              //                         .symmetric(vertical: 5),
-                              //                     shape: RoundedRectangleBorder(
-                              //                       borderRadius:
-                              //                           BorderRadius.circular(
-                              //                               30),
-                              //                     ),
-                              //                   ),
-                              //                   child: Text(
-                              //                     'Followups',
-                              //                     style: GoogleFonts.poppins(
-                              //                         fontSize: 10,
-                              //                         fontWeight:
-                              //                             FontWeight.w400,
-                              //                         color:
-                              //                             _childButtonIndex == 0
-                              //                                 ? Colors.white
-                              //                                 : Colors.black),
-                              //                   )),
-                              //             ),
-
-                              //             // Appointments Button
-                              //             Expanded(
-                              //               child: TextButton(
-                              //                 onPressed: () {
-                              //                   setState(() {
-                              //                     _childButtonIndex = 1;
-                              //                     _taskAll();
-                              //                     if (allTasks.isEmpty) {
-                              //                       fetchSingleTask(
-                              //                           widget.leadId);
-                              //                     }
-                              //                   });
-                              //                 },
-                              //                 style: TextButton.styleFrom(
-                              //                   backgroundColor:
-                              //                       _childButtonIndex == 1
-                              //                           ? Colors.blue
-                              //                           : Colors.transparent,
-                              //                   foregroundColor:
-                              //                       _childButtonIndex == 1
-                              //                           ? Colors.white
-                              //                           : Colors.black,
-                              //                   padding:
-                              //                       const EdgeInsets.symmetric(
-                              //                           vertical: 5),
-                              //                   shape: RoundedRectangleBorder(
-                              //                     borderRadius:
-                              //                         BorderRadius.circular(30),
-                              //                   ),
-                              //                 ),
-                              //                 child: Text('Appointments',
-                              //                     style: GoogleFonts.poppins(
-                              //                         fontSize: 10,
-                              //                         fontWeight:
-                              //                             FontWeight.w400,
-                              //                         color:
-                              //                             _childButtonIndex == 1
-                              //                                 ? Colors.white
-                              //                                 : Colors.black)),
-                              //               ),
-                              //             ),
-
-                              //             // Test Drive Button
-                              //             Expanded(
-                              //               child: TextButton(
-                              //                 onPressed: () {
-                              //                   setState(() {
-                              //                     _childButtonIndex = 2;
-                              //                     _eventAll();
-                              //                     if (allEvents.isEmpty) {
-                              //                       fetchTestDrive(
-                              //                           widget.leadId,
-                              //                           'Test%20Drive');
-                              //                     }
-                              //                   });
-                              //                 },
-                              //                 style: TextButton.styleFrom(
-                              //                   backgroundColor:
-                              //                       _childButtonIndex == 2
-                              //                           ? Colors.blue
-                              //                           : Colors.transparent,
-                              //                   foregroundColor:
-                              //                       _childButtonIndex == 2
-                              //                           ? Colors.white
-                              //                           : Colors.black,
-                              //                   padding:
-                              //                       const EdgeInsets.symmetric(
-                              //                           vertical: 5),
-                              //                   shape: RoundedRectangleBorder(
-                              //                     borderRadius:
-                              //                         BorderRadius.circular(30),
-                              //                   ),
-                              //                 ),
-                              //                 child: Text('Test Drive',
-                              //                     style: GoogleFonts.poppins(
-                              //                         fontSize: 10,
-                              //                         fontWeight:
-                              //                             FontWeight.w400,
-                              //                         color:
-                              //                             _childButtonIndex == 2
-                              //                                 ? Colors.white
-                              //                                 : Colors.black)),
-                              //               ),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
-
-                              // Data Section
-                              isLoading
-                                  ? const Center(
-                                      child: CircularProgressIndicator())
-                                  : Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const SizedBox(height: 0),
-                                        if (_childButtonIndex == 0)
-                                          allEvents.isNotEmpty
-                                              ? TimelineSevenWid(
-                                                  events: allEvents)
-                                              : const Center(
-                                                  child: Text(
-                                                    textAlign: TextAlign.start,
-                                                    "No Events Found....",
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                )
-                                        else if (_childButtonIndex == 1)
-                                          allTasks.isNotEmpty
-                                              ? TimelineEightWid(
-                                                  events: allTasks)
-                                              : const Center(
-                                                  child: Text(
-                                                    textAlign: TextAlign.center,
-                                                    "No Tasks Found...",
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                )
-                                        else if (_childButtonIndex == 2)
-                                          allTestdrive.isNotEmpty
-                                              ? TimelineNineWid(
-                                                  testDrive: allTestdrive)
-                                              : const Center(
-                                                  child: Text(
-                                                    textAlign: TextAlign.center,
-                                                    "No Test Drive Found...",
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                ),
-                                      ],
-                                    ),
+                              //  i want to show here the timeline eight and nine
+                              // and nine data
+                              _selectedTaskWidget,
                             ]
                           ],
                         ),
@@ -712,31 +666,38 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     );
   }
 
-  Widget _buildToggleSwitch() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildToggleOption(0, 'Upcoming'),
-        const SizedBox(
-          width: 10,
-        ),
-        _buildToggleOption(1, 'Completed'),
-      ],
-    );
-  }
+  // Widget _buildToggleSwitch() {
+  //   return Row(
+  //     mainAxisSize: MainAxisSize.min,
+  //     children: [
+  //       _buildToggleOption(0, 'Upcoming'),
+  //       const SizedBox(
+  //         width: 10,
+  //       ),
+  //       _buildToggleOption(1, 'Completed'),
+  //     ],
+  //   );
+  // }
 
   // Widget _buildToggleOption(int index, String text) {
   //   final bool isActive = _childButtonIndex == index;
-
   //   return GestureDetector(
   //     onTap: () {
   //       setState(() {
   //         _childButtonIndex = index;
   //         // Update your data based on selection
   //         if (index == 0) {
-  //           _eventAll(); // Show upcoming events
+  //           // Assuming upcomingTasks is a List<dynamic>, cast it to List<Map<String, dynamic>>
+  //           List<Map<String, dynamic>> typedUpcomingTasks =
+  //               List<Map<String, dynamic>>.from(upcomingTasks);
+  //           // Now you can pass the typedUpcomingTasks to TimelineEightWid
+  //           _selectedTaskWidget = TimelineEightWid(tasks: typedUpcomingTasks);
   //         } else {
-  //           _taskAll(); // Show completed tasks
+  //           // Assuming completedTasks is also a List<dynamic>, cast it to List<Map<String, dynamic>>
+  //           List<Map<String, dynamic>> typedCompletedTasks =
+  //               List<Map<String, dynamic>>.from(completedTasks);
+  //           // Now you can pass the typedCompletedTasks to TimelineSevenWid
+  //           // _selectedTaskWidget = TimelineSevenWid(tasks: typedCompletedTasks);
   //         }
   //       });
   //     },
@@ -750,59 +711,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   //     ),
   //   );
   // }
-
-  Widget _buildToggleOption(int index, String text) {
-    final bool isActive = _childButtonIndex == index;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _childButtonIndex = index;
-          // Update your data based on selection
-          if (index == 0) {
-            // TimelineSevenWid;
-            upcomingTasks.isNotEmpty
-                ? TimelineEightWid(events: allTasks)
-                : const Center(
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      "No Tasks Found...",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  );
-            // _eventAll(); // Show upcoming events
-          } else {
-            // TimelineSevenWid;
-            completedTasks.isNotEmpty
-                ? TimelineSevenWid(events: allTasks)
-                : const Center(
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      "No Tasks Found...",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  );
-            // _taskAll(); // Show completed tasks
-          }
-        });
-      },
-      child: Text(
-        text,
-        style: GoogleFonts.poppins(
-          fontSize: isActive ? 18 : 12,
-          fontWeight: FontWeight.w500,
-          color: Colors.black,
-        ),
-      ),
-    );
-  }
 
 // FAB Builder
   Widget _buildFloatingActionButton(BuildContext context) {
@@ -982,7 +890,7 @@ class _ContactRowState extends State<ContactRow> {
         phoneNumber = leadData['data']['mobile'] ?? 'N/A';
         email = leadData['data']['lead_email'] ?? 'N/A';
         status = leadData['data']['status'] ?? 'N/A';
-        company = leadData['data']['brand'] ?? 'N/A';
+        company = leadData['data']['PMI'] ?? 'N/A';
         address = leadData['data']['address'] ?? 'N/A';
         lead_owner = leadData['data']['lead_owner'] ?? 'N/A';
       });
@@ -1053,92 +961,5 @@ class NavigationController extends GetxController {
   }
 }
 
-// // ✅ Function to Show `CreateFollowupsPopups` on "Lead"
-// void _showLeadPopup(BuildContext context) {
-//   showDialog(
-//     context: context,
-//     builder: (context) {
-//       return Dialog(
-//         backgroundColor: Colors.transparent,
-//         insetPadding: EdgeInsets.zero,
-//         child: Container(
-//           width: MediaQuery.of(context).size.width,
-//           margin: const EdgeInsets.symmetric(
-//               horizontal: 16), // Add some margin for better UX
-//           decoration: BoxDecoration(
-//             color: Colors.white,
-//             borderRadius: BorderRadius.circular(10),
-//           ),
-//           child: const LeadsIds(),
-//         ),
-//       );
-//     },
-//   );
-// }
-
 // ✅ Function to Show `CreateFollowupsPopups` on "Lead"
-void _showFollowupPopup(BuildContext context, String leadId) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 16), // Add some margin for better UX
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: FollowupsIds(leadId: leadId),
-        ),
-      );
-    },
-  );
-}
 
-void _showAppointmentPopup(BuildContext context, String leadId) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero, // Remove default padding
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 16), // Add margin for better UX
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: AppointmentIds(leadId: leadId), // Appointment modal
-        ),
-      );
-    },
-  );
-}
-
-void _showTestdrivePopup(BuildContext context, String leadId) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero, // Remove default padding
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 16), // Add margin for better UX
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: TestdriveIds(leadId: leadId), // Appointment modal
-        ),
-      );
-    },
-  );
-}

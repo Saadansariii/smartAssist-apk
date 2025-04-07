@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
-import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/config/component/font/font.dart'; 
 import 'package:smart_assist/widgets/home_btn.dart/leads.dart';
 import 'package:smart_assist/widgets/home_btn.dart/order.dart';
 import 'package:smart_assist/widgets/home_btn.dart/test_drive.dart';

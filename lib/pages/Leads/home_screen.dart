@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/config/getX/fab.controller.dart';
 import 'package:smart_assist/pages/Leads/gloabal_search_page/global_search.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
@@ -16,6 +17,7 @@ import 'package:smart_assist/pages/notification/notification.dart';
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/snackbar_helper.dart';
 import 'package:smart_assist/utils/storage.dart';
+import 'package:smart_assist/widgets/home_btn.dart/bottom_btn_third.dart';
 import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/appointment_popup.dart';
 import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/create_Followups_popups.dart';
 import 'package:smart_assist/widgets/home_btn.dart/dashboard_popups/create_leads.dart';
@@ -40,6 +42,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? leadId;
+  bool _isHidden = false;
   String greeting = '';
   int notificationCount = 0;
   int overdueFollowupsCount = 0;
@@ -78,6 +81,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadDashboardAnalytics() async {
+    setState(() {
+      isDashboardLoading = true;
+    });
     try {
       final data = await LeadsSrv.fetchDashboardAnalytics();
       setState(() {
@@ -209,6 +215,78 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // String? teamRole = await SharedPreferences.getInstance()
   // .then((prefs) => prefs.getString('USER_ROLE'));
+
+  void _showAppointmentPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero, // Remove default padding
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(
+                horizontal: 16), // Add margin for better UX
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: AppointmentPopup(
+              onFormSubmit: fetchDashboardData,
+            ), // Appointment modal
+          ),
+        );
+      },
+    );
+  }
+
+  void _showTestdrivePopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero, // Remove default padding
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(
+                horizontal: 16), // Add margin for better UX
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: CreateTestdrive(
+              onFormSubmit: fetchDashboardData,
+            ), // Appointment modal
+          ),
+        );
+      },
+    );
+  }
+
+  void _showLeadPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(
+                horizontal: 16), // Add some margin for better UX
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: CreateLeads(
+              onFormSubmit: fetchDashboardData,
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -540,6 +618,34 @@ class _HomeScreenState extends State<HomeScreen> {
                               YtdData: YtdData,
                             ),
 
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Performance analysis',
+                                    style: AppFont.appbarfontgrey(context),
+                                  ),
+                                  TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _isHidden = !_isHidden;
+                                        });
+                                      },
+                                      child: Text(
+                                        _isHidden ? 'Show' : 'Hide',
+                                        style: AppFont.smallText(context),
+                                      ))
+                                ],
+                              ),
+                            ),
+                            if (!_isHidden) ...[
+                              const BottomBtnThird(),
+                            ],
+
                             const SizedBox(
                               height: 10,
                             )
@@ -782,52 +888,30 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-void _showFollowupPopup(BuildContext context) async {
-  final result = await showDialog<bool>(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
+  void _showFollowupPopup(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: CreateFollowupsPopups(
+              onFormSubmit: fetchDashboardData, // Pass the function here
+            ),
           ),
-          child: CreateFollowupsPopups(
-            onFormSubmit: fetchDashboardData, // Pass the function here
-          ),
-        ),
-      );
-    },
-  );
-}
-
+        );
+      },
+    );
+  }
 
 // ✅ Function to Show `CreateFollowupsPopups` on "Lead"
-void _showLeadPopup(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 16), // Add some margin for better UX
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const CreateLeads(),
-        ),
-      );
-    },
-  );
-}
 
 // ✅ Function to Show `CreateFollowupsPopups` on "Lead"
 // void _showFollowupPopup(BuildContext context) {
@@ -854,48 +938,4 @@ void _showLeadPopup(BuildContext context) {
 // }
 
 // ✅ Function to Show `CreateFollowupsPopups` on "Lead"
-
-void _showAppointmentPopup(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero, // Remove default padding
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 16), // Add margin for better UX
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const AppointmentPopup(), // Appointment modal
-        ),
-      );
-    },
-  );
-}
-
-void _showTestdrivePopup(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero, // Remove default padding
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 16), // Add margin for better UX
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const CreateTestdrive(), // Appointment modal
-        ),
-      );
-    },
-  );
-}
 }

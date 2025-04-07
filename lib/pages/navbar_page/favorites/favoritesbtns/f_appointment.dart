@@ -175,7 +175,7 @@ class _FAppointmentState extends State<FAppointment> {
             name: item['name'],
             subject: item['subject'] ?? 'Meeting',
             date: item['start_date'],
-            vehicle: 'Discovery Sport',
+            vehicle: item['PMI'] ?? 'Discovery Sport',
             leadId: item['lead_id'],
             time: item['start_time'],
             eventId: item['event_id'],
