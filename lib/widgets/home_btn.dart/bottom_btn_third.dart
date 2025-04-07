@@ -12,6 +12,38 @@ class BottomBtnThird extends StatefulWidget {
 class _BottomBtnThirdState extends State<BottomBtnThird> {
   int _childButtonIndex = 0;
 
+  // Define data for different time periods
+  final Map<int, List<List<String>>> timeData = {
+    0: [
+      // MTD data
+      ['Enquiries', '02', '42', '42', '42'],
+      ['Test drives', '06', '23', '23', '23'],
+      ['New Orders', '01', '15', '15', '15'],
+      ['Cancellations', '04', '2', '2', '2'],
+      ['Retail', '02', '7', '7', '7'],
+    ],
+    1: [
+      // QTD data
+      ['Enquiries', '12', '95', '98', '110'],
+      ['Test drives', '18', '56', '62', '75'],
+      ['New Orders', '05', '37', '42', '48'],
+      ['Cancellations', '09', '5', '4', '3'],
+      ['Retail', '08', '22', '28', '32'],
+    ],
+    2: [
+      // YTD data
+      ['Enquiries', '45', '220', '238', '256'],
+      ['Test drives', '32', '121', '145', '165'],
+      ['New Orders', '16', '92', '105', '119'],
+      ['Cancellations', '12', '15', '12', '8'],
+      ['Retail', '23', '84', '95', '105'],
+    ],
+  };
+
+  // Get current data based on selected button
+  List<List<String>>? get currentData =>
+      timeData[_childButtonIndex] ?? timeData[0];
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -67,8 +99,6 @@ class _BottomBtnThirdState extends State<BottomBtnThird> {
                           style: AppFont.tinyText(context)
                               .copyWith(fontWeight: FontWeight.w500),
                           maxLines: 2, // Limit to 2 lines
-                          // overflow:
-                          //     TextOverflow.ellipsis, // Ellipsis if text overflows
                         ),
                       ),
                       const SizedBox(
@@ -81,7 +111,6 @@ class _BottomBtnThirdState extends State<BottomBtnThird> {
                           style: AppFont.tinyText(context)
                               .copyWith(fontWeight: FontWeight.w500),
                           maxLines: 2,
-                          // overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(
@@ -94,7 +123,6 @@ class _BottomBtnThirdState extends State<BottomBtnThird> {
                           style: AppFont.tinyText(context)
                               .copyWith(fontWeight: FontWeight.w500),
                           maxLines: 2,
-                          // overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(
@@ -107,7 +135,6 @@ class _BottomBtnThirdState extends State<BottomBtnThird> {
                           style: AppFont.tinyText(context)
                               .copyWith(fontWeight: FontWeight.w500),
                           maxLines: 2,
-                          // overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -142,13 +169,7 @@ class _BottomBtnThirdState extends State<BottomBtnThird> {
         3: FixedColumnWidth(columnWidth2),
         4: FixedColumnWidth(columnWidth2),
       },
-      children: [
-        _buildTableRow(['Enquiries', '02', '42', '42', '42']),
-        _buildTableRow(['Test drives', '06', '23', '23', '23']),
-        _buildTableRow(['New Orders', '01', '15', '15', '15']),
-        _buildTableRow(['Cancellations', '04', '2', '2', '2']),
-        _buildTableRow(['Retail', '02', '7', '7', '7']),
-      ],
+      children: currentData!.map((rowData) => _buildTableRow(rowData)).toList(),
     );
   }
 
@@ -175,10 +196,6 @@ class _BottomBtnThirdState extends State<BottomBtnThird> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          // border: Border.all(
-          //   color: isSelected ? Colors.blue : Colors.transparent,
-          //   width: 1,
-          // ),
           borderRadius: BorderRadius.circular(30),
         ),
         child: TextButton(

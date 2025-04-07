@@ -155,7 +155,7 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
                                       4, // Vertical spacing when wrapped
                                   crossAxisAlignment: WrapCrossAlignment.center,
                                   children: [
-                                    Icon(Icons.camera_enhance_outlined,
+                                    Icon(Icons.call,
                                         size: screenWidth > 600 ? 24 : 20),
                                     Text(
                                       appointment['subject'] ?? 'No Subject',
@@ -229,7 +229,6 @@ class _AppointmentWidgetState extends State<AppointmentWidget> {
                                     ),
                                   ],
                                 ),
-                                
                                 const SizedBox(height: 5),
                               ],
                             ),

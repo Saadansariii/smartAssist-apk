@@ -16,7 +16,7 @@ import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/utils/storage.dart';
 
 class CreateLeads extends StatefulWidget {
-    final Function onFormSubmit;
+  final Function onFormSubmit;
   const CreateLeads({super.key, required this.onFormSubmit});
 
   @override
@@ -580,7 +580,7 @@ class _CreateLeadsState extends State<CreateLeads> {
               height: 10,
             ),
             SizedBox(
-              height: height * .57,
+              height: height * .6,
               child: PageView(
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
@@ -656,7 +656,12 @@ class _CreateLeadsState extends State<CreateLeads> {
                       ),
                       _buildButtons(
                         label: 'Lead Source',
-                        options: {"Email": "Email", "Walk-in": "Walk-in" , "Social" : "Social" ,"Referral" : "Referral"},
+                        options: {
+                          "Email": "Email",
+                          "Walk-in": "Walk-in",
+                          "Social": "Social",
+                          "Referral": "Referral"
+                        },
                         groupValue: _selectedType,
                         errorText: _errors['leadSource'],
                         onChanged: (value) {
@@ -823,230 +828,199 @@ class _CreateLeadsState extends State<CreateLeads> {
                           (exteriorOptions.isNotEmpty ||
                               interiorOptions.isNotEmpty)) ...[
                         const SizedBox(height: 15),
-                        Row(
-                          children: [
-                            // Expanded(
-                            //   child: Column(
-                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                            //     children: [
-                            //       Align(
-                            //         alignment: Alignment.centerLeft,
-                            //         child: Text(
-                            //           'Exterior Color',
-                            //           style: AppFont.dropDowmLabel(context),
-                            //         ),
-                            //       ),
-                            //       const SizedBox(height: 5),
-                            //       Container(
-                            //         width: double.infinity,
-                            //         decoration: BoxDecoration(
-                            //           borderRadius: BorderRadius.circular(8),
-                            //           color: AppColors.containerBg,
-                            //         ),
-                            //         child: DropdownButton<String>(
-                            //           value: selectedExteriorColor,
-                            //           hint: Padding(
-                            //             padding:
-                            //                 const EdgeInsets.only(left: 10),
-                            //             child: Text(
-                            //               "Select",
-                            //               style: AppFont.dropDown(context),
-                            //             ),
-                            //           ),
-                            //           icon: const Padding(
-                            //             padding: EdgeInsets.only(right: 15.0),
-                            //             child: Icon(
-                            //               Icons.keyboard_arrow_down,
-                            //               color: Colors.grey,
-                            //               size: 20,
-                            //             ),
-                            //           ),
-                            //           isExpanded: true,
-                            //           underline: const SizedBox.shrink(),
-                            //           dropdownColor: Colors
-                            //               .white, // Dropdown background color
-                            //           // Customizing the dropdown menu items
-                            //           items:
-                            //               exteriorOptions.map((String color) {
-                            //             return DropdownMenuItem<String>(
-                            //               value: color,
-                            //               child: Padding(
-                            //                 padding: const EdgeInsets.symmetric(
-                            //                     horizontal:
-                            //                         10.0), // Add margin to items
-                            //                 child: Text(
-                            //                   color,
-                            //                   style: AppFont.dropDowmLabel(
-                            //                       context),
-                            //                 ),
-                            //               ),
-                            //             );
-                            //           }).toList(),
-                            //           onChanged: (value) {
-                            //             setState(() {
-                            //               selectedExteriorColor = value;
-                            //             });
-                            //           },
-                            //           // Customize selected item to look like a button
-                            //           selectedItemBuilder:
-                            //               (BuildContext context) {
-                            //             return exteriorOptions
-                            //                 .map((String color) {
-                            //               return Padding(
-                            //                 padding: const EdgeInsets.symmetric(
-                            //                     horizontal: 10.0), // Add margin
-                            //                 child: Container(
-                            //                   decoration: BoxDecoration(
-                            //                     color: AppColors
-                            //                         .containerBg, // Background color when selected
-                            //                     borderRadius:
-                            //                         BorderRadius.circular(5),
-                            //                   ),
-                            //                   child: Padding(
-                            //                     padding:
-                            //                         const EdgeInsets.symmetric(
-                            //                             vertical: 10.0,
-                            //                             horizontal: 15.0),
-                            //                     child: Text(
-                            //                       color,
-                            //                       style: AppFont.dropDowmLabel(
-                            //                               context)
-                            //                           .copyWith(
-                            //                         color: Colors
-                            //                             .white, // Text color for selected item
-                            //                       ),
-                            //                     ),
-                            //                   ),
-                            //                 ),
-                            //               );
-                            //             }).toList();
-                            //           },
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Exterior Color',
-                                      style: AppFont.dropDowmLabel(context),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: AppColors.containerBg,
-                                    ),
-                                    child: DropdownButton<String>(
-                                      value: selectedExteriorColor,
-                                      hint: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: Text(
-                                          "Select",
-                                          style: AppFont.dropDown(context),
-                                        ),
-                                      ),
-                                      icon: const Padding(
-                                        padding: EdgeInsets.only(right: 15.0),
-                                        child: Icon(Icons.keyboard_arrow_down,
-                                            color: Colors.grey, size: 20),
-                                      ),
-                                      isExpanded: true,
-                                      underline: const SizedBox.shrink(),
-                                      items:
-                                          interiorOptions.map((String color) {
-                                        return DropdownMenuItem<String>(
-                                          value: color,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0),
-                                            child: Text(color,
-                                                style: AppFont.dropDowmLabel(
-                                                    context)),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedExteriorColor = value;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
+                        // This is the corrected code for the exterior color section
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Exterior Color',
+                                  style: AppFont.dropDowmLabel(context),
+                                ),
                               ),
-                            ),
-                          
-                            const SizedBox(
-                                width: 10), // Add space between columns
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Interior Color',
-                                      style: AppFont.dropDowmLabel(context),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: AppColors.containerBg,
-                                    ),
-                                    child: DropdownButton<String>(
-                                      value: selectedInteriorColor,
-                                      hint: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: Text(
-                                          "Select",
-                                          style: AppFont.dropDown(context),
-                                        ),
-                                      ),
-                                      icon: const Padding(
-                                        padding: EdgeInsets.only(right: 15.0),
-                                        child: Icon(Icons.keyboard_arrow_down,
-                                            color: Colors.grey, size: 20),
-                                      ),
-                                      isExpanded: true,
-                                      underline: const SizedBox.shrink(),
-                                      items:
-                                          interiorOptions.map((String color) {
-                                        return DropdownMenuItem<String>(
-                                          value: color,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0),
-                                            child: Text(color,
-                                                style: AppFont.dropDowmLabel(
-                                                    context)),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedInteriorColor = value;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
+                              const SizedBox(height: 5),
+                              // Wrap your button widget here
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: AppColors.containerBg,
+                                ),
+                                child: _buildButtons1(
+                                  options: {
+                                    'Brown': 'Brown',
+                                    'Black': 'Black',
+                                    'White': 'White',
+                                    'Grey': 'Grey',
+                                  },
+                                  groupValue: selectedExteriorColor ?? 'Select',
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedExteriorColor = value;
+                                    });
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+
+                        const SizedBox(
+                          height: 10,
+                        ),
+
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Interior Color',
+                                  style: AppFont.dropDowmLabel(context),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: AppColors.containerBg,
+                                ),
+                                child: _buildButtons1(
+                                  options: {
+                                    'Brown': 'Brown',
+                                    'Black': 'Black',
+                                  },
+                                  groupValue: selectedInteriorColor ?? 'Select',
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedInteriorColor = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Expanded(
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       Align(
+                        //         alignment: Alignment.centerLeft,
+                        //         child: Text(
+                        //           'Exterior Color',
+                        //           style: AppFont.dropDowmLabel(context),
+                        //         ),
+                        //       ),
+                        //       const SizedBox(height: 5),
+                        //       Container(
+                        //         width: double.infinity,
+                        //         decoration: BoxDecoration(
+                        //           borderRadius: BorderRadius.circular(8),
+                        //           color: AppColors.containerBg,
+                        //         ),
+                        //         child: DropdownButton<String>(
+                        //           value: selectedExteriorColor,
+                        //           hint: Padding(
+                        //             padding:
+                        //                 const EdgeInsets.only(left: 10),
+                        //             child: Text(
+                        //               "Select",
+                        //               style: AppFont.dropDown(context),
+                        //             ),
+                        //           ),
+                        //           icon: const Padding(
+                        //             padding: EdgeInsets.only(right: 15.0),
+                        //             child: Icon(Icons.keyboard_arrow_down,
+                        //                 color: Colors.grey, size: 20),
+                        //           ),
+                        //           isExpanded: true,
+                        //           underline: const SizedBox.shrink(),
+                        //           items:
+                        //               interiorOptions.map((String color) {
+                        //             return DropdownMenuItem<String>(
+                        //               value: color,
+                        //               child: Padding(
+                        //                 padding: const EdgeInsets.only(
+                        //                     left: 10.0),
+                        //                 child: Text(color,
+                        //                     style: AppFont.dropDowmLabel(
+                        //                         context)),
+                        //               ),
+                        //             );
+                        //           }).toList(),
+                        //           onChanged: (value) {
+                        //             setState(() {
+                        //               selectedExteriorColor = value;
+                        //             });
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+
+                        // const SizedBox(width: 10), // Add space between columns
+                        // Expanded(
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       Align(
+                        //         alignment: Alignment.centerLeft,
+                        //         child: Text(
+                        //           'Interior Color',
+                        //           style: AppFont.dropDowmLabel(context),
+                        //         ),
+                        //       ),
+                        //       const SizedBox(height: 5),
+                        //       Container(
+                        //         width: double.infinity,
+                        //         decoration: BoxDecoration(
+                        //           borderRadius: BorderRadius.circular(8),
+                        //           color: AppColors.containerBg,
+                        //         ),
+                        //         child: DropdownButton<String>(
+                        //           value: selectedInteriorColor,
+                        //           hint: Padding(
+                        //             padding: const EdgeInsets.only(left: 10),
+                        //             child: Text(
+                        //               "Select",
+                        //               style: AppFont.dropDown(context),
+                        //             ),
+                        //           ),
+                        //           icon: const Padding(
+                        //             padding: EdgeInsets.only(right: 15.0),
+                        //             child: Icon(Icons.keyboard_arrow_down,
+                        //                 color: Colors.grey, size: 20),
+                        //           ),
+                        //           isExpanded: true,
+                        //           underline: const SizedBox.shrink(),
+                        //           items: interiorOptions.map((String color) {
+                        //             return DropdownMenuItem<String>(
+                        //               value: color,
+                        //               child: Padding(
+                        //                 padding:
+                        //                     const EdgeInsets.only(left: 10.0),
+                        //                 child: Text(color,
+                        //                     style:
+                        //                         AppFont.dropDowmLabel(context)),
+                        //               ),
+                        //             );
+                        //           }).toList(),
+                        //           onChanged: (value) {
+                        //             setState(() {
+                        //               selectedInteriorColor = value;
+                        //             });
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
 
                       // Align(
@@ -2046,8 +2020,10 @@ class _CreateLeadsState extends State<CreateLeads> {
           ),
         ),
         const SizedBox(height: 5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        Wrap(
+          spacing: 5, // Space between buttons
+          runSpacing: 10,
+          // mainAxisAlignment: MainAxisAlignment.start,
           children: options.keys.map((shortText) {
             bool isSelected = groupValue == options[shortText];
 
@@ -2082,6 +2058,65 @@ class _CreateLeadsState extends State<CreateLeads> {
               ),
             );
           }).toList(),
+        ),
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+
+  Widget _buildButtons1({
+    required Map<String, String>
+        options, // ✅ Use a Map for short display & actual value
+    required String groupValue,
+    String? errorText,
+    required ValueChanged<String> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 5.0, left: 5),
+          child: Wrap(
+            spacing: 5, // Space between buttons
+            runSpacing: 10,
+            // mainAxisAlignment: MainAxisAlignment.start,
+            children: options.keys.map((shortText) {
+              bool isSelected = groupValue == options[shortText];
+
+              return GestureDetector(
+                onTap: () {
+                  onChanged(options[shortText]!);
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                  margin: const EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: isSelected
+                          ? AppColors.colorsBlue
+                          : AppColors.fontColor,
+                      width: .5,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                    color: isSelected
+                        ? AppColors.colorsBlue.withOpacity(0.2)
+                        : AppColors.innerContainerBg,
+                  ),
+                  child: Text(
+                    shortText, // ✅ Only show short text
+                    style: TextStyle(
+                      color: isSelected
+                          ? AppColors.colorsBlue
+                          : AppColors.fontColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
         ),
         const SizedBox(height: 5),
       ],

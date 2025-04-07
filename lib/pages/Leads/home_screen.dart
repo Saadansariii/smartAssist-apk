@@ -656,7 +656,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             Positioned(
-              bottom: 26,
+              bottom: 36,
               right: 18,
               child: _buildFloatingActionButton(context),
             ),

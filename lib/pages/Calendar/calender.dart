@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart'; 
 import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/Calendar/tasks/addTask.dart';
 import 'package:smart_assist/services/leads_srv.dart';
@@ -62,7 +61,7 @@ class _CalenderState extends State<Calender> {
     });
   }
 
-Future<void> _fetchCount(DateTime selectedDate) async {
+  Future<void> _fetchCount(DateTime selectedDate) async {
     // Check if the widget is still mounted before proceeding
     if (!mounted) return;
 
