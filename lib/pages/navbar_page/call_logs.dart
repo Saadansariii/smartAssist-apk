@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:call_log/call_log.dart';
+import 'package:flutter/material.dart'; 
 import 'package:permission_handler/permission_handler.dart';
 
 class CallLogs extends StatefulWidget {
@@ -11,49 +10,54 @@ class CallLogs extends StatefulWidget {
 
 class _CallLogsState extends State<CallLogs> {
   bool isLoading = true;
-  Iterable<CallLogEntry> _callLogs = [];
+  // List<Contact> _contacts = [];
 
   @override
   void initState() {
     super.initState();
-    fetchCallLogs();
+    // fetchContacts();
   }
 
-  Future<void> fetchCallLogs() async {
-    if (await Permission.phone.request().isGranted) {
-      final Iterable<CallLogEntry> result = await CallLog.get();
-      setState(() {
-        _callLogs = result;
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-      // You can show a dialog or message here
-    }
-  }
+  // Future<void> fetchContacts() async {
+  //   // Request permission to access contacts
+  //   PermissionStatus status = await Permission.contacts.request();
+
+  //   if (status.isGranted) {
+  //     final Iterable<Contact> contacts = await ContactsService.getContacts();
+  //     setState(() {
+  //       _contacts = contacts.toList();
+  //       isLoading = false;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //     // Handle permission denial here
+  //     // For example, show a message or dialog
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Call Logs"),
+        title: const Text("Contacts"),
         backgroundColor: Colors.blue,
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: _callLogs.length,
-              itemBuilder: (context, index) {
-                final entry = _callLogs.elementAt(index);
-                return ListTile(
-                  title: Text(entry.name ?? entry.number ?? "Unknown"),
-                  subtitle: Text("Duration: ${entry.duration}s"),
-                  trailing: Text(entry.callType.toString().split('.').last),
-                );
-              },
-            ),
+      // body: isLoading
+      //     ? const Center(child: CircularProgressIndicator())
+      //     : ListView.builder(
+      //         itemCount: _contacts.length,
+      //         itemBuilder: (context, index) {
+      //           final contact = _contacts[index];
+      //           return ListTile(
+      //             title: Text(contact.displayName ?? 'Unknown'),
+      //             subtitle: Text(contact.phones?.isNotEmpty == true
+      //                 ? contact.phones!.first.value ?? 'No number'
+      //                 : 'No phone number'),
+      //           );
+      //         },
+      //       ),
     );
   }
 }
