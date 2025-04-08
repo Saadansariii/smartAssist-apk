@@ -284,10 +284,7 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
         );
       } else if (isCallSwipe) {
         return LinearGradient(
-          colors: [
-            Colors.green.withOpacity(0.2),
-            Colors.green.withOpacity(0.8)
-          ],
+          colors: [Colors.blue.withOpacity(0.2), Colors.blue.withOpacity(0.8)],
           begin: Alignment.centerRight,
           end: Alignment.centerLeft,
         );
@@ -330,7 +327,7 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
                     const SizedBox(width: 10),
                     Text(widget.isFavorite ? 'Unfavorite' : 'Favorite',
                         style: GoogleFonts.poppins(
-                            color: Color.fromRGBO(187, 158, 0, 1),
+                            color: const Color.fromRGBO(187, 158, 0, 1),
                             fontSize: 18,
                             fontWeight: FontWeight.bold)),
                   ],
@@ -346,8 +343,8 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [
-                    AppColors.sideGreen,
-                    AppColors.sideGreen,
+                    AppColors.colorsBlue,
+                    AppColors.colorsBlue,
                   ],
                   begin: Alignment.centerRight,
                   end: Alignment.centerLeft,
@@ -359,7 +356,7 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const SizedBox(
-                      width: 10,
+                      width: 20,
                     ),
                     const Icon(Icons.directions_car,
                         color: Colors.white, size: 30),
@@ -387,7 +384,7 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
                 width: 8.0,
                 color: widget.isFavorite
                     ? (isCallSwipe
-                        ? Colors.green
+                        ? AppColors.sideRed
                             .withOpacity(0.9) // Green when swiping for a call
                         : Colors.yellow.withOpacity(isFavoriteSwipe
                             ? 0.1
@@ -395,7 +392,7 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
                     : (isFavoriteSwipe
                         ? Colors.yellow.withOpacity(0.1)
                         : (isCallSwipe
-                            ? AppColors.sideRed.withOpacity(0.5)
+                            ? Colors.blue.withOpacity(0.2)
                             : AppColors.sideRed)),
               ),
             ),

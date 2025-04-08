@@ -209,6 +209,18 @@ class AppFont {
     );
   }
 
+  static TextStyle mediumText14(
+    BuildContext context, {
+    double fontSize = 14,
+    Color color = const Color.fromRGBO(78, 78, 78, 1),
+  }) {
+    return GoogleFonts.poppins(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
   static TextStyle tinyText(
     BuildContext context, {
     double fontSize = 8,

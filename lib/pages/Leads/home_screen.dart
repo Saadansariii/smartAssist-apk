@@ -9,6 +9,7 @@ import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/config/getX/fab.controller.dart';
 import 'package:smart_assist/pages/Leads/gloabal_search_page/global_search.dart';
 import 'package:smart_assist/pages/navbar_page/app_setting.dart';
+import 'package:smart_assist/pages/navbar_page/call_logs.dart';
 import 'package:smart_assist/pages/navbar_page/favorite.dart';
 import 'package:smart_assist/pages/navbar_page/leads_all.dart';
 import 'package:smart_assist/pages/navbar_page/logout_page.dart';
@@ -462,7 +463,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Container(
                                         padding: const EdgeInsets.all(16),
                                         // Adjust height based on whether "My Team" is shown
-                                        height: teamRole == "Owner" ? 370 : 320,
+                                        height: teamRole == "Owner" ? 400 : 370,
                                         decoration: const BoxDecoration(
                                           color: Colors.white,
                                           borderRadius: BorderRadius.vertical(
@@ -479,6 +480,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       fontSize: 18)),
                                               onTap: () => Get.to(
                                                   () => const AllLeads()),
+                                            ),
+                                            ListTile(
+                                              leading: const Icon(
+                                                  Icons.call_outlined,
+                                                  size: 28),
+                                              title: Text('Call logs',
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 18)),
+                                              onTap: () => Get.to(
+                                                  () => const CallLogs()),
                                             ),
                                             ListTile(
                                               leading: const Icon(

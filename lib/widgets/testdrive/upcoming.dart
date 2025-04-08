@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/pages/Leads/single_details_pages/singleLead_followup.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_assist/pages/login_steps/second_screen.dart';
 import 'package:smart_assist/utils/storage.dart';
+import 'package:smart_assist/widgets/testdrive_verifyotp.dart';
 
 class TestUpcoming extends StatefulWidget {
   final List<dynamic> upcomingTestDrive;
@@ -51,7 +54,7 @@ class _TestUpcomingState extends State<TestUpcoming> {
       _toggleFavorite(eventId, index);
     } else if (swipeOffset < -100) {
       // Left Swipe (Call)
-      _handleCall(item);
+      _handleTestDrive(item);
     }
 
     // Reset animation
@@ -60,16 +63,22 @@ class _TestUpcomingState extends State<TestUpcoming> {
     });
   }
 
-  void _handleCall(dynamic item) {
+  void _handleTestDrive(dynamic item) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const TestdriveVerifyotp(email: '', text: ''),
+      ),
+    );
     print("Call action triggered for ${item['name']}");
-    // Implement actual call functionality here
   }
 
-   Future<void> _toggleFavorite(String eventId, int index) async {
+  Future<void> _toggleFavorite(String eventId, int index) async {
     final token = await Storage.getToken();
     try {
       // Get the current favorite status before toggling
-      bool currentStatus = widget.upcomingTestDrive[index]['favourite'] ?? false;
+      bool currentStatus =
+          widget.upcomingTestDrive[index]['favourite'] ?? false;
       bool newFavoriteStatus = !currentStatus;
 
       final response = await http.put(
@@ -100,7 +109,6 @@ class _TestUpcomingState extends State<TestUpcoming> {
     }
   }
 
-
   // Future<void> _toggleFavorite(String eventId, int index) async {
   //   bool newFavoriteStatus =
   //       !(widget.upcomingTestDrive[index]['favourite'] ?? false);
@@ -116,8 +124,6 @@ class _TestUpcomingState extends State<TestUpcoming> {
   //   print(
   //       "Favorite toggled for Task ID: $eventId, New Status: $newFavoriteStatus");
   // }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -158,6 +164,7 @@ class _TestUpcomingState extends State<TestUpcoming> {
             vehicle: item['PMI'] ?? 'Range Rover Velar',
             subject: item['subject'] ?? 'Meeting',
             date: item['start_date'],
+            // mail: item['start_date'],
             leadId: item['lead_id'],
             startTime: item['start_time'],
             eventId: item['event_id'],
@@ -294,8 +301,6 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
         return const LinearGradient(
           colors: [
             Color.fromRGBO(239, 206, 29, 0.67),
-            // Colors.yellow.withOpacity(0.2),
-            // Colors.yellow.withOpacity(0.8)
             Color.fromRGBO(239, 206, 29, 0.67)
           ],
           begin: Alignment.centerLeft,
@@ -303,10 +308,7 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
         );
       } else if (isCallSwipe) {
         return LinearGradient(
-          colors: [
-            Colors.green.withOpacity(0.2),
-            Colors.green.withOpacity(0.8)
-          ],
+          colors: [Colors.blue.withOpacity(0.2), Colors.blue.withOpacity(0.2)],
           begin: Alignment.centerRight,
           end: Alignment.centerLeft,
         );
@@ -365,8 +367,8 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [
-                    AppColors.sideGreen,
-                    AppColors.sideGreen,
+                    AppColors.colorsBlue,
+                    AppColors.colorsBlue,
                   ],
                   begin: Alignment.centerRight,
                   end: Alignment.centerLeft,
@@ -378,7 +380,7 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const SizedBox(
-                      width: 10,
+                      width: 20,
                     ),
                     const Icon(Icons.directions_car,
                         color: Colors.white, size: 30),
@@ -406,14 +408,15 @@ class _upcomingTestDrivesItemState extends State<upcomingTestDrivesItem> {
                 width: 8.0,
                 color: widget.isFavorite
                     ? (isCallSwipe
-                        ? AppColors.sideGreen // Green when swiping for a call
+                        ? Colors.blue
+                            .withOpacity(0.2) // Green when swiping for a call
                         : Colors.yellow.withOpacity(isFavoriteSwipe
                             ? 0.1
                             : 0.9)) // Keep yellow when favorite
                     : (isFavoriteSwipe
                         ? Colors.yellow.withOpacity(0.1)
                         : (isCallSwipe
-                            ? AppColors.sideGreen
+                            ? Colors.blue.withOpacity(0.2)
                             : AppColors.sideGreen)),
               ),
             ),
