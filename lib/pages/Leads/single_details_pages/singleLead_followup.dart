@@ -6,7 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
 import 'package:smart_assist/config/getX/fab.controller.dart';
+import 'package:smart_assist/pages/Leads/home_screen.dart';
 import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/widgets/call_history.dart';
 import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/appointment_ids.dart';
 import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/followups_ids.dart';
 import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/testdrive_ids.dart';
@@ -41,6 +43,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   bool isLoading = false;
   int _childButtonIndex = 0;
   Widget _selectedTaskWidget = Container();
+  //  Widget _callLogsWidget = Container();
   // fetchevent data
 
   List<Map<String, dynamic>> upcomingTasks = [];
@@ -56,7 +59,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
 
   bool _isHidden = false;
   bool _isHiddenTop = true;
-
+  bool _isHiddenMiddle = true;
   // dropdown
   final Widget _createFollowups = const LeadsCreateFollowup();
   final Widget _createAppoinment = const CreateAppointment();
@@ -75,6 +78,8 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       tasks: upcomingTasks,
       upcomingEvents: upcomingEvents,
     );
+
+    // _callLogsWidget = TimelineEightWid(tasks: upcomingTasks, upcomingEvents: upcomingEvents);
   }
 
   String formatDate(String date) {
@@ -233,8 +238,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     );
   }
 
-
-void _showAppointmentPopup(BuildContext context, String leadId) {
+  void _showAppointmentPopup(BuildContext context, String leadId) {
     showDialog(
       context: context,
       builder: (context) {
@@ -249,7 +253,8 @@ void _showAppointmentPopup(BuildContext context, String leadId) {
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: AppointmentIds(leadId: leadId ,
+            child: AppointmentIds(
+              leadId: leadId,
               onFormSubmit: eventandtask,
             ), // Appointment modal
           ),
@@ -304,7 +309,6 @@ void _showAppointmentPopup(BuildContext context, String leadId) {
   //   );
   // }
 
-
   void _showTestdrivePopup(BuildContext context, String leadId) {
     showDialog(
       context: context,
@@ -320,7 +324,8 @@ void _showAppointmentPopup(BuildContext context, String leadId) {
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: TestdriveIds(leadId: leadId ,
+            child: TestdriveIds(
+              leadId: leadId,
               onFormSubmit: eventandtask,
             ), // Appointment modal
           ),
@@ -594,7 +599,60 @@ void _showAppointmentPopup(BuildContext context, String leadId) {
                       const SizedBox(height: 10), // Spacer
                       // History Section
                       // Text('hiii'),
-
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              blurRadius: 6,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // _buildToggleSwitch(),
+                                Text(
+                                  'Call logs',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isHiddenMiddle = !_isHiddenMiddle;
+                                    });
+                                  },
+                                  child: Text(
+                                    _isHiddenMiddle ? 'Show' : 'Hide',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (!_isHiddenMiddle) ...[
+                              _callLogsWidget(context),
+                            ]
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -961,5 +1019,146 @@ class NavigationController extends GetxController {
   }
 }
 
-// ✅ Function to Show `CreateFollowupsPopups` on "Lead"
+Widget _callLogsWidget(BuildContext context) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 10),
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(
+              Icons.phone_callback_rounded,
+              size: 25,
+              color: AppColors.iconGrey,
+            ),
+            SizedBox(
+              width: screenWidth * .1,
+            ),
+            Text(
+              'Outgoing Calls',
+              style: AppFont.dropDowmLabel(context),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            Text(
+              '10', // Dynamic value should go here
+              style: AppFont.dropDowmLabel(context),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 25,
+                color: AppColors.iconGrey,
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(
+              Icons.call,
+              size: 25,
+              color: AppColors.sideRed,
+            ),
+            SizedBox(
+              width: screenWidth * .1,
+            ),
+            Text(
+              'Missed Calls',
+              style: AppFont.dropDowmLabel(context),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            Text(
+              '10', // Dynamic value should go here
+              style: AppFont.dropDowmLabel(context),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 25,
+                color: AppColors.iconGrey,
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(
+              Icons.call,
+              size: 25,
+              color: AppColors.iconGrey,
+            ),
+            SizedBox(
+              width: screenWidth * .1,
+            ),
+            Text(
+              'Connected Calls',
+              style: AppFont.dropDowmLabel(context),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            Text(
+              '10', // Dynamic value should go here
+              style: AppFont.dropDowmLabel(context),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CallHistory()));
+              },
+              icon: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 25,
+                color: AppColors.iconGrey,
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(
+              Icons.call,
+              size: 25,
+              color: AppColors.iconGrey,
+            ),
+            SizedBox(
+              width: screenWidth * .1,
+            ),
+            Text(
+              'Attempted Calls',
+              style: AppFont.dropDowmLabel(context),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            Text(
+              '10', // Dynamic value should go here
+              style: AppFont.dropDowmLabel(context),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 25,
+                color: AppColors.iconGrey,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 
+// ✅ Function to Show `CreateFollowupsPopups` on "Lead"

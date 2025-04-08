@@ -354,7 +354,7 @@ class AppFont {
   static TextStyle appbarfontgrey(
     BuildContext context, {
     double fontSize = 18,
-    Color color = const Color(0xff767676),
+    Color color = AppColors.fontColor,
   }) {
     return GoogleFonts.poppins(
       fontSize: scaleFont(context, fontSize),
