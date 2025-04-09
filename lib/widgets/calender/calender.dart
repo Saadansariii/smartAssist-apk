@@ -70,9 +70,9 @@ class _CalenderWidgetState extends State<CalenderWidget> {
         // ),
 
         headerStyle: HeaderStyle(
-          headerMargin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+          headerMargin: EdgeInsets.fromLTRB(10, 0, 0, 10),
           formatButtonVisible: false,
-          titleCentered: true,
+          titleCentered: false,
           leftChevronVisible: false,
           rightChevronVisible: false,
           headerPadding: EdgeInsets.zero,

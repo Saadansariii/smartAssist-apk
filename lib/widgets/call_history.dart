@@ -46,24 +46,23 @@ class _CallHistoryState extends State<CallHistory> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    width: screenWidth * 0.65,
+                    width: screenWidth * 0.55,
                     height: 27,
                     decoration: BoxDecoration(
                       // color: Colors.white,
                       border: Border.all(
-                        color: const Color.fromARGB(255, 129, 129, 129),
-                        strokeAlign: .5,
-                      ),
+                          color: const Color.fromARGB(255, 129, 129, 129),
+                          width: .2),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Row(
@@ -111,6 +110,16 @@ class _CallHistoryState extends State<CallHistory> {
                   // _fetchTasks(selectedDate);
                 },
               ),
+
+              const SizedBox(height: 10),
+
+              // PageView for Slides
+              SizedBox(
+                height: 300,
+                child: _buildFirstSlide(context, screenWidth),
+              ),
+
+              const SizedBox(height: 10),
             ],
           ),
         ),
@@ -122,7 +131,7 @@ class _CallHistoryState extends State<CallHistory> {
     // final selectedData = getSelectedData();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 0),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -133,45 +142,43 @@ class _CallHistoryState extends State<CallHistory> {
                   Expanded(
                     child: _buildInfoCard1(
                       context,
-                      'Current month new enquiries',
-                      ' ',
+                      'Total Duration',
+                      '3:00 H',
                       screenWidth,
-                      Colors.green,
+                      Colors.black,
                     ),
                   ),
                   const SizedBox(height: 10),
                   Expanded(
                     child: _buildInfoCard1(
                       context,
-                      'Enquiries lost',
-                      ' ',
+                      'Outgoing Call Duration',
+                      '3:00 H',
                       screenWidth,
-                      Colors.red,
+                      Colors.black,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: _buildInfoCard1(
-                context,
-                'More enquiries to achieve your target',
-                ' ',
-                screenWidth,
-                Colors.red,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _buildInfoCard1(
-                context,
-                'Enquiries lost',
-                ' ',
-                screenWidth,
-                Colors.red,
-              ),
-            )
+                child: Column(
+              children: [
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: _buildInfoCard1(
+                    context,
+                    'Incoming Calls Duration',
+                    '3:00 H',
+                    screenWidth,
+                    Colors.black,
+                  ),
+                ),
+              ],
+            ))
           ],
         ),
       ),
@@ -186,8 +193,10 @@ class _CallHistoryState extends State<CallHistory> {
         width: double.infinity,
         padding: EdgeInsets.all(screenWidth * 0.04),
         decoration: BoxDecoration(
+          // boxShadow: List.filled(3, fil),
+          border: Border.all(color: Colors.grey, width: .5),
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -200,7 +209,7 @@ class _CallHistoryState extends State<CallHistory> {
               maxLines: 4,
               value,
               style: GoogleFonts.poppins(
-                  fontSize: 24, fontWeight: FontWeight.w700, color: valueColor),
+                  fontSize: 20, fontWeight: FontWeight.w600, color: valueColor),
             ),
             const SizedBox(height: 5),
             Expanded(
@@ -211,9 +220,9 @@ class _CallHistoryState extends State<CallHistory> {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 4,
                 style: GoogleFonts.poppins(
-                    fontSize: 12,
+                    fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    color: Colors.grey[700]),
+                    color: AppColors.fontColor),
               ),
             ),
           ],

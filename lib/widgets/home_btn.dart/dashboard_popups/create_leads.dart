@@ -2139,11 +2139,23 @@ class _CreateLeadsState extends State<CreateLeads> {
         return;
       }
 
+// When preparing the leadData:
+      String mobileNumber = mobileController.text;
+
+// Ensure the mobile number always includes the country code
+      if (!mobileNumber.startsWith('+91')) {
+        print(mobileNumber);
+
+        mobileNumber = '+91' + mobileNumber;
+        print('ittt hitttttttttttttttt');
+      }
+
       final leadData = {
         'fname': firstNameController.text,
         'lname': lastNameController.text,
         'email': emailController.text,
-        'mobile': mobileController.text,
+        // 'mobile': mobileController.text,
+        'mobile': mobileNumber,
         'purchase_type': _selectedPurchaseType,
         'brand': _selectedBrand,
         'type': 'Product',
@@ -2170,6 +2182,7 @@ class _CreateLeadsState extends State<CreateLeads> {
           String leadId = response['data']['lead_id'];
 
           if (context.mounted) {
+            Navigator.pop(context);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -2177,6 +2190,7 @@ class _CreateLeadsState extends State<CreateLeads> {
               ),
             );
           }
+
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Form Submit Successful.')),
           );

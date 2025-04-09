@@ -5,8 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/config/getX/fab.controller.dart';
-import 'package:smart_assist/pages/Leads/home_screen.dart';
+import 'package:smart_assist/config/getX/fab.controller.dart'; 
 import 'package:smart_assist/services/leads_srv.dart';
 import 'package:smart_assist/widgets/call_history.dart';
 import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/appointment_ids.dart';
@@ -99,7 +98,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
         mobile = leadData['data']['mobile'] ?? 'N/A';
         email = leadData['data']['email'] ?? 'N/A';
         status = leadData['data']['status'] ?? 'N/A';
-        company = leadData['data']['PMI'] ?? 'N/A';
+        company = leadData['data']['brand'] ?? 'N/A';
         address = leadData['data']['address'] ?? 'N/A';
         leadSource = leadData['data']['lead_source'] ?? 'N/A';
         fuel_type = leadData['data']['fuel_type'] ?? 'N/A';
@@ -443,7 +442,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                             ),
                                           ],
                                         ),
-                                        Text(company,
+                                        Text(PMI,
                                             maxLines: 4,
                                             style: GoogleFonts.poppins(
                                                 fontSize: 12,
@@ -616,6 +615,58 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            // Header Row
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildToggleSwitch(),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isHidden = !_isHidden;
+                                    });
+                                  },
+                                  child: Text(
+                                    _isHidden ? 'Show' : 'Hide',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            // Show only if _isHidden is false
+                            if (!_isHidden) ...[
+                              //  i want to show here the timeline eight and nine
+                              // and nine data
+                              _selectedTaskWidget,
+                            ]
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              blurRadius: 6,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -653,54 +704,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              blurRadius: 6,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Header Row
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _buildToggleSwitch(),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isHidden = !_isHidden;
-                                    });
-                                  },
-                                  child: Text(
-                                    _isHidden ? 'Show' : 'Hide',
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            // Show only if _isHidden is false
-                            if (!_isHidden) ...[
-                              //  i want to show here the timeline eight and nine
-                              // and nine data
-                              _selectedTaskWidget,
-                            ]
-                          ],
-                        ),
-                      )
                     ],
                   ),
                 ),
@@ -1028,10 +1031,42 @@ Widget _callLogsWidget(BuildContext context) {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              Icons.phone_callback_rounded,
+           const Icon(
+              Icons.call,
               size: 25,
               color: AppColors.iconGrey,
+            ),
+            SizedBox(
+              width: screenWidth * .1,
+            ),
+            Text(
+              'All Calls',
+              style: AppFont.dropDowmLabel(context),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            Text(
+              '10', // Dynamic value should go here
+              style: AppFont.dropDowmLabel(context),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon:const Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 25,
+                color: AppColors.iconGrey,
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Icon(
+              Icons.phone_forwarded_outlined,
+              size: 25,
+              color: AppColors.colorsBlue,
             ),
             SizedBox(
               width: screenWidth * .1,
@@ -1049,7 +1084,7 @@ Widget _callLogsWidget(BuildContext context) {
             ),
             IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: 25,
                 color: AppColors.iconGrey,
@@ -1060,48 +1095,16 @@ Widget _callLogsWidget(BuildContext context) {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
+            const Icon(
               Icons.call,
               size: 25,
-              color: AppColors.sideRed,
+              color: AppColors.sideGreen,
             ),
             SizedBox(
               width: screenWidth * .1,
             ),
             Text(
-              'Missed Calls',
-              style: AppFont.dropDowmLabel(context),
-            ),
-            Expanded(
-              child: Container(),
-            ),
-            Text(
-              '10', // Dynamic value should go here
-              style: AppFont.dropDowmLabel(context),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 25,
-                color: AppColors.iconGrey,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Icon(
-              Icons.call,
-              size: 25,
-              color: AppColors.iconGrey,
-            ),
-            SizedBox(
-              width: screenWidth * .1,
-            ),
-            Text(
-              'Connected Calls',
+              'Incoming Calls',
               style: AppFont.dropDowmLabel(context),
             ),
             Expanded(
@@ -1116,7 +1119,7 @@ Widget _callLogsWidget(BuildContext context) {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => CallHistory()));
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: 25,
                 color: AppColors.iconGrey,
@@ -1127,16 +1130,16 @@ Widget _callLogsWidget(BuildContext context) {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
+            const Icon(
               Icons.call,
               size: 25,
-              color: AppColors.iconGrey,
+              color: AppColors.sideRed,
             ),
             SizedBox(
               width: screenWidth * .1,
             ),
             Text(
-              'Attempted Calls',
+              'Missed Calls',
               style: AppFont.dropDowmLabel(context),
             ),
             Expanded(

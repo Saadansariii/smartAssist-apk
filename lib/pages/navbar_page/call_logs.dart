@@ -47,6 +47,8 @@ class _CallLogsState extends State<CallLogs> {
         'phone': log.number ?? '',
         'call_type': log.callType?.toString().split('.').last ?? '',
         'call_duration': log.duration?.toString() ?? '',
+        'unique_key':
+            '${log.timestamp?.toString() ?? ''}${log.number ?? ''}${log.callType?.toString()}${log.duration?.toString()}',
       };
     }).toList();
 
