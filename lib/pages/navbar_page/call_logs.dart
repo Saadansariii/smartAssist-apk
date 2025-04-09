@@ -44,7 +44,7 @@ class _CallLogsState extends State<CallLogs> {
       return {
         'name': log.name ?? 'Unknown',
         'start_time': log.timestamp?.toString() ?? '',
-        'phone': log.number ?? '',
+        'mobile': log.number ?? '',
         'call_type': log.callType?.toString().split('.').last ?? '',
         'call_duration': log.duration?.toString() ?? '',
         'unique_key':
@@ -55,8 +55,7 @@ class _CallLogsState extends State<CallLogs> {
     print('Formated data from my side : ${jsonEncode(formattedLogs)}');
 
     // API endpoint URL - replace with your actual API endpoint
-    final apiUrl =
-        'https://api.smartassistapp.in/api/leads/leads/create-call-logs';
+    final apiUrl = 'https://api.smartassistapp.in/api/leads/create-call-logs';
 
     try {
       final response = await http.post(

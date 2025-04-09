@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
+import 'package:http/http.dart' as http;
 import 'package:smart_assist/config/component/font/font.dart';
-import 'package:smart_assist/config/getX/fab.controller.dart'; 
+import 'package:smart_assist/config/getX/fab.controller.dart';
 import 'package:smart_assist/services/leads_srv.dart';
+import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/call_history.dart';
 import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/appointment_ids.dart';
 import 'package:smart_assist/widgets/home_btn.dart/single_ids_popup/followups_ids.dart';
@@ -42,6 +46,13 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   bool isLoading = false;
   int _childButtonIndex = 0;
   Widget _selectedTaskWidget = Container();
+  static Map<String, int> _callLogs = {
+    'all': 0,
+    'outgoing': 0,
+    'incoming': 0,
+    'missed': 0,
+  };
+
   //  Widget _callLogsWidget = Container();
   // fetchevent data
 
@@ -70,7 +81,10 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   void initState() {
     super.initState();
     eventandtask(widget.leadId);
-    fetchSingleIdData(widget.leadId);
+    fetchSingleIdData(widget.leadId).then((_) {
+      fetchCallLogs(mobile);
+      // _fetchCallLogs();
+    });
 
     // Initially, set the selected widget
     _selectedTaskWidget = TimelineEightWid(
@@ -114,6 +128,52 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     }
   }
 
+  static Future<Map<String, int>> fetchCallLogs(String mobile) async {
+    const String apiUrl =
+        "https://api.smartassistapp.in/api/leads/call-logs/all";
+    final token = await Storage.getToken();
+
+    try {
+      // if (mobile.isEmpty) {
+      //   throw Exception("Mobile number is required");
+      // }
+      final encodedMobile = Uri.encodeComponent(mobile);
+
+      final response = await http.get(
+        Uri.parse(
+            '$apiUrl?mobile=$encodedMobile'), // Correct query parameter format
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final Map<String, dynamic> data = jsonResponse['data'];
+        print('$apiUrl?mobile=$encodedMobile');
+        final Map<String, dynamic> categoryCounts = data['category_counts'];
+
+        // Update the class variable with the category counts
+        _callLogs = {
+          'all': categoryCounts['all'] ?? 0,
+          'outgoing': categoryCounts['outgoing'] ?? 0,
+          'incoming': categoryCounts['incoming'] ?? 0,
+          'missed': categoryCounts['missed'] ?? 0,
+          'rejected': categoryCounts['rejected'] ??
+              0, // Added this as it's in your API response
+        };
+        return _callLogs;
+      } else {
+        print('Error: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching data: $e');
+    }
+  }
+
   List<Map<String, dynamic>> allEvents = [];
   List<Map<String, dynamic>> allTasks = [];
   List<Map<String, dynamic>> allTestdrive = [];
@@ -145,8 +205,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       setState(() => isLoading = false);
     }
   }
-
- 
 
   void _toggleTasks(int index) {
     setState(() {
@@ -241,7 +299,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       },
     );
   }
- 
 
   void _showTestdrivePopup(BuildContext context, String leadId) {
     showDialog(
@@ -293,6 +350,90 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       subtitle: subtitle,
       taskId: widget.leadId,
     );
+  }
+
+  Widget _callLogsWidget(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        children: [
+          // All Calls
+          _buildRow('All Calls', _callLogs['all'] ?? 0, '', Icons.call),
+
+          // Outgoing Calls
+          _buildRow('Outgoing Calls', _callLogs['outgoing'] ?? 0, 'outgoing',
+              Icons.phone_forwarded_outlined),
+
+          // Incoming Calls
+          _buildRow('Incoming Calls', _callLogs['incoming'] ?? 0, 'incoming',
+              Icons.call),
+
+          // Missed Calls
+          _buildRow('Missed Calls', _callLogs['missed'] ?? 0, 'missed',
+              Icons.call_missed),
+        ],
+      ),
+    );
+  }
+
+// Helper method to build each row with dynamic values
+  Widget _buildRow(String title, int count, String category, IconData icon) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Icon(
+          icon,
+          size: 25,
+          color: _getIconColor(category),
+        ),
+        SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+        Text(
+          title,
+          style: AppFont.dropDowmLabel(context),
+        ),
+        Expanded(child: Container()),
+        Text(
+          '$count', // Use dynamic value
+          style: AppFont.dropDowmLabel(context),
+        ),
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CallHistory(
+                  category: category,
+                  mobile: mobile,
+                ),
+              ),
+            );
+          },
+          icon: const Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: 25,
+            color: AppColors.iconGrey,
+          ),
+        ),
+      ],
+    );
+  }
+
+// Helper method to get icon color based on category
+  Color _getIconColor(String category) {
+    switch (category) {
+      case 'outgoing':
+        return AppColors.colorsBlue;
+      case 'incoming':
+        return AppColors.sideGreen;
+      case 'missed':
+        return AppColors.sideRed;
+      case 'rejected':
+        return AppColors.iconGrey;
+      default:
+        return AppColors.iconGrey;
+    }
   }
 
   @override
@@ -383,7 +524,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w500,
                                                 color: Colors.black)),
-                                         
                                       ],
                                     ),
                                   ),
@@ -653,7 +793,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       ]),
     );
   }
- 
 
 // FAB Builder
   Widget _buildFloatingActionButton(BuildContext context) {
@@ -719,7 +858,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                     fabController.closeFab();
                     _showAppointmentPopup(context, widget.leadId);
                   }),
-                  
                   _buildPopupItem(Icons.directions_car, "Test Drive", -20,
                       onTap: () {
                     fabController.closeFab();
@@ -858,7 +996,6 @@ class _ContactRowState extends State<ContactRow> {
           ),
           const SizedBox(width: 10),
           Expanded(
-            // Ensure text doesn't overflow
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -899,147 +1036,3 @@ class NavigationController extends GetxController {
     });
   }
 }
-
-Widget _callLogsWidget(BuildContext context) {
-  double screenWidth = MediaQuery.of(context).size.width;
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 10),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-           const Icon(
-              Icons.call,
-              size: 25,
-              color: AppColors.iconGrey,
-            ),
-            SizedBox(
-              width: screenWidth * .1,
-            ),
-            Text(
-              'All Calls',
-              style: AppFont.dropDowmLabel(context),
-            ),
-            Expanded(
-              child: Container(),
-            ),
-            Text(
-              '10', // Dynamic value should go here
-              style: AppFont.dropDowmLabel(context),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon:const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 25,
-                color: AppColors.iconGrey,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Icon(
-              Icons.phone_forwarded_outlined,
-              size: 25,
-              color: AppColors.colorsBlue,
-            ),
-            SizedBox(
-              width: screenWidth * .1,
-            ),
-            Text(
-              'Outgoing Calls',
-              style: AppFont.dropDowmLabel(context),
-            ),
-            Expanded(
-              child: Container(),
-            ),
-            Text(
-              '10', // Dynamic value should go here
-              style: AppFont.dropDowmLabel(context),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 25,
-                color: AppColors.iconGrey,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Icon(
-              Icons.call,
-              size: 25,
-              color: AppColors.sideGreen,
-            ),
-            SizedBox(
-              width: screenWidth * .1,
-            ),
-            Text(
-              'Incoming Calls',
-              style: AppFont.dropDowmLabel(context),
-            ),
-            Expanded(
-              child: Container(),
-            ),
-            Text(
-              '10', // Dynamic value should go here
-              style: AppFont.dropDowmLabel(context),
-            ),
-            IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CallHistory()));
-              },
-              icon: const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 25,
-                color: AppColors.iconGrey,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Icon(
-              Icons.call,
-              size: 25,
-              color: AppColors.sideRed,
-            ),
-            SizedBox(
-              width: screenWidth * .1,
-            ),
-            Text(
-              'Missed Calls',
-              style: AppFont.dropDowmLabel(context),
-            ),
-            Expanded(
-              child: Container(),
-            ),
-            Text(
-              '10', // Dynamic value should go here
-              style: AppFont.dropDowmLabel(context),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 25,
-                color: AppColors.iconGrey,
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
-
- 

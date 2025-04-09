@@ -1,40 +1,503 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_assist/config/component/color/colors.dart';
 import 'package:smart_assist/config/component/font/font.dart';
+import 'package:smart_assist/utils/storage.dart';
 import 'package:smart_assist/widgets/calender/calender.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class CallHistory extends StatefulWidget {
-  const CallHistory({super.key});
+  final String category;
+  final String mobile;
+  const CallHistory({super.key, required this.category, required this.mobile});
 
   @override
   State<CallHistory> createState() => _CallHistoryState();
 }
 
+// class _CallHistoryState extends State<CallHistory> {
+//   int _childButtonIndex = 0;
+//   CalendarFormat _calendarFormat = CalendarFormat.week;
+//   bool _isMonthView = false;
+//   DateTime? _selectedDay;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     print('category');
+//     print(widget.category);
+//     print(widget.mobile);
+//   }
+
+//   // IconData getCallTypeIcon(String callType) {
+//   //   switch (callType) {
+//   //     case callType.incoming:
+//   //       return Icons.call_received;
+//   //     case CallType.outgoing:
+//   //       return Icons.call_made;
+//   //     case CallType.missed:
+//   //       return Icons.call_missed;
+//   //     case CallType.rejected:
+//   //       return Icons.call_missed_outgoing;
+//   //     default:
+//   //       return Icons.call;
+//   //   }
+//   // }
+
+//   static Future<List<Map<String, dynamic>>> fetchCallLogs(
+//       String mobile, String category) async {
+//     final String apiUrl =
+//         "https://api.smartassistapp.in/api/leads/call-logs/all?mobile=${Uri.encodeComponent(mobile)}&category=$category";
+//     final token = await Storage.getToken();
+
+//     try {
+//       final response = await http.get(
+//         Uri.parse(apiUrl),
+//         headers: {
+//           'Authorization': 'Bearer $token',
+//           'Content-Type': 'application/json',
+//         },
+//       );
+
+//       if (response.statusCode == 200) {
+//         final Map<String, dynamic> jsonResponse = json.decode(response.body);
+//         final List<dynamic> data = jsonResponse['data'];
+
+//         return data.map((item) => Map<String, dynamic>.from(item)).toList();
+//       } else {
+//         throw Exception('Failed to load data: ${response.statusCode}');
+//       }
+//     } catch (e) {
+//       throw Exception('Error fetching data: $e');
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     double screenWidth = MediaQuery.of(context).size.width;
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('All Calls', style: AppFont.appbarfontgrey(context)),
+//         leading: IconButton(
+//           icon: const Icon(Icons.arrow_back_ios_new_outlined,
+//               color: AppColors.iconGrey),
+//           onPressed: () {
+//             Navigator.pop(context, true);
+//           },
+//         ),
+//         elevation: 0,
+//       ),
+//       body: SingleChildScrollView(
+//         child: Padding(
+//           padding: const EdgeInsets.symmetric(horizontal: 10),
+//           child: Column(
+//             children: [
+//               const SizedBox(
+//                 height: 20,
+//               ),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Container(
+//                     width: screenWidth * 0.55,
+//                     height: 27,
+//                     decoration: BoxDecoration(
+//                       // color: Colors.white,
+//                       border: Border.all(
+//                           color: const Color.fromARGB(255, 129, 129, 129),
+//                           width: .2),
+//                       borderRadius: BorderRadius.circular(30),
+//                     ),
+//                     child: Row(
+//                       children: [
+//                         _buildButton('Day', 0),
+//                         _buildButton('Week', 1),
+//                         _buildButton('Month', 2),
+//                         _buildButton('Year', 3),
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               ),
+
+//               const SizedBox(height: 10),
+
+//               // PageView for Slides
+//               SizedBox(
+//                 height: 100,
+//                 child: _buildFirstSlide(context, screenWidth),
+//               ),
+
+//               const SizedBox(height: 10),
+
+//               _buildCallHistory(context),
+
+//               const SizedBox(height: 10),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildCallHistory(BuildContext context) {
+//     return Column(
+//       children: [
+//         Align(
+//           alignment: Alignment.centerLeft,
+//           child: Padding(
+//             padding: const EdgeInsets.only(left: 10.0),
+//             child: Text(
+//               textAlign: TextAlign.start,
+//               'todays',
+//               style: AppFont.mediumText14(context),
+//             ),
+//           ),
+//         ),
+//         const SizedBox(
+//           height: 10,
+//         ),
+//         Container(
+//           decoration: BoxDecoration(
+//               border: Border.all(color: Colors.grey, width: .2),
+//               borderRadius: BorderRadius.circular(5)),
+//           child: Row(
+//             children: [
+//               const Row(children: [
+//                 SizedBox(
+//                   width: 10,
+//                 ),
+//                 Icon(
+//                   Icons.call_received,
+//                   color: AppColors.colorsBlue,
+//                   size: 20,
+//                 ),
+//               ]),
+//               const SizedBox(
+//                 width: 10,
+//               ),
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Padding(
+//                     padding: const EdgeInsets.symmetric(vertical: 10),
+//                     child: Text(
+//                       '02:14',
+//                       style: AppFont.smallTextBold(context),
+//                     ),
+//                   ),
+//                   Text(
+//                     'Outgoing call, 1 min 39 secs',
+//                     style: AppFont.smallText(context),
+//                   ),
+//                   SizedBox(
+//                     height: 10,
+//                   ),
+//                 ],
+//               )
+//             ],
+//           ),
+//         )
+//       ],
+//     );
+//   }
+
+//   Widget _buildFirstSlide(BuildContext context, double screenWidth) {
+//     // final selectedData = getSelectedData();
+
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(horizontal: 0),
+//       child: IntrinsicHeight(
+//         child: Row(
+//           crossAxisAlignment: CrossAxisAlignment.stretch,
+//           children: [
+//             Expanded(
+//               child: Column(
+//                 children: [
+//                   Expanded(
+//                     child: _buildInfoCard1(
+//                       context,
+//                       'Total Duration',
+//                       '3:00 H',
+//                       screenWidth,
+//                       Colors.black,
+//                     ),
+//                   ),
+//                   // const SizedBox(height: 10),
+//                   // Expanded(
+//                   //   child: _buildInfoCard1(
+//                   //     context,
+//                   //     'Outgoing Call Duration',
+//                   //     '3:00 H',
+//                   //     screenWidth,
+//                   //     Colors.black,
+//                   //   ),
+//                   // ),
+//                 ],
+//               ),
+//             ),
+//             // const SizedBox(width: 10),
+//             // Expanded(
+//             //     child: Column(
+//             //   children: [
+//             //     const SizedBox(
+//             //       width: 10,
+//             //     ),
+//             //     Expanded(
+//             //       child: _buildInfoCard1(
+//             //         context,
+//             //         'Incoming Calls Duration',
+//             //         '3:00 H',
+//             //         screenWidth,
+//             //         Colors.black,
+//             //       ),
+//             //     ),
+//             //   ],
+//             // ))
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildInfoCard1(BuildContext context, String title, String value,
+//       double screenWidth, Color valueColor) {
+//     return Align(
+//       alignment: Alignment.centerLeft,
+//       child: Container(
+//         width: double.infinity,
+//         padding: EdgeInsets.all(screenWidth * 0.04),
+//         decoration: BoxDecoration(
+//           // boxShadow: List.filled(3, fil),
+//           border: Border.all(color: Colors.grey, width: .5),
+//           color: Colors.white,
+//           borderRadius: BorderRadius.circular(5),
+//         ),
+//         child: Column(
+//           // mainAxisAlignment: MainAxisAlignment.,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//               softWrap: true,
+//               overflow: TextOverflow.ellipsis,
+//               textAlign: TextAlign.center,
+//               maxLines: 4,
+//               value,
+//               style: GoogleFonts.poppins(
+//                   fontSize: 20, fontWeight: FontWeight.w600, color: valueColor),
+//             ),
+//             const SizedBox(height: 5),
+//             Expanded(
+//               child: Text(
+//                 title,
+//                 softWrap: true,
+//                 // textAlign: TextAlign.center,
+//                 overflow: TextOverflow.ellipsis,
+//                 maxLines: 4,
+//                 style: GoogleFonts.poppins(
+//                     fontSize: 20,
+//                     fontWeight: FontWeight.w400,
+//                     color: AppColors.fontColor),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildButton(String text, int index) {
+//     bool isSelected = _childButtonIndex == index;
+
+//     return Expanded(
+//       child: Container(
+//         decoration: BoxDecoration(
+//           border: Border.all(
+//             color: isSelected ? Colors.blue : Colors.transparent,
+//             width: 1,
+//           ),
+//           borderRadius: BorderRadius.circular(30),
+//         ),
+//         child: TextButton(
+//           onPressed: () {
+//             setState(() {
+//               _childButtonIndex = index;
+//             });
+//           },
+//           style: TextButton.styleFrom(
+//             foregroundColor: isSelected ? Colors.blue : Colors.black,
+//             backgroundColor: Colors.transparent,
+//             padding: const EdgeInsets.symmetric(vertical: 5),
+//             shape: RoundedRectangleBorder(
+//               borderRadius: BorderRadius.circular(30),
+//             ),
+//           ),
+//           child: Text(
+//             text,
+//             style: GoogleFonts.poppins(
+//               fontSize: 12,
+//               fontWeight: FontWeight.w500,
+//               color: isSelected ? Colors.blue : Colors.black,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 class _CallHistoryState extends State<CallHistory> {
+  String _categoryTitle = '';
+  List<dynamic> _callLogs = [];
+  String _totalDuration = '0';
+  int _totalCalls = 0;
   int _childButtonIndex = 0;
-  CalendarFormat _calendarFormat = CalendarFormat.week;
-  bool _isMonthView = false;
-  DateTime? _selectedDay;
-  //   Map<String, dynamic> getSelectedData() {
-  //   switch (_childButtonIndex) {
-  //     case 0:
-  //       return widget.MtdData;
-  //     case 1:
-  //       return widget.QtdData;
-  //     case 2:
-  //       return widget.YtdData;
-  //     default:
-  //       return {};
+  DateTime _selectedDate = DateTime.now(); // Initially set to the current date
+  String _formattedDate = ''; // Store the formatted date for the API query
+
+  @override
+  void initState() {
+    super.initState();
+    _categoryTitle = widget.category; // Set the category title dynamically
+    _formattedDate = formatDate(_selectedDate); // Format the current date
+    _fetchCallLogs(); // Fetch the call logs based on category, mobile, and date
+  }
+
+  String formatDate(DateTime date) {
+    return DateFormat('yyyy/MM/dd')
+        .format(date); // Formats the date to "YYYY/MM/dd"
+  }
+
+  // Fetch call logs based on the category, mobile number, and date
+  Future<void> _fetchCallLogs() async {
+    try {
+      final data =
+          await fetchCallLogs(widget.mobile, widget.category, _formattedDate);
+      setState(() {
+        _callLogs = data['logs']['rows']; // Store the call logs
+        _totalDuration =
+            data['totalDurationInMins'].toString(); // Store total duration
+        _totalCalls = data['logs']['count']; // Store total call count
+      });
+    } catch (e) {
+      print('Error fetching call logs: $e');
+    }
+  }
+
+  // Fetch call logs from the API based on mobile number, category, and date
+  // Future<Map<String, dynamic>> fetchCallLogs(
+  //     String mobile, String category, String callDate) async {
+  //   final String apiUrl =
+  //       "https://api.smartassistapp.in/api/leads/call-logs/all?category=$category&call_date=$callDate&mobile=${Uri.encodeComponent(mobile)}";
+  //   final token = await Storage.getToken();
+
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse(apiUrl),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
+
+  //     print(apiUrl);
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
+  //       return jsonResponse['data']; // Returning data from the API
+  //     } else {
+  //       throw Exception('Failed to load data: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Error fetching data: $e');
   //   }
   // }
+
+  Future<Map<String, dynamic>> fetchCallLogs(
+      String mobile, String category, String callDate) async {
+    // If callDate is empty, omit the call_date query parameter from the URL
+    String apiUrl =
+        "https://api.smartassistapp.in/api/leads/call-logs/all?category=$category&mobile=${Uri.encodeComponent(mobile)}";
+
+    // If callDate is not empty, include it in the URL
+    if (callDate.isNotEmpty) {
+      apiUrl += "&call_date=$callDate";
+    }
+
+    final token = await Storage.getToken();
+
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      print(apiUrl); // Print the final API URL
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse['data']; // Returning data from the API
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching data: $e');
+    }
+  }
+
+  // Update the date filter when a button is clicked
+  void _updateDateFilter(String filter) {
+    setState(() {
+      switch (filter) {
+        case 'All':
+          // For 'All', don't set _formattedDate and remove call_date from the URL
+          _formattedDate = ''; // Leave the date empty for "All"
+          break;
+        // case 'Today':
+        //   _selectedDate = DateTime.now();
+        //   _formattedDate = formatDate(_selectedDate); // Format and set date
+        //   break;
+        case 'Yesterday':
+          _selectedDate = DateTime.now().subtract(Duration(days: 1));
+          _formattedDate = formatDate(_selectedDate); // Format and set date
+          break;
+        case '1W':
+          _selectedDate = DateTime.now().subtract(Duration(
+              days: DateTime.now().weekday - 1)); // Start of the current week
+          _formattedDate = formatDate(_selectedDate); // Format and set date
+          break;
+        case '1M':
+          _selectedDate = DateTime(DateTime.now().year, DateTime.now().month,
+              1); // First day of the current month
+          _formattedDate = formatDate(_selectedDate); // Format and set date
+          break;
+        case '1Y':
+          _selectedDate = DateTime(
+              DateTime.now().year, 1, 1); // First day of the current year
+          _formattedDate = formatDate(_selectedDate); // Format and set date
+          break;
+        default:
+          _selectedDate = DateTime.now();
+          _formattedDate = formatDate(_selectedDate); // Format and set date
+      }
+      _fetchCallLogs(); // Fetch new data based on the selected date
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Calls', style: AppFont.appbarfontgrey(context)),
+        title: Text('$_categoryTitle Calls',
+            style: AppFont.appbarfontgrey(context)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_outlined,
               color: AppColors.iconGrey),
@@ -49,76 +512,32 @@ class _CallHistoryState extends State<CallHistory> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: screenWidth * 0.55,
-                    height: 27,
-                    decoration: BoxDecoration(
-                      // color: Colors.white,
-                      border: Border.all(
-                          color: const Color.fromARGB(255, 129, 129, 129),
-                          width: .2),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Row(
-                      children: [
-                        _buildButton('Day', 0),
-                        _buildButton('Week', 1),
-                        _buildButton('Month', 2),
-                        _buildButton('Year', 3),
-                      ],
-                    ),
+              // Date filter buttons
+              Container(
+                width: screenWidth * 0.95,
+                height: 27,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 129, 129, 129),
+                    width: .2,
                   ),
-                  Container(
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _calendarFormat = _isMonthView
-                                  ? CalendarFormat.week
-                                  : CalendarFormat.month;
-                              _isMonthView = !_isMonthView;
-                            });
-                          },
-                          icon: Icon(
-                            _isMonthView
-                                ? Icons.calendar_view_week
-                                : Icons.calendar_month,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  children: [
+                    _buildButton('All', 0),
+                    // _buildButton('Today', 1),
+                    _buildButton('1D', 2),
+                    _buildButton('1W', 3),
+                    _buildButton('1M', 4),
+                    _buildButton('1Y', 5),
+                  ],
+                ),
               ),
-              CalenderWidget(
-                key: ValueKey(_calendarFormat),
-                calendarFormat: _calendarFormat,
-                onDateSelected: (selectedDate) {
-                  setState(() {
-                    // _focusedDay = selectedDate;
-                    // _selectedDay = selectedDate;
-                  });
-                  // _fetchAppointments(selectedDate);
-                  // _fetchTasks(selectedDate);
-                },
-              ),
-
+              const SizedBox(height: 20),
+              _buildCallSummary(context, screenWidth),
               const SizedBox(height: 10),
-
-              // PageView for Slides
-              SizedBox(
-                height: 300,
-                child: _buildFirstSlide(context, screenWidth),
-              ),
-
+              _buildCallHistory(context),
               const SizedBox(height: 10),
             ],
           ),
@@ -127,7 +546,39 @@ class _CallHistoryState extends State<CallHistory> {
     );
   }
 
-  Widget _buildFirstSlide(BuildContext context, double screenWidth) {
+  // Widget to display total call duration and total calls
+  // Widget _buildCallSummary(BuildContext context) {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       border: Border.all(color: Colors.grey, width: .2),
+  //       borderRadius: BorderRadius.circular(5),
+  //     ),
+  //     padding: const EdgeInsets.all(10),
+  //     child: Column(
+  //       children: [
+  //         Row(
+  //           children: [
+  //             Icon(Icons.call, color: AppColors.iconGrey),
+  //             SizedBox(width: 10),
+  //             Text('Total Calls: $_totalCalls',
+  //                 style: AppFont.mediumText14(context)),
+  //           ],
+  //         ),
+  //         const SizedBox(height: 10),
+  //         Row(
+  //           children: [
+  //             Icon(Icons.access_time, color: AppColors.iconGrey),
+  //             SizedBox(width: 10),
+  //             Text('Total Duration: $_totalDuration minutes',
+  //                 style: AppFont.mediumText14(context)),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget _buildCallSummary(BuildContext context, double screenWidth) {
     // final selectedData = getSelectedData();
 
     return Padding(
@@ -143,17 +594,7 @@ class _CallHistoryState extends State<CallHistory> {
                     child: _buildInfoCard1(
                       context,
                       'Total Duration',
-                      '3:00 H',
-                      screenWidth,
-                      Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: _buildInfoCard1(
-                      context,
-                      'Outgoing Call Duration',
-                      '3:00 H',
+                      '$_totalDuration ',
                       screenWidth,
                       Colors.black,
                     ),
@@ -161,24 +602,6 @@ class _CallHistoryState extends State<CallHistory> {
                 ],
               ),
             ),
-            const SizedBox(width: 10),
-            Expanded(
-                child: Column(
-              children: [
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: _buildInfoCard1(
-                    context,
-                    'Incoming Calls Duration',
-                    '3:00 H',
-                    screenWidth,
-                    Colors.black,
-                  ),
-                ),
-              ],
-            ))
           ],
         ),
       ),
@@ -188,7 +611,7 @@ class _CallHistoryState extends State<CallHistory> {
   Widget _buildInfoCard1(BuildContext context, String title, String value,
       double screenWidth, Color valueColor) {
     return Align(
-      alignment: Alignment.center,
+      alignment: Alignment.centerLeft,
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(screenWidth * 0.04),
@@ -199,8 +622,8 @@ class _CallHistoryState extends State<CallHistory> {
           borderRadius: BorderRadius.circular(5),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               softWrap: true,
@@ -220,7 +643,7 @@ class _CallHistoryState extends State<CallHistory> {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 4,
                 style: GoogleFonts.poppins(
-                    fontSize: 16,
+                    fontSize: 20,
                     fontWeight: FontWeight.w400,
                     color: AppColors.fontColor),
               ),
@@ -231,6 +654,77 @@ class _CallHistoryState extends State<CallHistory> {
     );
   }
 
+  // Widget to display call logs
+  Widget _buildCallHistory(BuildContext context) {
+    if (_callLogs.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return Column(
+      children: _callLogs.map((call) {
+        return Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey, width: .2),
+              borderRadius: BorderRadius.circular(5)),
+          child: Row(
+            children: [
+              _getCallTypeIcon(call['call_type']),
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      call['call_date'], // Call date
+                      style: AppFont.smallTextBold(context),
+                    ),
+                  ),
+                  Text(
+                    '${call['call_type']} call, ${call['call_duration']} secs', // Call type and duration
+                    style: AppFont.smallText(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  // Helper method to get the correct icon based on call type
+  Widget _getCallTypeIcon(String callType) {
+    IconData iconData;
+    Color iconColor;
+
+    switch (callType) {
+      case 'incoming':
+        iconData = Icons.call_received;
+        iconColor = AppColors.colorsBlue;
+        break;
+      case 'outgoing':
+        iconData = Icons.call_made;
+        iconColor = AppColors.sideGreen;
+        break;
+      case 'missed':
+        iconData = Icons.call_missed;
+        iconColor = AppColors.sideRed;
+        break;
+      case 'rejected':
+        iconData = Icons.call_missed_outgoing;
+        iconColor = AppColors.sideRed;
+        break;
+      default:
+        iconData = Icons.call;
+        iconColor = AppColors.iconGrey;
+        break;
+    }
+
+    return Icon(iconData, color: iconColor, size: 20);
+  }
+
+  // Build each date filter button
   Widget _buildButton(String text, int index) {
     bool isSelected = _childButtonIndex == index;
 
@@ -248,6 +742,8 @@ class _CallHistoryState extends State<CallHistory> {
             setState(() {
               _childButtonIndex = index;
             });
+            _updateDateFilter(
+                text); // Update the date filter based on the selected button
           },
           style: TextButton.styleFrom(
             foregroundColor: isSelected ? Colors.blue : Colors.black,
@@ -270,5 +766,3 @@ class _CallHistoryState extends State<CallHistory> {
     );
   }
 }
-
-// class _childButtonIndex {}
