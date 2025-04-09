@@ -146,27 +146,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     }
   }
 
-  // Future<void> eventandtask(String leadId) async {
-  //   setState(() => isLoading = true);
-  //   try {
-  //     final data = await LeadsSrv.eventTaskByLead(widget.leadId);
-  //     setState(() {
-  //       completedTasks = data['completedTasks'];
-  //       completedEvents = data['completedEvents'];
-  //       upcomingTasks = data['upcomingTasks'];
-  //       upcomingEvents = data['upcomingEvents'];
-
-  //       _selectedTaskWidget = TimelineEightWid(tasks: upcomingTasks);
-
-  //       print(upcomingTasks);
-  //       print(completedTasks);
-  //     });
-  //   } catch (e) {
-  //     print('Error Fetching events: $e');
-  //   } finally {
-  //     setState(() => isLoading = false);
-  //   }
-  // }
+ 
 
   void _toggleTasks(int index) {
     setState(() {
@@ -261,52 +241,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       },
     );
   }
-
-  // void _showAppointmentPopup(BuildContext context, String leadId) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return Dialog(
-  //         backgroundColor: Colors.transparent,
-  //         insetPadding: EdgeInsets.zero, // Remove default padding
-  //         child: Container(
-  //           width: MediaQuery.of(context).size.width,
-  //           margin: const EdgeInsets.symmetric(
-  //               horizontal: 16), // Add margin for better UX
-  //           decoration: BoxDecoration(
-  //             color: Colors.white,
-  //             borderRadius: BorderRadius.circular(10),
-  //           ),
-  //           child: AppointmentIds(
-  //             leadId: leadId,
-  //           ), // Appointment modal
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // void _showTestdrivePopup(BuildContext context, String leadId) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return Dialog(
-  //         backgroundColor: Colors.transparent,
-  //         insetPadding: EdgeInsets.zero, // Remove default padding
-  //         child: Container(
-  //           width: MediaQuery.of(context).size.width,
-  //           margin: const EdgeInsets.symmetric(
-  //               horizontal: 16), // Add margin for better UX
-  //           decoration: BoxDecoration(
-  //             color: Colors.white,
-  //             borderRadius: BorderRadius.circular(10),
-  //           ),
-  //           child: TestdriveIds(leadId: leadId), // Appointment modal
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+ 
 
   void _showTestdrivePopup(BuildContext context, String leadId) {
     showDialog(
@@ -448,15 +383,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w500,
                                                 color: Colors.black)),
-                                        // Text(
-                                        //   email,
-                                        //   softWrap: true,
-                                        //   overflow: TextOverflow.visible,
-                                        //   style: GoogleFonts.poppins(
-                                        //       fontSize: 10,
-                                        //       fontWeight: FontWeight.w400,
-                                        //       color: AppColors.iconGrey),
-                                        // ),
+                                         
                                       ],
                                     ),
                                   ),
@@ -726,52 +653,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       ]),
     );
   }
-
-  // Widget _buildToggleSwitch() {
-  //   return Row(
-  //     mainAxisSize: MainAxisSize.min,
-  //     children: [
-  //       _buildToggleOption(0, 'Upcoming'),
-  //       const SizedBox(
-  //         width: 10,
-  //       ),
-  //       _buildToggleOption(1, 'Completed'),
-  //     ],
-  //   );
-  // }
-
-  // Widget _buildToggleOption(int index, String text) {
-  //   final bool isActive = _childButtonIndex == index;
-  //   return GestureDetector(
-  //     onTap: () {
-  //       setState(() {
-  //         _childButtonIndex = index;
-  //         // Update your data based on selection
-  //         if (index == 0) {
-  //           // Assuming upcomingTasks is a List<dynamic>, cast it to List<Map<String, dynamic>>
-  //           List<Map<String, dynamic>> typedUpcomingTasks =
-  //               List<Map<String, dynamic>>.from(upcomingTasks);
-  //           // Now you can pass the typedUpcomingTasks to TimelineEightWid
-  //           _selectedTaskWidget = TimelineEightWid(tasks: typedUpcomingTasks);
-  //         } else {
-  //           // Assuming completedTasks is also a List<dynamic>, cast it to List<Map<String, dynamic>>
-  //           List<Map<String, dynamic>> typedCompletedTasks =
-  //               List<Map<String, dynamic>>.from(completedTasks);
-  //           // Now you can pass the typedCompletedTasks to TimelineSevenWid
-  //           // _selectedTaskWidget = TimelineSevenWid(tasks: typedCompletedTasks);
-  //         }
-  //       });
-  //     },
-  //     child: Text(
-  //       text,
-  //       style: GoogleFonts.poppins(
-  //         fontSize: isActive ? 18 : 12,
-  //         fontWeight: FontWeight.w500,
-  //         color: Colors.black,
-  //       ),
-  //     ),
-  //   );
-  // }
+ 
 
 // FAB Builder
   Widget _buildFloatingActionButton(BuildContext context) {
@@ -837,11 +719,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                     fabController.closeFab();
                     _showAppointmentPopup(context, widget.leadId);
                   }),
-                  // _buildPopupItem(Icons.people_alt_rounded, "Lead", -60,
-                  //     onTap: () {
-                  //   fabController.closeFab();
-                  //   _showLeadPopup(context);
-                  // }),
+                  
                   _buildPopupItem(Icons.directions_car, "Test Drive", -20,
                       onTap: () {
                     fabController.closeFab();
@@ -1164,4 +1042,4 @@ Widget _callLogsWidget(BuildContext context) {
   );
 }
 
-// ✅ Function to Show `CreateFollowupsPopups` on "Lead"
+ 
