@@ -352,6 +352,7 @@ class CallHistory extends StatefulWidget {
 
 class _CallHistoryState extends State<CallHistory> {
   String _categoryTitle = '';
+  bool _isLoading = true;
   List<dynamic> _callLogs = [];
   String _totalDuration = '0';
   int _totalCalls = 0;
@@ -372,6 +373,26 @@ class _CallHistoryState extends State<CallHistory> {
         .format(date); // Formats the date to "YYYY/MM/dd"
   }
 
+  String _getFormattedDateString(Map<String, dynamic> call) {
+    String formattedDate = '';
+    try {
+      DateTime parseDate = DateTime.parse(call['call_date']);
+      if (parseDate.year == DateTime.now().year &&
+          parseDate.month == DateTime.now().month &&
+          parseDate.day == DateTime.now().day) {
+        formattedDate = 'Today';
+      } else {
+        int day = parseDate.day;
+        String suffix = _getDaySuffix(day);
+        String month = DateFormat('MMM').format(parseDate);
+        formattedDate = '${day}$suffix $month';
+      }
+    } catch (e) {
+      formattedDate = call['call_date'];
+    }
+    return formattedDate;
+  }
+
   // Fetch call logs based on the category, mobile number, and date
   Future<void> _fetchCallLogs() async {
     try {
@@ -382,40 +403,12 @@ class _CallHistoryState extends State<CallHistory> {
         _totalDuration =
             data['totalDurationInMins'].toString(); // Store total duration
         _totalCalls = data['logs']['count']; // Store total call count
+        _isLoading = false;
       });
     } catch (e) {
       print('Error fetching call logs: $e');
     }
   }
-
-  // Fetch call logs from the API based on mobile number, category, and date
-  // Future<Map<String, dynamic>> fetchCallLogs(
-  //     String mobile, String category, String callDate) async {
-  //   final String apiUrl =
-  //       "https://api.smartassistapp.in/api/leads/call-logs/all?category=$category&call_date=$callDate&mobile=${Uri.encodeComponent(mobile)}";
-  //   final token = await Storage.getToken();
-
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Authorization': 'Bearer $token',
-  //         'Content-Type': 'application/json',
-  //       },
-  //     );
-
-  //     print(apiUrl);
-
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-  //       return jsonResponse['data']; // Returning data from the API
-  //     } else {
-  //       throw Exception('Failed to load data: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Error fetching data: $e');
-  //   }
-  // }
 
   Future<Map<String, dynamic>> fetchCallLogs(
       String mobile, String category, String callDate) async {
@@ -443,12 +436,75 @@ class _CallHistoryState extends State<CallHistory> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
         return jsonResponse['data']; // Returning data from the API
       } else {
+        setState(() => _isLoading = false);
         throw Exception('Failed to load data: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Error fetching data: $e');
+    }
+  }
+
+  Widget _time(Map<String, dynamic> call) {
+    DateTime parsedTime = DateFormat("HH:mm:ss").parse(call['start_time']);
+    String formattedTime = DateFormat("HH:mm").format(parsedTime);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(width: 4),
+        Text(formattedTime,
+            style: GoogleFonts.poppins(
+                color: AppColors.fontColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 14)),
+      ],
+    );
+  }
+
+  // Widget _date(Map<String, dynamic> call) {
+  //   String formattedDate = '';
+  //   try {
+  //     DateTime parseDate = DateTime.parse(call['call_date']);
+  //     // formattedDate = DateFormat('dd MMM').format(parseDate);
+  //     // Check if the date is today
+  //     if (parseDate.year == DateTime.now().year &&
+  //         parseDate.month == DateTime.now().month &&
+  //         parseDate.day == DateTime.now().day) {
+  //       formattedDate = 'Today';
+  //     } else {
+  //       // If not today, format it as "26th March"
+  //       int day = parseDate.day;
+  //       String suffix = _getDaySuffix(day);
+  //       String month = DateFormat('MMM').format(parseDate); // Full month name
+  //       formattedDate = '${day}$suffix $month';
+  //     }
+  //   } catch (e) {
+  //     formattedDate = call['call_date'];
+  //   }
+  //   return Row(
+  //     children: [
+  //       const SizedBox(width: 5),
+  //       Text(formattedDate, style: AppFont.smallText(context)),
+  //     ],
+  //   );
+  // }
+
+  String _getDaySuffix(int day) {
+    if (day >= 11 && day <= 13) {
+      return 'th';
+    }
+    switch (day % 10) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
     }
   }
 
@@ -460,11 +516,8 @@ class _CallHistoryState extends State<CallHistory> {
           // For 'All', don't set _formattedDate and remove call_date from the URL
           _formattedDate = ''; // Leave the date empty for "All"
           break;
-        // case 'Today':
-        //   _selectedDate = DateTime.now();
-        //   _formattedDate = formatDate(_selectedDate); // Format and set date
-        //   break;
-        case 'Yesterday':
+
+        case '1D':
           _selectedDate = DateTime.now().subtract(Duration(days: 1));
           _formattedDate = formatDate(_selectedDate); // Format and set date
           break;
@@ -537,6 +590,8 @@ class _CallHistoryState extends State<CallHistory> {
               const SizedBox(height: 20),
               _buildCallSummary(context, screenWidth),
               const SizedBox(height: 10),
+
+              const SizedBox(height: 10),
               _buildCallHistory(context),
               const SizedBox(height: 10),
             ],
@@ -545,38 +600,6 @@ class _CallHistoryState extends State<CallHistory> {
       ),
     );
   }
-
-  // Widget to display total call duration and total calls
-  // Widget _buildCallSummary(BuildContext context) {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //       border: Border.all(color: Colors.grey, width: .2),
-  //       borderRadius: BorderRadius.circular(5),
-  //     ),
-  //     padding: const EdgeInsets.all(10),
-  //     child: Column(
-  //       children: [
-  //         Row(
-  //           children: [
-  //             Icon(Icons.call, color: AppColors.iconGrey),
-  //             SizedBox(width: 10),
-  //             Text('Total Calls: $_totalCalls',
-  //                 style: AppFont.mediumText14(context)),
-  //           ],
-  //         ),
-  //         const SizedBox(height: 10),
-  //         Row(
-  //           children: [
-  //             Icon(Icons.access_time, color: AppColors.iconGrey),
-  //             SizedBox(width: 10),
-  //             Text('Total Duration: $_totalDuration minutes',
-  //                 style: AppFont.mediumText14(context)),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _buildCallSummary(BuildContext context, double screenWidth) {
     // final selectedData = getSelectedData();
@@ -657,42 +680,157 @@ class _CallHistoryState extends State<CallHistory> {
   // Widget to display call logs
   Widget _buildCallHistory(BuildContext context) {
     if (_callLogs.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: Text('No data found'));
     }
 
-    return Column(
-      children: _callLogs.map((call) {
-        return Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: .2),
-              borderRadius: BorderRadius.circular(5)),
-          child: Row(
-            children: [
-              _getCallTypeIcon(call['call_type']),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      call['call_date'], // Call date
-                      style: AppFont.smallTextBold(context),
-                    ),
-                  ),
-                  Text(
-                    '${call['call_type']} call, ${call['call_duration']} secs', // Call type and duration
-                    style: AppFont.smallText(context),
-                  ),
-                ],
+    // Group calls by date
+    Map<String, List<dynamic>> callsByDate = {};
+
+    for (var call in _callLogs) {
+      String dateKey = _getFormattedDateString(call);
+      if (!callsByDate.containsKey(dateKey)) {
+        callsByDate[dateKey] = [];
+      }
+      callsByDate[dateKey]!.add(call);
+    }
+
+    // Create a list of widgets for each date group
+    List<Widget> dateGroups = [];
+
+    callsByDate.forEach((date, calls) {
+      // Create a container for each date with all its calls
+      dateGroups.add(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Date header
+            Padding(
+              padding: const EdgeInsets.only(left: 5, top: 15, bottom: 5),
+              child: Text(
+                date,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ],
-          ),
-        );
-      }).toList(),
+            ),
+            // Single container for all calls of this date
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              margin: const EdgeInsets.symmetric(vertical: 5),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: .2),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Column(
+                children: calls.map((call) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      children: [
+                        _getCallTypeIcon(call['call_type']),
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _time(call),
+                            const SizedBox(height: 5),
+                            Text(
+                              '${call['call_type']} call, ${call['call_duration']} secs',
+                              style: AppFont.smallText(context),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: dateGroups,
     );
   }
 
+  // Widget _buildCallHistory(BuildContext context) {
+  //   if (_callLogs.isEmpty) {
+  //     return const Center(child: Text('No data found'));
+  //   }
+
+  //   // Group calls by date
+  //   Map<String, List<dynamic>> callsByDate = {};
+
+  //   for (var call in _callLogs) {
+  //     // Use _getFormattedDateString instead of _date
+  //     String dateKey = _getFormattedDateString(call);
+  //     if (!callsByDate.containsKey(dateKey)) {
+  //       callsByDate[dateKey] = [];
+  //     }
+  //     callsByDate[dateKey]!.add(call);
+  //   }
+
+  //   // Create a list of widgets for each date group
+  //   List<Widget> dateGroups = [];
+
+  //   callsByDate.forEach((date, calls) {
+  //     // Add the date header
+  //     dateGroups.add(
+  //       Padding(
+  //         padding: const EdgeInsets.only(left: 5, top: 15, bottom: 5),
+  //         child: Text(
+  //           date,
+  //           style: GoogleFonts.poppins(
+  //             fontSize: 14,
+  //             color: Colors.grey[600],
+  //             fontWeight: FontWeight.w500,
+  //           ),
+  //         ),
+  //       ),
+  //     );
+
+  //     // Add the calls for this date
+  //     for (var call in calls) {
+  //       dateGroups.add(
+  //         Container(
+  //           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+  //           margin: const EdgeInsets.symmetric(vertical: 5),
+  //           decoration: BoxDecoration(
+  //               border: Border.all(color: Colors.grey, width: .2),
+  //               borderRadius: BorderRadius.circular(5)),
+  //           child: Row(
+  //             children: [
+  //               _getCallTypeIcon(call['call_type']),
+  //               const SizedBox(width: 10),
+  //               Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   _time(call),
+  //                   const SizedBox(height: 5),
+  //                   Text(
+  //                     '${call['call_type']} call, ${call['call_duration']} secs',
+  //                     style: AppFont.smallText(context),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     }
+  //   });
+
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: dateGroups,
+  //   );
+  // }
   // Helper method to get the correct icon based on call type
   Widget _getCallTypeIcon(String callType) {
     IconData iconData;

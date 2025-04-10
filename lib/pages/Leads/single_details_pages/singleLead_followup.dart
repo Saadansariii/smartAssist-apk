@@ -19,6 +19,7 @@ import 'package:smart_assist/widgets/leads_details_popup/create_appointment.dart
 import 'package:smart_assist/widgets/leads_details_popup/create_followups.dart';
 import 'package:smart_assist/widgets/timeline/timeline_tasks.dart';
 import 'package:smart_assist/widgets/timeline/timeline_events.dart';
+import 'package:smart_assist/widgets/whatsapp_chat.dart';
 
 class FollowupsDetails extends StatefulWidget {
   final String leadId;
@@ -738,14 +739,39 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // _buildToggleSwitch(),
-                                Text(
-                                  'Call logs',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Call logs',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    WhatsappChat(
+                                                      chatId: '',
+                                                      userName: lead_owner,
+                                                    )));
+                                      },
+                                      child: Text(
+                                        'Whatsapp',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
+
                                 TextButton(
                                   onPressed: () {
                                     setState(() {
